@@ -3,8 +3,8 @@ FROM rustlang/rust:nightly-bookworm AS builder
 WORKDIR /app
 COPY . .
 
-# Диагностика: выводим список файлов в лог сборки
-RUN ls -la /app
+# ДИАГНОСТИКА: выводим список всех файлов в лог сборки
+RUN echo "=== Файлы в /app ===" && ls -la /app
 
 # Собираем проект в режиме release
 RUN cargo build --release
@@ -26,5 +26,5 @@ RUN mkdir -p /data
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Команда запуска: всегда рендерит input.anim
-CMD ["sh", "-c", "animdsl render input.anim -o /data/output.mp4"]
+# Команда запуска: рендерит input.anim и сохраняет в /data
+CMD ["animdsl", "render", "input.anim", "-o", "/data/output.mp4"]
