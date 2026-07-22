@@ -1,7 +1,0 @@
-﻿meta:
-  environment: rust
-  toolchain:
-    name: cargo
-    version: "1.80" # Укажите актуальную версию Rust, которую вы используете
-run:
-  scriptName: target/release/animdsl # Имя бинарного файла, которое берётся из Cargo.toml
