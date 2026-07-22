@@ -1,10 +1,8 @@
 FROM rust:1.80-bookworm AS builder
 WORKDIR /app
 
-# Явно копируем файлы манифеста и исходный код
-COPY Cargo.toml ./
-COPY Cargo.lock ./
-COPY src ./src
+# Копируем ВСЕ файлы из корня репозитория
+COPY . .
 
 RUN cargo build --release
 
@@ -14,6 +12,5 @@ RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg ca-certi
 COPY --from=builder /app/target/release/animdsl /usr/local/bin/animdsl
 RUN mkdir -p /data
 
-# Порт должен совпадать с containerPort в настройках Amvera
 EXPOSE 8080
 CMD ["animdsl"]
