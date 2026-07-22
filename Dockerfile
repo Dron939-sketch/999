@@ -13,14 +13,10 @@ RUN apt-get update && \
 
 COPY --from=builder /app/target/release/animdsl /usr/local/bin/animdsl
 
+# Копируем сценарий из репозитория
+COPY input.anim /app/input.anim
+
 RUN mkdir -p /data
-
 WORKDIR /app
-
-# === Создаём input.anim с правильными переносами строк ===
-RUN printf 'scene "test" {\n    duration: 3\n    background: #000000\n}\n' > input.anim
-
-# Диагностика: показываем содержимое файла в логе сборки
-RUN cat input.anim && echo "---" && wc -l input.anim
 
 CMD ["animdsl", "render", "input.anim", "-o", "/data/output.mp4"]
