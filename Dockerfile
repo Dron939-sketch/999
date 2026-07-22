@@ -1,7 +1,6 @@
 # Этап 1: Сборка Rust-приложения
 FROM rust:1.85-slim AS builder
 
-# Устанавливаем FFmpeg и инструменты для сборки
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     pkg-config \
@@ -11,13 +10,11 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 COPY . .
 
-# Собираем проект в режиме release
 RUN cargo build --release
 
-# Этап 2: Финальный минимальный образ для запуска
+# Этап 2: Финальный образ для запуска
 FROM debian:bookworm-slim
 
-# Устанавливаем FFmpeg (он нужен вашему приложению для рендеринга видео)
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     ca-certificates \
@@ -25,11 +22,15 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Копируем скомпилированный бинарный файл из этапа сборки
+# Копируем исполняемый файл
 COPY --from=builder /app/target/release/animdsl /app/animdsl
 
-# Копируем папку с примерами, чтобы было что рендерить
+# Копируем примеры И РЕСУРСЫ (это исправляет черный экран!)
 COPY --from=builder /app/examples /app/examples
+COPY --from=builder /app/assets /app/assets
 
-# При старте контейнера программа сразу рендерит видео с философом
-CMD ["./animdsl", "render", "examples/freeman-style.anim", "-o", "/app/output/result.mp4"]
+# Создаем папку для результата
+RUN mkdir -p /app/output
+
+# Запускаем рендеринг нашего ролика
+CMD ["./animdsl", "render", "examples/freeman-30s.anim", "-o", "/app/output/result.mp4"]
