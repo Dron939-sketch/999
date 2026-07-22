@@ -1,5 +1,5 @@
 # Этап 1: Сборка Rust-приложения
-FROM rust:1.82-slim AS builder
+FROM rust:1.85-slim AS builder
 
 # Устанавливаем FFmpeg и инструменты для сборки
 RUN apt-get update && apt-get install -y \
