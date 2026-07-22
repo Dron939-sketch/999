@@ -1,4 +1,37 @@
-scene "test" {
-    duration: 3
-    background: #000000
+character "philosopher" {
+    body-type: adult-male
+    skin-color: light
+    hair-style: bald
+    clothing: suit
+    clothing-color: black
+}
+
+scene "monologue" (duration: 15s, set: void) {
+    place philosopher at center facing front
+    camera medium
+    
+    text "Что есть код?" at top
+    wait 3s
+    
+    pose "thinking" {
+        head-nod: 15
+        arm-right-angle: 45
+        mouth-smile: 0.0
+    }
+    wait 2s
+    
+    text "Код — это мысли, застывшие во времени." at top
+    wait 3s
+    
+    pose "gesturing" {
+        arm-left-angle: -60
+        arm-right-angle: 60
+        mouth-smile: 0.3
+    }
+    wait 2s
+    
+    text "Или просто баги, которые работают." at top
+    wait 3s
+    
+    transition fade-black 2s
 }
