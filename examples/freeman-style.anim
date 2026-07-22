@@ -1,5 +1,5 @@
-// "The Freeman Monologue"
-// 30-секундный минималистичный ролик в черно-белом стиле.
+// "The Freeman Monologue" (Visual Timing)
+// 30-секундный ролик, выверенный под закадровый голос.
 
 config {
     width: 1920
@@ -8,7 +8,8 @@ config {
     background: #000000
 }
 
-pose "freeman-idle" {
+// Простая поза для статичного наблюдения
+pose "freeman-stare" {
     torso-bend: 0
     head-nod: 0
     arm-left-angle: -10
@@ -20,42 +21,27 @@ pose "freeman-idle" {
     mouth-smile: 0.0
 }
 
-pose "freeman-pointing" {
-    torso-bend: 5
-    head-tilt: -5
-    arm-right-angle: -45
-    elbow-right-bend: 0.2
-    eye-open-left: 0.8
-    eye-open-right: 0.8
-    mouth-open: 0.1
-}
-
-scene "freeman-void" (duration: 30s, set: void) {
+scene "freeman-void" (duration: 30s, set: server-dark) {
+    // 0-5 сек: Вступление ("Привет. Ты думаешь, что пишешь код.")
     camera wide
-    
-    // 0-5 сек: Вступление
-    text "Привет." at center
     wait 2s
-    text "Ты думаешь, что пишешь код." at center
-    wait 3s
-
-    // 5-15 сек: Поворот
     camera medium
-    text "Но на самом деле..." at center
-    wait 2s
-    text "...код пишет тебя." at center
     wait 3s
 
-    // 15-25 сек: Кульминация
+    // 5-15 сек: Поворот ("Но на самом деле... код пишет тебя.")
     camera close-up
-    text "Каждая строка — это клетка." at center
-    wait 3s
-    text "А ты просто привыкаешь к решетке." at center
+    wait 2s
+    camera extreme-close-up
     wait 3s
 
-    // 25-30 сек: Финал
+    // 15-25 сек: Кульминация ("Каждая строка — это клетка. А ты привыкаешь к решетке.")
+    camera medium
+    wait 3s
     camera wide
-    text "Продолжай." at center
+    wait 3s
+
+    // 25-30 сек: Финал ("Продолжай.")
+    camera close-up
     wait 2s
     
     transition fade-black 2s
