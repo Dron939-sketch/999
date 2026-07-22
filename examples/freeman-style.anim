@@ -1,30 +1,62 @@
-scene "freeman-monologue" (duration: 30s, set: void) {
+// "The Freeman Monologue"
+// 30-секундный минималистичный ролик в черно-белом стиле.
+
+config {
+    width: 1920
+    height: 1080
+    fps: 30
+    background: #000000
+}
+
+pose "freeman-idle" {
+    torso-bend: 0
+    head-nod: 0
+    arm-left-angle: -10
+    arm-right-angle: 10
+    elbow-left-bend: 0.1
+    elbow-right-bend: 0.1
+    eye-open-left: 0.9
+    eye-open-right: 0.9
+    mouth-smile: 0.0
+}
+
+pose "freeman-pointing" {
+    torso-bend: 5
+    head-tilt: -5
+    arm-right-angle: -45
+    elbow-right-bend: 0.2
+    eye-open-left: 0.8
+    eye-open-right: 0.8
+    mouth-open: 0.1
+}
+
+scene "freeman-void" (duration: 30s, set: void) {
+    camera wide
+    
+    // 0-5 сек: Вступление
+    text "Привет." at center
+    wait 2s
+    text "Ты думаешь, что пишешь код." at center
+    wait 3s
+
+    // 5-15 сек: Поворот
     camera medium
-    background black
-    
-    text "Привет. Я — ваш внутренний критик." at top
+    text "Но на самом деле..." at center
+    wait 2s
+    text "...код пишет тебя." at center
     wait 3s
-    
-    text "Ты опять пишешь код, который никто не прочитает." at center
-    wait 4s
-    
-    text "Зачем? Чтобы почувствовать себя умным?" at center
+
+    // 15-25 сек: Кульминация
+    camera close-up
+    text "Каждая строка — это клетка." at center
     wait 3s
-    
-    text "Или чтобы доказать что-то себе?" at center
-    wait 4s
-    
-    text "Знаешь что? Это нормально." at center
+    text "А ты просто привыкаешь к решетке." at center
     wait 3s
-    
-    text "Мы все пишем код, который никто не прочитает." at center
-    wait 4s
-    
-    text "Включая тех, кто пишет фреймворки." at center
-    wait 3s
-    
-    text "Так что продолжай. Это часть пути." at center
-    wait 3s
+
+    // 25-30 сек: Финал
+    camera wide
+    text "Продолжай." at center
+    wait 2s
     
     transition fade-black 2s
 }
