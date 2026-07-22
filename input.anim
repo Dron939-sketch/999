@@ -1,6 +1,3 @@
-// Монолог в стиле Мистера Фримана
-// Персонаж: ОДИН мужчина в черном пальто
-
 character "fred" {
     body-type: adult-male
     skin-color: light
@@ -22,96 +19,11 @@ pose "thinking" {
     mouth-smile: 0.1
 }
 
-pose "pointing" {
-    torso-bend: 8
-    head-nod: 5
-    arm-left-angle: -80
-    arm-right-angle: 20
-    elbow-left-bend: 0.3
-    elbow-right-bend: 0.8
-    mouth-smile: 0.0
-}
-
-pose "serious" {
-    torso-bend: 0
-    head-nod: 0
-    arm-left-angle: -10
-    arm-right-angle: 10
-    elbow-left-bend: 0.5
-    elbow-right-bend: 0.5
-    mouth-smile: -0.2
-    eyebrow-angle: -15
-}
-
-set "dark-room" {
-    background: dark-gray
-}
-
-// СЦЕНА 1: Начало монолога
-scene "intro" (duration: 8s, set: dark-room) {
+scene "intro" (duration: 5s, set: dark-room) {
     place fred at center facing front
-    camera close-up fred
-    fred pose "serious"
-    wait 1s
-    
     camera wide
-    fred pose "thinking"
-    text "Ты думаешь, что ты свободен?" at top
     wait 2s
-    
-    fred pose "pointing"
-    text "Но ты всего лишь винтик в системе." at top
+    text "Это тестовая анимация." at top
     wait 2s
-    
-    fred pose "serious"
-    text "Системе, которая пожирает твоё время." at top
-    wait 2s
-    
     transition fade-black 1s
-}
-
-// СЦЕНА 2: Развитие мысли
-scene "middle" (duration: 10s, set: dark-room) {
-    place fred at center facing front
-    camera medium fred
-    fred pose "thinking"
-    wait 1s
-    
-    text "Каждое утро ты просыпаешься," at top
-    wait 1.5s
-    text "и делаешь то, что от тебя ждут." at top
-    wait 1.5s
-    
-    fred pose "serious"
-    text "А где ТЫ?" at top
-    wait 1.5s
-    text "Где твои желания?" at top
-    wait 1.5s
-    
-    fred pose "pointing"
-    text "Ты даже не знаешь, чего хочешь." at top
-    wait 2s
-    
-    transition fade-black 1s
-}
-
-// СЦЕНА 3: Заключение
-scene "outro" (duration: 8s, set: dark-room) {
-    place fred at center facing front
-    camera close-up fred
-    fred pose "serious"
-    wait 1s
-    
-    text "Пока ты не осознаешь этого," at top
-    wait 2s
-    text "ты будешь просто..." at top
-    wait 1.5s
-    text "существовать." at top
-    wait 1.5s
-    
-    fred pose "thinking"
-    text "А не жить." at top
-    wait 1.5s
-    
-    transition fade-black 2s
 }
