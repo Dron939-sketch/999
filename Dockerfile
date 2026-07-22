@@ -31,6 +31,5 @@ COPY --from=builder /app/target/release/animdsl /app/animdsl
 # Копируем папку с примерами, чтобы было что рендерить
 COPY --from=builder /app/examples /app/examples
 
-# ⚠️ ИЗМЕНЕННАЯ КОМАНДА ЗАПУСКА:
-# При старте контейнера программа сразу рендерит видео
-CMD ["./animdsl", "render", "examples/my-first-animation.anim", "-o", "/app/output.mp4"]
+# При старте контейнера программа сразу рендерит видео с философом
+CMD ["./animdsl", "render", "examples/philosopher.anim", "-o", "/app/output.mp4"]
