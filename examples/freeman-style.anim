@@ -1,48 +1,348 @@
-// "The Freeman Monologue" (Visual Timing)
-// 30-секундный ролик, выверенный под закадровый голос.
+// "The Duel"
+// A spaghetti-western showdown between a marshal and an outlaw.
+// Showcases: precise timing with waits, shot/reverse-shot editing,
+//            wipe transitions, camera shake for gunshots, over-shoulder framing,
+//            and dramatic use of slow movement with easing.
+
+import character marshal from "assets/characters/procedural/marshal.json"
+import character viper from "assets/characters/procedural/viper.json"
+import set dusty-town from "assets/sets/dusty-town.svg"
 
 config {
     width: 1920
     height: 1080
     fps: 30
-    background: #000000
+    background: #1a1508
 }
 
-// Простая поза для статичного наблюдения
-pose "freeman-stare" {
-    torso-bend: 0
-    head-nod: 0
-    arm-left-angle: -10
-    arm-right-angle: 10
-    elbow-left-bend: 0.1
-    elbow-right-bend: 0.1
-    eye-open-left: 0.9
-    eye-open-right: 0.9
+// --- CUSTOM POSES ---
+
+pose "standing-tall" {
+    torso-squash: 1.04
+    line-of-action: 0.02
+    shoulder-left: -0.1
+    shoulder-right: -0.1
+    head-nod: -3
+    eyebrow-left: -0.2
+    eyebrow-right: -0.2
+    eye-open-left: 0.85
+    eye-open-right: 0.85
     mouth-smile: 0.0
 }
 
-scene "freeman-void" (duration: 30s, set: server-dark) {
-    // 0-5 сек: Вступление ("Привет. Ты думаешь, что пишешь код.")
+pose "hand-near-hip" {
+    arm-right-angle: 20
+    elbow-right-bend: 0.3
+    arm-left-angle: 5
+    shoulder-right: -0.05
+    torso-squash: 1.02
+    head-nod: -2
+    eye-open-left: 0.9
+    eye-open-right: 0.9
+    eyebrow-left: -0.3
+    eyebrow-right: -0.3
+    mouth-smile: -0.15
+}
+
+pose "quick-draw" {
+    arm-right-angle: -65
+    elbow-right-bend: 0.2
+    arm-left-angle: 15
+    torso-bend: 5
+    line-of-action: 0.08
+    knee-left-bend: 0.15
+    knee-right-bend: 0.1
+    head-nod: -5
+    eye-open-left: 1.2
+    eye-open-right: 1.2
+    mouth-smile: -0.2
+}
+
+pose "shot-recoil" {
+    arm-right-angle: -80
+    elbow-right-bend: 0.15
+    torso-bend: -5
+    line-of-action: -0.06
+    shoulder-right: -0.3
+    head-nod: -8
+    eye-open-left: 1.0
+    eye-open-right: 1.0
+}
+
+pose "gut-hit" {
+    torso-bend: 20
+    torso-squash: 0.88
+    line-of-action: -0.15
+    arm-left-angle: -30
+    arm-right-angle: 30
+    elbow-left-bend: 0.6
+    elbow-right-bend: 0.6
+    knee-left-bend: 0.3
+    knee-right-bend: 0.2
+    head-nod: 12
+    mouth-open: 0.5
+    mouth-smile: -0.6
+    eye-open-left: 0.7
+    eye-open-right: 0.7
+    eyebrow-left: 0.5
+    eyebrow-right: 0.5
+}
+
+pose "tipping-hat" {
+    arm-right-angle: -85
+    elbow-right-bend: 0.7
+    head-nod: 8
+    head-tilt: -3
+    mouth-smile: 0.15
+    eye-open-left: 0.8
+    eye-open-right: 0.8
+    eyebrow-left: 0.1
+    eyebrow-right: 0.1
+}
+
+pose "staredown" {
+    head-nod: -2
+    eye-direction: 0.0
+    eye-open-left: 0.7
+    eye-open-right: 0.7
+    eyebrow-left: -0.4
+    eyebrow-right: -0.4
+    mouth-smile: -0.1
+    shoulder-left: -0.05
+    shoulder-right: -0.05
+}
+
+pose "smirking" {
+    head-tilt: 5
+    mouth-smile: 0.4
+    eyebrow-left: 0.2
+    eyebrow-right: -0.3
+    eye-open-left: 0.8
+    eye-open-right: 0.9
+    arm-left-angle: 10
+    arm-right-angle: -10
+}
+
+pose "walking-slow" {
+    leg-left-angle: 12
+    leg-right-angle: -8
+    knee-left-bend: 0.05
+    knee-right-bend: 0.15
+    arm-left-angle: -10
+    arm-right-angle: 10
+    torso-bend: 2
+    line-of-action: 0.03
+}
+
+pose "falling-back" {
+    torso-bend: -15
+    line-of-action: -0.2
+    arm-left-angle: 50
+    arm-right-angle: -40
+    elbow-left-bend: 0.2
+    elbow-right-bend: 0.3
+    knee-left-bend: 0.4
+    knee-right-bend: 0.5
+    head-nod: -10
+    y-offset: -0.04
+    eye-open-left: 0.5
+    eye-open-right: 0.5
+    mouth-open: 0.3
+}
+
+// --- SCENE 1: High Noon ---
+// The two face each other on the empty street.
+
+scene "high-noon" (duration: 20s, set: dusty-town) {
+
+    // Open wide on the empty street. Let the dust settle.
+    camera wide
+    wait 2.5s
+
+    // Marshal enters from the left. Slow, deliberate.
+    place marshal at left-edge facing right
+    marshal enters left over 3s ease-out
+    wait 0.5s
+
+    marshal pose "walking-slow"
+    marshal moves-to left-third over 2.5s ease-out
+    wait 0.5s
+
+    marshal pose "standing-tall"
+    camera medium marshal
+    wait 1.5s
+
+    // Wipe transition — Viper enters from the opposite side.
+    transition wipe right 0.5s
+
+    camera wide
+    wait 0.5s
+
+    place viper at right-edge facing left
+    viper enters right over 2.5s ease-out
+    wait 0.3s
+
+    viper pose "walking-slow"
+    viper moves-to right-third over 2s ease-out
+    wait 0.5s
+
+    viper pose "smirking"
+    camera medium viper
+    wait 1.5s
+
+    // Wide shot — the distance between them.
+    camera wide
+    wait 1.5s
+
+    transition dissolve 0.8s
+}
+
+// --- SCENE 2: The Staredown ---
+// Neither moves. The tension is in the details.
+
+scene "staredown" (duration: 18s, set: dusty-town) {
+
+    place marshal at left-third facing right
+    place viper at right-third facing left
+
+    // Two-shot. Let them breathe.
+    camera two-shot
+    wait 1.5s
+
+    // Shot/reverse-shot — classic Western editing.
+
+    // Marshal's eyes.
+    camera extreme-close-up marshal
+    marshal pose "staredown"
+    wait 2s
+
+    // Viper's eyes.
+    camera extreme-close-up viper
+    viper pose "staredown"
+    wait 2s
+
+    // Marshal's hand drifts toward his hip.
+    camera close-up marshal
+    marshal pose "hand-near-hip"
+    wait 2s
+
+    // Viper mirrors the gesture. He knows.
+    camera close-up viper
+    viper pose "hand-near-hip"
+    wait 2s
+
+    // Wide shot. The moment stretches.
     camera wide
     wait 2s
-    camera medium
-    wait 3s
 
-    // 5-15 сек: Поворот ("Но на самом деле... код пишет тебя.")
-    camera close-up
-    wait 2s
-    camera extreme-close-up
-    wait 3s
+    // Over-shoulder from behind Viper, looking at Marshal.
+    camera over-shoulder viper
+    wait 1.5s
 
-    // 15-25 сек: Кульминация ("Каждая строка — это клетка. А ты привыкаешь к решетке.")
-    camera medium
-    wait 3s
+    // Reverse — over Marshal's shoulder at Viper.
+    camera over-shoulder marshal
+    wait 1.5s
+
+    // Final two-shot before the draw.
+    camera two-shot
+    wait 1s
+
+    transition cut
+}
+
+// --- SCENE 3: The Draw ---
+// It happens in less than a second.
+
+scene "the-draw" (duration: 10s, set: dusty-town) {
+
+    place marshal at left-third facing right
+    place viper at right-third facing left
+
+    marshal pose "hand-near-hip"
+    viper pose "hand-near-hip"
+
+    // Extreme wide — maximizing the space.
     camera wide
-    wait 3s
+    wait 1.5s
 
-    // 25-30 сек: Финал ("Продолжай.")
-    camera close-up
+    // THE DRAW — both move simultaneously.
+    together {
+        marshal pose "quick-draw"
+        viper pose "quick-draw"
+    }
+    wait 0.15s
+
+    // BANG. Camera shake sells the gunshot.
+    camera shake 0.3s intensity 12
+    wait 0.1s
+
+    // Marshal fires — recoil pose.
+    marshal pose "shot-recoil"
+    wait 0.2s
+
+    // Viper is hit.
+    together {
+        viper pose "gut-hit"
+        camera zoom-to viper over 0.5s ease-out
+    }
+    wait 0.8s
+
+    // Close on Viper's face — disbelief.
+    camera extreme-close-up viper
+    wait 1s
+
+    // He stumbles.
+    camera wide
+    together {
+        viper pose "falling-back"
+        viper moves-to right over 1.5s ease-out
+    }
+    wait 0.5s
+
+    // Viper fades — he's done.
+    viper fades-to 0.5 over 1.5s ease-out
+    wait 0.5s
+
+    // Marshal stands alone.
+    camera medium marshal
+    marshal pose "standing-tall"
+    wait 1.5s
+
+    transition fade-black 1s
+}
+
+// --- SCENE 4: The Walk Away ---
+// The aftermath. One man left standing.
+
+scene "walk-away" (duration: 12s, set: dusty-town) {
+
+    place marshal at left-third facing right
+
+    // Fade in. Marshal alone on the street.
+    camera wide
     wait 2s
-    
+
+    // He tips his hat. It's over.
+    camera close-up marshal
+    marshal pose "tipping-hat"
+    wait 2s
+
+    // He turns and walks.
+    camera wide
+    marshal pose "walking-slow"
+    wait 0.5s
+
+    marshal moves-to left-edge over 3s ease-in-out
+    camera pan-to (0.3, 0.5) over 3s ease-in-out
+    wait 0.5s
+
+    marshal exits left over 2s ease-in
+    wait 0.5s
+
+    // Linger on the empty town.
+    camera wide
+    wait 2s
+
+    // Final fade.
     transition fade-black 2s
 }
