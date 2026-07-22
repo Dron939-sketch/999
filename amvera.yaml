@@ -1,0 +1,7 @@
+meta:
+  environment: rust
+  toolchain:
+    name: cargo
+    version: "1.80"
+run:
+  scriptName: target/release/animdsl
