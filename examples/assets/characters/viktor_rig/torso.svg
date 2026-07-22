@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 130">
+  <!-- Shirt base (visible at collar) -->
+  <rect x="30" y="0" width="50" height="20" rx="2" fill="#e8e8e8"/>
+
+  <!-- Suit jacket body -->
+  <path d="M8 18 C8 12, 16 4, 30 2 L42 0 L55 8 L68 0 L80 2 C94 4, 102 12, 102 18 L106 130 L4 130 L8 18Z" fill="#1a1a2e"/>
+
+  <!-- Jacket lapels -->
+  <path d="M42 0 L55 20 L36 40 L28 18 Z" fill="#12122a"/>
+  <path d="M68 0 L55 20 L74 40 L82 18 Z" fill="#12122a"/>
+  <!-- Lapel edges -->
+  <path d="M42 0 L55 20 L36 40" fill="none" stroke="#0e0e24" stroke-width="1.2"/>
+  <path d="M68 0 L55 20 L74 40" fill="none" stroke="#0e0e24" stroke-width="1.2"/>
+
+  <!-- Shirt V-neck visible under lapels -->
+  <path d="M42 0 L55 20 L68 0 L64 0 L55 16 L46 0 Z" fill="#e8e8e8"/>
+
+  <!-- Tie -->
+  <path d="M52 8 L55 12 L58 8 L58 10 L55 14 L52 10Z" fill="#8b0000"/>
+  <!-- Tie knot -->
+  <rect x="52.5" y="6" width="5" height="4" rx="1" fill="#8b0000"/>
+  <!-- Tie body -->
+  <path d="M52 14 L55 70 L58 14Z" fill="#8b0000"/>
+  <!-- Tie tip -->
+  <path d="M53 66 L55 74 L57 66Z" fill="#8b0000"/>
+  <!-- Tie stripe details -->
+  <line x1="53.5" y1="28" x2="56.5" y2="26" stroke="#6b0000" stroke-width="0.6"/>
+  <line x1="53.8" y1="38" x2="56.2" y2="36" stroke="#6b0000" stroke-width="0.6"/>
+  <line x1="54" y1="48" x2="56" y2="46" stroke="#6b0000" stroke-width="0.6"/>
+  <line x1="54.2" y1="58" x2="55.8" y2="56" stroke="#6b0000" stroke-width="0.6"/>
+
+  <!-- Pocket square (left breast) -->
+  <path d="M24 38 L24 48 L34 48 L34 42 L28 38Z" fill="#8b0000" opacity="0.8"/>
+  <path d="M26 40 L26 46 L32 46 L32 42 L28 40Z" fill="#a01010"/>
+
+  <!-- Jacket buttons -->
+  <circle cx="55" cy="50" r="2.2" fill="#2a2a3e"/>
+  <circle cx="55" cy="66" r="2.2" fill="#2a2a3e"/>
+  <!-- Button detail -->
+  <circle cx="55" cy="50" r="1" fill="none" stroke="#3a3a4e" stroke-width="0.4"/>
+  <circle cx="55" cy="66" r="1" fill="none" stroke="#3a3a4e" stroke-width="0.4"/>
+
+  <!-- Jacket center line -->
+  <line x1="55" y1="20" x2="55" y2="130" stroke="#0e0e24" stroke-width="0.8"/>
+
+  <!-- Shoulder seams -->
+  <line x1="8" y1="18" x2="30" y2="4" stroke="#0e0e24" stroke-width="0.8"/>
+  <line x1="102" y1="18" x2="80" y2="4" stroke="#0e0e24" stroke-width="0.8"/>
+
+  <!-- Bottom of jacket — slight flare -->
+  <path d="M4 130 L8 124 L30 126 L55 128 L80 126 L102 124 L106 130Z" fill="#1a1a2e" stroke="#0e0e24" stroke-width="0.5"/>
+</svg>

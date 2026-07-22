@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 440" width="200" height="440">
+  <!-- Detective Maya - trench coat, hat, serious demeanor -->
+  
+  <!-- Legs -->
+  <rect x="72" y="310" width="22" height="95" rx="5" fill="#2c2c2c"/>
+  <rect x="106" y="310" width="22" height="95" rx="5" fill="#2c2c2c"/>
+  <!-- Shoes -->
+  <ellipse cx="83" cy="408" rx="20" ry="9" fill="#1a1a1a"/>
+  <ellipse cx="117" cy="408" rx="20" ry="9" fill="#1a1a1a"/>
+  
+  <!-- Trench coat body -->
+  <path d="M55,155 L55,310 Q55,320 65,320 L135,320 Q145,320 145,310 L145,155 Q145,145 135,140 L65,140 Q55,145 55,155Z" fill="#8B7355"/>
+  <!-- Coat lapels -->
+  <path d="M75,140 L100,180 L90,140Z" fill="#7a6345"/>
+  <path d="M125,140 L100,180 L110,140Z" fill="#7a6345"/>
+  <!-- Belt -->
+  <rect x="60" y="230" width="80" height="8" rx="2" fill="#5c4a32"/>
+  <rect x="94" y="227" width="12" height="14" rx="2" fill="#c4a44a"/>
+  
+  <!-- Neck -->
+  <rect x="88" y="120" width="24" height="25" rx="4" fill="#c68e6a"/>
+  
+  <!-- Head -->
+  <ellipse cx="100" cy="85" rx="42" ry="45" fill="#c68e6a"/>
+  <!-- Hair (dark, shoulder-length) -->
+  <path d="M58,75 Q55,30 100,22 Q145,30 142,75 Q140,55 100,48 Q60,55 58,75Z" fill="#1a0a00"/>
+  <path d="M58,75 L52,120 Q55,110 60,100Z" fill="#1a0a00"/>
+  <path d="M142,75 L148,120 Q145,110 140,100Z" fill="#1a0a00"/>
+  
+  <!-- Hat (fedora) -->
+  <ellipse cx="100" cy="42" rx="55" ry="10" fill="#4a3728"/>
+  <path d="M60,42 Q60,10 100,5 Q140,10 140,42Z" fill="#5c4a38"/>
+  <rect x="58" y="38" width="84" height="6" rx="2" fill="#4a3728"/>
+  
+  <!-- Pose: idle -->
+  <g id="pose-idle">
+    <rect x="35" y="160" width="22" height="85" rx="8" fill="#8B7355" transform="rotate(-3,46,160)"/>
+    <rect x="143" y="160" width="22" height="85" rx="8" fill="#8B7355" transform="rotate(3,154,160)"/>
+    <ellipse cx="35" cy="248" rx="10" ry="11" fill="#c68e6a"/>
+    <ellipse cx="165" cy="248" rx="10" ry="11" fill="#c68e6a"/>
+    <!-- Neutral face -->
+    <ellipse cx="82" cy="82" rx="5" ry="5" fill="#1a0a00"/>
+    <ellipse cx="118" cy="82" rx="5" ry="5" fill="#1a0a00"/>
+    <path d="M87,102 Q100,108 113,102" stroke="#4a2a10" stroke-width="2.5" fill="none"/>
+    <!-- Eyebrows -->
+    <line x1="74" y1="72" x2="89" y2="74" stroke="#1a0a00" stroke-width="2.5"/>
+    <line x1="111" y1="74" x2="126" y2="72" stroke="#1a0a00" stroke-width="2.5"/>
+  </g>
+  
+  <!-- Pose: thinking -->
+  <g id="pose-thinking" style="display:none">
+    <rect x="35" y="160" width="22" height="85" rx="8" fill="#8B7355" transform="rotate(-3,46,160)"/>
+    <rect x="143" y="155" width="22" height="70" rx="8" fill="#8B7355" transform="rotate(-45,154,155)"/>
+    <ellipse cx="35" cy="248" rx="10" ry="11" fill="#c68e6a"/>
+    <ellipse cx="118" cy="108" rx="10" ry="11" fill="#c68e6a"/>
+    <!-- Thoughtful face -->
+    <ellipse cx="82" cy="82" rx="5" ry="5" fill="#1a0a00"/>
+    <ellipse cx="118" cy="82" rx="5" ry="5" fill="#1a0a00"/>
+    <ellipse cx="84" cy="82" rx="2" ry="2" fill="white"/>
+    <ellipse cx="120" cy="82" rx="2" ry="2" fill="white"/>
+    <path d="M90,104 Q100,100 110,104" stroke="#4a2a10" stroke-width="2.5" fill="none"/>
+    <line x1="74" y1="74" x2="89" y2="72" stroke="#1a0a00" stroke-width="2.5"/>
+    <line x1="111" y1="72" x2="126" y2="74" stroke="#1a0a00" stroke-width="2.5"/>
+  </g>
+  
+  <!-- Pose: pointing -->
+  <g id="pose-pointing" style="display:none">
+    <rect x="35" y="160" width="22" height="85" rx="8" fill="#8B7355" transform="rotate(-3,46,160)"/>
+    <rect x="143" y="155" width="22" height="90" rx="8" fill="#8B7355" transform="rotate(-65,154,155)"/>
+    <ellipse cx="35" cy="248" rx="10" ry="11" fill="#c68e6a"/>
+    <ellipse cx="175" cy="80" rx="10" ry="11" fill="#c68e6a"/>
+    <!-- Determined face -->
+    <ellipse cx="82" cy="82" rx="6" ry="5" fill="#1a0a00"/>
+    <ellipse cx="118" cy="82" rx="6" ry="5" fill="#1a0a00"/>
+    <path d="M88,103 L112,103" stroke="#4a2a10" stroke-width="2.5" fill="none"/>
+    <line x1="72" y1="70" x2="89" y2="73" stroke="#1a0a00" stroke-width="3"/>
+    <line x1="111" y1="73" x2="128" y2="70" stroke="#1a0a00" stroke-width="3"/>
+  </g>
+  
+  <!-- Pose: surprised -->
+  <g id="pose-surprised" style="display:none">
+    <rect x="30" y="152" width="22" height="85" rx="8" fill="#8B7355" transform="rotate(-20,41,152)"/>
+    <rect x="148" y="152" width="22" height="85" rx="8" fill="#8B7355" transform="rotate(20,159,152)"/>
+    <ellipse cx="25" cy="235" rx="10" ry="11" fill="#c68e6a"/>
+    <ellipse cx="175" cy="235" rx="10" ry="11" fill="#c68e6a"/>
+    <!-- Surprised face -->
+    <ellipse cx="82" cy="80" rx="7" ry="8" fill="#1a0a00"/>
+    <ellipse cx="118" cy="80" rx="7" ry="8" fill="#1a0a00"/>
+    <ellipse cx="82" cy="80" rx="3" ry="3" fill="white"/>
+    <ellipse cx="118" cy="80" rx="3" ry="3" fill="white"/>
+    <ellipse cx="100" cy="108" rx="8" ry="10" fill="#4a2a10"/>
+    <line x1="72" y1="66" x2="90" y2="70" stroke="#1a0a00" stroke-width="3"/>
+    <line x1="110" y1="70" x2="128" y2="66" stroke="#1a0a00" stroke-width="3"/>
+  </g>
+</svg>

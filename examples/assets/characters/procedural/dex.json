@@ -1,0 +1,38 @@
+{
+  "name": "dex",
+  "body": {
+    "height": 0.75,
+    "build": 0.2,
+    "skin_color": [195, 170, 140]
+  },
+  "face": {
+    "shape": 0.7,
+    "eye_size": 0.85,
+    "eye_color": [80, 120, 70],
+    "eyebrow_thickness": 0.7,
+    "nose_size": 0.5,
+    "lip_fullness": 0.3
+  },
+  "hair": {
+    "color": [160, 140, 100],
+    "style": "Messy",
+    "length": 0.35
+  },
+  "outfit": {
+    "top": {
+      "kind": "Hoodie",
+      "color": [110, 100, 90]
+    },
+    "bottom": {
+      "kind": "Pants",
+      "color": [55, 60, 45]
+    },
+    "shoes": {
+      "color": [80, 65, 50],
+      "kind": "Boots"
+    },
+    "accessories": [
+      { "kind": "Glasses", "color": [70, 60, 50] }
+    ]
+  }
+}

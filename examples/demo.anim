@@ -1,0 +1,50 @@
+// Example AnimDSL scene: two characters interact in an office.
+
+import character alice from "assets/characters/alice.svg"
+import character bob from "assets/characters/bob.svg"
+import set office from "assets/sets/office.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #1a1a2e
+}
+
+scene "confrontation" (duration: 12s, set: office) {
+    // Initial placement
+    place alice at left-third facing right
+    place bob at right-third facing left
+
+    // Alice walks to center
+    do {
+        alice moves-to center over 1.5s ease-out
+        alice pose "pointing"
+        wait 0.5s
+    }
+
+    // Bob reacts while camera zooms
+    together {
+        bob pose "surprised"
+        camera zoom-to alice over 0.8s ease-in-out
+    }
+
+    wait 1s
+
+    // Camera pans to Bob
+    together {
+        camera pan-to bob over 0.6s ease-in-out
+        alice pose "idle"
+    }
+
+    wait 0.5s
+
+    // Bob exits
+    bob moves-to right-edge over 2s ease-in
+    bob exits right over 1s
+
+    // End scene
+    wait 0.5s
+    camera reset over 0.5s
+    transition fade-black 1s
+}

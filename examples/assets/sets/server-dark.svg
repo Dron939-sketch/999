@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#050508"/>
+  <!-- server racks with blinking lights -->
+  <rect x="100" y="100" width="80" height="520" fill="#0a0a14" stroke="#151525" stroke-width="1"/>
+  <rect x="220" y="100" width="80" height="520" fill="#0a0a14" stroke="#151525" stroke-width="1"/>
+  <rect x="980" y="100" width="80" height="520" fill="#0a0a14" stroke="#151525" stroke-width="1"/>
+  <rect x="1100" y="100" width="80" height="520" fill="#0a0a14" stroke="#151525" stroke-width="1"/>
+  <!-- floor -->
+  <rect x="0" y="620" width="1280" height="100" fill="#080812"/>
+  <!-- ambient glow -->
+  <circle cx="640" cy="360" r="300" fill="#0a1020" opacity="0.3"/>
+</svg>

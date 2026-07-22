@@ -1,0 +1,14 @@
+{
+  "name": "kai",
+  "body": { "height": 0.4, "build": 0.3, "skin_color": [232, 200, 160] },
+  "face": { "shape": 0.2, "eye_size": 1.0, "eye_color": [60, 80, 50], "eyebrow_thickness": 0.4, "nose_size": 0.3, "lip_fullness": 0.5 },
+  "hair": { "color": [45, 52, 54], "style": "Messy", "length": 0.4 },
+  "outfit": {
+    "top": { "kind": "Hoodie", "color": [69, 123, 157] },
+    "bottom": { "kind": "Jeans", "color": [61, 90, 128] },
+    "shoes": { "color": [230, 57, 70], "kind": "Sneakers" },
+    "accessories": [
+      { "kind": "Glasses", "color": [50, 50, 50] }
+    ]
+  }
+}

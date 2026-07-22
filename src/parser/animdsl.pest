@@ -1,0 +1,345 @@
+// ---------------------------------------------------------------------------
+// AnimDSL PEG Grammar
+// ---------------------------------------------------------------------------
+
+// Entry point
+program = { SOI ~ NEWLINE* ~ (top_level_item ~ NEWLINE*)* ~ EOI }
+
+top_level_item = { import_decl | config_block | pose_decl | scene_decl }
+
+// ---------------------------------------------------------------------------
+// Imports
+// ---------------------------------------------------------------------------
+
+import_decl = {
+    "import" ~ import_kind ~ identifier ~ "from" ~ string_literal
+}
+
+import_kind = { "character" | "set" | "prop" }
+
+// ---------------------------------------------------------------------------
+// Config
+// ---------------------------------------------------------------------------
+
+config_block = {
+    "config" ~ "{" ~ NEWLINE* ~ (config_entry ~ NEWLINE*)* ~ "}"
+}
+
+config_entry = { identifier ~ ":" ~ value }
+
+// ---------------------------------------------------------------------------
+// Custom pose definitions
+// ---------------------------------------------------------------------------
+
+pose_decl = {
+    "pose" ~ string_literal ~ "{" ~ NEWLINE* ~ (pose_entry ~ NEWLINE*)* ~ "}"
+}
+
+pose_entry = { pose_field ~ ":" ~ number }
+
+pose_field = {
+    "line-of-action"
+    | "torso-bend"
+    | "torso-squash"
+    | "shoulder-left"
+    | "shoulder-right"
+    | "arm-left-angle"
+    | "arm-right-angle"
+    | "elbow-left-bend"
+    | "elbow-right-bend"
+    | "leg-left-angle"
+    | "leg-right-angle"
+    | "knee-left-bend"
+    | "knee-right-bend"
+    | "head-tilt"
+    | "head-nod"
+    | "y-offset"
+    | "body-angle"
+    | "eyebrow-left"
+    | "eyebrow-right"
+    | "eye-open-left"
+    | "eye-open-right"
+    | "eye-direction"
+    | "mouth-smile"
+    | "mouth-open"
+}
+
+// ---------------------------------------------------------------------------
+// Scenes
+// ---------------------------------------------------------------------------
+
+scene_decl = {
+    "scene" ~ string_literal ~ ("(" ~ scene_params ~ ")")? ~ "{" ~ NEWLINE* ~ (scene_statement ~ NEWLINE*)* ~ "}"
+}
+
+scene_params = { scene_param ~ ("," ~ scene_param)* }
+
+scene_param = { identifier ~ ":" ~ value }
+
+// ---------------------------------------------------------------------------
+// Scene statements
+// ---------------------------------------------------------------------------
+
+scene_statement = {
+    place_stmt
+    | together_block
+    | do_block
+    | camera_stmt
+    | transition_stmt
+    | wait_stmt
+    | let_stmt
+    | action_stmt
+}
+
+// Place
+place_stmt = {
+    "place" ~ identifier ~ "at" ~ position ~ (facing_clause)? ~ (layer_clause)?
+}
+
+facing_clause = { "facing" ~ direction }
+
+layer_clause = { "layer" ~ integer }
+
+// Wait
+wait_stmt = { "wait" ~ duration }
+
+// Together (parallel)
+together_block = {
+    "together" ~ "{" ~ NEWLINE* ~ (scene_statement ~ NEWLINE*)* ~ "}"
+}
+
+// Do (sequential, explicit)
+do_block = {
+    "do" ~ "{" ~ NEWLINE* ~ (scene_statement ~ NEWLINE*)* ~ "}"
+}
+
+// Let binding
+let_stmt = {
+    "let" ~ identifier ~ "=" ~ let_kind
+}
+
+let_kind = {
+    let_prop
+}
+
+let_prop = {
+    "prop" ~ "(" ~ string_literal ~ "," ~ string_literal ~ ")" ~ ("at" ~ position)?
+}
+
+// ---------------------------------------------------------------------------
+// Actions
+// ---------------------------------------------------------------------------
+
+action_stmt = {
+    enter_action
+    | exit_action
+    | move_action
+    | pose_action
+    | show_action
+    | hide_action
+    | scale_action
+    | rotate_action
+    | fade_action
+}
+
+move_action = {
+    identifier ~ "moves-to" ~ position ~ "over" ~ duration ~ easing_clause?
+}
+
+pose_action = {
+    identifier ~ "pose" ~ string_literal
+}
+
+show_action = {
+    identifier ~ "shows" ~ ("over" ~ duration)? ~ easing_clause?
+}
+
+hide_action = {
+    identifier ~ "hides" ~ ("over" ~ duration)? ~ easing_clause?
+}
+
+enter_action = {
+    identifier ~ "enters" ~ direction ~ ("over" ~ duration)? ~ easing_clause?
+}
+
+exit_action = {
+    identifier ~ "exits" ~ direction ~ ("over" ~ duration)? ~ easing_clause?
+}
+
+scale_action = {
+    identifier ~ "scales" ~ number ~ ("over" ~ duration)? ~ easing_clause?
+}
+
+rotate_action = {
+    identifier ~ "rotates" ~ number ~ ("over" ~ duration)? ~ easing_clause?
+}
+
+fade_action = {
+    identifier ~ "fades-to" ~ number ~ ("over" ~ duration)? ~ easing_clause?
+}
+
+// ---------------------------------------------------------------------------
+// Camera
+// ---------------------------------------------------------------------------
+
+camera_stmt = { "camera" ~ camera_command }
+
+camera_command = {
+    camera_shake
+    | camera_reset
+    | camera_zoom
+    | camera_pan
+    | camera_shot
+}
+
+camera_shot = {
+    shot_type ~ identifier?
+}
+
+camera_zoom = {
+    "zoom-to" ~ identifier ~ "over" ~ duration ~ easing_clause?
+}
+
+camera_pan = {
+    "pan-to" ~ (identifier | coord_pair) ~ "over" ~ duration ~ easing_clause?
+}
+
+camera_shake = {
+    "shake" ~ duration ~ ("intensity" ~ number)?
+}
+
+camera_reset = {
+    "reset" ~ ("over" ~ duration)?
+}
+
+shot_type = {
+    "extreme-close-up"
+    | "close-up"
+    | "over-shoulder"
+    | "two-shot"
+    | "medium"
+    | "wide"
+}
+
+// ---------------------------------------------------------------------------
+// Transitions
+// ---------------------------------------------------------------------------
+
+transition_stmt = { "transition" ~ transition_kind }
+
+transition_kind = {
+    transition_fade_black
+    | transition_fade_white
+    | transition_dissolve
+    | transition_wipe
+    | transition_cut
+}
+
+transition_fade_black = { "fade-black" ~ duration }
+transition_fade_white = { "fade-white" ~ duration }
+transition_dissolve   = { "dissolve" ~ duration }
+transition_cut        = { "cut" }
+transition_wipe       = { "wipe" ~ direction ~ duration }
+
+// ---------------------------------------------------------------------------
+// Easing
+// ---------------------------------------------------------------------------
+
+easing_clause = { easing }
+
+easing = {
+    "ease-in-out"
+    | "ease-in"
+    | "ease-out"
+    | "linear"
+}
+
+// ---------------------------------------------------------------------------
+// Positions
+// ---------------------------------------------------------------------------
+
+position = {
+    named_position
+    | coord_pair
+    | relative_position
+}
+
+named_position = {
+    "offscreen-left"
+    | "offscreen-right"
+    | "offscreen-up"
+    | "offscreen-down"
+    | "left-third"
+    | "right-third"
+    | "left-edge"
+    | "right-edge"
+    | "top-left"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right"
+    | "left"
+    | "right"
+    | "center"
+    | "top"
+    | "bottom"
+}
+
+coord_pair = { "(" ~ number ~ "," ~ number ~ ")" }
+
+relative_position = {
+    relation ~ identifier
+}
+
+relation = {
+    "in-front-of"
+    | "left-of"
+    | "right-of"
+    | "near"
+    | "behind"
+    | "above"
+    | "below"
+}
+
+// ---------------------------------------------------------------------------
+// Directions
+// ---------------------------------------------------------------------------
+
+direction = { "left" | "right" | "up" | "down" }
+
+// ---------------------------------------------------------------------------
+// Values & primitives
+// ---------------------------------------------------------------------------
+
+value = {
+    duration
+    | color_literal
+    | boolean
+    | number
+    | string_literal
+    | identifier
+}
+
+duration = @{ number_raw ~ "s" }
+
+number = @{ number_raw }
+
+number_raw = @{ "-"? ~ ASCII_DIGIT+ ~ ("." ~ ASCII_DIGIT+)? }
+
+integer = @{ "-"? ~ ASCII_DIGIT+ }
+
+string_literal = @{ "\"" ~ string_inner ~ "\"" }
+string_inner   = @{ (!("\"" | "\\") ~ ANY)* }
+
+color_literal = @{ "#" ~ ASCII_HEX_DIGIT{6} ~ ASCII_HEX_DIGIT{2}? }
+
+boolean = { "true" | "false" }
+
+identifier = @{ (ASCII_ALPHA | "_") ~ (ASCII_ALPHANUMERIC | "_" | "-")* }
+
+// ---------------------------------------------------------------------------
+// Whitespace & comments
+// ---------------------------------------------------------------------------
+
+WHITESPACE = _{ " " | "\t" }
+COMMENT    = _{ "//" ~ (!NEWLINE ~ ANY)* }
+NEWLINE    = _{ "\r\n" | "\n" }

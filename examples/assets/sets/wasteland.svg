@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <!-- Sky gradient: smoggy orange to dirty yellow -->
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgb(80,50,30)"/>
+      <stop offset="50%" stop-color="rgb(100,70,40)"/>
+      <stop offset="85%" stop-color="rgb(115,92,55)"/>
+      <stop offset="100%" stop-color="rgb(120,100,60)"/>
+    </linearGradient>
+    <!-- Sun glow -->
+    <radialGradient id="sunGlow" cx="1024" cy="180" r="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="rgb(200,100,40)" stop-opacity="0.9"/>
+      <stop offset="25%" stop-color="rgb(200,100,40)" stop-opacity="0.4"/>
+      <stop offset="60%" stop-color="rgb(180,90,35)" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="rgb(150,80,30)" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Outer sun haze -->
+    <radialGradient id="sunHaze" cx="1024" cy="180" r="350" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="rgb(200,120,50)" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="rgb(200,120,50)" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Ground gradient -->
+    <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgb(95,80,58)"/>
+      <stop offset="40%" stop-color="rgb(90,75,55)"/>
+      <stop offset="100%" stop-color="rgb(75,62,45)"/>
+    </linearGradient>
+    <!-- Horizon dust haze -->
+    <linearGradient id="hazeGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgb(120,100,60)" stop-opacity="0.35"/>
+      <stop offset="50%" stop-color="rgb(110,90,55)" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="rgb(100,80,50)" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Road surface -->
+    <linearGradient id="roadGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgb(65,60,50)"/>
+      <stop offset="100%" stop-color="rgb(72,67,57)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ===== SKY ===== -->
+  <rect x="0" y="0" width="1280" height="432" fill="url(#skyGrad)"/>
+
+  <!-- ===== SUN ===== -->
+  <!-- Sun outer haze -->
+  <rect x="0" y="0" width="1280" height="432" fill="url(#sunHaze)"/>
+  <!-- Sun glow -->
+  <rect x="0" y="0" width="1280" height="432" fill="url(#sunGlow)"/>
+  <!-- Sun disc -->
+  <circle cx="1024" cy="180" r="45" fill="rgb(200,100,40)" opacity="0.85"/>
+  <circle cx="1024" cy="180" r="35" fill="rgb(220,120,50)" opacity="0.5"/>
+
+  <!-- ===== DISTANT RUINED BUILDINGS (horizon silhouettes) ===== -->
+  <!-- Far left cluster -->
+  <rect x="60" y="370" width="35" height="62" fill="rgb(50,40,35)"/>
+  <rect x="80" y="350" width="25" height="82" fill="rgb(48,38,33)"/>
+  <rect x="110" y="380" width="40" height="52" fill="rgb(52,42,36)"/>
+  <!-- Damaged top on tallest -->
+  <polygon points="80,350 95,340 105,350" fill="rgb(48,38,33)"/>
+
+  <!-- Center-left cluster -->
+  <rect x="280" y="360" width="30" height="72" fill="rgb(50,40,35)"/>
+  <rect x="305" y="340" width="20" height="92" fill="rgb(46,37,32)"/>
+  <rect x="320" y="375" width="35" height="57" fill="rgb(52,42,36)"/>
+  <rect x="350" y="385" width="25" height="47" fill="rgb(49,39,34)"/>
+  <!-- Jagged top -->
+  <polygon points="305,340 315,330 325,340" fill="rgb(46,37,32)"/>
+
+  <!-- Center cluster -->
+  <rect x="530" y="365" width="40" height="67" fill="rgb(50,40,35)"/>
+  <rect x="560" y="380" width="25" height="52" fill="rgb(48,38,33)"/>
+  <rect x="590" y="355" width="30" height="77" fill="rgb(52,42,36)"/>
+  <polygon points="590,355 605,342 620,355" fill="rgb(52,42,36)"/>
+
+  <!-- Right cluster (closer to sun, slightly lighter) -->
+  <rect x="820" y="370" width="35" height="62" fill="rgb(54,44,38)"/>
+  <rect x="850" y="355" width="28" height="77" fill="rgb(50,40,35)"/>
+  <rect x="870" y="380" width="20" height="52" fill="rgb(52,42,36)"/>
+
+  <!-- Far right -->
+  <rect x="1150" y="375" width="30" height="57" fill="rgb(50,40,35)"/>
+  <rect x="1175" y="385" width="40" height="47" fill="rgb(48,38,33)"/>
+  <rect x="1210" y="365" width="25" height="67" fill="rgb(52,42,36)"/>
+
+  <!-- ===== GROUND PLANE ===== -->
+  <rect x="0" y="432" width="1280" height="288" fill="url(#groundGrad)"/>
+
+  <!-- ===== HORIZON DUST HAZE ===== -->
+  <rect x="0" y="400" width="1280" height="100" fill="url(#hazeGrad)"/>
+
+  <!-- ===== GROUND CRACKS ===== -->
+  <!-- Major crack lines -->
+  <line x1="100" y1="500" x2="250" y2="510" stroke="rgb(70,58,42)" stroke-width="2"/>
+  <line x1="250" y1="510" x2="320" y2="505" stroke="rgb(70,58,42)" stroke-width="1.5"/>
+  <line x1="250" y1="510" x2="280" y2="540" stroke="rgb(70,58,42)" stroke-width="1"/>
+  <line x1="400" y1="550" x2="520" y2="560" stroke="rgb(72,60,44)" stroke-width="2"/>
+  <line x1="520" y1="560" x2="600" y2="555" stroke="rgb(72,60,44)" stroke-width="1.5"/>
+  <line x1="520" y1="560" x2="550" y2="590" stroke="rgb(72,60,44)" stroke-width="1"/>
+  <line x1="700" y1="600" x2="850" y2="610" stroke="rgb(68,56,40)" stroke-width="2"/>
+  <line x1="850" y1="610" x2="950" y2="605" stroke="rgb(68,56,40)" stroke-width="1.5"/>
+  <line x1="850" y1="610" x2="880" y2="640" stroke="rgb(68,56,40)" stroke-width="1"/>
+  <line x1="1000" y1="530" x2="1120" y2="540" stroke="rgb(70,58,42)" stroke-width="1.5"/>
+  <line x1="1120" y1="540" x2="1200" y2="535" stroke="rgb(70,58,42)" stroke-width="1"/>
+  <!-- Secondary cracks -->
+  <line x1="180" y1="620" x2="300" y2="630" stroke="rgb(72,60,44)" stroke-width="1.5"/>
+  <line x1="600" y1="480" x2="700" y2="490" stroke="rgb(70,58,42)" stroke-width="1.5"/>
+  <line x1="900" y1="680" x2="1050" y2="690" stroke="rgb(68,56,40)" stroke-width="1.5"/>
+  <line x1="50" y1="680" x2="180" y2="685" stroke="rgb(70,58,42)" stroke-width="1"/>
+  <line x1="1100" y1="650" x2="1250" y2="660" stroke="rgb(72,60,44)" stroke-width="1"/>
+
+  <!-- ===== BROKEN ROAD ===== -->
+  <rect x="0" y="490" width="1280" height="50" fill="url(#roadGrad)" opacity="0.9"/>
+  <!-- Road edges (crumbling) -->
+  <line x1="0" y1="490" x2="1280" y2="490" stroke="rgb(58,53,45)" stroke-width="2"/>
+  <line x1="0" y1="540" x2="1280" y2="540" stroke="rgb(58,53,45)" stroke-width="2"/>
+  <!-- Dashed center line (faded yellow) -->
+  <line x1="30" y1="515" x2="100" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.35"/>
+  <line x1="130" y1="515" x2="200" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.3"/>
+  <line x1="240" y1="515" x2="310" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.25"/>
+  <line x1="350" y1="515" x2="420" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.35"/>
+  <line x1="470" y1="515" x2="540" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.2"/>
+  <line x1="590" y1="515" x2="660" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.3"/>
+  <line x1="710" y1="515" x2="780" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.35"/>
+  <line x1="840" y1="515" x2="910" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.25"/>
+  <line x1="960" y1="515" x2="1030" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.3"/>
+  <line x1="1080" y1="515" x2="1150" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.2"/>
+  <line x1="1200" y1="515" x2="1270" y2="515" stroke="rgb(140,130,70)" stroke-width="3" opacity="0.35"/>
+  <!-- Road damage / potholes -->
+  <ellipse cx="380" cy="510" rx="25" ry="10" fill="rgb(55,48,38)" opacity="0.7"/>
+  <ellipse cx="750" cy="520" rx="30" ry="12" fill="rgb(52,45,36)" opacity="0.6"/>
+  <ellipse cx="1100" cy="505" rx="20" ry="8" fill="rgb(55,48,38)" opacity="0.65"/>
+  <!-- Missing road chunk -->
+  <rect x="580" y="490" width="60" height="50" fill="rgb(90,75,55)"/>
+
+  <!-- ===== DEAD TREE 1 (left side) ===== -->
+  <g stroke="rgb(30,25,20)" stroke-linecap="round" fill="none">
+    <!-- Trunk -->
+    <line x1="200" y1="490" x2="195" y2="380" stroke-width="6"/>
+    <line x1="195" y1="380" x2="192" y2="340" stroke-width="4"/>
+    <!-- Main branches -->
+    <line x1="195" y1="380" x2="160" y2="330" stroke-width="3.5"/>
+    <line x1="160" y1="330" x2="140" y2="300" stroke-width="2.5"/>
+    <line x1="140" y1="300" x2="125" y2="285" stroke-width="1.5"/>
+    <line x1="160" y1="330" x2="155" y2="295" stroke-width="2"/>
+    <line x1="192" y1="340" x2="225" y2="300" stroke-width="3"/>
+    <line x1="225" y1="300" x2="245" y2="270" stroke-width="2"/>
+    <line x1="245" y1="270" x2="260" y2="255" stroke-width="1.5"/>
+    <line x1="225" y1="300" x2="240" y2="290" stroke-width="1.5"/>
+    <!-- Small twigs -->
+    <line x1="192" y1="360" x2="175" y2="345" stroke-width="2"/>
+    <line x1="175" y1="345" x2="165" y2="335" stroke-width="1"/>
+    <line x1="192" y1="355" x2="210" y2="340" stroke-width="1.5"/>
+  </g>
+
+  <!-- ===== DEAD TREE 2 (right side, smaller/farther) ===== -->
+  <g stroke="rgb(30,25,20)" stroke-linecap="round" fill="none">
+    <line x1="1050" y1="490" x2="1048" y2="420" stroke-width="4"/>
+    <line x1="1048" y1="420" x2="1045" y2="395" stroke-width="3"/>
+    <!-- Branches -->
+    <line x1="1048" y1="420" x2="1025" y2="390" stroke-width="2.5"/>
+    <line x1="1025" y1="390" x2="1015" y2="370" stroke-width="1.5"/>
+    <line x1="1045" y1="395" x2="1065" y2="370" stroke-width="2"/>
+    <line x1="1065" y1="370" x2="1075" y2="355" stroke-width="1.5"/>
+    <line x1="1065" y1="370" x2="1070" y2="360" stroke-width="1"/>
+    <!-- Broken branch (snapped off, stub) -->
+    <line x1="1048" y1="440" x2="1060" y2="435" stroke-width="2"/>
+  </g>
+
+  <!-- ===== GROUND DEBRIS ===== -->
+  <!-- Scattered rubble / junk -->
+  <rect x="320" y="570" width="14" height="8" fill="rgb(50,42,35)" opacity="0.7" transform="rotate(25, 327, 574)"/>
+  <rect x="480" y="610" width="10" height="6" fill="rgb(48,40,34)" opacity="0.6" transform="rotate(-15, 485, 613)"/>
+  <rect x="660" y="580" width="18" height="10" fill="rgb(52,44,37)" opacity="0.65" transform="rotate(40, 669, 585)"/>
+  <rect x="920" y="620" width="12" height="7" fill="rgb(46,38,32)" opacity="0.6" transform="rotate(-30, 926, 624)"/>
+  <rect x="1150" y="560" width="15" height="9" fill="rgb(50,42,35)" opacity="0.55" transform="rotate(55, 1158, 565)"/>
+  <circle cx="420" cy="600" r="4" fill="rgb(48,40,34)" opacity="0.5"/>
+  <circle cx="780" cy="640" r="3" fill="rgb(50,42,35)" opacity="0.5"/>
+  <circle cx="1000" cy="570" r="5" fill="rgb(46,38,32)" opacity="0.45"/>
+  <rect x="140" y="590" width="8" height="5" fill="rgb(52,44,37)" opacity="0.6" transform="rotate(10, 144, 593)"/>
+  <rect x="560" y="650" width="20" height="6" fill="rgb(48,40,34)" opacity="0.5" transform="rotate(-5, 570, 653)"/>
+  <!-- Larger debris piece (concrete slab) -->
+  <polygon points="850,560 880,555 885,570 855,575" fill="rgb(55,48,40)" opacity="0.6"/>
+  <polygon points="300,640 330,635 335,650 305,655" fill="rgb(52,45,38)" opacity="0.55"/>
+
+  <!-- ===== FOREGROUND DUST PARTICLES ===== -->
+  <circle cx="100" cy="460" r="2" fill="rgb(130,110,70)" opacity="0.12"/>
+  <circle cx="350" cy="440" r="1.5" fill="rgb(140,120,75)" opacity="0.1"/>
+  <circle cx="600" cy="455" r="2.5" fill="rgb(125,105,65)" opacity="0.08"/>
+  <circle cx="850" cy="445" r="1.8" fill="rgb(135,115,72)" opacity="0.11"/>
+  <circle cx="1100" cy="460" r="2" fill="rgb(130,110,70)" opacity="0.09"/>
+  <circle cx="250" cy="475" r="1" fill="rgb(140,120,75)" opacity="0.1"/>
+  <circle cx="500" cy="465" r="1.5" fill="rgb(125,105,65)" opacity="0.12"/>
+  <circle cx="750" cy="450" r="1.2" fill="rgb(135,115,72)" opacity="0.08"/>
+  <circle cx="1000" cy="470" r="2" fill="rgb(130,110,70)" opacity="0.1"/>
+  <circle cx="1200" cy="440" r="1.5" fill="rgb(140,120,75)" opacity="0.11"/>
+
+  <!-- ===== ATMOSPHERIC OVERLAY ===== -->
+  <!-- Slight warm color wash -->
+  <rect x="0" y="0" width="1280" height="720" fill="rgb(100,60,30)" opacity="0.06"/>
+</svg>

@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 440" width="200" height="440">
+  <!-- Kai - young tech hacker, hoodie, glasses -->
+  
+  <!-- Legs (jeans) -->
+  <rect x="72" y="300" width="22" height="100" rx="5" fill="#3d5a80"/>
+  <rect x="106" y="300" width="22" height="100" rx="5" fill="#3d5a80"/>
+  <!-- Sneakers -->
+  <ellipse cx="83" cy="404" rx="20" ry="9" fill="#e63946"/>
+  <ellipse cx="117" cy="404" rx="20" ry="9" fill="#e63946"/>
+  <line x1="73" y1="402" x2="93" y2="402" stroke="white" stroke-width="1.5"/>
+  <line x1="107" y1="402" x2="127" y2="402" stroke="white" stroke-width="1.5"/>
+  
+  <!-- Hoodie body -->
+  <path d="M55,155 L55,305 Q55,312 62,312 L138,312 Q145,312 145,305 L145,155 Q145,142 130,138 L70,138 Q55,142 55,155Z" fill="#457b9d"/>
+  <!-- Hoodie pocket -->
+  <path d="M70,240 L130,240 L130,275 Q130,280 125,280 L75,280 Q70,280 70,275Z" fill="#3d6d8d" stroke="#3a6a8a" stroke-width="1"/>
+  <!-- Hoodie strings -->
+  <line x1="90" y1="138" x2="88" y2="180" stroke="#a8dadc" stroke-width="2"/>
+  <line x1="110" y1="138" x2="112" y2="180" stroke="#a8dadc" stroke-width="2"/>
+  <!-- Hood -->
+  <path d="M65,138 Q65,120 80,112 L120,112 Q135,120 135,138" fill="#3d6d8d" stroke="none"/>
+  
+  <!-- Neck -->
+  <rect x="88" y="100" width="24" height="18" rx="4" fill="#e8c8a0"/>
+  
+  <!-- Head -->
+  <ellipse cx="100" cy="68" rx="40" ry="42" fill="#e8c8a0"/>
+  <!-- Messy hair -->
+  <path d="M60,58 Q58,18 100,10 Q142,18 140,58 Q135,30 115,24 Q95,28 85,22 Q70,28 62,45Z" fill="#2d3436"/>
+  <path d="M85,18 L90,8 L95,20" fill="#2d3436"/>
+  <path d="M110,16 L115,5 L118,18" fill="#2d3436"/>
+  
+  <!-- Glasses -->
+  <rect x="66" y="58" width="28" height="22" rx="4" fill="none" stroke="#333" stroke-width="2.5"/>
+  <rect x="106" y="58" width="28" height="22" rx="4" fill="none" stroke="#333" stroke-width="2.5"/>
+  <line x1="94" y1="68" x2="106" y2="68" stroke="#333" stroke-width="2.5"/>
+  <!-- Lens glare -->
+  <ellipse cx="76" cy="64" rx="3" ry="2" fill="rgba(255,255,255,0.3)"/>
+  <ellipse cx="116" cy="64" rx="3" ry="2" fill="rgba(255,255,255,0.3)"/>
+  
+  <!-- Pose: idle -->
+  <g id="pose-idle">
+    <rect x="35" y="158" width="22" height="80" rx="8" fill="#457b9d" transform="rotate(-5,46,158)"/>
+    <rect x="143" y="158" width="22" height="80" rx="8" fill="#457b9d" transform="rotate(5,154,158)"/>
+    <ellipse cx="33" cy="240" rx="10" ry="11" fill="#e8c8a0"/>
+    <ellipse cx="167" cy="240" rx="10" ry="11" fill="#e8c8a0"/>
+    <!-- Neutral/focused eyes behind glasses -->
+    <ellipse cx="80" cy="67" rx="4" ry="4" fill="#2d3436"/>
+    <ellipse cx="120" cy="67" rx="4" ry="4" fill="#2d3436"/>
+    <path d="M86,90 Q100,95 114,90" stroke="#8b6b4a" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Pose: typing -->
+  <g id="pose-typing" style="display:none">
+    <rect x="45" y="165" width="22" height="65" rx="8" fill="#457b9d" transform="rotate(20,56,165)"/>
+    <rect x="133" y="165" width="22" height="65" rx="8" fill="#457b9d" transform="rotate(-20,144,165)"/>
+    <ellipse cx="62" cy="232" rx="10" ry="11" fill="#e8c8a0"/>
+    <ellipse cx="138" cy="232" rx="10" ry="11" fill="#e8c8a0"/>
+    <!-- Focused eyes -->
+    <ellipse cx="80" cy="67" rx="5" ry="3" fill="#2d3436"/>
+    <ellipse cx="120" cy="67" rx="5" ry="3" fill="#2d3436"/>
+    <path d="M90,90 L110,90" stroke="#8b6b4a" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Pose: excited -->
+  <g id="pose-excited" style="display:none">
+    <rect x="28" y="148" width="22" height="80" rx="8" fill="#457b9d" transform="rotate(-35,39,148)"/>
+    <rect x="150" y="148" width="22" height="80" rx="8" fill="#457b9d" transform="rotate(35,161,148)"/>
+    <ellipse cx="15" cy="220" rx="10" ry="11" fill="#e8c8a0"/>
+    <ellipse cx="185" cy="220" rx="10" ry="11" fill="#e8c8a0"/>
+    <!-- Excited eyes -->
+    <ellipse cx="80" cy="65" rx="6" ry="6" fill="#2d3436"/>
+    <ellipse cx="120" cy="65" rx="6" ry="6" fill="#2d3436"/>
+    <ellipse cx="80" cy="65" rx="2.5" ry="2.5" fill="white"/>
+    <ellipse cx="120" cy="65" rx="2.5" ry="2.5" fill="white"/>
+    <path d="M85,88 Q100,98 115,88" stroke="#8b6b4a" stroke-width="2.5" fill="none"/>
+  </g>
+  
+  <!-- Pose: scared -->
+  <g id="pose-scared" style="display:none">
+    <rect x="40" y="155" width="22" height="70" rx="8" fill="#457b9d" transform="rotate(10,51,155)"/>
+    <rect x="138" y="155" width="22" height="70" rx="8" fill="#457b9d" transform="rotate(-10,149,155)"/>
+    <ellipse cx="55" cy="228" rx="10" ry="11" fill="#e8c8a0"/>
+    <ellipse cx="145" cy="228" rx="10" ry="11" fill="#e8c8a0"/>
+    <!-- Scared eyes -->
+    <ellipse cx="80" cy="64" rx="7" ry="8" fill="#2d3436"/>
+    <ellipse cx="120" cy="64" rx="7" ry="8" fill="#2d3436"/>
+    <ellipse cx="80" cy="64" rx="3" ry="3" fill="white"/>
+    <ellipse cx="120" cy="64" rx="3" ry="3" fill="white"/>
+    <ellipse cx="100" cy="94" rx="8" ry="10" fill="#8b6b4a"/>
+  </g>
+</svg>

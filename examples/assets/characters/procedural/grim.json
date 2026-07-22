@@ -1,0 +1,39 @@
+{
+  "name": "Grim",
+  "body": {
+    "height": 0.85,
+    "build": 0.8,
+    "skin_color": [95, 75, 65]
+  },
+  "face": {
+    "shape": 0.7,
+    "eye_size": 0.6,
+    "eye_color": [180, 160, 100],
+    "eyebrow_thickness": 0.9,
+    "nose_size": 0.7,
+    "lip_fullness": 0.3
+  },
+  "hair": {
+    "color": [10, 10, 10],
+    "style": "Buzz",
+    "length": 0.05
+  },
+  "outfit": {
+    "top": {
+      "kind": "TrenchCoat",
+      "color": [45, 35, 30],
+      "secondary_color": [30, 25, 20]
+    },
+    "bottom": {
+      "kind": "Pants",
+      "color": [35, 30, 25]
+    },
+    "shoes": {
+      "kind": "Boots",
+      "color": [25, 20, 15]
+    },
+    "accessories": [
+      { "kind": "Scarf", "color": [100, 20, 20] }
+    ]
+  }
+}

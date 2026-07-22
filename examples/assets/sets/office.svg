@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- Simple office background -->
+
+  <!-- Floor -->
+  <rect x="0" y="500" width="1280" height="220" fill="#8b7355"/>
+  <rect x="0" y="500" width="1280" height="5" fill="#6b5335"/>
+
+  <!-- Wall -->
+  <rect x="0" y="0" width="1280" height="500" fill="#d4c5a9"/>
+
+  <!-- Window -->
+  <rect x="800" y="80" width="300" height="250" rx="5" fill="#87ceeb" stroke="#8b7355" stroke-width="8"/>
+  <line x1="950" y1="80" x2="950" y2="330" stroke="#8b7355" stroke-width="4"/>
+  <line x1="800" y1="205" x2="1100" y2="205" stroke="#8b7355" stroke-width="4"/>
+  <!-- Curtains -->
+  <path d="M790,70 L790,340 Q810,300 790,260 Q810,220 790,180 Q810,140 790,100Z" fill="#9b4444" opacity="0.7"/>
+  <path d="M1110,70 L1110,340 Q1090,300 1110,260 Q1090,220 1110,180 Q1090,140 1110,100Z" fill="#9b4444" opacity="0.7"/>
+
+  <!-- Desk -->
+  <rect x="100" y="380" width="400" height="20" rx="3" fill="#654321"/>
+  <rect x="120" y="400" width="15" height="100" fill="#654321"/>
+  <rect x="465" y="400" width="15" height="100" fill="#654321"/>
+  <!-- Monitor on desk -->
+  <rect x="250" y="290" width="120" height="85" rx="5" fill="#333" stroke="#222" stroke-width="3"/>
+  <rect x="255" y="295" width="110" height="75" rx="3" fill="#4a90d9"/>
+  <rect x="295" y="375" width="30" height="10" fill="#333"/>
+
+  <!-- Bookshelf -->
+  <rect x="560" y="100" width="160" height="300" fill="#8b6914" stroke="#6b4914" stroke-width="3"/>
+  <rect x="565" y="130" width="150" height="8" fill="#6b4914"/>
+  <rect x="565" y="200" width="150" height="8" fill="#6b4914"/>
+  <rect x="565" y="270" width="150" height="8" fill="#6b4914"/>
+  <rect x="565" y="340" width="150" height="8" fill="#6b4914"/>
+  <!-- Books -->
+  <rect x="570" y="105" width="15" height="25" fill="#cc4444"/>
+  <rect x="588" y="108" width="12" height="22" fill="#4444cc"/>
+  <rect x="603" y="104" width="18" height="26" fill="#44aa44"/>
+  <rect x="624" y="107" width="10" height="23" fill="#cc8844"/>
+  <rect x="570" y="140" width="20" height="58" fill="#8844cc" transform="rotate(-5,580,170)"/>
+  <rect x="595" y="138" width="14" height="60" fill="#cc4488"/>
+  <rect x="615" y="140" width="16" height="58" fill="#44cccc"/>
+
+  <!-- Plant -->
+  <rect x="50" y="420" width="40" height="45" rx="5" fill="#8b4513"/>
+  <circle cx="70" cy="410" r="30" fill="#228b22"/>
+  <circle cx="55" cy="395" r="20" fill="#2ea82e"/>
+  <circle cx="85" cy="400" r="22" fill="#26962e"/>
+
+  <!-- Clock on wall -->
+  <circle cx="450" cy="150" r="35" fill="white" stroke="#333" stroke-width="3"/>
+  <line x1="450" y1="150" x2="450" y2="125" stroke="#333" stroke-width="3"/>
+  <line x1="450" y1="150" x2="465" y2="145" stroke="#333" stroke-width="2"/>
+  <circle cx="450" cy="150" r="3" fill="#333"/>
+</svg>

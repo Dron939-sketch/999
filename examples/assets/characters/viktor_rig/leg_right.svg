@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 115">
+  <!-- Upper leg — dark suit trousers -->
+  <path d="M5 0 L5 55 C5 58, 7 60, 9 60 L27 60 C29 60, 31 58, 31 55 L31 0Z" fill="#141428"/>
+  <!-- Crease -->
+  <line x1="18" y1="4" x2="18" y2="58" stroke="#1e1e38" stroke-width="0.8"/>
+
+  <!-- Lower leg — trousers -->
+  <path d="M6 58 L6 96 C6 98, 7 100, 9 100 L27 100 C29 100, 30 98, 30 96 L30 58Z" fill="#141428"/>
+  <!-- Crease continues -->
+  <line x1="18" y1="58" x2="18" y2="98" stroke="#1e1e38" stroke-width="0.8"/>
+
+  <!-- Knee shadow -->
+  <ellipse cx="18" cy="55" rx="10" ry="3" fill="#0e0e22" opacity="0.3"/>
+
+  <!-- Trouser hem -->
+  <rect x="5" y="96" width="26" height="4" rx="1" fill="#141428"/>
+  <line x1="5" y1="96" x2="31" y2="96" stroke="#1a1a30" stroke-width="0.6"/>
+
+  <!-- Shoe -->
+  <path d="M3 100 L3 108 C3 112, 7 115, 13 115 L29 115 C33 115, 35 112, 34 108 L33 100 L3 100Z" fill="#0a0a0a"/>
+  <!-- Shoe sole -->
+  <path d="M3 112 C3 114, 7 115, 13 115 L29 115 C33 115, 35 114, 35 112Z" fill="#050505"/>
+  <!-- Shoe shine highlight -->
+  <ellipse cx="18" cy="106" rx="8" ry="2" fill="#1a1a1a" opacity="0.6"/>
+  <!-- Shoe lace area -->
+  <rect x="9" y="100" width="18" height="4" rx="1" fill="#0e0e0e"/>
+  <line x1="13" y1="100" x2="13" y2="104" stroke="#1a1a1a" stroke-width="0.5"/>
+  <line x1="18" y1="100" x2="18" y2="104" stroke="#1a1a1a" stroke-width="0.5"/>
+  <line x1="23" y1="100" x2="23" y2="104" stroke="#1a1a1a" stroke-width="0.5"/>
+</svg>

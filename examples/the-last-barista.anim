@@ -1,0 +1,508 @@
+// "The Last Barista"
+// A post-apocalyptic comedic noir about the last bag of coffee beans
+
+import character zara from "assets/characters/procedural/zara.json"
+import character dex from "assets/characters/procedural/dex.json"
+import character nyx from "assets/characters/procedural/nyx.json"
+import set cafe-ruins from "assets/sets/cafe-ruins.svg"
+import set wasteland from "assets/sets/wasteland.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 30
+    background: #1a1410
+}
+
+// --- CUSTOM POSES ---
+// These replace the hardcoded vocabulary with story-specific body language.
+
+pose "searching" {
+    torso-bend: 12
+    head-nod: 15
+    arm-right-angle: -40
+    elbow-right-bend: 0.6
+    arm-left-angle: 20
+    elbow-left-bend: 0.3
+    line-of-action: 0.08
+    eye-direction: -0.4
+    eyebrow-left: -0.2
+    eyebrow-right: 0.1
+}
+
+pose "reaching" {
+    arm-right-angle: -85
+    elbow-right-bend: 0.15
+    torso-bend: 8
+    shoulder-right: -0.4
+    head-nod: -5
+    line-of-action: 0.12
+    eyebrow-left: 0.3
+    eyebrow-right: 0.3
+    eye-open-left: 1.2
+    eye-open-right: 1.2
+}
+
+pose "clutching" {
+    arm-left-angle: -50
+    arm-right-angle: 50
+    elbow-left-bend: 0.85
+    elbow-right-bend: 0.85
+    torso-squash: 0.95
+    shoulder-left: 0.2
+    shoulder-right: 0.2
+    line-of-action: -0.05
+    mouth-smile: 0.6
+    eye-open-left: 1.1
+    eye-open-right: 1.1
+}
+
+pose "cautious" {
+    torso-bend: -3
+    line-of-action: -0.06
+    arm-left-angle: 15
+    arm-right-angle: -15
+    elbow-left-bend: 0.4
+    elbow-right-bend: 0.4
+    shoulder-left: 0.15
+    shoulder-right: 0.15
+    head-tilt: -3
+    eye-open-left: 1.1
+    eye-open-right: 1.1
+    eyebrow-left: 0.2
+    eyebrow-right: 0.2
+}
+
+pose "smooth-talker" {
+    arm-right-angle: -55
+    elbow-right-bend: 0.5
+    arm-left-angle: 25
+    elbow-left-bend: 0.2
+    torso-bend: 5
+    line-of-action: 0.08
+    head-tilt: 6
+    mouth-smile: 0.5
+    eyebrow-left: 0.3
+    eyebrow-right: -0.1
+}
+
+pose "hands-up" {
+    arm-left-angle: -75
+    arm-right-angle: 75
+    elbow-left-bend: 0.6
+    elbow-right-bend: 0.6
+    shoulder-left: -0.3
+    shoulder-right: -0.3
+    torso-squash: 0.97
+    head-nod: -3
+    eyebrow-left: 0.5
+    eyebrow-right: 0.5
+    eye-open-left: 1.2
+    eye-open-right: 1.2
+    mouth-open: 0.2
+}
+
+pose "brewing" {
+    torso-bend: 10
+    head-nod: 12
+    arm-left-angle: -50
+    arm-right-angle: 50
+    elbow-left-bend: 0.75
+    elbow-right-bend: 0.75
+    line-of-action: 0.05
+    eye-open-left: 0.85
+    eye-open-right: 0.85
+    mouth-smile: 0.3
+}
+
+pose "sipping" {
+    arm-right-angle: -80
+    elbow-right-bend: 0.9
+    head-nod: 8
+    head-tilt: 3
+    eye-open-left: 0.7
+    eye-open-right: 0.7
+    mouth-open: 0.15
+    mouth-smile: 0.2
+}
+
+pose "savoring" {
+    head-nod: 5
+    head-tilt: -4
+    eye-open-left: 0.5
+    eye-open-right: 0.5
+    mouth-smile: 0.9
+    eyebrow-left: 0.4
+    eyebrow-right: 0.4
+    shoulder-left: -0.1
+    shoulder-right: -0.1
+    torso-squash: 1.02
+}
+
+pose "looming" {
+    torso-bend: 8
+    line-of-action: 0.15
+    leg-left-angle: 10
+    leg-right-angle: -10
+    arm-left-angle: 20
+    arm-right-angle: -20
+    shoulder-left: -0.2
+    shoulder-right: -0.2
+    head-nod: -8
+    eyebrow-left: -0.6
+    eyebrow-right: -0.6
+    eye-open-left: 0.7
+    eye-open-right: 0.7
+    mouth-smile: -0.3
+}
+
+pose "commanding" {
+    arm-right-angle: -65
+    elbow-right-bend: 0.1
+    torso-bend: 5
+    line-of-action: 0.1
+    head-tilt: -3
+    eyebrow-left: -0.4
+    eyebrow-right: -0.4
+    mouth-smile: -0.2
+    mouth-open: 0.15
+}
+
+pose "reluctant-respect" {
+    head-nod: 8
+    head-tilt: 3
+    arm-left-angle: 12
+    arm-right-angle: -12
+    elbow-left-bend: 0.2
+    elbow-right-bend: 0.2
+    eyebrow-left: 0.2
+    eyebrow-right: -0.1
+    mouth-smile: 0.15
+    eye-direction: 0.2
+}
+
+pose "cowering" {
+    torso-squash: 0.88
+    shoulder-left: 0.5
+    shoulder-right: 0.5
+    arm-left-angle: 20
+    arm-right-angle: -20
+    elbow-left-bend: 0.8
+    elbow-right-bend: 0.8
+    head-nod: 15
+    head-tilt: -5
+    line-of-action: -0.12
+    knee-left-bend: 0.3
+    knee-right-bend: 0.3
+    eyebrow-left: 0.7
+    eyebrow-right: 0.7
+    eye-open-left: 1.3
+    eye-open-right: 1.3
+    mouth-open: 0.4
+    mouth-smile: -0.5
+}
+
+pose "defiant" {
+    torso-squash: 1.03
+    line-of-action: 0.05
+    torso-bend: 3
+    arm-left-angle: 30
+    arm-right-angle: -30
+    elbow-left-bend: 0.4
+    elbow-right-bend: 0.4
+    head-nod: -5
+    eyebrow-left: -0.5
+    eyebrow-right: -0.5
+    eye-open-left: 0.9
+    eye-open-right: 0.9
+    mouth-smile: -0.3
+    mouth-open: 0.1
+}
+
+pose "stunned" {
+    shoulder-left: -0.2
+    shoulder-right: -0.2
+    arm-left-angle: 35
+    arm-right-angle: -35
+    elbow-left-bend: 0.25
+    elbow-right-bend: 0.25
+    torso-squash: 0.96
+    head-nod: -3
+    eyebrow-left: 0.7
+    eyebrow-right: 0.7
+    eye-open-left: 1.4
+    eye-open-right: 1.4
+    mouth-open: 0.6
+    mouth-smile: 0.0
+}
+
+// --- ACT 1: The Discovery ---
+// Zara finds something incredible in the ruins of her old cafe.
+
+scene "the-find" (duration: 18s, set: cafe-ruins) {
+
+    // Open on an empty, ruined cafe. Let it breathe.
+    camera wide
+    wait 2s
+
+    // Zara enters cautiously from the left.
+    place zara at left facing right
+    zara enters left over 2.5s ease-out
+    wait 0.3s
+
+    zara moves-to left-third over 1.5s ease-in-out
+    camera medium zara
+    wait 0.8s
+
+    // She's searching through the rubble.
+    zara pose "searching"
+    wait 2s
+
+    // She moves deeper into the cafe, toward the counter.
+    zara moves-to (0.45, 0.5) over 2s ease-in-out
+    camera close-up zara
+    wait 0.5s
+
+    // She finds something — reaching for it.
+    zara pose "reaching"
+    camera shake 0.3s intensity 3
+    wait 1.2s
+
+    // She has it. Coffee beans. She clutches them.
+    zara pose "clutching"
+    wait 1.5s
+
+    // Quick zoom out to show her alone with her discovery.
+    camera wide
+    wait 1.5s
+
+    // Someone's watching from the doorway.
+    place dex at right-edge facing left
+    dex enters right over 0.6s ease-out
+    camera zoom-to dex over 0.8s ease-in
+    wait 0.8s
+
+    transition fade-black 0.8s
+}
+
+// --- ACT 2: The Negotiation ---
+// Dex wants the beans. Zara doesn't trust him.
+
+scene "negotiation" (duration: 22s, set: cafe-ruins) {
+
+    place zara at left-edge facing right
+    place dex at right-third facing left
+
+    // They face off across the ruined cafe.
+    camera wide
+    wait 1s
+
+    // Dex tries the charm offensive.
+    dex pose "smooth-talker"
+    wait 1s
+
+    // Zara's not buying it. Clutching the beans tighter.
+    camera close-up zara
+    zara pose "defiant"
+    wait 1.5s
+
+    // Dex backs off — hands up, no threat.
+    camera wide
+    dex pose "hands-up"
+    dex moves-to right over 0.8s ease-out
+    wait 1s
+
+    // He tries reasoning — the thinker approach.
+    dex pose "cautious"
+    camera close-up dex
+    wait 2s
+
+    // Zara considers. Maybe he's not so bad.
+    camera close-up zara
+    zara pose "searching"
+    wait 2s
+
+    // She starts to come around.
+    zara pose "idle"
+    camera wide
+    wait 0.8s
+
+    // Dex takes a half-step forward — cautious, hopeful.
+    dex moves-to right-third over 1.2s ease-in-out
+    wait 0.5s
+
+    // Then the wall explodes.
+    camera shake 0.8s intensity 12
+    wait 0.3s
+
+    // They both scramble to the left before Nyx enters.
+    together {
+        zara moves-to left-edge over 0.5s ease-out
+        dex moves-to left-third over 0.5s ease-out
+    }
+
+    // Now Nyx arrives from the right — coast is clear.
+    place nyx at right facing left
+    nyx enters right over 1.2s ease-in
+    wait 0.2s
+
+    together {
+        zara pose "cowering"
+        dex pose "cowering"
+        camera zoom-to nyx over 1s ease-in
+    }
+    wait 1s
+
+    nyx pose "looming"
+    camera extreme-close-up nyx
+    wait 2s
+
+    // She sees the beans. She wants them.
+    nyx pose "commanding"
+    camera wide
+    wait 0.5s
+
+    together {
+        nyx moves-to center over 1.5s ease-in
+        dex moves-to left-third over 1s ease-out
+    }
+    wait 1s
+
+    transition fade-black 1s
+}
+
+// --- ACT 3: The Standoff ---
+// All three meet in the wasteland for a final confrontation.
+
+scene "standoff" (duration: 24s, set: wasteland) {
+
+    // Open wide on the desolate landscape.
+    camera wide
+    wait 1.5s
+
+    // Zara enters from the left, determined.
+    place zara at left-third facing right
+    zara enters left over 2s ease-out
+    zara moves-to left-third over 1.5s ease-in-out
+    wait 0.5s
+
+    zara pose "defiant"
+    camera medium zara
+    wait 1.5s
+
+    // Nyx steps out from the right.
+    place nyx at right-third facing left
+    nyx enters right over 2s ease-out
+    camera wide
+    wait 0.5s
+
+    nyx moves-to right-third over 1.5s ease-in-out
+    nyx pose "looming"
+    wait 1s
+
+    // Staredown — close-up shot/reverse-shot.
+    camera close-up zara
+    wait 1.2s
+
+    camera close-up nyx
+    wait 1.2s
+
+    // Dex stumbles in behind zara, breaking the tension.
+    camera wide
+    place dex at left-edge facing right
+    dex enters left over 1.5s ease-out
+    wait 0.3s
+
+    dex moves-to left-edge over 1s ease-in-out
+    dex pose "cowering"
+    wait 0.8s
+
+    // Nyx starts advancing.
+    nyx moves-to (0.55, 0.5) over 2s ease-in
+    camera zoom-to nyx over 2s ease-in-out
+    wait 0.3s
+
+    // Zara steps forward to meet her. No fear.
+    together {
+        zara moves-to (0.4, 0.5) over 1.5s ease-in
+        zara pose "commanding"
+    }
+    wait 0.5s
+
+    camera close-up zara
+    wait 1s
+
+    // Nyx stops. Something Zara said got through.
+    camera close-up nyx
+    nyx pose "stunned"
+    wait 1.5s
+
+    nyx pose "reluctant-respect"
+    wait 1.5s
+
+    camera wide
+    wait 0.5s
+
+    // Dex peeks out from behind.
+    camera medium dex
+    dex pose "cautious"
+    wait 1s
+
+    transition fade-black 1.2s
+}
+
+// --- EPILOGUE: One Last Cup ---
+// Back in the cafe. Together.
+
+scene "epilogue" (duration: 16s, set: cafe-ruins) {
+
+    place zara at center facing right
+    place nyx at right-third facing left
+    place dex at left-third facing right
+
+    camera wide
+    wait 1.5s
+
+    // They're all here. An uneasy truce.
+    together {
+        zara pose "idle"
+        nyx pose "cautious"
+        dex pose "cautious"
+    }
+    wait 1.5s
+
+    // Zara gets to work. This is her craft.
+    camera close-up zara
+    zara pose "brewing"
+    wait 2s
+
+    zara pose "clutching"
+    wait 1s
+
+    // She turns to the others.
+    camera wide
+    wait 0.8s
+
+    // Dex takes a sip.
+    camera close-up dex
+    dex pose "sipping"
+    wait 1.2s
+
+    // The taste hits him.
+    dex pose "savoring"
+    wait 1.5s
+
+    // Even Nyx — the warlord — cracks.
+    camera close-up nyx
+    nyx pose "sipping"
+    wait 1s
+
+    nyx pose "savoring"
+    wait 1.5s
+
+    // Final wide shot. Three strangers, one cup of coffee, end of the world.
+    camera wide
+    wait 2s
+
+    transition fade-black 2s
+}

@@ -1,0 +1,15 @@
+{
+  "name": "maya",
+  "body": { "height": 0.6, "build": 0.35, "skin_color": [198, 142, 106] },
+  "face": { "shape": 0.6, "eye_size": 0.9, "eye_color": [80, 60, 40], "eyebrow_thickness": 0.5, "nose_size": 0.4, "lip_fullness": 0.6 },
+  "hair": { "color": [26, 10, 0], "style": "Straight", "length": 0.7 },
+  "outfit": {
+    "top": { "kind": "TrenchCoat", "color": [139, 115, 85] },
+    "bottom": { "kind": "Pants", "color": [46, 38, 34] },
+    "shoes": { "color": [30, 30, 30], "kind": "Boots" },
+    "accessories": [
+      { "kind": "Fedora", "color": [74, 55, 40] },
+      { "kind": "Belt", "color": [90, 74, 50] }
+    ]
+  }
+}

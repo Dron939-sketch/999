@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" width="200" height="400">
+  <!-- Simple character: Bob -->
+  <g id="body">
+    <!-- Body -->
+    <rect x="65" y="150" width="70" height="120" rx="10" fill="#6b8f71"/>
+    <!-- Legs -->
+    <rect x="72" y="270" width="22" height="100" rx="5" fill="#3d3d3d"/>
+    <rect x="106" y="270" width="22" height="100" rx="5" fill="#3d3d3d"/>
+    <!-- Shoes -->
+    <ellipse cx="83" cy="375" rx="18" ry="8" fill="#222"/>
+    <ellipse cx="117" cy="375" rx="18" ry="8" fill="#222"/>
+  </g>
+
+  <!-- Head -->
+  <circle cx="100" cy="100" r="50" fill="#d4a574"/>
+  <!-- Hair (short) -->
+  <path d="M55,85 Q55,45 100,40 Q145,45 145,85 Q135,70 100,65 Q65,70 55,85Z" fill="#2c1810"/>
+
+  <!-- Poses -->
+  <g id="pose-idle">
+    <!-- Arms down -->
+    <rect x="35" y="160" width="26" height="85" rx="8" fill="#d4a574" transform="rotate(-5,48,160)"/>
+    <rect x="139" y="160" width="26" height="85" rx="8" fill="#d4a574" transform="rotate(5,152,160)"/>
+    <!-- Neutral face -->
+    <circle cx="82" cy="95" r="6" fill="#333"/>
+    <circle cx="118" cy="95" r="6" fill="#333"/>
+    <path d="M85,118 Q100,125 115,118" stroke="#333" stroke-width="3" fill="none"/>
+  </g>
+
+  <g id="pose-surprised" style="display:none">
+    <!-- Arms up -->
+    <rect x="30" y="145" width="26" height="85" rx="8" fill="#d4a574" transform="rotate(-35,43,145)"/>
+    <rect x="144" y="145" width="26" height="85" rx="8" fill="#d4a574" transform="rotate(35,157,145)"/>
+    <!-- Surprised face -->
+    <circle cx="82" cy="93" r="8" fill="#333"/>
+    <circle cx="118" cy="93" r="8" fill="#333"/>
+    <ellipse cx="100" cy="122" rx="12" ry="14" fill="#333"/>
+  </g>
+
+  <g id="pose-pointing" style="display:none">
+    <!-- Right arm pointing -->
+    <rect x="35" y="160" width="26" height="85" rx="8" fill="#d4a574" transform="rotate(-5,48,160)"/>
+    <rect x="139" y="150" width="26" height="85" rx="8" fill="#d4a574" transform="rotate(-55,152,150)"/>
+    <!-- Focused face -->
+    <circle cx="82" cy="95" r="5" fill="#333"/>
+    <circle cx="118" cy="95" r="5" fill="#333"/>
+    <path d="M88,118 L112,118" stroke="#333" stroke-width="3" fill="none"/>
+  </g>
+</svg>

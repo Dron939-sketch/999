@@ -1,0 +1,137 @@
+// "The Signal" v3 — Fully procedural character rendering
+// No pre-made SVG assets for characters — everything is drawn from code
+
+import character maya from "assets/characters/procedural/maya.json"
+import character viktor from "assets/characters/procedural/viktor.json"
+import character kai from "assets/characters/procedural/kai.json"
+import set server-room from "assets/sets/server-room.svg"
+import set rooftop from "assets/sets/rooftop.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 30
+    background: #0a0a12
+}
+
+scene "discovery" (duration: 10s, set: server-room) {
+    place kai at center facing right
+
+    camera close-up kai
+    kai pose "typing"
+    wait 1.5s
+
+    camera medium kai
+    kai pose "excited"
+    wait 0.8s
+
+    maya enters left over 1.4s ease-out
+    camera wide
+    wait 0.4s
+
+    maya moves-to left-third over 1.2s ease-in-out
+    camera two-shot
+    wait 0.5s
+
+    maya pose "thinking"
+    wait 1.2s
+
+    maya pose "surprised"
+    camera close-up maya
+    wait 1.2s
+
+    camera close-up kai
+    kai pose "scared"
+    wait 1s
+
+    transition fade-black 0.8s
+}
+
+scene "confrontation" (duration: 16s, set: rooftop) {
+    place maya at left-third facing right
+    place kai at left facing right
+
+    camera wide
+    wait 0.8s
+
+    maya pose "thinking"
+    wait 1.2s
+
+    viktor enters right over 2s ease-out
+    wait 0.4s
+
+    viktor pose "menacing"
+    camera zoom-to viktor over 1.8s ease-in-out
+    wait 0.8s
+
+    camera close-up maya
+    maya pose "idle"
+    wait 1s
+
+    camera wide
+    wait 0.5s
+
+    viktor moves-to center over 1.5s ease-in
+    wait 0.3s
+
+    together {
+        kai pose "scared"
+        kai moves-to left-edge over 1s ease-out
+    }
+    wait 0.5s
+
+    maya pose "pointing"
+    camera close-up maya
+    wait 1.2s
+
+    camera close-up viktor
+    viktor pose "angry"
+    wait 1s
+
+    camera wide
+    wait 0.5s
+
+    camera shake 0.5s intensity 8
+    viktor pose "surprised"
+    wait 0.6s
+
+    together {
+        maya moves-to right-third over 0.8s ease-in
+        kai moves-to center over 1s ease-out
+    }
+    wait 0.5s
+
+    transition fade-black 1s
+}
+
+scene "escape" (duration: 10s, set: rooftop) {
+    place maya at center facing right
+    place kai at left-third facing right
+
+    camera wide
+    wait 0.4s
+
+    together {
+        maya moves-to right-edge over 2s ease-in
+        kai moves-to right-third over 2s ease-in
+        camera pan-to (0.7, 0.5) over 2s ease-in-out
+    }
+
+    wait 0.3s
+    kai moves-to right-edge over 1s ease-in
+    wait 0.3s
+
+    together {
+        maya exits right over 0.8s ease-in
+        kai exits right over 1s ease-in
+    }
+
+    camera wide
+    wait 1.2s
+
+    viktor enters left over 2.5s ease-out
+    camera zoom-to viktor over 2s ease-in-out
+    wait 0.8s
+
+    transition fade-black 1.5s
+}

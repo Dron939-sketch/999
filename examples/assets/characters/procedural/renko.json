@@ -1,0 +1,39 @@
+{
+  "name": "Renko",
+  "body": {
+    "height": 0.6,
+    "build": 0.4,
+    "skin_color": [185, 155, 125]
+  },
+  "face": {
+    "shape": 0.4,
+    "eye_size": 0.85,
+    "eye_color": [50, 50, 50],
+    "eyebrow_thickness": 0.5,
+    "nose_size": 0.4,
+    "lip_fullness": 0.3
+  },
+  "hair": {
+    "color": [20, 20, 25],
+    "style": "Short",
+    "length": 0.2
+  },
+  "outfit": {
+    "top": {
+      "kind": "Hoodie",
+      "color": [30, 30, 35],
+      "secondary_color": [50, 50, 55]
+    },
+    "bottom": {
+      "kind": "Jeans",
+      "color": [25, 25, 30]
+    },
+    "shoes": {
+      "kind": "Sneakers",
+      "color": [20, 20, 20]
+    },
+    "accessories": [
+      { "kind": "Glasses", "color": [60, 60, 60] }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "zara",
+  "body": {
+    "height": 0.45,
+    "build": 0.4,
+    "skin_color": [168, 120, 85]
+  },
+  "face": {
+    "shape": 0.3,
+    "eye_size": 1.1,
+    "eye_color": [60, 40, 20],
+    "eyebrow_thickness": 0.5,
+    "nose_size": 0.3,
+    "lip_fullness": 0.7
+  },
+  "hair": {
+    "color": [20, 15, 10],
+    "style": "Wavy",
+    "length": 0.5
+  },
+  "outfit": {
+    "top": {
+      "kind": "TShirt",
+      "color": [45, 80, 55]
+    },
+    "bottom": {
+      "kind": "Jeans",
+      "color": [40, 45, 65]
+    },
+    "shoes": {
+      "color": [220, 210, 195],
+      "kind": "Sneakers"
+    },
+    "accessories": [
+      { "kind": "Scarf", "color": [140, 90, 50] }
+    ]
+  }
+}

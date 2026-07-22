@@ -1,0 +1,189 @@
+// "The Signal" — A 30-second animated short
+// Three scenes: server room discovery, rooftop confrontation, escape
+
+import character maya from "assets/characters/maya.svg"
+import character viktor from "assets/characters/viktor.svg"
+import character kai from "assets/characters/kai.svg"
+import set server-room from "assets/sets/server-room.svg"
+import set rooftop from "assets/sets/rooftop.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #0a0a12
+}
+
+// --- SCENE 1: Server Room Discovery (10s) ---
+scene "discovery" (duration: 10s, set: server-room) {
+    // Kai is already at the monitors, typing
+    place kai at center facing right
+
+    // Start with a close-up of Kai working
+    camera close-up kai
+    wait 1s
+
+    // Pull back to medium shot
+    camera medium kai
+    wait 0.5s
+
+    // Kai reacts - found something
+    kai pose "excited"
+    wait 0.3s
+
+    // Maya enters from the left
+    maya enters left over 1.2s ease-out
+
+    // Place her at her destination after entering
+    camera wide
+    wait 0.5s
+
+    // Maya walks toward Kai
+    maya moves-to left-third over 1s ease-in-out
+
+    // Zoom into a two-shot
+    camera two-shot
+    wait 0.3s
+
+    // Kai turns to Maya
+    kai pose "excited"
+    wait 0.5s
+
+    // Maya is thinking
+    maya pose "thinking"
+    wait 0.8s
+
+    // Maya reacts with concern
+    maya pose "surprised"
+    camera close-up maya
+    wait 1s
+
+    // Quick cut to Kai
+    camera close-up kai
+    kai pose "scared"
+    wait 0.8s
+
+    // Fade to black - end scene 1
+    transition fade-black 0.8s
+}
+
+// --- SCENE 2: Rooftop Confrontation (14s) ---
+scene "confrontation" (duration: 14s, set: rooftop) {
+    // Start in darkness, fade in
+    place maya at left-third facing right
+    place kai at left facing right
+
+    // Maya and Kai are on the rooftop
+    camera wide
+    wait 0.5s
+
+    // They look around cautiously
+    maya pose "thinking"
+    wait 1s
+
+    // Viktor appears from the right - menacing
+    viktor enters right over 1.5s ease-out
+    camera wide
+    wait 0.3s
+
+    // Viktor stops at right-third
+    viktor pose "menacing"
+
+    // Tension beat - camera slowly zooms
+    camera zoom-to viktor over 1.5s ease-in-out
+    wait 0.5s
+
+    // Cut to Maya's reaction
+    camera close-up maya
+    maya pose "idle"
+    wait 0.8s
+
+    // Back to wide shot
+    camera wide
+    wait 0.3s
+
+    // Viktor steps forward menacingly
+    viktor moves-to center over 1.2s ease-in
+    wait 0.2s
+
+    // Kai steps back in fear
+    together {
+        kai pose "scared"
+        kai moves-to left-edge over 0.8s ease-out
+    }
+    wait 0.3s
+
+    // Maya stands her ground
+    maya pose "pointing"
+    camera close-up maya
+    wait 1s
+
+    // Viktor gets angry
+    camera close-up viktor
+    viktor pose "angry"
+    wait 0.8s
+
+    // Wide shot - standoff
+    camera wide
+    wait 0.5s
+
+    // Camera shake - something happens
+    camera shake 0.4s intensity 8
+
+    // Viktor is surprised
+    viktor pose "surprised"
+    wait 0.5s
+
+    // Maya and Kai make their move
+    together {
+        maya moves-to right-third over 0.6s ease-in
+        kai moves-to center over 0.8s ease-out
+    }
+    wait 0.3s
+
+    transition fade-black 0.8s
+}
+
+// --- SCENE 3: The Escape (8s) ---
+scene "escape" (duration: 8s, set: rooftop) {
+    // Fast-paced escape sequence
+    place maya at center facing right
+    place kai at left-third facing right
+
+    camera wide
+    wait 0.3s
+
+    // They run toward the right
+    together {
+        maya moves-to right-edge over 1.5s ease-in
+        kai moves-to right-third over 1.5s ease-in
+        camera pan-to (0.7, 0.5) over 1.5s ease-in-out
+    }
+
+    wait 0.2s
+
+    // Kai catches up
+    kai moves-to right-edge over 0.8s ease-in
+
+    wait 0.3s
+
+    // Both exit
+    together {
+        maya exits right over 0.6s ease-in
+        kai exits right over 0.8s ease-in
+    }
+
+    // Linger on empty rooftop
+    camera wide
+    wait 1s
+
+    // Viktor appears in the distance, watching them go
+    viktor enters left over 2s ease-out
+    viktor pose "idle"
+    camera zoom-to viktor over 1.5s ease-in-out
+
+    wait 0.5s
+
+    // Final fade
+    transition fade-black 1.5s
+}

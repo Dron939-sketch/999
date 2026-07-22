@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- Server room / hacker den -->
+  
+  <!-- Dark ceiling -->
+  <rect x="0" y="0" width="1280" height="200" fill="#0a0a12"/>
+  
+  <!-- Walls -->
+  <rect x="0" y="0" width="1280" height="500" fill="#121218"/>
+  
+  <!-- Floor (reflective dark) -->
+  <rect x="0" y="500" width="1280" height="220" fill="#0e0e16"/>
+  <rect x="0" y="500" width="1280" height="3" fill="#1a1a28"/>
+  
+  <!-- Server racks (left side) -->
+  <rect x="30" y="120" width="100" height="380" rx="3" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="2"/>
+  <rect x="35" y="130" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="115" cy="145" r="3" fill="#00ff44" opacity="0.8"/>
+  <circle cx="105" cy="145" r="3" fill="#00ff44" opacity="0.6"/>
+  <rect x="35" y="165" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="115" cy="180" r="3" fill="#00ff44" opacity="0.8"/>
+  <circle cx="105" cy="180" r="3" fill="#ff4444" opacity="0.6"/>
+  <rect x="35" y="200" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="115" cy="215" r="3" fill="#44aaff" opacity="0.8"/>
+  <circle cx="105" cy="215" r="3" fill="#00ff44" opacity="0.6"/>
+  <rect x="35" y="235" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="115" cy="250" r="3" fill="#00ff44" opacity="0.7"/>
+  <rect x="35" y="270" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="115" cy="285" r="3" fill="#00ff44" opacity="0.8"/>
+  <circle cx="105" cy="285" r="3" fill="#00ff44" opacity="0.5"/>
+  <rect x="35" y="305" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="115" cy="320" r="3" fill="#ff4444" opacity="0.8"/>
+  <rect x="35" y="340" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="115" cy="355" r="3" fill="#00ff44" opacity="0.6"/>
+  
+  <!-- Server racks (right side) -->
+  <rect x="1150" y="120" width="100" height="380" rx="3" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="2"/>
+  <rect x="1155" y="130" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="1165" cy="145" r="3" fill="#00ff44" opacity="0.8"/>
+  <rect x="1155" y="165" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="1165" cy="180" r="3" fill="#44aaff" opacity="0.7"/>
+  <rect x="1155" y="200" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="1165" cy="215" r="3" fill="#00ff44" opacity="0.8"/>
+  <rect x="1155" y="235" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="1165" cy="250" r="3" fill="#ff4444" opacity="0.6"/>
+  <rect x="1155" y="270" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="1165" cy="285" r="3" fill="#00ff44" opacity="0.8"/>
+  <rect x="1155" y="305" width="90" height="30" rx="2" fill="#0e0e1a"/>
+  <circle cx="1165" cy="320" r="3" fill="#00ff44" opacity="0.5"/>
+  
+  <!-- Central desk with monitors -->
+  <rect x="400" y="380" width="480" height="20" rx="3" fill="#2a2a3e"/>
+  <rect x="420" y="400" width="15" height="100" fill="#2a2a3e"/>
+  <rect x="845" y="400" width="15" height="100" fill="#2a2a3e"/>
+  
+  <!-- Monitor 1 (left) -->
+  <rect x="440" y="270" width="140" height="105" rx="5" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="2"/>
+  <rect x="445" y="275" width="130" height="90" rx="3" fill="#0a2a0a"/>
+  <!-- Green terminal text -->
+  <line x1="455" y1="290" x2="540" y2="290" stroke="#00ff44" stroke-width="1.5" opacity="0.7"/>
+  <line x1="455" y1="300" x2="520" y2="300" stroke="#00ff44" stroke-width="1.5" opacity="0.5"/>
+  <line x1="455" y1="310" x2="555" y2="310" stroke="#00ff44" stroke-width="1.5" opacity="0.6"/>
+  <line x1="455" y1="320" x2="530" y2="320" stroke="#00ff44" stroke-width="1.5" opacity="0.7"/>
+  <line x1="455" y1="330" x2="548" y2="330" stroke="#00ff44" stroke-width="1.5" opacity="0.5"/>
+  <line x1="455" y1="340" x2="510" y2="340" stroke="#00ff44" stroke-width="1.5" opacity="0.6"/>
+  <line x1="455" y1="350" x2="560" y2="350" stroke="#00ff44" stroke-width="1.5" opacity="0.7"/>
+  <rect x="495" y="375" width="30" height="8" fill="#2a2a3e"/>
+  
+  <!-- Monitor 2 (center) -->
+  <rect x="600" y="260" width="160" height="115" rx="5" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="2"/>
+  <rect x="605" y="265" width="150" height="100" rx="3" fill="#0a0a2a"/>
+  <!-- Blue interface -->
+  <rect x="615" y="275" width="60" height="40" rx="2" fill="#1144aa" opacity="0.5"/>
+  <rect x="685" y="275" width="60" height="40" rx="2" fill="#1144aa" opacity="0.3"/>
+  <rect x="615" y="325" width="130" height="8" rx="2" fill="#2266cc" opacity="0.4"/>
+  <rect x="615" y="340" width="80" height="8" rx="2" fill="#2266cc" opacity="0.3"/>
+  <rect x="665" y="375" width="30" height="8" fill="#2a2a3e"/>
+  
+  <!-- Monitor 3 (right) -->
+  <rect x="780" y="275" width="130" height="100" rx="5" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="2"/>
+  <rect x="785" y="280" width="120" height="85" rx="3" fill="#2a0a0a"/>
+  <!-- Red warning -->
+  <rect x="810" y="300" width="70" height="30" rx="3" fill="#aa1111" opacity="0.6"/>
+  <line x1="825" y1="315" x2="860" y2="315" stroke="#ff4444" stroke-width="2" opacity="0.8"/>
+  <rect x="830" y="340" width="30" height="8" fill="#2a2a3e"/>
+  
+  <!-- Keyboard -->
+  <rect x="520" y="382" width="200" height="14" rx="3" fill="#1a1a28"/>
+  
+  <!-- Chair -->
+  <ellipse cx="640" cy="490" rx="45" ry="15" fill="#1a1a2e"/>
+  <rect x="620" y="440" width="40" height="50" rx="5" fill="#2a2a3e"/>
+  <line x1="640" y1="490" x2="640" y2="510" stroke="#3a3a4a" stroke-width="4"/>
+  
+  <!-- Cables on floor -->
+  <path d="M130,500 Q200,510 300,505 Q400,498 500,510" stroke="#2a2a3e" stroke-width="3" fill="none"/>
+  <path d="M780,505 Q900,512 1000,500 Q1100,495 1150,510" stroke="#2a2a3e" stroke-width="3" fill="none"/>
+  
+  <!-- Ceiling lights (dim) -->
+  <rect x="300" y="0" width="4" height="40" fill="#3a3a4a"/>
+  <ellipse cx="302" cy="42" rx="20" ry="5" fill="#3a3a4a"/>
+  <ellipse cx="302" cy="45" rx="15" ry="3" fill="#445566" opacity="0.3"/>
+  
+  <rect x="640" y="0" width="4" height="40" fill="#3a3a4a"/>
+  <ellipse cx="642" cy="42" rx="20" ry="5" fill="#3a3a4a"/>
+  <ellipse cx="642" cy="45" rx="15" ry="3" fill="#445566" opacity="0.3"/>
+  
+  <rect x="980" y="0" width="4" height="40" fill="#3a3a4a"/>
+  <ellipse cx="982" cy="42" rx="20" ry="5" fill="#3a3a4a"/>
+  <ellipse cx="982" cy="45" rx="15" ry="3" fill="#445566" opacity="0.3"/>
+  
+  <!-- Ambient glow from monitors -->
+  <ellipse cx="640" cy="350" rx="200" ry="100" fill="#1144aa" opacity="0.05"/>
+</svg>

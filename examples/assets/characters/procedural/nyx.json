@@ -1,0 +1,39 @@
+{
+  "name": "nyx",
+  "body": {
+    "height": 0.8,
+    "build": 0.65,
+    "skin_color": [90, 60, 40]
+  },
+  "face": {
+    "shape": 0.9,
+    "eye_size": 0.75,
+    "eye_color": [180, 130, 50],
+    "eyebrow_thickness": 0.85,
+    "nose_size": 0.5,
+    "lip_fullness": 0.5
+  },
+  "hair": {
+    "color": [15, 15, 15],
+    "style": "Buzz",
+    "length": 0.1
+  },
+  "outfit": {
+    "top": {
+      "kind": "TrenchCoat",
+      "color": [50, 20, 25]
+    },
+    "bottom": {
+      "kind": "Pants",
+      "color": [20, 20, 25]
+    },
+    "shoes": {
+      "color": [15, 15, 15],
+      "kind": "Boots"
+    },
+    "accessories": [
+      { "kind": "Belt", "color": [60, 50, 40] },
+      { "kind": "Scarf", "color": [120, 30, 30] }
+    ]
+  }
+}

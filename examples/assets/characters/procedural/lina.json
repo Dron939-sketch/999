@@ -1,0 +1,37 @@
+{
+  "name": "Lina",
+  "body": {
+    "height": 0.55,
+    "build": 0.3,
+    "skin_color": [220, 190, 160]
+  },
+  "face": {
+    "shape": 0.35,
+    "eye_size": 1.0,
+    "eye_color": [40, 130, 100],
+    "eyebrow_thickness": 0.4,
+    "nose_size": 0.3,
+    "lip_fullness": 0.6
+  },
+  "hair": {
+    "color": [150, 30, 30],
+    "style": "Straight",
+    "length": 0.7
+  },
+  "outfit": {
+    "top": {
+      "kind": "Suit",
+      "color": [20, 20, 25],
+      "secondary_color": [40, 40, 50]
+    },
+    "bottom": {
+      "kind": "Pants",
+      "color": [20, 20, 25]
+    },
+    "shoes": {
+      "kind": "Formal",
+      "color": [15, 15, 15]
+    },
+    "accessories": []
+  }
+}

@@ -1,0 +1,292 @@
+// "Ghost in the Machine"
+// A surreal horror vignette. A programmer alone at night encounters
+// something that shouldn't exist in the server room.
+// Showcases: fades-to for ghostly effects, scaling for unnatural growth,
+//            rotates for disorientation, extreme camera work, and
+//            dissolve/wipe transitions.
+
+import character renko from "assets/characters/procedural/renko.json"
+import character echo from "assets/characters/procedural/echo.json"
+import set server-dark from "assets/sets/server-dark.svg"
+
+config {
+    width: 1920
+    height: 1080
+    fps: 30
+    background: #050508
+}
+
+// --- CUSTOM POSES ---
+
+pose "hunched-typing" {
+    torso-bend: 18
+    head-nod: 15
+    arm-left-angle: -45
+    arm-right-angle: -40
+    elbow-left-bend: 0.85
+    elbow-right-bend: 0.85
+    shoulder-left: 0.2
+    shoulder-right: 0.2
+    eye-open-left: 0.8
+    eye-open-right: 0.8
+    eye-direction: 0.0
+    line-of-action: 0.06
+}
+
+pose "startled-look" {
+    torso-bend: -5
+    torso-squash: 1.03
+    head-tilt: -20
+    eye-direction: -0.9
+    eye-open-left: 1.3
+    eye-open-right: 1.3
+    eyebrow-left: 0.6
+    eyebrow-right: 0.4
+    mouth-open: 0.2
+    shoulder-left: 0.3
+    shoulder-right: -0.1
+}
+
+pose "backing-away" {
+    torso-bend: -8
+    line-of-action: -0.12
+    arm-left-angle: 25
+    arm-right-angle: -25
+    elbow-left-bend: 0.5
+    elbow-right-bend: 0.5
+    knee-left-bend: 0.2
+    knee-right-bend: 0.1
+    head-nod: -5
+    eye-open-left: 1.2
+    eye-open-right: 1.2
+    mouth-open: 0.15
+    mouth-smile: -0.3
+}
+
+pose "floating" {
+    y-offset: 0.06
+    line-of-action: 0.0
+    arm-left-angle: -30
+    arm-right-angle: 30
+    elbow-left-bend: 0.15
+    elbow-right-bend: 0.15
+    head-tilt: 8
+    eye-open-left: 0.6
+    eye-open-right: 0.6
+    mouth-smile: 0.1
+}
+
+pose "reaching-out" {
+    arm-right-angle: -75
+    elbow-right-bend: 0.1
+    arm-left-angle: -30
+    elbow-left-bend: 0.15
+    head-tilt: 5
+    y-offset: 0.04
+    eye-open-left: 0.7
+    eye-open-right: 0.7
+    mouth-smile: 0.2
+    mouth-open: 0.1
+}
+
+pose "collapsing" {
+    torso-squash: 0.8
+    torso-bend: 25
+    line-of-action: -0.15
+    knee-left-bend: 0.7
+    knee-right-bend: 0.6
+    arm-left-angle: 40
+    arm-right-angle: -30
+    elbow-left-bend: 0.3
+    elbow-right-bend: 0.6
+    head-nod: 20
+    eye-open-left: 0.3
+    eye-open-right: 0.3
+    shoulder-left: 0.4
+    shoulder-right: 0.4
+}
+
+pose "shielding-eyes" {
+    arm-right-angle: -80
+    elbow-right-bend: 0.8
+    arm-left-angle: -60
+    elbow-left-bend: 0.7
+    head-nod: 10
+    head-tilt: 5
+    torso-bend: 8
+    eye-open-left: 0.2
+    eye-open-right: 0.2
+    mouth-smile: -0.3
+    mouth-open: 0.25
+}
+
+// --- SCENE 1: Late Night ---
+// Renko is alone. The server room hums.
+
+scene "late-night" (duration: 14s, set: server-dark) {
+
+    // Open on darkness. Let the atmosphere build.
+    camera wide
+    wait 2s
+
+    // Renko at his station, deep in code.
+    place renko at left-third facing right
+    renko pose "hunched-typing"
+    camera medium renko
+    wait 2.5s
+
+    // Close-up on his tired face.
+    camera extreme-close-up renko
+    wait 2s
+
+    // Something catches his eye. A flicker in his peripheral vision.
+    renko pose "startled-look"
+    wait 0.8s
+
+    // He looks. Nothing there.
+    camera wide
+    wait 2s
+
+    // He goes back to work. Slower now.
+    camera medium renko
+    renko pose "hunched-typing"
+    wait 1.5s
+
+    // Another flicker — this time the camera catches it.
+    // Echo appears at the far right, barely visible.
+    place echo at right-edge facing left
+    echo fades-to 0.08 over 0.01s linear
+    echo shows over 0.01s linear
+    wait 0.3s
+
+    // Flash — she's there, then gone.
+    echo fades-to 0.3 over 0.3s ease-in
+    wait 0.3s
+    echo fades-to 0.0 over 0.5s ease-out
+    wait 0.5s
+
+    transition dissolve 1s
+}
+
+// --- SCENE 2: The Apparition ---
+// Echo manifests. Renko can't look away.
+
+scene "the-apparition" (duration: 22s, set: server-dark) {
+
+    place renko at left-third facing right
+    place echo at offscreen-right facing left
+
+    // Renko is standing now, staring at where the flicker was.
+    renko pose "startled-look"
+    echo fades-to 0.0 over 0.01s linear
+
+    camera medium renko
+    wait 1.5s
+
+    // Echo begins to materialize — move her into position and fade in.
+    together {
+        echo moves-to right-third over 0.01s linear
+        echo fades-to 0.4 over 3s ease-in
+        echo scales 0.8 over 0.01s linear
+        camera pan-to (0.5, 0.5) over 3s ease-in-out
+    }
+    wait 0.5s
+
+    // Renko sees her. Really sees her.
+    camera close-up renko
+    renko pose "scared"
+    wait 1.2s
+
+    // Cut to Echo — she's not quite right. Floating.
+    camera close-up echo
+    echo pose "floating"
+    echo fades-to 0.6 over 1s ease-out
+    wait 1.5s
+
+    // She grows. Slowly. Unnervingly.
+    together {
+        echo scales 1.2 over 3s linear
+        echo fades-to 0.8 over 3s ease-in
+        camera wide
+    }
+    wait 0.5s
+
+    // Renko starts backing away.
+    together {
+        renko pose "backing-away"
+        renko moves-to left-edge over 2s ease-out
+    }
+    wait 0.5s
+
+    // Echo tilts — the world feels wrong.
+    together {
+        echo rotates 8 over 2s ease-in-out
+        echo moves-to center over 2s linear
+        camera shake 0.5s intensity 2
+    }
+    wait 0.5s
+
+    // Close on Echo's face. She's reaching for him.
+    camera extreme-close-up echo
+    echo pose "reaching-out"
+    wait 2s
+
+    // Camera shake intensifies.
+    camera shake 0.8s intensity 6
+    wait 0.3s
+
+    // Flash to white.
+    transition fade-white 0.5s
+}
+
+// --- SCENE 3: Alone Again ---
+// Was it real?
+
+scene "alone-again" (duration: 12s, set: server-dark) {
+
+    place renko at left-edge facing right
+
+    // Fade in from white.
+    transition fade-white 0.8s
+
+    // Renko is on the ground, disoriented.
+    renko pose "collapsing"
+    camera medium renko
+    wait 2s
+
+    // He slowly gets up.
+    renko pose "shielding-eyes"
+    wait 1.5s
+
+    renko pose "scared"
+    wait 1s
+
+    // He looks around. The room is normal.
+    camera wide
+    wait 2s
+
+    // He walks to where Echo was. Nothing.
+    renko moves-to right-third over 2.5s ease-in-out
+    camera zoom-to renko over 2.5s ease-in-out
+    wait 0.5s
+
+    renko pose "idle"
+    wait 1s
+
+    // But wait — behind him, barely visible...
+    place echo at offscreen-left facing right
+    echo fades-to 0.0 over 0.01s linear
+    echo shows over 0.01s linear
+    together {
+        echo moves-to left-edge over 0.01s linear
+        echo fades-to 0.05 over 0.3s ease-in
+    }
+    wait 0.5s
+
+    // The audience sees it. Renko doesn't.
+    camera wide
+    wait 1s
+
+    // Smash to black.
+    transition fade-black 0.3s
+}

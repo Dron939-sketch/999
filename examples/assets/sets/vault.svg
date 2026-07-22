@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#0d0d18"/>
+  <rect x="0" y="500" width="1280" height="220" fill="#0a0a12"/>
+  <!-- vault door -->
+  <circle cx="640" cy="360" r="200" fill="none" stroke="#2a2a3a" stroke-width="6"/>
+  <circle cx="640" cy="360" r="30" fill="#1a1a2a" stroke="#333" stroke-width="3"/>
+  <!-- walls -->
+  <line x1="0" y1="200" x2="1280" y2="200" stroke="#1a1a2a" stroke-width="2"/>
+  <rect x="50" y="200" width="40" height="300" fill="#151520"/>
+  <rect x="1190" y="200" width="40" height="300" fill="#151520"/>
+</svg>

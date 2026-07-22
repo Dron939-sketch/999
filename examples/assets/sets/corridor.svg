@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#060610"/>
+  <!-- corridor walls -->
+  <polygon points="0,0 400,180 400,540 0,720" fill="#0a0a1a"/>
+  <polygon points="1280,0 880,180 880,540 1280,720" fill="#0a0a1a"/>
+  <rect x="400" y="180" width="480" height="360" fill="#080816"/>
+  <!-- floor -->
+  <polygon points="400,540 0,720 1280,720 880,540" fill="#0c0c1c"/>
+  <!-- ceiling lights -->
+  <rect x="580" y="180" width="120" height="8" fill="#1a2a40" opacity="0.6"/>
+  <rect x="580" y="290" width="120" height="8" fill="#1a2a40" opacity="0.4"/>
+</svg>

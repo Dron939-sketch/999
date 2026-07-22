@@ -1,0 +1,39 @@
+{
+  "name": "Viper",
+  "body": {
+    "height": 0.7,
+    "build": 0.45,
+    "skin_color": [160, 130, 100]
+  },
+  "face": {
+    "shape": 0.45,
+    "eye_size": 0.7,
+    "eye_color": [60, 80, 50],
+    "eyebrow_thickness": 0.7,
+    "nose_size": 0.55,
+    "lip_fullness": 0.25
+  },
+  "hair": {
+    "color": [15, 10, 5],
+    "style": "SlickedBack",
+    "length": 0.35
+  },
+  "outfit": {
+    "top": {
+      "kind": "Suit",
+      "color": [15, 15, 15],
+      "secondary_color": [30, 30, 30]
+    },
+    "bottom": {
+      "kind": "Pants",
+      "color": [15, 15, 15]
+    },
+    "shoes": {
+      "kind": "Boots",
+      "color": [10, 10, 10]
+    },
+    "accessories": [
+      { "kind": "Scarf", "color": [120, 10, 10] }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 105">
+  <!-- Upper arm — suit sleeve -->
+  <path d="M7 0 C5 2, 3 10, 3 20 L3 50 C3 54, 5 56, 9 56 L27 56 C31 56, 33 54, 33 50 L33 20 C33 10, 31 2, 29 0Z" fill="#1a1a2e"/>
+  <!-- Sleeve seam -->
+  <line x1="18" y1="2" x2="18" y2="54" stroke="#0e0e24" stroke-width="0.6" opacity="0.5"/>
+
+  <!-- Lower arm / forearm — suit sleeve -->
+  <path d="M5 54 L5 78 C5 80, 7 82, 9 82 L27 82 C29 82, 31 80, 31 78 L31 54Z" fill="#1a1a2e"/>
+
+  <!-- Shirt cuff -->
+  <rect x="6" y="78" width="24" height="6" rx="1" fill="#e8e8e8"/>
+  <line x1="6" y1="80" x2="30" y2="80" stroke="#d0d0d0" stroke-width="0.5"/>
+
+  <!-- Hand -->
+  <path d="M8 84 C6 86, 5 90, 6 94 L8 98 C10 102, 15 105, 18 105 C21 105, 26 102, 28 98 L30 94 C31 90, 30 86, 28 84Z" fill="#d4b896"/>
+  <!-- Fingers -->
+  <path d="M27 94 C28 96, 27 100, 25 101" fill="none" stroke="#c4a07a" stroke-width="0.8"/>
+  <path d="M23 94 C24 97, 23 101, 21 102" fill="none" stroke="#c4a07a" stroke-width="0.8"/>
+  <path d="M18 94 C18 98, 18 101, 18 103" fill="none" stroke="#c4a07a" stroke-width="0.8"/>
+  <path d="M13 94 C12 97, 13 101, 15 102" fill="none" stroke="#c4a07a" stroke-width="0.8"/>
+  <!-- Thumb -->
+  <path d="M30 88 C33 90, 33 94, 31 96" fill="none" stroke="#c4a07a" stroke-width="1"/>
+
+  <!-- Sleeve fold shadows -->
+  <path d="M7 30 Q18 33, 29 30" fill="none" stroke="#12122a" stroke-width="0.8" opacity="0.4"/>
+  <path d="M7 44 Q18 47, 29 44" fill="none" stroke="#12122a" stroke-width="0.8" opacity="0.4"/>
+</svg>

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 400" width="200" height="400">
+  <!-- Simple character: Alice -->
+  <g id="body">
+    <!-- Body -->
+    <rect x="70" y="150" width="60" height="120" rx="10" fill="#e8a87c"/>
+    <!-- Legs -->
+    <rect x="75" y="270" width="20" height="100" rx="5" fill="#4a6fa5"/>
+    <rect x="105" y="270" width="20" height="100" rx="5" fill="#4a6fa5"/>
+    <!-- Shoes -->
+    <ellipse cx="85" cy="375" rx="18" ry="8" fill="#333"/>
+    <ellipse cx="115" cy="375" rx="18" ry="8" fill="#333"/>
+  </g>
+
+  <!-- Head -->
+  <circle cx="100" cy="100" r="50" fill="#f5cda7"/>
+  <!-- Hair -->
+  <path d="M50,90 Q50,40 100,35 Q150,40 150,90 Q140,60 100,55 Q60,60 50,90Z" fill="#8b4513"/>
+
+  <!-- Poses -->
+  <g id="pose-idle">
+    <!-- Arms down -->
+    <rect x="40" y="160" width="25" height="80" rx="8" fill="#e8a87c" transform="rotate(-5,52,160)"/>
+    <rect x="135" y="160" width="25" height="80" rx="8" fill="#e8a87c" transform="rotate(5,147,160)"/>
+    <!-- Neutral face -->
+    <circle cx="82" cy="95" r="6" fill="#333"/>
+    <circle cx="118" cy="95" r="6" fill="#333"/>
+    <path d="M85,115 Q100,125 115,115" stroke="#333" stroke-width="3" fill="none"/>
+  </g>
+
+  <g id="pose-pointing" style="display:none">
+    <!-- Left arm down, right arm pointing -->
+    <rect x="40" y="160" width="25" height="80" rx="8" fill="#e8a87c" transform="rotate(-5,52,160)"/>
+    <rect x="135" y="155" width="25" height="80" rx="8" fill="#e8a87c" transform="rotate(-60,147,155)"/>
+    <!-- Determined face -->
+    <circle cx="82" cy="95" r="6" fill="#333"/>
+    <circle cx="118" cy="95" r="6" fill="#333"/>
+    <path d="M85,118 L115,118" stroke="#333" stroke-width="3" fill="none"/>
+  </g>
+
+  <g id="pose-surprised" style="display:none">
+    <!-- Arms up slightly -->
+    <rect x="35" y="150" width="25" height="80" rx="8" fill="#e8a87c" transform="rotate(-25,47,150)"/>
+    <rect x="140" y="150" width="25" height="80" rx="8" fill="#e8a87c" transform="rotate(25,152,150)"/>
+    <!-- Surprised face -->
+    <circle cx="82" cy="93" r="8" fill="#333"/>
+    <circle cx="118" cy="93" r="8" fill="#333"/>
+    <ellipse cx="100" cy="120" rx="10" ry="12" fill="#333"/>
+  </g>
+</svg>

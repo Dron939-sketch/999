@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 110" width="35" height="110">
+  <!-- Upper leg / thigh - dark pants -->
+  <path d="M4 0 L30 0 Q32 2, 32 6 L30 52 Q28 54, 26 54 L8 54 Q6 54, 4 52 L2 6 Q2 2, 4 0 Z" fill="#2e2622"/>
+  <!-- Pant crease -->
+  <line x1="17" y1="4" x2="17" y2="52" stroke="#3a3230" stroke-width="0.7" opacity="0.4"/>
+
+  <!-- Knee area -->
+  <path d="M6 52 Q17 56, 28 52" stroke="#3a3230" stroke-width="0.8" fill="none" opacity="0.5"/>
+
+  <!-- Lower leg / shin - dark pants -->
+  <path d="M6 54 L28 54 Q30 56, 29 60 L27 88 Q26 90, 24 90 L10 90 Q8 90, 7 88 L5 60 Q4 56, 6 54 Z" fill="#2e2622"/>
+  <!-- Lower pant crease -->
+  <line x1="17" y1="56" x2="17" y2="88" stroke="#3a3230" stroke-width="0.6" opacity="0.3"/>
+
+  <!-- Pant cuff -->
+  <rect x="7" y="86" width="20" height="5" rx="1" fill="#262020"/>
+
+  <!-- Shoe -->
+  <path d="M5 91 L28 91 Q32 93, 33 96 Q34 102, 30 104 L2 104 Q-1 102, 0 98 Q1 93, 5 91 Z" fill="#1a1412"/>
+  <!-- Shoe sole -->
+  <rect x="0" y="102" width="33" height="4" rx="2" fill="#0e0a08"/>
+  <!-- Shoe detail -->
+  <path d="M8 94 Q17 92, 26 94" stroke="#2a2018" stroke-width="1" fill="none"/>
+  <!-- Shoe lace area -->
+  <line x1="14" y1="92" x2="14" y2="98" stroke="#2a2018" stroke-width="0.6"/>
+  <line x1="18" y1="92" x2="18" y2="98" stroke="#2a2018" stroke-width="0.6"/>
+</svg>

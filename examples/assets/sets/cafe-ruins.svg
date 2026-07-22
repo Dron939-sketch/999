@@ -1,0 +1,222 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <!-- Flickering overhead lamp glow -->
+    <radialGradient id="lampGlow" cx="640" cy="120" r="350" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="rgb(200,150,60)" stop-opacity="0.15"/>
+      <stop offset="60%" stop-color="rgb(200,150,60)" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="rgb(200,150,60)" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Wall gradient -->
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgb(70,65,60)"/>
+      <stop offset="100%" stop-color="rgb(60,55,50)"/>
+    </linearGradient>
+    <!-- Floor gradient -->
+    <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgb(50,45,42)"/>
+      <stop offset="100%" stop-color="rgb(40,36,34)"/>
+    </linearGradient>
+    <!-- Counter wood grain -->
+    <linearGradient id="counterGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgb(85,65,45)"/>
+      <stop offset="30%" stop-color="rgb(95,75,55)"/>
+      <stop offset="60%" stop-color="rgb(80,62,44)"/>
+      <stop offset="100%" stop-color="rgb(90,70,50)"/>
+    </linearGradient>
+    <!-- Shelf wood -->
+    <linearGradient id="shelfGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgb(65,55,45)"/>
+      <stop offset="100%" stop-color="rgb(75,65,55)"/>
+    </linearGradient>
+    <!-- Dim secondary lamp glow (right side) -->
+    <radialGradient id="lampGlow2" cx="950" cy="100" r="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="rgb(200,150,60)" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="rgb(200,150,60)" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ===== BACKGROUND / CEILING ===== -->
+  <rect x="0" y="0" width="1280" height="720" fill="rgb(35,32,30)"/>
+
+  <!-- ===== BACK WALL ===== -->
+  <rect x="0" y="0" width="1280" height="480" fill="url(#wallGrad)"/>
+  <!-- Wall cracks -->
+  <line x1="320" y1="60" x2="350" y2="180" stroke="rgb(45,42,38)" stroke-width="2"/>
+  <line x1="350" y1="180" x2="340" y2="260" stroke="rgb(45,42,38)" stroke-width="1.5"/>
+  <line x1="350" y1="180" x2="380" y2="230" stroke="rgb(45,42,38)" stroke-width="1"/>
+  <line x1="800" y1="30" x2="820" y2="150" stroke="rgb(48,44,40)" stroke-width="2"/>
+  <line x1="820" y1="150" x2="810" y2="280" stroke="rgb(48,44,40)" stroke-width="1.5"/>
+  <line x1="820" y1="150" x2="850" y2="200" stroke="rgb(48,44,40)" stroke-width="1"/>
+  <line x1="600" y1="100" x2="620" y2="200" stroke="rgb(46,43,39)" stroke-width="1.5"/>
+  <line x1="620" y1="200" x2="610" y2="300" stroke="rgb(46,43,39)" stroke-width="1"/>
+  <!-- Large wall crack (impact) -->
+  <line x1="1050" y1="80" x2="1070" y2="190" stroke="rgb(42,38,35)" stroke-width="2.5"/>
+  <line x1="1070" y1="190" x2="1040" y2="300" stroke="rgb(42,38,35)" stroke-width="2"/>
+  <line x1="1070" y1="190" x2="1100" y2="250" stroke="rgb(42,38,35)" stroke-width="1.5"/>
+  <line x1="1070" y1="190" x2="1090" y2="170" stroke="rgb(42,38,35)" stroke-width="1"/>
+
+  <!-- ===== FLOOR (cracked tiles) ===== -->
+  <rect x="0" y="480" width="1280" height="240" fill="url(#floorGrad)"/>
+  <!-- Tile grid (horizontal lines) -->
+  <line x1="0" y1="520" x2="1280" y2="520" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="0" y1="570" x2="1280" y2="570" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="0" y1="620" x2="1280" y2="620" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="0" y1="670" x2="1280" y2="670" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <!-- Tile grid (vertical lines) -->
+  <line x1="100" y1="480" x2="100" y2="720" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="210" y1="480" x2="210" y2="720" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="330" y1="480" x2="330" y2="720" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="440" y1="480" x2="440" y2="720" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="560" y1="480" x2="560" y2="720" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="670" y1="480" x2="670" y2="720" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="790" y1="480" x2="790" y2="720" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="900" y1="480" x2="900" y2="720" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="1020" y1="480" x2="1020" y2="720" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <line x1="1130" y1="480" x2="1130" y2="720" stroke="rgb(35,31,29)" stroke-width="1.5"/>
+  <!-- Missing/cracked tiles (gaps) -->
+  <rect x="335" y="572" width="100" height="45" fill="rgb(30,27,25)"/>
+  <rect x="675" y="522" width="110" height="45" fill="rgb(30,27,25)"/>
+  <rect x="905" y="622" width="110" height="45" fill="rgb(28,25,23)"/>
+  <!-- Floor cracks -->
+  <line x1="200" y1="500" x2="280" y2="600" stroke="rgb(30,27,25)" stroke-width="1.5"/>
+  <line x1="280" y1="600" x2="300" y2="700" stroke="rgb(30,27,25)" stroke-width="1"/>
+  <line x1="850" y1="490" x2="870" y2="580" stroke="rgb(30,27,25)" stroke-width="1.5"/>
+
+  <!-- ===== LEFT BOARDED-UP WINDOW ===== -->
+  <!-- Window frame -->
+  <rect x="40" y="100" width="180" height="260" fill="rgb(25,22,20)" rx="2"/>
+  <!-- Boards -->
+  <rect x="35" y="110" width="195" height="28" fill="rgb(80,65,45)" rx="1" transform="rotate(-3, 130, 124)"/>
+  <rect x="35" y="155" width="195" height="28" fill="rgb(75,60,42)" rx="1" transform="rotate(2, 130, 169)"/>
+  <rect x="35" y="200" width="195" height="28" fill="rgb(82,67,47)" rx="1" transform="rotate(-1, 130, 214)"/>
+  <rect x="35" y="245" width="195" height="28" fill="rgb(78,63,44)" rx="1" transform="rotate(3, 130, 259)"/>
+  <rect x="35" y="290" width="195" height="28" fill="rgb(76,61,43)" rx="1" transform="rotate(-2, 130, 304)"/>
+  <!-- Nails -->
+  <circle cx="55" cy="125" r="2.5" fill="rgb(50,48,45)"/>
+  <circle cx="210" cy="125" r="2.5" fill="rgb(50,48,45)"/>
+  <circle cx="55" cy="170" r="2.5" fill="rgb(50,48,45)"/>
+  <circle cx="210" cy="260" r="2.5" fill="rgb(50,48,45)"/>
+  <!-- Light leaking through gaps -->
+  <rect x="37" y="140" width="190" height="3" fill="rgb(200,150,60)" opacity="0.06"/>
+  <rect x="37" y="185" width="190" height="3" fill="rgb(200,150,60)" opacity="0.05"/>
+
+  <!-- ===== RIGHT BOARDED-UP WINDOW ===== -->
+  <rect x="1060" y="100" width="180" height="260" fill="rgb(25,22,20)" rx="2"/>
+  <rect x="1055" y="110" width="195" height="28" fill="rgb(78,63,44)" rx="1" transform="rotate(2, 1150, 124)"/>
+  <rect x="1055" y="155" width="195" height="28" fill="rgb(82,67,47)" rx="1" transform="rotate(-3, 1150, 169)"/>
+  <rect x="1055" y="200" width="195" height="28" fill="rgb(75,60,42)" rx="1" transform="rotate(1, 1150, 214)"/>
+  <rect x="1055" y="245" width="195" height="28" fill="rgb(80,65,45)" rx="1" transform="rotate(-2, 1150, 259)"/>
+  <rect x="1055" y="290" width="195" height="28" fill="rgb(77,62,43)" rx="1" transform="rotate(3, 1150, 304)"/>
+  <circle cx="1075" cy="125" r="2.5" fill="rgb(50,48,45)"/>
+  <circle cx="1230" cy="170" r="2.5" fill="rgb(50,48,45)"/>
+  <rect x="1057" y="140" width="190" height="3" fill="rgb(200,150,60)" opacity="0.05"/>
+
+  <!-- ===== BACK WALL SHELVES ===== -->
+  <!-- Shelf unit frame -->
+  <rect x="300" y="80" width="680" height="380" fill="rgb(55,48,42)" rx="2"/>
+  <!-- Shelf boards (slightly angled for damage) -->
+  <rect x="310" y="140" width="660" height="12" fill="url(#shelfGrad)" transform="rotate(0.5, 640, 146)"/>
+  <rect x="310" y="220" width="660" height="12" fill="url(#shelfGrad)" transform="rotate(-0.8, 640, 226)"/>
+  <rect x="310" y="300" width="660" height="12" fill="url(#shelfGrad)" transform="rotate(0.3, 640, 306)"/>
+  <rect x="310" y="380" width="660" height="12" fill="url(#shelfGrad)" transform="rotate(-0.5, 640, 386)"/>
+  <!-- Broken shelf piece (fallen, angled) -->
+  <rect x="720" y="330" width="240" height="12" fill="rgb(70,60,50)" transform="rotate(18, 840, 336)"/>
+  <!-- Vertical dividers -->
+  <rect x="530" y="80" width="10" height="380" fill="rgb(62,54,46)"/>
+  <rect x="750" y="80" width="10" height="300" fill="rgb(62,54,46)"/>
+
+  <!-- ===== ITEMS ON SHELVES ===== -->
+  <!-- Top shelf - bottles -->
+  <rect x="340" y="105" width="18" height="34" rx="2" fill="rgb(45,60,45)" opacity="0.8"/>
+  <rect x="380" y="110" width="18" height="29" rx="2" fill="rgb(55,40,35)" opacity="0.8"/>
+  <!-- Broken bottle (tilted) -->
+  <rect x="450" y="108" width="16" height="30" rx="2" fill="rgb(50,55,50)" opacity="0.7" transform="rotate(25, 458, 123)"/>
+  <rect x="570" y="100" width="18" height="38" rx="2" fill="rgb(40,55,40)" opacity="0.8"/>
+  <rect x="610" y="112" width="16" height="26" rx="2" fill="rgb(60,45,35)" opacity="0.7"/>
+  <rect x="790" y="105" width="18" height="34" rx="2" fill="rgb(48,58,48)" opacity="0.8"/>
+  <!-- Second shelf - cups and items -->
+  <ellipse cx="350" cy="212" rx="12" ry="8" fill="rgb(85,80,75)" opacity="0.7"/>
+  <rect x="345" y="190" width="14" height="22" rx="3" fill="rgb(85,80,75)" opacity="0.7"/>
+  <!-- Fallen cup -->
+  <rect x="420" y="205" width="22" height="14" rx="3" fill="rgb(90,85,80)" opacity="0.6" transform="rotate(85, 431, 212)"/>
+  <rect x="580" y="188" width="14" height="30" rx="2" fill="rgb(80,75,70)" opacity="0.7"/>
+  <rect x="800" y="192" width="12" height="26" rx="3" fill="rgb(88,82,76)" opacity="0.7"/>
+  <!-- Third shelf - sparse items -->
+  <rect x="340" y="270" width="20" height="28" rx="2" fill="rgb(50,45,40)" opacity="0.6"/>
+  <rect x="560" y="275" width="14" height="23" rx="2" fill="rgb(55,50,45)" opacity="0.6" transform="rotate(-15, 567, 287)"/>
+
+  <!-- ===== COUNTER/BAR ===== -->
+  <!-- Counter body -->
+  <rect x="250" y="430" width="780" height="60" fill="url(#counterGrad)" rx="3"/>
+  <!-- Counter top surface -->
+  <rect x="245" y="425" width="790" height="12" fill="rgb(100,78,56)" rx="2"/>
+  <!-- Counter damage (chunk missing) -->
+  <polygon points="680,425 730,425 730,460 710,460 700,445 680,445" fill="rgb(35,32,30)"/>
+  <!-- Counter front panel detail -->
+  <rect x="270" y="445" width="200" height="35" fill="rgb(82,64,46)" rx="1" stroke="rgb(70,55,40)" stroke-width="1"/>
+  <rect x="490" y="445" width="200" height="35" fill="rgb(82,64,46)" rx="1" stroke="rgb(70,55,40)" stroke-width="1"/>
+  <rect x="790" y="445" width="200" height="35" fill="rgb(82,64,46)" rx="1" stroke="rgb(70,55,40)" stroke-width="1"/>
+
+  <!-- ===== ITEMS ON COUNTER ===== -->
+  <!-- Coffee machine (broken) -->
+  <rect x="380" y="385" width="60" height="40" rx="3" fill="rgb(50,50,55)"/>
+  <rect x="390" y="375" width="40" height="15" rx="2" fill="rgb(55,55,60)"/>
+  <circle cx="410" cy="400" r="6" fill="rgb(35,35,38)"/>
+  <!-- Cups on counter -->
+  <rect x="310" y="405" width="16" height="20" rx="3" fill="rgb(90,85,80)" opacity="0.8"/>
+  <!-- Tipped over cup -->
+  <rect x="520" y="412" width="20" height="14" rx="3" fill="rgb(85,80,75)" opacity="0.7" transform="rotate(90, 530, 419)"/>
+  <!-- Spilled liquid from tipped cup -->
+  <ellipse cx="548" cy="422" rx="18" ry="4" fill="rgb(50,35,25)" opacity="0.4"/>
+  <!-- Plate fragments -->
+  <path d="M 600 418 Q 615 410 625 420" stroke="rgb(95,90,85)" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 628 415 Q 635 422 630 428" stroke="rgb(95,90,85)" stroke-width="2" fill="none" opacity="0.5"/>
+
+  <!-- ===== OVERHEAD LAMP ===== -->
+  <!-- Lamp fixture -->
+  <rect x="625" y="10" width="6" height="60" fill="rgb(50,48,45)"/>
+  <polygon points="610,70 670,70 660,85 620,85" fill="rgb(60,55,50)"/>
+  <!-- Lamp bulb (dim amber) -->
+  <circle cx="640" cy="90" r="8" fill="rgb(200,150,60)" opacity="0.3"/>
+  <!-- Wire dangling from second broken lamp -->
+  <path d="M 950 10 Q 955 40 948 70 Q 942 90 950 100" stroke="rgb(50,48,45)" stroke-width="2" fill="none"/>
+  <circle cx="950" cy="105" r="4" fill="rgb(60,55,50)" opacity="0.5"/>
+
+  <!-- ===== LIGHTING EFFECTS ===== -->
+  <!-- Main lamp glow -->
+  <rect x="0" y="0" width="1280" height="720" fill="url(#lampGlow)"/>
+  <!-- Secondary lamp glow -->
+  <rect x="0" y="0" width="1280" height="720" fill="url(#lampGlow2)"/>
+
+  <!-- ===== DUST / DEBRIS PARTICLES ===== -->
+  <circle cx="180" cy="350" r="1.5" fill="rgb(150,140,120)" opacity="0.15"/>
+  <circle cx="400" cy="200" r="1" fill="rgb(160,150,130)" opacity="0.12"/>
+  <circle cx="550" cy="320" r="1.8" fill="rgb(140,130,110)" opacity="0.1"/>
+  <circle cx="700" cy="150" r="1.2" fill="rgb(155,145,125)" opacity="0.14"/>
+  <circle cx="850" cy="280" r="1" fill="rgb(150,140,120)" opacity="0.11"/>
+  <circle cx="1000" cy="400" r="1.5" fill="rgb(145,135,115)" opacity="0.13"/>
+  <circle cx="300" cy="500" r="2" fill="rgb(140,130,110)" opacity="0.1"/>
+  <circle cx="640" cy="450" r="1.3" fill="rgb(155,145,125)" opacity="0.12"/>
+  <circle cx="900" cy="550" r="1.8" fill="rgb(150,140,120)" opacity="0.09"/>
+  <circle cx="150" cy="550" r="1" fill="rgb(160,150,130)" opacity="0.1"/>
+  <circle cx="1100" cy="350" r="1.4" fill="rgb(145,135,115)" opacity="0.11"/>
+  <circle cx="480" cy="100" r="1.6" fill="rgb(150,140,120)" opacity="0.08"/>
+  <circle cx="760" cy="500" r="1.2" fill="rgb(140,130,110)" opacity="0.1"/>
+  <circle cx="1050" cy="600" r="1.5" fill="rgb(155,145,125)" opacity="0.09"/>
+  <circle cx="250" cy="250" r="1" fill="rgb(150,140,120)" opacity="0.12"/>
+
+  <!-- ===== FLOOR DEBRIS ===== -->
+  <!-- Small rubble pieces -->
+  <rect x="150" y="510" width="8" height="5" fill="rgb(65,60,55)" opacity="0.6" transform="rotate(30, 154, 513)"/>
+  <rect x="500" y="550" width="10" height="6" fill="rgb(60,55,50)" opacity="0.5" transform="rotate(-20, 505, 553)"/>
+  <rect x="800" y="530" width="7" height="4" fill="rgb(68,62,56)" opacity="0.5" transform="rotate(45, 804, 532)"/>
+  <rect x="1100" y="580" width="9" height="5" fill="rgb(62,57,52)" opacity="0.6" transform="rotate(-35, 1105, 583)"/>
+  <rect x="350" y="600" width="12" height="7" fill="rgb(58,53,48)" opacity="0.5" transform="rotate(15, 356, 604)"/>
+  <rect x="950" y="650" width="8" height="5" fill="rgb(65,60,55)" opacity="0.4" transform="rotate(-50, 954, 653)"/>
+  <!-- Glass shards -->
+  <polygon points="650,540 658,535 655,548" fill="rgb(120,130,130)" opacity="0.15"/>
+  <polygon points="420,580 427,575 430,585 423,588" fill="rgb(115,125,125)" opacity="0.12"/>
+
+  <!-- ===== VIGNETTE OVERLAY ===== -->
+  <rect x="0" y="0" width="1280" height="720" fill="rgb(15,12,10)" opacity="0.25" rx="0"/>
+</svg>

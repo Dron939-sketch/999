@@ -1,0 +1,14 @@
+{
+  "name": "viktor",
+  "body": { "height": 0.85, "build": 0.5, "skin_color": [212, 184, 150] },
+  "face": { "shape": 0.8, "eye_size": 0.8, "eye_color": [120, 130, 140], "eyebrow_thickness": 0.7, "nose_size": 0.6, "lip_fullness": 0.3 },
+  "hair": { "color": [10, 10, 10], "style": "SlickedBack", "length": 0.3 },
+  "outfit": {
+    "top": { "kind": "Suit", "color": [26, 26, 46], "secondary_color": [139, 0, 0] },
+    "bottom": { "kind": "Pants", "color": [20, 20, 40] },
+    "shoes": { "color": [10, 10, 10], "kind": "Formal" },
+    "accessories": [
+      { "kind": "Tie", "color": [139, 0, 0] }
+    ]
+  }
+}

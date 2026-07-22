@@ -1,0 +1,40 @@
+{
+  "name": "Marshal Cole",
+  "body": {
+    "height": 0.75,
+    "build": 0.55,
+    "skin_color": [175, 140, 110]
+  },
+  "face": {
+    "shape": 0.5,
+    "eye_size": 0.8,
+    "eye_color": [90, 70, 40],
+    "eyebrow_thickness": 0.6,
+    "nose_size": 0.5,
+    "lip_fullness": 0.35
+  },
+  "hair": {
+    "color": [60, 45, 30],
+    "style": "Short",
+    "length": 0.25
+  },
+  "outfit": {
+    "top": {
+      "kind": "TrenchCoat",
+      "color": [110, 85, 55],
+      "secondary_color": [90, 70, 45]
+    },
+    "bottom": {
+      "kind": "Pants",
+      "color": [70, 55, 40]
+    },
+    "shoes": {
+      "kind": "Boots",
+      "color": [60, 45, 30]
+    },
+    "accessories": [
+      { "kind": "Hat", "color": [100, 80, 50] },
+      { "kind": "Belt", "color": [80, 60, 35] }
+    ]
+  }
+}

@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- Night city rooftop scene -->
+  
+  <!-- Sky gradient (night) -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0a1a"/>
+      <stop offset="60%" stop-color="#1a1a3a"/>
+      <stop offset="100%" stop-color="#2a2040"/>
+    </linearGradient>
+    <radialGradient id="moon-glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#fffce8" stop-opacity="1"/>
+      <stop offset="60%" stop-color="#fffce8" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#fffce8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  
+  <rect x="0" y="0" width="1280" height="720" fill="url(#sky)"/>
+  
+  <!-- Stars -->
+  <circle cx="100" cy="50" r="1.5" fill="white" opacity="0.8"/>
+  <circle cx="250" cy="30" r="1" fill="white" opacity="0.6"/>
+  <circle cx="400" cy="70" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="550" cy="25" r="1" fill="white" opacity="0.9"/>
+  <circle cx="700" cy="55" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="850" cy="40" r="1" fill="white" opacity="0.8"/>
+  <circle cx="1000" cy="60" r="1.5" fill="white" opacity="0.6"/>
+  <circle cx="1150" cy="35" r="1" fill="white" opacity="0.7"/>
+  <circle cx="180" cy="90" r="1" fill="white" opacity="0.5"/>
+  <circle cx="620" cy="85" r="1" fill="white" opacity="0.4"/>
+  <circle cx="950" cy="80" r="1.5" fill="white" opacity="0.6"/>
+  <circle cx="1100" cy="95" r="1" fill="white" opacity="0.7"/>
+  <circle cx="320" cy="110" r="1" fill="white" opacity="0.3"/>
+  <circle cx="780" cy="15" r="2" fill="white" opacity="0.9"/>
+  
+  <!-- Moon -->
+  <circle cx="1050" cy="100" r="60" fill="url(#moon-glow)"/>
+  <circle cx="1050" cy="100" r="35" fill="#fffce8"/>
+  <circle cx="1040" cy="90" r="6" fill="#eee8cc" opacity="0.5"/>
+  <circle cx="1060" cy="105" r="4" fill="#eee8cc" opacity="0.4"/>
+  <circle cx="1045" cy="110" r="3" fill="#eee8cc" opacity="0.3"/>
+  
+  <!-- Distant city skyline -->
+  <rect x="0" y="320" width="80" height="200" fill="#12121e"/>
+  <rect x="85" y="280" width="60" height="240" fill="#0e0e1a"/>
+  <rect x="150" y="340" width="70" height="180" fill="#14142a"/>
+  <rect x="225" y="260" width="50" height="260" fill="#0e0e1a"/>
+  <rect x="280" y="300" width="80" height="220" fill="#121222"/>
+  <rect x="365" y="350" width="55" height="170" fill="#14142a"/>
+  <rect x="425" y="290" width="65" height="230" fill="#101020"/>
+  <rect x="495" y="330" width="50" height="190" fill="#14142a"/>
+  <rect x="550" y="270" width="70" height="250" fill="#0c0c18"/>
+  <rect x="625" y="310" width="60" height="210" fill="#121222"/>
+  <rect x="690" y="350" width="45" height="170" fill="#14142a"/>
+  <rect x="740" y="280" width="80" height="240" fill="#0e0e1a"/>
+  <rect x="825" y="320" width="55" height="200" fill="#121222"/>
+  <rect x="885" y="290" width="65" height="230" fill="#101020"/>
+  <rect x="955" y="350" width="50" height="170" fill="#14142a"/>
+  <rect x="1010" y="300" width="70" height="220" fill="#0e0e1a"/>
+  <rect x="1085" y="340" width="60" height="180" fill="#121222"/>
+  <rect x="1150" y="270" width="55" height="250" fill="#0c0c18"/>
+  <rect x="1210" y="310" width="70" height="210" fill="#14142a"/>
+  
+  <!-- Building windows (lit) -->
+  <rect x="92" y="290" width="8" height="10" fill="#ffcc44" opacity="0.7"/>
+  <rect x="110" y="310" width="8" height="10" fill="#ffcc44" opacity="0.5"/>
+  <rect x="232" y="275" width="8" height="10" fill="#44ccff" opacity="0.6"/>
+  <rect x="248" y="300" width="8" height="10" fill="#ffcc44" opacity="0.4"/>
+  <rect x="295" y="320" width="8" height="10" fill="#ffcc44" opacity="0.6"/>
+  <rect x="330" y="340" width="8" height="10" fill="#44ccff" opacity="0.5"/>
+  <rect x="440" y="305" width="8" height="10" fill="#ffcc44" opacity="0.7"/>
+  <rect x="460" y="330" width="8" height="10" fill="#44ccff" opacity="0.4"/>
+  <rect x="565" y="285" width="8" height="10" fill="#ffcc44" opacity="0.6"/>
+  <rect x="590" y="310" width="8" height="10" fill="#ffcc44" opacity="0.5"/>
+  <rect x="755" y="295" width="8" height="10" fill="#44ccff" opacity="0.6"/>
+  <rect x="790" y="320" width="8" height="10" fill="#ffcc44" opacity="0.4"/>
+  <rect x="900" y="305" width="8" height="10" fill="#ffcc44" opacity="0.7"/>
+  <rect x="920" y="340" width="8" height="10" fill="#44ccff" opacity="0.5"/>
+  <rect x="1025" y="315" width="8" height="10" fill="#ffcc44" opacity="0.6"/>
+  <rect x="1050" y="340" width="8" height="10" fill="#ffcc44" opacity="0.4"/>
+  
+  <!-- Rooftop floor -->
+  <rect x="0" y="520" width="1280" height="200" fill="#2a2a3a"/>
+  <rect x="0" y="518" width="1280" height="6" fill="#3a3a4a"/>
+  
+  <!-- Rooftop details -->
+  <!-- Vent/AC unit -->
+  <rect x="80" y="470" width="70" height="50" rx="3" fill="#3a3a4a" stroke="#4a4a5a" stroke-width="2"/>
+  <rect x="100" y="460" width="30" height="12" rx="2" fill="#4a4a5a"/>
+  <line x1="90" y1="485" x2="90" y2="510" stroke="#4a4a5a" stroke-width="1"/>
+  <line x1="105" y1="485" x2="105" y2="510" stroke="#4a4a5a" stroke-width="1"/>
+  <line x1="120" y1="485" x2="120" y2="510" stroke="#4a4a5a" stroke-width="1"/>
+  <line x1="135" y1="485" x2="135" y2="510" stroke="#4a4a5a" stroke-width="1"/>
+  
+  <!-- Antenna -->
+  <line x1="1100" y1="380" x2="1100" y2="520" stroke="#4a4a5a" stroke-width="3"/>
+  <line x1="1085" y1="400" x2="1115" y2="400" stroke="#4a4a5a" stroke-width="2"/>
+  <line x1="1090" y1="420" x2="1110" y2="420" stroke="#4a4a5a" stroke-width="2"/>
+  <circle cx="1100" cy="378" r="4" fill="#ff3333" opacity="0.8"/>
+  
+  <!-- Railing -->
+  <line x1="0" y1="515" x2="1280" y2="515" stroke="#5a5a6a" stroke-width="3"/>
+  <line x1="50" y1="490" x2="50" y2="520" stroke="#5a5a6a" stroke-width="2"/>
+  <line x1="200" y1="490" x2="200" y2="520" stroke="#5a5a6a" stroke-width="2"/>
+  <line x1="350" y1="490" x2="350" y2="520" stroke="#5a5a6a" stroke-width="2"/>
+  <line x1="500" y1="490" x2="500" y2="520" stroke="#5a5a6a" stroke-width="2"/>
+  <line x1="650" y1="490" x2="650" y2="520" stroke="#5a5a6a" stroke-width="2"/>
+  <line x1="800" y1="490" x2="800" y2="520" stroke="#5a5a6a" stroke-width="2"/>
+  <line x1="950" y1="490" x2="950" y2="520" stroke="#5a5a6a" stroke-width="2"/>
+  <line x1="0" y1="490" x2="1280" y2="490" stroke="#5a5a6a" stroke-width="2"/>
+  
+  <!-- Rooftop door/stairwell -->
+  <rect x="1140" y="430" width="80" height="90" rx="3" fill="#3a3a4a" stroke="#4a4a5a" stroke-width="2"/>
+  <rect x="1145" y="435" width="70" height="80" rx="2" fill="#2a2a38"/>
+  <circle cx="1205" cy="475" r="4" fill="#6a6a7a"/>
+  
+  <!-- Puddles (reflective) -->
+  <ellipse cx="400" cy="560" rx="60" ry="8" fill="#1a1a3a" opacity="0.5"/>
+  <ellipse cx="900" cy="580" rx="45" ry="6" fill="#1a1a3a" opacity="0.4"/>
+  
+  <!-- Atmospheric fog/haze near horizon -->
+  <rect x="0" y="490" width="1280" height="40" fill="#1a1a2e" opacity="0.3"/>
+</svg>

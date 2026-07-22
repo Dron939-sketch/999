@@ -1,0 +1,310 @@
+// "The Heist"
+// A three-person vault job goes sideways.
+// Showcases: coordinated parallel movement, props, let bindings,
+//            camera shake, over-shoulder shots, and layered do/together blocks.
+
+import character renko from "assets/characters/procedural/renko.json"
+import character lina from "assets/characters/procedural/lina.json"
+import character grim from "assets/characters/procedural/grim.json"
+import set vault from "assets/sets/vault.svg"
+import set corridor from "assets/sets/corridor.svg"
+
+config {
+    width: 1920
+    height: 1080
+    fps: 30
+    background: #0d0d18
+}
+
+// --- CUSTOM POSES ---
+
+pose "crouching" {
+    torso-squash: 0.82
+    knee-left-bend: 0.6
+    knee-right-bend: 0.6
+    torso-bend: 15
+    line-of-action: -0.1
+    arm-left-angle: 15
+    arm-right-angle: -15
+    head-nod: -8
+    eye-open-left: 1.1
+    eye-open-right: 1.1
+}
+
+pose "lockpicking" {
+    torso-bend: 20
+    head-nod: 18
+    arm-left-angle: -60
+    arm-right-angle: -50
+    elbow-left-bend: 0.85
+    elbow-right-bend: 0.9
+    eye-open-left: 1.2
+    eye-open-right: 0.6
+    mouth-open: 0.05
+    line-of-action: 0.1
+}
+
+pose "lookout" {
+    head-tilt: -12
+    eye-direction: -0.8
+    shoulder-left: 0.2
+    shoulder-right: -0.1
+    arm-left-angle: 10
+    arm-right-angle: -25
+    elbow-right-bend: 0.3
+    eyebrow-left: 0.3
+    eyebrow-right: -0.2
+    line-of-action: -0.03
+}
+
+pose "carrying-heavy" {
+    torso-bend: 12
+    torso-squash: 0.92
+    arm-left-angle: -40
+    arm-right-angle: 40
+    elbow-left-bend: 0.7
+    elbow-right-bend: 0.7
+    shoulder-left: 0.3
+    shoulder-right: 0.3
+    knee-left-bend: 0.2
+    knee-right-bend: 0.2
+    line-of-action: 0.08
+    mouth-smile: -0.2
+}
+
+pose "celebrating" {
+    arm-left-angle: -85
+    arm-right-angle: 85
+    elbow-left-bend: 0.4
+    elbow-right-bend: 0.4
+    shoulder-left: -0.4
+    shoulder-right: -0.4
+    y-offset: 0.03
+    mouth-smile: 0.8
+    mouth-open: 0.3
+    eyebrow-left: 0.4
+    eyebrow-right: 0.4
+    eye-open-left: 1.1
+    eye-open-right: 1.1
+}
+
+pose "hand-signal" {
+    arm-right-angle: -70
+    elbow-right-bend: 0.2
+    arm-left-angle: 10
+    head-nod: -3
+    eye-direction: 0.5
+    mouth-smile: 0.0
+    eyebrow-left: -0.2
+    eyebrow-right: -0.2
+}
+
+pose "frozen" {
+    torso-squash: 0.98
+    shoulder-left: 0.3
+    shoulder-right: 0.3
+    eye-open-left: 1.3
+    eye-open-right: 1.3
+    eyebrow-left: 0.6
+    eyebrow-right: 0.6
+    mouth-open: 0.1
+    mouth-smile: -0.4
+}
+
+pose "sprinting" {
+    torso-bend: 18
+    line-of-action: 0.2
+    arm-left-angle: -55
+    arm-right-angle: 55
+    elbow-left-bend: 0.6
+    elbow-right-bend: 0.6
+    leg-left-angle: -30
+    leg-right-angle: 30
+    knee-left-bend: 0.4
+    knee-right-bend: 0.1
+}
+
+// --- SCENE 1: The Approach ---
+// Three figures move through a dark corridor toward the vault.
+
+scene "the-approach" (duration: 16s, set: corridor) {
+
+    // Lina is already inside, scouting ahead.
+    place lina at right-third facing right
+    place renko at left-edge facing right
+    place grim at left-edge facing right
+
+    camera wide
+    wait 1s
+
+    // Lina signals from her position.
+    camera close-up lina
+    lina pose "hand-signal"
+    wait 1.5s
+
+    // Renko enters from the left.
+    camera wide
+    renko enters left over 2s ease-out
+    wait 0.3s
+
+    renko moves-to left-third over 1.5s ease-in-out
+    wait 0.3s
+
+    // Grim enters last, taking rear guard.
+    grim enters left over 2s ease-out
+    wait 0.5s
+
+    // Cut to Renko acknowledging — he crouches.
+    camera close-up renko
+    renko pose "crouching"
+    wait 1s
+
+    // Grim stands guard at the rear.
+    camera over-shoulder grim
+    grim pose "lookout"
+    wait 1.5s
+
+    // Wide shot: they're in position.
+    camera wide
+    wait 1s
+
+    transition fade-black 0.8s
+}
+
+// --- SCENE 2: Cracking the Vault ---
+// Renko works the lock while the others keep watch.
+
+scene "cracking-the-vault" (duration: 20s, set: vault) {
+
+    place renko at center facing right
+    place lina at left-third facing right
+    place grim at left-edge facing right
+
+    camera wide
+    wait 1s
+
+    // Renko approaches the vault door.
+    renko moves-to (0.55, 0.5) over 1.5s ease-in-out
+    camera zoom-to renko over 1.5s ease-in-out
+    wait 0.3s
+
+    // He starts working.
+    renko pose "lockpicking"
+    camera close-up renko
+    wait 3s
+
+    // Tension beat — Lina checks behind her.
+    camera close-up lina
+    lina pose "lookout"
+    wait 1.5s
+
+    // Back to Renko, closer now.
+    camera extreme-close-up renko
+    wait 2s
+
+    // The vault clicks. Camera shake to sell it.
+    camera shake 0.4s intensity 5
+    wait 0.2s
+
+    // Renko reacts — he's in.
+    renko pose "excited"
+    camera medium renko
+    wait 0.8s
+
+    // Create the prize.
+    let diamond = prop("diamond-case", "assets/props/diamond-case.svg") at (0.65, 0.55)
+    diamond shows over 0.6s ease-out
+    diamond scales 1.3 over 0.6s ease-out
+    wait 0.5s
+
+    // Wide shot reveal.
+    camera wide
+    wait 0.8s
+
+    // Lina sees it.
+    camera close-up lina
+    lina pose "surprised"
+    wait 0.8s
+
+    // Even Grim cracks a smile.
+    camera close-up grim
+    grim pose "celebrating"
+    wait 0.8s
+
+    // Renko grabs it.
+    together {
+        renko moves-to (0.65, 0.5) over 0.8s ease-in
+        diamond hides over 0.3s ease-in
+    }
+    renko pose "carrying-heavy"
+    wait 0.5s
+
+    camera wide
+    wait 0.5s
+
+    transition dissolve 1s
+}
+
+// --- SCENE 3: The Alarm ---
+// Everything goes wrong. They have to run.
+
+scene "the-alarm" (duration: 18s, set: corridor) {
+
+    place renko at center facing left
+    place lina at right-third facing left
+    place grim at right facing left
+
+    camera wide
+    renko pose "carrying-heavy"
+    wait 0.8s
+
+    // ALARM — big camera shake.
+    camera shake 1s intensity 10
+    wait 0.2s
+
+    // They all freeze.
+    together {
+        renko pose "frozen"
+        lina pose "frozen"
+        grim pose "frozen"
+    }
+    wait 1s
+
+    // Beat. Then Lina takes charge.
+    camera close-up lina
+    lina pose "hand-signal"
+    wait 0.8s
+
+    // Everyone sprints left — staggered exits.
+    camera wide
+
+    // Renko bolts first — he's in the middle, closest to the exit.
+    renko pose "sprinting"
+    renko moves-to left-edge over 1s linear
+    renko exits left over 0.5s ease-in
+
+    // Lina follows.
+    lina pose "sprinting"
+    lina moves-to left-edge over 1.2s linear
+    lina exits left over 0.5s ease-in
+
+    // Grim brings up the rear.
+    grim pose "sprinting"
+    grim moves-to left-edge over 1.5s linear
+
+    camera pan-to (0.2, 0.5) over 1s ease-in-out
+    wait 0.3s
+
+    grim exits left over 0.5s ease-in
+
+    // Linger on the empty, alarming corridor.
+    camera wide
+    wait 1.5s
+
+    // Rapid camera shakes — the building is reacting.
+    camera shake 0.5s intensity 6
+    wait 0.5s
+
+    // Smash to black.
+    transition fade-black 0.5s
+}

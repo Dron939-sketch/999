@@ -1,0 +1,97 @@
+{
+  "name": "maya",
+  "height": 440,
+  "skeleton": {
+    "root": {
+      "name": "root",
+      "pivot": [0, 0],
+      "offset": [0, 0],
+      "children": [
+        {
+          "name": "torso",
+          "part": "torso",
+          "pivot": [50, 10],
+          "offset": [0, 0],
+          "z_order": 2,
+          "children": [
+            {
+              "name": "head",
+              "part": "head",
+              "pivot": [60, 120],
+              "offset": [0, -12],
+              "z_order": 5
+            },
+            {
+              "name": "arm_left",
+              "part": "arm_left",
+              "pivot": [17, 5],
+              "offset": [-40, 8],
+              "rotation": 8,
+              "z_order": 1
+            },
+            {
+              "name": "arm_right",
+              "part": "arm_right",
+              "pivot": [17, 5],
+              "offset": [40, 8],
+              "rotation": -8,
+              "z_order": 3
+            },
+            {
+              "name": "leg_left",
+              "part": "leg_left",
+              "pivot": [17, 3],
+              "offset": [-14, 115],
+              "z_order": 0
+            },
+            {
+              "name": "leg_right",
+              "part": "leg_right",
+              "pivot": [17, 3],
+              "offset": [14, 115],
+              "z_order": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "poses": {
+    "idle": {
+      "name": "idle",
+      "bones": {
+        "arm_left": { "rotation": 8 },
+        "arm_right": { "rotation": -8 }
+      }
+    },
+    "thinking": {
+      "name": "thinking",
+      "transition_duration": 0.4,
+      "bones": {
+        "head": { "rotation": -8 },
+        "arm_left": { "rotation": 8 },
+        "arm_right": { "rotation": -85, "offset": [30, -10] }
+      }
+    },
+    "pointing": {
+      "name": "pointing",
+      "transition_duration": 0.3,
+      "bones": {
+        "torso": { "rotation": 3 },
+        "arm_left": { "rotation": 10 },
+        "arm_right": { "rotation": -60 }
+      }
+    },
+    "surprised": {
+      "name": "surprised",
+      "transition_duration": 0.25,
+      "bones": {
+        "head": { "rotation": 5, "offset": [0, -3] },
+        "arm_left": { "rotation": 40 },
+        "arm_right": { "rotation": -40 },
+        "leg_left": { "rotation": 5 },
+        "leg_right": { "rotation": -5 }
+      }
+    }
+  }
+}

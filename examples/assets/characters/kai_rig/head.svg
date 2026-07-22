@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 120">
+  <!-- Neck -->
+  <rect x="42" y="100" width="26" height="20" rx="4" fill="#e8c8a0"/>
+
+  <!-- Head shape -->
+  <ellipse cx="55" cy="60" rx="40" ry="44" fill="#e8c8a0"/>
+
+  <!-- Hair base - messy dark hair covering top of head -->
+  <ellipse cx="55" cy="42" rx="42" ry="34" fill="#2d3436"/>
+  <!-- Hair fringe across forehead -->
+  <path d="M18 52 Q25 38 38 36 Q45 48 55 34 Q65 46 72 36 Q85 38 92 52 Q80 44 70 46 Q60 40 50 46 Q38 42 28 48 Z" fill="#2d3436"/>
+
+  <!-- Spiky bits sticking up -->
+  <path d="M30 28 L26 6 L38 22 Z" fill="#2d3436"/>
+  <path d="M48 20 L50 0 L56 18 Z" fill="#2d3436"/>
+  <path d="M62 18 L68 2 L70 20 Z" fill="#2d3436"/>
+  <path d="M76 24 L84 8 L80 26 Z" fill="#2d3436"/>
+  <path d="M38 24 L34 10 L44 22 Z" fill="#2d3436"/>
+
+  <!-- Ears -->
+  <ellipse cx="16" cy="62" rx="6" ry="8" fill="#e8c8a0"/>
+  <ellipse cx="94" cy="62" rx="6" ry="8" fill="#e8c8a0"/>
+
+  <!-- Eyes (behind glasses) -->
+  <ellipse cx="40" cy="62" rx="5" ry="5.5" fill="white"/>
+  <ellipse cx="70" cy="62" rx="5" ry="5.5" fill="white"/>
+  <circle cx="41" cy="63" r="3" fill="#2d3436"/>
+  <circle cx="71" cy="63" r="3" fill="#2d3436"/>
+  <!-- Pupils -->
+  <circle cx="42" cy="62.5" r="1.2" fill="white"/>
+  <circle cx="72" cy="62.5" r="1.2" fill="white"/>
+
+  <!-- Glasses frames -->
+  <rect x="28" y="54" width="24" height="18" rx="4" fill="none" stroke="#333" stroke-width="2.5"/>
+  <rect x="58" y="54" width="24" height="18" rx="4" fill="none" stroke="#333" stroke-width="2.5"/>
+  <!-- Bridge -->
+  <line x1="52" y1="63" x2="58" y2="63" stroke="#333" stroke-width="2.5"/>
+  <!-- Temple arms -->
+  <line x1="28" y1="60" x2="18" y2="58" stroke="#333" stroke-width="2"/>
+  <line x1="82" y1="60" x2="92" y2="58" stroke="#333" stroke-width="2"/>
+
+  <!-- Eyebrows -->
+  <path d="M30 50 Q40 46 50 50" fill="none" stroke="#2d3436" stroke-width="2" stroke-linecap="round"/>
+  <path d="M60 50 Q70 46 80 50" fill="none" stroke="#2d3436" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Nose -->
+  <path d="M53 72 Q55 78 58 74" fill="none" stroke="#d4a984" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Friendly smile -->
+  <path d="M40 84 Q55 96 70 84" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
+  <!-- Smile cheek dimples -->
+  <circle cx="34" cy="80" r="4" fill="#f0b8a0" opacity="0.5"/>
+  <circle cx="76" cy="80" r="4" fill="#f0b8a0" opacity="0.5"/>
+</svg>
