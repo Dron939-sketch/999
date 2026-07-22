@@ -1,11 +1,12 @@
-﻿FROM rust:latest AS builder
-WORKDIR /app
-COPY . .
-RUN cargo build --release
+﻿   FROM rust:1.80-bookworm AS builder
+   WORKDIR /app
+   COPY Cargo.toml ./
+   COPY src ./src
+   RUN cargo build --release
 
-FROM debian:bookworm-slim
-RUN apt-get update && apt-get install -y ca-certificates ffmpeg && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /app/target/release/animdsl /usr/local/bin/animdsl
-COPY examples /app/examples
-WORKDIR /app
-CMD ["animdsl", "render", "examples/the-last-barista.anim", "-o", "output.mp4"]
+   FROM debian:bookworm-slim
+   RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg ca-certificates && rm -rf /var/lib/apt/lists/*
+   COPY --from=builder /app/target/release/animdsl /usr/local/bin/animdsl
+   RUN mkdir -p /data
+   EXPOSE 80
+   CMD ["animdsl"]
