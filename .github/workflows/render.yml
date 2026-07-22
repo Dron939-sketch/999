@@ -1,0 +1,30 @@
+name: Render Animation
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Build Docker image
+        run: docker build -t animdsl .
+      
+      - name: Render video
+        run: |
+          mkdir -p output
+          docker run --rm -v ${{ github.workspace }}/output:/app/output animdsl
+      
+      - name: Upload video artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-video
+          path: output/output.mp4
+          retention-days: 30
