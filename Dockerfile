@@ -32,4 +32,4 @@ COPY --from=builder /app/target/release/animdsl /app/animdsl
 COPY --from=builder /app/examples /app/examples
 
 # При старте контейнера программа сразу рендерит видео с философом
-CMD ["./animdsl", "render", "examples/the-last-barista.anim", "-o", "/app/output/result.mp4"]
+CMD ["./animdsl", "render", "examples/freeman-style.anim", "-o", "/app/output/result.mp4"]
