@@ -8,3 +8,5 @@ build:
 
 run:
   persistenceMount: /data
+  command: animdsl
+  args: render input.anim -o /data/output.mp4
