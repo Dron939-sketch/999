@@ -33,4 +33,4 @@ COPY --from=builder /app/examples /app/examples
 
 # ⚠️ ИЗМЕНЕННАЯ КОМАНДА ЗАПУСКА:
 # При старте контейнера программа сразу рендерит видео
-CMD ["./animdsl", "render", "examples/the-last-barista.anim", "-o", "/app/output.mp4"]
+CMD ["./animdsl", "render", "examples/my-first-animation.anim", "-o", "/app/output.mp4"]
