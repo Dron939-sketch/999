@@ -14,17 +14,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Build Docker image
-        run: docker build -t animdsl .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker image (с кэшем для ускорения)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          tags: animdsl:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       
       - name: Render video
         run: |
           mkdir -p output
+          echo "Запуск рендеринга..."
           docker run --rm -v ${{ github.workspace }}/output:/app/output animdsl
+          echo "Содержимое папки output после рендера:"
+          ls -la output/
       
       - name: Upload video artifact
         uses: actions/upload-artifact@v4
         with:
           name: rendered-video
-          path: output/output.mp4
+          path: output/result.mp4
           retention-days: 30
