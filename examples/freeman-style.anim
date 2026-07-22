@@ -1,0 +1,30 @@
+scene "freeman-monologue" (duration: 30s, set: void) {
+    camera medium
+    background black
+    
+    text "Привет. Я — ваш внутренний критик." at top
+    wait 3s
+    
+    text "Ты опять пишешь код, который никто не прочитает." at center
+    wait 4s
+    
+    text "Зачем? Чтобы почувствовать себя умным?" at center
+    wait 3s
+    
+    text "Или чтобы доказать что-то себе?" at center
+    wait 4s
+    
+    text "Знаешь что? Это нормально." at center
+    wait 3s
+    
+    text "Мы все пишем код, который никто не прочитает." at center
+    wait 4s
+    
+    text "Включая тех, кто пишет фреймворки." at center
+    wait 3s
+    
+    text "Так что продолжай. Это часть пути." at center
+    wait 3s
+    
+    transition fade-black 2s
+}
