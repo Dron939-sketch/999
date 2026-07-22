@@ -13,7 +13,6 @@ RUN apt-get update && \
 
 COPY --from=builder /app/target/release/animdsl /usr/local/bin/animdsl
 
-# Копируем сценарий из репозитория
 COPY input.anim /app/input.anim
 
 RUN mkdir -p /data
