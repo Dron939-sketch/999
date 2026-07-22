@@ -19,11 +19,14 @@ pose "thinking" {
     mouth-smile: 0.1
 }
 
-scene "intro" (duration: 5s, set: dark-room) {
+scene "intro" {
+    duration: 5
+    set: dark-room
+    
     place fred at center facing front
     camera wide
-    wait 2s
+    wait 2
     text "Это тестовая анимация." at top
-    wait 2s
-    transition fade-black 1s
+    wait 2
+    transition fade-black 1
 }
