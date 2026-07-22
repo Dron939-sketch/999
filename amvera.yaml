@@ -1,5 +1,6 @@
 meta:
   tool: docker
+  toolchain: rust:nightly-bookworm
 
 build:
   dockerfile: Dockerfile
