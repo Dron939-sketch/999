@@ -1,0 +1,9 @@
+﻿meta:
+  tool: docker
+
+build:
+  dockerfile: Dockerfile
+  skip: false
+
+run:
+  persistenceMount: /data
