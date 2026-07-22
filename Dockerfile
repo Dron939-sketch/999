@@ -31,9 +31,6 @@ COPY --from=builder /app/target/release/animdsl /app/animdsl
 # Копируем папку с примерами, чтобы было что рендерить
 COPY --from=builder /app/examples /app/examples
 
-# ⚠️ ВАЖНО ДЛЯ AMVERA:
-# Amvera ожидает, что приложение работает постоянно (как веб-сервер).
-# Поскольку ваша программа — это CLI-утилита (выполнила задачу и закрылась),
-# мы добавляем команду, которая выводит справку и "засыпает", 
-# чтобы контейнер не закрывался и Amvera не помечала его как "Упавший".
-CMD ["sh", "-c", "./animdsl --version && echo 'Готово к работе. Для рендеринга выполните: ./animdsl render examples/the-last-barista.anim -o output.mp4' && tail -f /dev/null"]
+# ⚠️ ИЗМЕНЕННАЯ КОМАНДА ЗАПУСКА:
+# При старте контейнера программа сразу рендерит видео
+CMD ["./animdsl", "render", "examples/the-last-barista.anim", "-o", "/app/output.mp4"]
