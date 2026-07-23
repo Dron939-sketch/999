@@ -1,5 +1,14 @@
-// "Freeman Style Monologue"
-// 30-секундный минималистичный ролик. Используем проверенные ресурсы marshal и server-dark.
+// "The Voice in Your Head"
+// 30-секундный ролик в стиле Мистера Фримена.
+// Идеально ложится под закадровый монолог.
+// 
+// Тайминг под голос:
+// 0-5с:   "Привет. Я — твой внутренний критик."
+// 5-12с:  "Ты опять пишешь код, который никто не прочитает."
+// 12-18с: "Зачем? Чтобы почувствовать себя умным?"
+// 18-24с: "Или чтобы доказать что-то себе?"
+// 24-28с: "Продолжай. Это часть пути."
+// 28-30с: (пауза, уход в темноту)
 
 import character marshal from "assets/characters/procedural/marshal.json"
 import set server-dark from "assets/sets/server-dark.svg"
@@ -8,63 +17,170 @@ config {
     width: 1920
     height: 1080
     fps: 30
-    background: #050505 // Почти черный фон для атмосферы Фримена
+    background: #000000
 }
 
 // --- ПОЗЫ В СТИЛЕ ФРИМЕНА ---
 
-pose "freeman-stare" {
+// Спокойное, оценивающее наблюдение
+pose "freeman-calm" {
     torso-squash: 1.02
     line-of-action: 0.0
     head-nod: -2
     eye-open-left: 0.85
     eye-open-right: 0.85
-    eyebrow-left: -0.3
-    eyebrow-right: -0.3
-    mouth-smile: -0.2 // Строгое выражение лица
+    eye-direction: 0.0
+    eyebrow-left: -0.2
+    eyebrow-right: -0.2
+    mouth-smile: -0.15
+    shoulder-left: -0.05
+    shoulder-right: -0.05
 }
 
-pose "freeman-point" {
-    torso-bend: 5
-    arm-right-angle: -45 // Указывает прямо в камеру
-    elbow-right-bend: 0.2
-    head-nod: -5
+// Лёгкое моргание — момент "осознания"
+pose "freeman-blink" {
+    torso-squash: 1.01
+    head-nod: -1
+    eye-open-left: 0.3
+    eye-open-right: 0.3
+    mouth-smile: -0.1
+}
+
+// Прищур — скепсис, недоверие
+pose "freeman-squint" {
+    torso-squash: 1.02
+    head-tilt: -3
+    head-nod: -2
+    eye-open-left: 0.5
+    eye-open-right: 0.5
+    eyebrow-left: -0.4
+    eyebrow-right: -0.4
+    mouth-smile: -0.25
+}
+
+// Нахмуренный взгляд — обвинение
+pose "freeman-stern" {
+    torso-squash: 1.03
+    line-of-action: 0.03
+    head-nod: -4
     eye-open-left: 0.9
     eye-open-right: 0.9
+    eyebrow-left: -0.5
+    eyebrow-right: -0.5
+    mouth-smile: -0.3
+    shoulder-left: -0.1
+    shoulder-right: -0.1
+}
+
+// Указывающий жест — "это про тебя"
+pose "freeman-point" {
+    torso-bend: 4
+    torso-squash: 1.02
+    head-tilt: -2
+    head-nod: -3
+    arm-right-angle: -50
+    elbow-right-bend: 0.15
+    arm-left-angle: -5
+    eye-open-left: 0.95
+    eye-open-right: 0.95
+    eyebrow-left: -0.3
+    eyebrow-right: -0.3
+    mouth-open: 0.1
+}
+
+// Лёгкая усмешка — "я знаю правду"
+pose "freeman-smirk" {
+    torso-squash: 1.02
+    head-tilt: 4
+    head-nod: -1
+    eye-open-left: 0.8
+    eye-open-right: 0.85
+    eyebrow-left: 0.15
+    eyebrow-right: -0.2
+    mouth-smile: 0.35
 }
 
 // --- СЦЕНА (30 секунд) ---
 
-scene "freeman-void" (duration: 30s, set: server-dark) {
-    
-    // 0-5 сек: Появление в темноте
+scene "freeman-monologue" (duration: 30s, set: server-dark) {
+
+    // Размещаем персонажа в центре
     place marshal at center facing front
-    marshal pose "freeman-stare"
-    
+    marshal pose "freeman-calm"
+
+    // === 0-5 сек: "Привет. Я — твой внутренний критик." ===
+    // Общий план — появляется из темноты
     camera wide
-    wait 3s
-    camera medium
+    wait 1.5s
+    
+    // Плавное приближение
+    camera medium marshal
+    wait 1.5s
+    
+    // Лёгкое моргание — "я тебя вижу"
+    marshal pose "freeman-blink"
+    wait 0.3s
+    marshal pose "freeman-calm"
+    wait 1.7s
+
+    // === 5-12 сек: "Ты опять пишешь код, который никто не прочитает." ===
+    // Крупный план — давление нарастает
+    camera close-up marshal
+    marshal pose "freeman-squint"
+    wait 2.5s
+    
+    // Возврат к спокойствию — "но это не осуждение"
+    marshal pose "freeman-calm"
+    wait 2s
+    
+    // Снова прищур — "или всё-таки осуждение?"
+    marshal pose "freeman-squint"
     wait 2s
 
-    // 5-15 сек: Приближение и "обвинительный" жест
-    together {
-        camera zoom-to marshal over 3s ease-in-out
-        marshal pose "freeman-point"
-    }
-    wait 4s
-
-    // 15-22 сек: Экстремально крупный план (давление на зрителя)
+    // === 12-18 сек: "Зачем? Чтобы почувствовать себя умным?" ===
+    // Экстремально крупный план — только глаза
     camera extreme-close-up marshal
-    wait 4s
+    marshal pose "freeman-stern"
+    wait 2.5s
+    
+    // Лёгкая усмешка — "я знаю ответ"
+    marshal pose "freeman-smirk"
+    wait 2s
+    
+    // Снова серьёзный
+    marshal pose "freeman-stern"
+    wait 1.5s
 
-    // 22-28 сек: Возврат в спокойное состояние
-    together {
-        marshal pose "freeman-stare"
-        camera zoom-to (0.5, 0.5) over 3s ease-out // Отъезд камеры
-    }
-    wait 3s
+    // === 18-24 сек: "Или чтобы доказать что-то себе?" ===
+    // Указывающий жест — "это про тебя"
+    camera close-up marshal
+    marshal pose "freeman-point"
+    wait 2s
+    
+    // Лёгкая тряска камеры — эмоциональный удар
+    camera shake 0.4s intensity 3
+    
+    // Возврат к спокойствию
+    marshal pose "freeman-calm"
+    wait 2s
+    
+    // Снова моргание
+    marshal pose "freeman-blink"
+    wait 0.3s
+    marshal pose "freeman-calm"
+    wait 1.3s
 
-    // 28-30 сек: Финал
+    // === 24-28 сек: "Продолжай. Это часть пути." ===
+    // Финальная усмешка — одобрение
+    camera medium marshal
+    marshal pose "freeman-smirk"
+    wait 2s
+    
+    // Серьёзный кивок
+    marshal pose "freeman-calm"
+    wait 2s
+
+    // === 28-30 сек: Финал — уход в темноту ===
     camera wide
     wait 1s
     transition fade-black 1s
