@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 24" width="34" height="24">
+  <!-- sclera -->
+  <path d="M2 12 Q9 4 17 5 Q27 5 32 12 Q26 20 17 19 Q8 19 2 12 Z" fill="#f1ede3"/>
+  <!-- iris + pupil -->
+  <circle cx="18" cy="12" r="5.6" fill="#3a3125"/>
+  <circle cx="18" cy="12" r="2.7" fill="#0f0c07"/>
+  <circle cx="15.6" cy="9.8" r="1.5" fill="#ffffff"/>
+  <!-- heavy upper lid + lash line -->
+  <path d="M2 12 Q10 3 32 12" fill="none" stroke="#241d15" stroke-width="2.1" stroke-linecap="round"/>
+  <path d="M4 14 Q17 21 30 14" fill="none" stroke="#4a3d2e" stroke-width="0.9" opacity="0.6"/>
+  <!-- inner-corner shadow -->
+  <path d="M2 12 Q6 10 9 12" fill="none" stroke="#8a7458" stroke-width="1" opacity="0.6"/>
+</svg>

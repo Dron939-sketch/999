@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- Фирменный «фон Фримена»: плоское светло-серое поле, лёгкая зернистость,
+       мягкое затемнение к краям и редкие штрихи-росчерки от руки. Персонаж стоит
+       фронтально по центру; вся выразительность — в нём и в монтаже планов. -->
+  <defs>
+    <radialGradient id="paperLight" cx="50%" cy="44%" r="72%">
+      <stop offset="0%" stop-color="#e7e9e2"/>
+      <stop offset="62%" stop-color="#d3d6cd"/>
+      <stop offset="100%" stop-color="#b3b7ad"/>
+    </radialGradient>
+    <filter id="paperGrain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.06 0 0 0 0"/>
+      <feComposite operator="over" in2="SourceGraphic"/>
+    </filter>
+    <filter id="ink" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="720" fill="url(#paperLight)" filter="url(#paperGrain)"/>
+
+  <!-- стойкие росчерки/волоски в углах, как на кадрах Фримена -->
+  <g stroke="#2c2c2c" stroke-width="1.4" fill="none" opacity="0.5" filter="url(#ink)" stroke-linecap="round">
+    <path d="M120 96 q22 -14 40 4"/>
+    <path d="M1140 130 q-26 -6 -30 22"/>
+    <path d="M96 560 q-10 26 16 40"/>
+    <path d="M1180 600 q10 -22 -14 -34"/>
+    <path d="M980 90 q-6 18 10 26"/>
+  </g>
+</svg>

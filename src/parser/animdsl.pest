@@ -135,11 +135,26 @@ action_stmt = {
     | exit_action
     | move_action
     | pose_action
+    | speak_action
+    | lips_action
     | show_action
     | hide_action
     | scale_action
     | rotate_action
     | fade_action
+}
+
+// Auto-speech: cycles the character's phoneme mouth poses ("talk"/"gab"/"idle")
+// for the given duration, so scripts don't hand-write every mouth flap.
+speak_action = {
+    identifier ~ "speaks" ~ "for" ~ duration
+}
+
+// One overlay mouth cel held for a duration (advances time). prep_lipsync emits
+// a sequence of these from the real audio envelope, so the mouth opens where the
+// sound is — amplitude lipsync — while the held body pose is preserved (overlay).
+lips_action = {
+    identifier ~ "lips" ~ string_literal ~ "for" ~ duration
 }
 
 move_action = {
@@ -304,7 +319,7 @@ relation = {
 // Directions
 // ---------------------------------------------------------------------------
 
-direction = { "left" | "right" | "up" | "down" }
+direction = { "left" | "right" | "up" | "down" | "front" | "back" }
 
 // ---------------------------------------------------------------------------
 // Values & primitives

@@ -1,0 +1,74 @@
+// =============================================================================
+//  Мистер Фримен — монолог в камеру. Точный канон:
+//    • белая яйцевидная маска, два больших овальных глаза, простой рот;
+//    • чёрное силуэтное тело с грубым «дрожащим» чернильным контуром
+//      (SVG feTurbulence + feDisplacementMap на каждой части — рисунок от руки);
+//    • светло-серый фон с виньеткой и штрихами.
+//  Персонаж: examples/assets/characters/freeman_rig/ (риг с локтями/коленями).
+//  Рендер: cargo run --release -- render examples/freeman-monologue.anim -o freeman.mp4
+// =============================================================================
+
+import character freeman from "assets/characters/freeman_rig"
+import set stage from "assets/sets/freeman-stage.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #ccd2ca
+    // aged-film post — the finishing layer of the Freeman look
+    film-grain: 0.34
+    vignette: 0.5
+}
+
+scene "monologue" (duration: 20s, set: stage) {
+    place freeman at (0.5, 0.74) facing front
+
+    // intro — общий взгляд
+    camera medium freeman
+    freeman pose "calm"
+    wait 1.2s
+    freeman pose "blink"
+    wait 0.2s
+
+    // говорит (авто-речь: фонемы чередуются сами)
+    camera close-up freeman
+    freeman speaks for 2s
+    freeman pose "wide"
+    wait 1s
+
+    // пожимает плечами
+    camera medium freeman
+    freeman pose "shrug"
+    wait 1.8s
+
+    // указывает и говорит
+    freeman pose "point"
+    wait 0.8s
+    freeman speaks for 1.4s
+
+    // задумался
+    camera close-up freeman
+    freeman pose "think"
+    wait 2s
+
+    // строгий взгляд в упор
+    camera extreme-close-up freeman
+    freeman pose "stern"
+    wait 1.4s
+    freeman pose "angry"
+    wait 0.8s
+    freeman speaks for 1.2s
+
+    // руки в боки, финал
+    camera medium freeman
+    freeman pose "hips"
+    wait 1.6s
+    freeman pose "calm"
+    wait 0.8s
+    freeman pose "blink"
+    wait 0.2s
+    freeman pose "calm"
+    wait 1s
+    transition fade-black 1.4s
+}

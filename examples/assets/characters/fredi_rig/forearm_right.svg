@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 300" width="60" height="300">
+  <defs>
+    <linearGradient id="far" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#08080e"/><stop offset="55%" stop-color="#2b2b34"/><stop offset="100%" stop-color="#05050a"/></linearGradient>
+    <radialGradient id="har" cx="40%" cy="30%" r="80%"><stop offset="0%" stop-color="#e7ded2"/><stop offset="100%" stop-color="#c3b6a2"/></radialGradient>
+    <linearGradient id="cs" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0c0c10"/><stop offset="45%" stop-color="#3a3630"/><stop offset="100%" stop-color="#0c0c10"/></linearGradient>
+    <radialGradient id="kn" cx="38%" cy="30%" r="75%"><stop offset="0%" stop-color="#eef0f4"/><stop offset="60%" stop-color="#b9bcc4"/><stop offset="100%" stop-color="#7c7f88"/></radialGradient>
+  </defs>
+  <!-- cane (behind hand) -->
+  <rect x="26" y="98" width="7" height="188" rx="2" fill="url(#cs)" stroke="#050508" stroke-width="1"/>
+  <rect x="24" y="284" width="11" height="6" rx="1.5" fill="url(#kn)" stroke="#4a4a52" stroke-width="0.8"/>
+  <ellipse cx="29.5" cy="96" rx="8.5" ry="7.5" fill="url(#kn)" stroke="#4a4a52" stroke-width="1"/>
+  <!-- elbow cap + forearm -->
+  <circle cx="24" cy="12" r="10.5" fill="#2a2a33"/>
+  <path d="M12 8 Q24 2 36 8 L34 74 Q33 82 30 86 L18 86 Q15 82 14 74 Z" fill="url(#far)" stroke="#050508" stroke-width="1.5"/>
+  <path d="M24 16 Q26 50 24 82" fill="none" stroke="#43434d" stroke-width="1.1" opacity="0.5"/>
+  <path d="M17 80 L31 80 L30 88 L18 88 Z" fill="#efece3" stroke="#bcb5a4" stroke-width="0.8"/>
+  <!-- fist gripping knob -->
+  <path d="M17 84 Q13 96 17 106 Q25 111 35 107 Q40 101 38 91 Q37 85 32 84 Z" fill="url(#har)" stroke="#5a4f40" stroke-width="1.1"/>
+  <path d="M20 94 L36 94 M21 100 L35 100" stroke="#8a7c66" stroke-width="0.8" opacity="0.55"/>
+</svg>

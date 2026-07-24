@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <radialGradient id="moon" cx="46%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#c3ccc4"/>
+      <stop offset="72%" stop-color="#a7b0a8"/>
+      <stop offset="100%" stop-color="#828b84"/>
+    </radialGradient>
+    <radialGradient id="floor" cx="50%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#aab3ab"/>
+      <stop offset="100%" stop-color="#3a423c"/>
+    </radialGradient>
+  </defs>
+
+  <!-- night -->
+  <rect width="1280" height="720" fill="#0a0d0b"/>
+
+  <!-- big moon -->
+  <circle cx="632" cy="320" r="300" fill="url(#moon)"/>
+  <!-- faint craters / mottling -->
+  <circle cx="560" cy="250" r="34" fill="#000000" opacity="0.05"/>
+  <circle cx="720" cy="360" r="52" fill="#000000" opacity="0.05"/>
+  <circle cx="640" cy="430" r="28" fill="#000000" opacity="0.05"/>
+  <circle cx="700" cy="210" r="20" fill="#000000" opacity="0.04"/>
+
+  <!-- hand-inked star dots -->
+  <g fill="#e7ece7">
+    <circle cx="120" cy="70" r="5"/><circle cx="240" cy="150" r="3"/><circle cx="70" cy="260" r="4"/>
+    <circle cx="180" cy="380" r="3"/><circle cx="90" cy="460" r="5"/><circle cx="300" cy="60" r="3"/>
+    <circle cx="1160" cy="90" r="5"/><circle cx="1040" cy="170" r="3"/><circle cx="1200" cy="300" r="4"/>
+    <circle cx="1090" cy="400" r="3"/><circle cx="1180" cy="480" r="5"/><circle cx="980" cy="70" r="3"/>
+    <circle cx="430" cy="40" r="3"/><circle cx="820" cy="40" r="3"/><circle cx="1140" cy="620" r="4"/>
+    <circle cx="150" cy="600" r="3"/><circle cx="40" cy="150" r="3"/><circle cx="1240" cy="200" r="3"/>
+  </g>
+
+  <!-- moonlit floor pooling toward camera -->
+  <path d="M120 620 Q640 560 1160 620 L1280 720 L0 720 Z" fill="url(#floor)"/>
+  <!-- perspective lines to a vanishing point -->
+  <g stroke="#202621" stroke-width="2" opacity="0.55">
+    <line x1="632" y1="590" x2="60" y2="720"/>
+    <line x1="632" y1="590" x2="340" y2="720"/>
+    <line x1="632" y1="590" x2="632" y2="720"/>
+    <line x1="632" y1="590" x2="930" y2="720"/>
+    <line x1="632" y1="590" x2="1220" y2="720"/>
+  </g>
+  <!-- floor horizontal bands -->
+  <path d="M250 640 Q640 612 1015 640" fill="none" stroke="#202621" stroke-width="2" opacity="0.4"/>
+  <path d="M170 680 Q640 646 1100 680" fill="none" stroke="#202621" stroke-width="2" opacity="0.4"/>
+
+  <!-- soft cast shadow under the figure -->
+  <ellipse cx="632" cy="632" rx="230" ry="30" fill="#000000" opacity="0.35"/>
+</svg>

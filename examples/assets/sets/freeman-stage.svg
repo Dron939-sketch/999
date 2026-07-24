@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <radialGradient id="vig" cx="50%" cy="46%" r="72%">
+      <stop offset="0%" stop-color="#e4e8e1"/>
+      <stop offset="66%" stop-color="#ccd2ca"/>
+      <stop offset="100%" stop-color="#9aa199"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#vig)"/>
+  <!-- faint hand-drawn scratches / stray ink strokes -->
+  <g fill="none" stroke="#7f857d" stroke-width="1.6" opacity="0.45" stroke-linecap="round">
+    <path d="M150 120 Q160 180 140 230"/>
+    <path d="M1120 90 Q1108 150 1128 210"/>
+    <path d="M90 520 Q120 540 100 580"/>
+    <path d="M1180 470 Q1150 500 1175 540"/>
+    <path d="M60 300 L96 296"/>
+    <path d="M1210 320 L1176 316"/>
+  </g>
+</svg>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <filter id="ink" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="1" seed="6" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- стол-фон: плоская тёмная заливка (графика, без градиентов) -->
+  <rect width="1280" height="720" fill="#2b2f2a"/>
+  <!-- открытая книга: левая страница + правая (титул) — плоские заливки -->
+  <path d="M80 80 Q360 50 620 84 L620 660 Q360 626 80 640 Z" fill="#d0c9b3"/>
+  <path d="M660 84 Q920 50 1200 80 L1200 640 Q920 626 660 660 Z" fill="#e4ddc8"/>
+  <rect x="620" y="50" width="40" height="616" fill="#8a8168" opacity="0.4"/>
+  <!-- жирный чёрный контур книги -->
+  <g fill="none" stroke="#141410" stroke-width="4" filter="url(#ink)" stroke-linejoin="round">
+    <path d="M80 80 Q360 50 620 84 L620 660 Q360 626 80 640 Z"/>
+    <path d="M660 84 Q920 50 1200 80 L1200 640 Q920 626 660 660 Z"/>
+  </g>
+  <!-- page edges -->
+  <g stroke="#9c9378" stroke-width="2" fill="none" opacity="0.8">
+    <path d="M84 646 Q360 632 616 664"/>
+    <path d="M90 652 Q360 640 610 670"/>
+    <path d="M1196 646 Q920 632 664 664"/>
+    <path d="M1190 652 Q920 640 668 670"/>
+  </g>
+
+  <!-- ornate border on the title page -->
+  <g filter="url(#ink)" fill="none" stroke="#4a412f" stroke-width="2.4">
+    <rect x="716" y="128" width="428" height="470"/>
+    <rect x="728" y="140" width="404" height="446" stroke-width="1.2"/>
+    <path d="M716 128 l-10 -10 M1144 128 l10 -10 M716 598 l-10 10 M1144 598 l10 10" stroke-width="1.6"/>
+  </g>
+
+  <!-- title text (real Cyrillic, rendered with system fonts) -->
+  <g fill="#3a3122" text-anchor="middle" font-family="DejaVu Serif">
+    <text x="930" y="205" font-size="30" opacity="0.85">Лекторий · курс</text>
+    <text x="930" y="266" font-size="42" font-weight="bold">ПЕРЕПРОШИВКА</text>
+    <text x="930" y="316" font-size="24" opacity="0.9">Лекция 1. Ты — не с нуля</text>
+  </g>
+  <line x1="770" y1="288" x2="1090" y2="288" stroke="#4a412f" stroke-width="2" filter="url(#ink)"/>
+
+  <!-- illustration: head with a chip being flashed (the «прошивка») -->
+  <g filter="url(#ink)">
+    <!-- frame of the picture -->
+    <rect x="800" y="352" width="260" height="200" fill="#e9e2cd" stroke="#4a412f" stroke-width="3"/>
+    <!-- head profile silhouette -->
+    <path d="M905 528 Q860 520 856 470 Q852 430 878 408 Q898 386 930 388 Q968 390 984 420 Q996 444 988 470 Q1000 480 996 492 Q992 500 982 500 Q984 516 968 518 Q964 530 948 528 Z"
+          fill="#181b17"/>
+    <!-- chip inside the head -->
+    <rect x="898" y="428" width="44" height="34" rx="4" fill="#e9e2cd"/>
+    <g stroke="#e9e2cd" stroke-width="3">
+      <line x1="890" y1="436" x2="898" y2="436"/><line x1="890" y1="446" x2="898" y2="446"/><line x1="890" y1="456" x2="898" y2="456"/>
+      <line x1="942" y1="436" x2="950" y2="436"/><line x1="942" y1="446" x2="950" y2="446"/><line x1="942" y1="456" x2="950" y2="456"/>
+    </g>
+    <g stroke="#181b17" stroke-width="2.4" fill="none">
+      <path d="M906 436 h28 M906 445 h28 M906 454 h18"/>
+    </g>
+    <!-- download arrow into the head -->
+    <path d="M920 366 v30 M908 386 l12 14 l12 -14" fill="none" stroke="#4a412f" stroke-width="4"/>
+  </g>
+
+  <!-- caption under the picture -->
+  <text x="930" y="580" font-size="18" fill="#3a3122" text-anchor="middle" font-family="DejaVu Serif" font-style="italic">кто написал твой «здравый смысл»?</text>
+
+  <!-- left page: faint text lines -->
+  <g stroke="#a89e83" stroke-width="3" opacity="0.6">
+    <line x1="150" y1="180" x2="560" y2="172"/>
+    <line x1="150" y1="220" x2="560" y2="212"/>
+    <line x1="150" y1="260" x2="520" y2="253"/>
+    <line x1="150" y1="330" x2="560" y2="322"/>
+    <line x1="150" y1="370" x2="540" y2="362"/>
+    <line x1="150" y1="410" x2="560" y2="402"/>
+    <line x1="150" y1="480" x2="500" y2="473"/>
+  </g>
+</svg>

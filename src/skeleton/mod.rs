@@ -94,6 +94,15 @@ pub struct BoneTransform {
     pub offset: Option<(f64, f64)>,
     #[serde(default)]
     pub scale: Option<(f64, f64)>,
+    /// Swap the bone's drawing for this pose (frame-by-frame "cel" swap, like a
+    /// Flash symbol keyframe): the named `<part>.svg` replaces the default part.
+    #[serde(default)]
+    pub part: Option<String>,
+    /// Override the bone's draw order for this pose. Lets a limb go BEHIND the
+    /// head/torso in poses where it should (e.g. a hand tucked behind the head),
+    /// then return in front for others — no more limbs punching through.
+    #[serde(default)]
+    pub z_order: Option<i32>,
 }
 
 /// A loaded SVG part.
@@ -129,9 +138,17 @@ pub fn load_rig(name: &str, dir: &Path) -> Result<CharacterRig, AnimError> {
     let rig_def: RigDefinition = serde_json::from_str(&rig_json)
         .map_err(|e| AnimError::Asset(format!("failed to parse rig.json for '{}': {}", name, e)))?;
 
-    // Load all SVG parts referenced in the skeleton.
+    // Load all SVG parts referenced in the skeleton...
     let mut parts = HashMap::new();
     collect_parts(&rig_def.skeleton.root, dir, &mut parts)?;
+    // ...and any alternate drawings referenced only in pose cel-swaps.
+    for pose in rig_def.poses.values() {
+        for bt in pose.bones.values() {
+            if let Some(ref part_name) = bt.part {
+                load_part(part_name, dir, &mut parts)?;
+            }
+        }
+    }
 
     Ok(CharacterRig {
         name: name.to_string(),
@@ -148,42 +165,50 @@ fn collect_parts(
     parts: &mut HashMap<String, PartAsset>,
 ) -> Result<(), AnimError> {
     if let Some(ref part_name) = bone.part {
-        if !parts.contains_key(part_name) {
-            let svg_path = dir.join(format!("{}.svg", part_name));
-            let svg_data = std::fs::read(&svg_path).map_err(|e| {
-                AnimError::Asset(format!(
-                    "failed to read part '{}' from {}: {}",
-                    part_name,
-                    svg_path.display(),
-                    e
-                ))
-            })?;
-
-            let opts = usvg::Options::default();
-            let tree = usvg::Tree::from_data(&svg_data, &opts).map_err(|e| {
-                AnimError::Asset(format!(
-                    "failed to parse SVG for part '{}': {}",
-                    part_name, e
-                ))
-            })?;
-
-            let size = tree.size();
-            parts.insert(
-                part_name.clone(),
-                PartAsset {
-                    name: part_name.clone(),
-                    svg_data,
-                    width: size.width() as f64,
-                    height: size.height() as f64,
-                },
-            );
-        }
+        load_part(part_name, dir, parts)?;
     }
 
     for child in &bone.children {
         collect_parts(child, dir, parts)?;
     }
 
+    Ok(())
+}
+
+/// Load a single `<part_name>.svg` into the parts map (idempotent).
+fn load_part(
+    part_name: &str,
+    dir: &Path,
+    parts: &mut HashMap<String, PartAsset>,
+) -> Result<(), AnimError> {
+    if parts.contains_key(part_name) {
+        return Ok(());
+    }
+    let svg_path = dir.join(format!("{}.svg", part_name));
+    let svg_data = std::fs::read(&svg_path).map_err(|e| {
+        AnimError::Asset(format!(
+            "failed to read part '{}' from {}: {}",
+            part_name,
+            svg_path.display(),
+            e
+        ))
+    })?;
+
+    let opts = crate::svg_options();
+    let tree = usvg::Tree::from_data(&svg_data, &opts).map_err(|e| {
+        AnimError::Asset(format!("failed to parse SVG for part '{}': {}", part_name, e))
+    })?;
+
+    let size = tree.size();
+    parts.insert(
+        part_name.to_string(),
+        PartAsset {
+            name: part_name.to_string(),
+            svg_data,
+            width: size.width() as f64,
+            height: size.height() as f64,
+        },
+    );
     Ok(())
 }
 
@@ -237,9 +262,29 @@ fn interpolate_bone(
     // Smooth interpolation using ease-in-out
     let t_smooth = smooth_step(t);
 
+    // Cel swap: drawings don't tween — snap to the target pose's part past the
+    // midpoint, else the source pose's part, else the bone's default drawing.
+    let part = if t >= 0.5 {
+        to_bt
+            .and_then(|bt| bt.part.clone())
+            .or_else(|| bone.part.clone())
+    } else {
+        from_bt
+            .and_then(|bt| bt.part.clone())
+            .or_else(|| bone.part.clone())
+    };
+
+    // Draw order is discrete too — snap it the same way as the cel, so a limb
+    // switches behind/in-front cleanly at the midpoint instead of z-fighting.
+    let z_order = if t >= 0.5 {
+        to_bt.and_then(|bt| bt.z_order).unwrap_or(bone.z_order)
+    } else {
+        from_bt.and_then(|bt| bt.z_order).unwrap_or(bone.z_order)
+    };
+
     states.push(BoneState {
         name: bone.name.clone(),
-        part: bone.part.clone(),
+        part,
         pivot: bone.pivot,
         offset: (
             lerp(from_offset.0, to_offset.0, t_smooth),
@@ -250,7 +295,7 @@ fn interpolate_bone(
             lerp(from_scale.0, to_scale.0, t_smooth),
             lerp(from_scale.1, to_scale.1, t_smooth),
         ),
-        z_order: bone.z_order,
+        z_order,
     });
 
     for child in &bone.children {
@@ -264,32 +309,75 @@ fn interpolate_bone(
 
 /// Apply idle breathing/swaying animation to bone states.
 pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f64) {
-    let breath_cycle = (time * 1.2 * 2.0 * PI).sin(); // ~1.2 Hz breathing
-    let sway_cycle = (time * 0.4 * 2.0 * PI).sin(); // slow sway
+    let tau = 2.0 * PI;
+    // Multi-frequency breathing/sway reads more organic than a single sine.
+    let breath = (time * 1.05 * tau).sin();
+    let sway = (time * 0.33 * tau).sin() * 0.6 + (time * 0.19 * tau).sin() * 0.4;
+    // Very slow weight-shift (~8s period): the body subtly leans side to side,
+    // head leads/counters it — reads as a living body holding its weight, not a
+    // frozen puppet. Low frequency, so it's life, not the tremor we calmed.
+    let shift = (time * 0.12 * tau).sin();
+    // "Animation boil": the jitter target updates ~5x/sec (held on fours), so a
+    // static pose is never perfectly still — but calm, not a tremor.
+    let step = (time * 5.0).floor() as i64;
 
     for state in states.iter_mut() {
+        let is_face = state.name.contains("eye")
+            || state.name.contains("mouth")
+            || state.name.contains("brow");
+
+        // Per-bone procedural micro-float (skipped for facial features).
+        if !is_face {
+            let h = name_hash(&state.name);
+            let jr = hash_unit(h ^ (step as u32).wrapping_mul(2654435761));
+            let jx = hash_unit(h.wrapping_add(97) ^ (step as u32).wrapping_mul(40503));
+            let jy = hash_unit(h.wrapping_add(191) ^ (step as u32).wrapping_mul(22695477));
+            state.rotation += jr * 0.45;
+            state.offset.0 += jx * 0.28;
+            state.offset.1 += jy * 0.22;
+        }
+
         match state.name.as_str() {
             "torso" => {
-                // Subtle breathing — torso scales slightly
-                state.scale.1 = state.scale.1 * (1.0 + breath_cycle * 0.008);
-                // Very slight sway
-                state.rotation += sway_cycle * 0.3;
+                state.scale.1 *= 1.0 + breath * 0.014; // breathing
+                state.offset.0 += shift * 2.2; // weight shift (whole upper body)
+                state.rotation += sway * 1.0 + shift * 0.8;
             }
             "head" => {
-                // Head bobs slightly with breathing
-                state.offset.1 += breath_cycle * 0.5;
-                // Subtle independent sway
-                state.rotation += (time * 0.5 * 2.0 * PI).sin() * 0.5;
+                state.offset.1 += breath * 1.0;
+                // slow "looking" life + counter to the weight shift (head leads)
+                state.offset.0 += shift * 1.4 + (time * 0.23 * tau).sin() * 1.0;
+                state.rotation += (time * 0.37 * tau).sin() * 1.3 + sway * 0.6 - shift * 0.9;
+            }
+            name if name.contains("thigh") => {
+                state.offset.0 += shift * 0.7; // legs plant against the shift
             }
             name if name.contains("arm") => {
-                // Arms sway slightly
-                let arm_sway =
-                    (time * 0.6 * 2.0 * PI + if name.contains("right") { PI } else { 0.0 }).sin();
-                state.rotation += arm_sway * 1.0;
+                let phase = if name.contains("right") { PI } else { 0.0 };
+                // gentle arm float, and hands drift with the weight shift
+                state.rotation += (time * 0.6 * tau + phase).sin() * 1.4 + shift * 0.6;
             }
             _ => {}
         }
     }
+}
+
+/// Small stable hash of a bone name, for per-bone procedural noise.
+fn name_hash(name: &str) -> u32 {
+    let mut h: u32 = 2166136261;
+    for b in name.bytes() {
+        h ^= b as u32;
+        h = h.wrapping_mul(16777619);
+    }
+    h
+}
+
+/// Deterministic hash → [-1, 1].
+fn hash_unit(mut x: u32) -> f64 {
+    x ^= x >> 13;
+    x = x.wrapping_mul(1274126177);
+    x ^= x >> 16;
+    (x as f64 / u32::MAX as f64) * 2.0 - 1.0
 }
 
 /// Apply walk cycle procedural animation.
@@ -350,13 +438,16 @@ pub fn apply_anticipation(states: &mut [BoneState], t: f64) {
 }
 
 /// Apply squash and stretch based on vertical velocity.
-pub fn apply_squash_stretch(states: &mut [BoneState], velocity_y: f64) {
-    let factor = (velocity_y * 0.005).clamp(-0.15, 0.15);
+pub fn apply_squash_stretch(states: &mut [BoneState], velocity_x: f64, velocity_y: f64) {
+    // Stretch ALONG the direction of motion and squash across it — the classic
+    // squash/stretch of hand-drawn animation, giving fast moves weight. Applied
+    // to the torso, which propagates to the whole body. Volume roughly kept.
+    let fy = (velocity_y * 0.006).clamp(-0.17, 0.17);
+    let fx = (velocity_x * 0.006).clamp(-0.17, 0.17);
     for state in states.iter_mut() {
         if state.name == "torso" {
-            // Stretch when moving fast vertically, squash on deceleration
-            state.scale.1 *= 1.0 + factor;
-            state.scale.0 *= 1.0 - factor * 0.5; // preserve volume
+            state.scale.1 *= 1.0 + fy - fx.abs() * 0.5;
+            state.scale.0 *= 1.0 + fx - fy.abs() * 0.5;
         }
     }
 }

@@ -168,6 +168,20 @@ pub enum ActionStmt {
         entity: String,
         pose: String,
     },
+    /// `freeman speaks for 3s` — auto-cycles phoneme mouth poses for the
+    /// duration (advances scene time, like a wait that talks).
+    Speak {
+        entity: String,
+        duration: Duration,
+    },
+    /// `freeman lips "gab" for 0.14s` — set an overlay mouth cel for the
+    /// duration (advances time). Emitted by prep_lipsync from the audio
+    /// envelope for amplitude-accurate lipsync; overlay keeps the body pose.
+    Lips {
+        entity: String,
+        pose: String,
+        duration: Duration,
+    },
     Show {
         entity: String,
         duration: Option<Duration>,
@@ -321,6 +335,10 @@ pub enum Direction {
     Right,
     Up,
     Down,
+    /// Facing the camera (used for Freeman-style monologues to camera).
+    Front,
+    /// Facing away from the camera.
+    Back,
 }
 
 /// Duration in seconds.

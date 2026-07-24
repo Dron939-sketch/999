@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 32" width="50" height="32">
+  <!-- interior (opens as the bone scales vertically) -->
+  <path d="M9 13 Q25 17 41 13 Q25 24 9 13 Z" fill="#241812"/>
+  <!-- teeth hint -->
+  <path d="M12 14 Q25 16 38 14 Q25 18 12 14 Z" fill="#e9e2d4" opacity="0.85"/>
+  <!-- upper lip -->
+  <path d="M6 11 Q25 5 44 11 Q25 14 6 11 Z" fill="#5c4a3c"/>
+  <!-- lower lip -->
+  <path d="M9 19 Q25 26 41 19 Q25 21 9 19 Z" fill="#8a7260"/>
+  <path d="M6 11 Q25 5 44 11" fill="none" stroke="#3a2c22" stroke-width="1.1" opacity="0.7"/>
+</svg>

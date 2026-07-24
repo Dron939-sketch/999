@@ -25,12 +25,11 @@ WORKDIR /app
 # Копируем исполняемый файл
 COPY --from=builder /app/target/release/animdsl /app/animdsl
 
-# Копируем примеры И РЕСУРСЫ (это исправляет черный экран!)
+# Копируем примеры вместе с ресурсами (assets лежат внутри examples/).
 COPY --from=builder /app/examples /app/examples
-COPY --from=builder /app/assets /app/assets
 
 # Создаем папку для результата
 RUN mkdir -p /app/output
 
-# Запускаем рендеринг нашего ролика
-CMD ["./animdsl", "render", "examples/freeman-30s.anim", "-o", "/app/output/result.mp4"]
+# Рендерим пилотный ролик Лектория (Фреди, стиль Фримена, ч/б).
+CMD ["./animdsl", "render", "examples/lektorij/lekciya-2-frejd-psihodinamika.anim", "-o", "/app/output/result.mp4"]

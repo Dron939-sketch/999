@@ -14,6 +14,16 @@ pub struct RenderConfig {
     pub height: u32,
     pub fps: u32,
     pub background: Color,
+    /// When true, frames are post-processed to high-contrast black & white
+    /// ("ink" look) — used for the Freeman-style lecture videos.
+    pub monochrome: bool,
+    /// Contrast strength for the monochrome post-process. ~1.1 keeps gradient
+    /// shading; crank it (2–4) for a stark 2-tone silhouette ("ink" Freeman).
+    pub mono_contrast: f64,
+    /// Film-grain intensity (0 = off, ~0.3–0.7 = aged-film look).
+    pub film_grain: f64,
+    /// Vignette intensity (0 = off, ~0.3–0.6 = darkened edges).
+    pub vignette: f64,
 }
 
 impl Default for RenderConfig {
@@ -23,6 +33,10 @@ impl Default for RenderConfig {
             height: 1080,
             fps: 24,
             background: Color::rgb(0, 0, 0),
+            monochrome: false,
+            mono_contrast: 1.12,
+            film_grain: 0.0,
+            vignette: 0.0,
         }
     }
 }
@@ -50,6 +64,27 @@ impl RenderConfig {
                 "background" => {
                     if let Value::Color(c) = &entry.value {
                         cfg.background = c.clone();
+                    }
+                }
+                "monochrome" => match &entry.value {
+                    Value::Bool(b) => cfg.monochrome = *b,
+                    // Also accept `monochrome: 1` / `monochrome: 0`.
+                    Value::Number(n) => cfg.monochrome = *n != 0.0,
+                    _ => {}
+                },
+                "mono-contrast" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.mono_contrast = *n;
+                    }
+                }
+                "film-grain" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.film_grain = *n;
+                    }
+                }
+                "vignette" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.vignette = *n;
                     }
                 }
                 _ => {}
@@ -148,6 +183,8 @@ pub fn resolve_named_position(pos: &NamedPosition) -> (f64, f64) {
         NamedPosition::Offscreen(Direction::Right) => (1.2, 0.5),
         NamedPosition::Offscreen(Direction::Up) => (0.5, -0.2),
         NamedPosition::Offscreen(Direction::Down) => (0.5, 1.2),
+        // front/back have no offscreen edge — treat as below the frame.
+        NamedPosition::Offscreen(Direction::Front | Direction::Back) => (0.5, 1.2),
     }
 }
 

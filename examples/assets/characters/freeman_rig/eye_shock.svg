@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 60" width="48" height="60"><defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.5" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<g filter="url(#ink)">
+  <!-- выпученный чёрный глаз, чуть крупнее обычного -->
+  <ellipse cx="24" cy="30" rx="20" ry="26" fill="#0e0e0e"/>
+  <!-- блик — глаз «живой», взгляд в упор -->
+  <circle cx="30" cy="19" r="4.5" fill="#eef1ec"/>
+  <circle cx="18" cy="40" r="2" fill="#eef1ec" opacity="0.6"/>
+</g></svg>

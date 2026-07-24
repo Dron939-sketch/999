@@ -58,7 +58,13 @@ pub fn encode_video(frames: &[Frame], output: &Path, fps: u32) -> Result<(), Ani
             "-preset",
             "medium", // encoding speed/quality tradeoff
             "-crf",
-            "23", // quality (lower = better, 18-28 reasonable)
+            "28", // quality (lower = better); film grain is high-entropy, so...
+            "-maxrate",
+            "2200k", // ...cap the bitrate (VBV) — grain can't blow up file size
+            "-bufsize",
+            "4400k", // VBV buffer; keeps a 52s clip ~14MB (well under repo limits)
+            "-tune",
+            "grain", // preserve the intended grain look at the capped bitrate
             "-movflags",
             "+faststart", // optimize for streaming
         ])

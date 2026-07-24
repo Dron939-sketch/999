@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <!-- Off-white "paper" backdrop for Freeman-style ink lectures. -->
+  <!-- Kept intentionally minimal: a soft vignette + a couple of faint ink -->
+  <!-- hatch marks. No floor shadow (it can't track the character position). -->
+  <defs>
+    <radialGradient id="vign" cx="50%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#f5f2ea"/>
+      <stop offset="68%" stop-color="#ece7db"/>
+      <stop offset="100%" stop-color="#d6d0c1"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#vign)"/>
+  <!-- faint hand-drawn hatch marks in the corners for paper texture -->
+  <line x1="70" y1="110" x2="140" y2="110" stroke="#d5cebe" stroke-width="2"/>
+  <line x1="78" y1="122" x2="132" y2="122" stroke="#d9d3c4" stroke-width="2"/>
+  <line x1="1140" y1="150" x2="1210" y2="150" stroke="#d5cebe" stroke-width="2"/>
+  <line x1="1148" y1="162" x2="1202" y2="162" stroke="#d9d3c4" stroke-width="2"/>
+</svg>

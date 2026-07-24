@@ -1,0 +1,47 @@
+// =============================================================================
+//  Фреди в стиле Мистера Фримена — силуэт на фоне луны.
+//  Демонстрация: «реализм» Фримена = АРТ-ДИРЕКШЕН, не детализация рендера.
+//  Рецепт кадра:
+//    • жёсткий 2-тон (mono-contrast) → тело уходит в чёрный силуэт, лицо светлое;
+//    • атмосферный сет: луна + звёзды + пол с перспективой + тень (freeman-moon.svg);
+//    • динамичная поза (fredi-flourish) и живой монтаж.
+//  Рендер: cargo run --release -- render examples/lektorij/fredi-freeman-moon.anim -o freeman.mp4
+// =============================================================================
+
+import character fredi from "../assets/characters/fredi_rig"
+import set moon from "../assets/sets/freeman-moon.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #0a0d0b
+    monochrome: true
+    mono-contrast: 1.8
+}
+
+scene "freeman" (duration: 13s, set: moon) {
+    place fredi at (0.5, 0.72) facing front
+
+    camera wide
+    fredi pose "fredi-calm"
+    wait 1s
+    fredi pose "fredi-flourish"
+    wait 2.5s
+
+    fredi pose "fredi-speak"
+    wait 0.3s
+    fredi pose "fredi-point"
+    wait 2s
+
+    fredi pose "fredi-stern"
+    wait 1.6s
+    fredi pose "fredi-lean"
+    wait 1.8s
+
+    fredi pose "fredi-flourish"
+    wait 2s
+    fredi pose "fredi-calm"
+    wait 1s
+    transition fade-black 1.5s
+}
