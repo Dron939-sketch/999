@@ -12,7 +12,7 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 
 use animdsl::assets::AssetRegistry;
-use animdsl::ast::TopLevelItem;
+use animdsl::ast::{LetKind, SceneStatement, TopLevelItem};
 use animdsl::errors::AnimError;
 use animdsl::renderer;
 use animdsl::scene::{resolve_scene, EntityKind, RenderConfig};
@@ -148,6 +148,15 @@ fn cmd_render(
         })
         .collect();
     assets.load_imports(&imports, &base_dir)?;
+
+    // Load inline (`let name = prop("label", "path") at ...`) props declared in
+    // any scene. Without this the prop's asset is never registered and the prop
+    // never renders. Scan all scenes (including nested together/do blocks).
+    for item in &program.items {
+        if let TopLevelItem::Scene(scene) = item {
+            load_let_props(&scene.body, &mut assets, &base_dir)?;
+        }
+    }
 
     // Extract custom pose definitions.
     let mut custom_poses: HashMap<String, Vec<(String, f64)>> = HashMap::new();
@@ -293,6 +302,30 @@ fn apply_monochrome(data: &mut [u8], contrast: f32) {
     }
 }
 
+/// Register the asset for every inline `let name = prop("label", "path")` in a
+/// scene body (recursing into together/do blocks), so the prop actually renders.
+fn load_let_props(
+    stmts: &[SceneStatement],
+    assets: &mut AssetRegistry,
+    base_dir: &Path,
+) -> Result<()> {
+    for stmt in stmts {
+        match stmt {
+            SceneStatement::Let(let_stmt) => {
+                let LetKind::Prop { label, path, .. } = &let_stmt.kind;
+                if !assets.props.contains_key(&let_stmt.name) {
+                    assets.load_dynamic_prop(&let_stmt.name, label, path, base_dir)?;
+                }
+            }
+            SceneStatement::Together(inner) | SceneStatement::Do(inner) => {
+                load_let_props(inner, assets, base_dir)?;
+            }
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
 /// Drifting particles (snow / ash specks) — a light atmospheric layer. Each
 /// particle has a fixed column and fall speed derived from its id, so motion is
 /// smooth and fully deterministic (reproducible renders). Density scales the
@@ -419,6 +452,11 @@ fn cmd_check(input: &Path) -> Result<()> {
         })
         .collect();
     assets.load_imports(&imports, &base_dir)?;
+    for item in &program.items {
+        if let TopLevelItem::Scene(scene) = item {
+            load_let_props(&scene.body, &mut assets, &base_dir)?;
+        }
+    }
 
     // Resolve each scene, compile its timeline, and check for overlaps.
     let scenes: Vec<_> = program

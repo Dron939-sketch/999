@@ -295,6 +295,10 @@ pub fn resolve_scene(
         }
     }
 
+    // Register inline `let name = prop(...) at (x,y)` props as entities so they
+    // render at their declared position (asset is loaded separately at startup).
+    register_let_props(&scene.body, &mut entities)?;
+
     // Also register entities that are referenced via `enters` but not `place`d.
     // They start offscreen and invisible.
     register_entering_entities(&scene.body, assets, &mut entities);
@@ -306,6 +310,36 @@ pub fn resolve_scene(
         entities,
         statements: scene.body.clone(),
     })
+}
+
+/// Recursively register inline `let name = prop(...) at (x,y)` props as prop
+/// entities positioned where declared (visible from the start).
+fn register_let_props(
+    stmts: &[SceneStatement],
+    entities: &mut HashMap<String, EntityState>,
+) -> Result<(), AnimError> {
+    for stmt in stmts {
+        match stmt {
+            SceneStatement::Let(let_stmt) => {
+                let LetKind::Prop { position, .. } = &let_stmt.kind;
+                if entities.contains_key(&let_stmt.name) {
+                    continue;
+                }
+                let mut state = EntityState::new_prop(&let_stmt.name);
+                if let Some(pos) = position {
+                    let (x, y) = resolve_position(pos, entities)?;
+                    state.x = x;
+                    state.y = y;
+                }
+                entities.insert(let_stmt.name.clone(), state);
+            }
+            SceneStatement::Together(inner) | SceneStatement::Do(inner) => {
+                register_let_props(inner, entities)?;
+            }
+            _ => {}
+        }
+    }
+    Ok(())
 }
 
 /// Recursively scan statements for Enter actions and register any entities
