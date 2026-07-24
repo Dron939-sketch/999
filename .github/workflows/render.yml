@@ -44,8 +44,10 @@ jobs:
       # Один завод: картинки → рендер → озвучка → сведение → videos/*.mp4(+mp3)
       - name: Studio (render + voice + mux)
         env:
-          # Озвучка через Frederick (ключ Fish живёт на его сервере) — нужен только токен:
-          FREDERICK_ADMIN_TOKEN: ${{ secrets.FREDERICK_ADMIN_TOKEN }}
+          # Озвучка через Frederick (ключ Fish живёт на его сервере) — нужен только токен.
+          # Секрет в репо назван ADMIN_TOKEN (= ADMIN_TOKEN сервера Frederick); поддержим
+          # и FREDERICK_ADMIN_TOKEN, если задан.
+          FREDERICK_ADMIN_TOKEN: ${{ secrets.FREDERICK_ADMIN_TOKEN != '' && secrets.FREDERICK_ADMIN_TOKEN || secrets.ADMIN_TOKEN }}
           FREDERICK_TTS_URL: ${{ secrets.FREDERICK_TTS_URL }}
           # ...либо прямой Fish (запасной путь), если Frederick не используем:
           FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
