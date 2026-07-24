@@ -55,7 +55,9 @@ jobs:
           IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
           IMAGE_API_PROVIDER: ${{ secrets.IMAGE_API_PROVIDER }}
         run: |
-          python3 tools/studio.py
+          # Рендерим ТОЛЬКО тот ролик, над которым работаем (id из productions.json),
+          # чтобы прогон был быстрым. Убери аргумент → соберёт все продакшены.
+          python3 tools/studio.py pereproshivka-intro
           echo "=== videos/ ==="
           ls -la videos/
 
