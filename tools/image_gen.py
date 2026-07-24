@@ -9,7 +9,7 @@ image_gen.py — генерация иллюстраций по текстово
 
 Провайдер и ключ берутся ТОЛЬКО из окружения (в CI — из секретов):
   * IMAGE_API_KEY       — ключ (обязателен);
-  * IMAGE_API_PROVIDER  — gemini (Nano Banana, по умолчанию) | openai.
+  * IMAGE_API_PROVIDER  — gemini (Nano Banana) | openai | fal (Flux).
 
 Промт лучше писать в стиле Фримена, чтобы картинка легла в ряд:
   "hand-drawn 2D cartoon, thick wobbly black ink outline, flat light-gray
@@ -55,6 +55,33 @@ def gen_gemini(prompt, api_key, size):
     raise RuntimeError("Gemini не вернул картинку: " + json.dumps(data)[:300])
 
 
+def gen_fal(prompt, api_key, size):
+    """fal.ai (по умолчанию Flux dev) → PNG-байты."""
+    model = os.environ.get("IMAGE_MODEL", "fal-ai/flux/dev")
+    w, h = (size or "1280x720").split("x")
+    body = {
+        "prompt": FREEMAN_STYLE + prompt,
+        "image_size": {"width": int(w), "height": int(h)},
+        "num_images": 1,
+        "sync_mode": True,  # вернуть картинку в ответе, без отдельного опроса
+    }
+    req = urllib.request.Request(
+        f"https://fal.run/{model}",
+        data=json.dumps(body).encode("utf-8"),
+        headers={"Content-Type": "application/json",
+                 "Authorization": f"Key {api_key}"}, method="POST")
+    with urllib.request.urlopen(req, timeout=180) as resp:
+        data = json.loads(resp.read())
+    images = data.get("images") or []
+    if not images:
+        raise RuntimeError("fal не вернул картинку: " + json.dumps(data)[:300])
+    url = images[0].get("url", "")
+    if url.startswith("data:"):  # data-URI (sync_mode)
+        return base64.b64decode(url.split(",", 1)[1])
+    with urllib.request.urlopen(url, timeout=120) as r2:  # либо ссылка на fal.media
+        return r2.read()
+
+
 def gen_openai(prompt, api_key, size):
     """OpenAI images → PNG-байты (запасной провайдер)."""
     url = "https://api.openai.com/v1/images/generations"
@@ -70,7 +97,7 @@ def gen_openai(prompt, api_key, size):
     return base64.b64decode(b64)
 
 
-PROVIDERS = {"gemini": gen_gemini, "openai": gen_openai}
+PROVIDERS = {"gemini": gen_gemini, "openai": gen_openai, "fal": gen_fal}
 
 
 def wrap_in_svg(png_path, svg_path, size):
