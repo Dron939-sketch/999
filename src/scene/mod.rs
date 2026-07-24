@@ -20,6 +20,10 @@ pub struct RenderConfig {
     /// Contrast strength for the monochrome post-process. ~1.1 keeps gradient
     /// shading; crank it (2–4) for a stark 2-tone silhouette ("ink" Freeman).
     pub mono_contrast: f64,
+    /// Film-grain intensity (0 = off, ~0.3–0.7 = aged-film look).
+    pub film_grain: f64,
+    /// Vignette intensity (0 = off, ~0.3–0.6 = darkened edges).
+    pub vignette: f64,
 }
 
 impl Default for RenderConfig {
@@ -31,6 +35,8 @@ impl Default for RenderConfig {
             background: Color::rgb(0, 0, 0),
             monochrome: false,
             mono_contrast: 1.12,
+            film_grain: 0.0,
+            vignette: 0.0,
         }
     }
 }
@@ -69,6 +75,16 @@ impl RenderConfig {
                 "mono-contrast" => {
                     if let Value::Number(n) = &entry.value {
                         cfg.mono_contrast = *n;
+                    }
+                }
+                "film-grain" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.film_grain = *n;
+                    }
+                }
+                "vignette" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.vignette = *n;
                     }
                 }
                 _ => {}

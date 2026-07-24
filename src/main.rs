@@ -214,6 +214,20 @@ fn cmd_render(
         }
     }
 
+    // Aged-film post: vignette + grain (the last layer of the Freeman look).
+    if config.film_grain > 0.0 || config.vignette > 0.0 {
+        for (i, frame) in all_frames.iter_mut().enumerate() {
+            apply_film(
+                &mut frame.data,
+                frame.width,
+                frame.height,
+                i as u32,
+                config.film_grain as f32,
+                config.vignette as f32,
+            );
+        }
+    }
+
     // Output.
     if let Some(dir) = png_dir {
         video::encode_png_sequence(&all_frames, dir)?;
@@ -249,6 +263,56 @@ fn apply_monochrome(data: &mut [u8], contrast: f32) {
         px[1] = v;
         px[2] = v;
         // px[3] (alpha) untouched.
+    }
+}
+
+/// Aged-film post-process: a soft vignette plus per-pixel, per-frame grain —
+/// the "shot on old stock" layer that finishes the Mr. Freeman look. Grain is
+/// deterministic (hash of x,y,frame) so renders are reproducible.
+fn apply_film(data: &mut [u8], width: u32, height: u32, frame: u32, grain: f32, vignette: f32) {
+    let w = width as i64;
+    let h = height as i64;
+    let cx = w as f32 * 0.5;
+    let cy = h as f32 * 0.5;
+    let max_d2 = cx * cx + cy * cy;
+    let grain_amp = grain * 46.0;
+    for y in 0..h {
+        for x in 0..w {
+            let idx = ((y * w + x) * 4) as usize;
+            let mut r = data[idx] as f32;
+            let mut g = data[idx + 1] as f32;
+            let mut b = data[idx + 2] as f32;
+
+            if vignette > 0.0 {
+                let dx = x as f32 - cx;
+                let dy = y as f32 - cy;
+                let d2 = (dx * dx + dy * dy) / max_d2;
+                let f = 1.0 - vignette * d2 * d2; // soft falloff, strong at corners
+                r *= f;
+                g *= f;
+                b *= f;
+            }
+
+            if grain > 0.0 {
+                // cheap integer hash → [-1, 1]
+                let mut hsh = (x as u32)
+                    .wrapping_mul(374761393)
+                    .wrapping_add((y as u32).wrapping_mul(668265263))
+                    .wrapping_add(frame.wrapping_mul(2246822519));
+                hsh ^= hsh >> 13;
+                hsh = hsh.wrapping_mul(1274126177);
+                hsh ^= hsh >> 16;
+                let n = (hsh as f32 / u32::MAX as f32) * 2.0 - 1.0;
+                let gg = n * grain_amp;
+                r += gg;
+                g += gg;
+                b += gg;
+            }
+
+            data[idx] = r.clamp(0.0, 255.0) as u8;
+            data[idx + 1] = g.clamp(0.0, 255.0) as u8;
+            data[idx + 2] = b.clamp(0.0, 255.0) as u8;
+        }
     }
 }
 

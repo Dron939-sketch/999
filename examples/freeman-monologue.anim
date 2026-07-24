@@ -16,6 +16,9 @@ config {
     height: 720
     fps: 24
     background: #ccd2ca
+    // aged-film post — the finishing layer of the Freeman look
+    film-grain: 0.34
+    vignette: 0.5
 }
 
 scene "monologue" (duration: 20s, set: stage) {
