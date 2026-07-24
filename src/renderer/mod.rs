@@ -4,7 +4,11 @@
 //! Supports both legacy single-SVG characters and new rig-based characters
 //! with per-bone part compositing and procedural animation.
 
+use std::cell::RefCell;
+use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
+use std::hash::{Hash, Hasher};
+use std::sync::Arc;
 
 use tiny_skia::{Color as SkiaColor, Paint, Pixmap, PixmapPaint, Rect, Transform};
 
@@ -20,6 +24,46 @@ use crate::skeleton::{
 use crate::timeline::{
     evaluate_camera, evaluate_track, CameraKeyframe, PoseEvent, Property, Timeline, TransitionKind,
 };
+
+thread_local! {
+    /// Parsed-SVG cache keyed by a hash of the exact SVG bytes. Rendering a 52s
+    /// clip re-draws the same static set 1300+ times and each character part
+    /// many times — parsing (usvg) is the bottleneck. Identical bytes → parse
+    /// once, reuse the tree. The static set collapses to a single parse; boiled
+    /// character parts reuse per seed value while that seed recurs.
+    static SVG_CACHE: RefCell<HashMap<u64, Arc<usvg::Tree>>> = RefCell::new(HashMap::new());
+
+    /// Rasterised-SVG cache: keyed by (bytes, render size, flip). The real cost
+    /// of a detailed set is rasterising its ink filter (feTurbulence/displace)
+    /// every frame — but under a HELD camera the result is pixel-identical, so we
+    /// rasterise once and just re-composite the cached pixmap. This is the big
+    /// render-speed win (the parse cache only saves XML parsing).
+    static PIXMAP_CACHE: RefCell<HashMap<u64, Arc<Pixmap>>> = RefCell::new(HashMap::new());
+}
+
+/// Parse SVG bytes into a tree, reusing a cached parse for identical bytes.
+fn parse_svg_cached(bytes: &[u8]) -> Result<Arc<usvg::Tree>, AnimError> {
+    let mut hasher = DefaultHasher::new();
+    bytes.hash(&mut hasher);
+    let key = hasher.finish();
+    if let Some(tree) = SVG_CACHE.with(|c| c.borrow().get(&key).cloned()) {
+        return Ok(tree);
+    }
+    let opts = crate::svg_options();
+    let tree = Arc::new(
+        usvg::Tree::from_data(bytes, &opts)
+            .map_err(|e| AnimError::Render(format!("SVG parse error: {e}")))?,
+    );
+    // Bound memory: boiled parts create many distinct keys over a long clip.
+    SVG_CACHE.with(|c| {
+        let mut m = c.borrow_mut();
+        if m.len() > 8192 {
+            m.clear();
+        }
+        m.insert(key, tree.clone());
+    });
+    Ok(tree)
+}
 
 /// A rendered frame as raw RGBA pixel data.
 pub struct Frame {
@@ -855,10 +899,8 @@ fn render_bone_part(
     pivot: &(f64, f64),
     boil_seed: u32,
 ) -> Result<(), AnimError> {
-    let opts = crate::svg_options();
     let svg_data = apply_boil(&part.svg_data, boil_seed);
-    let tree = usvg::Tree::from_data(&svg_data, &opts)
-        .map_err(|e| AnimError::Render(format!("SVG parse error: {e}")))?;
+    let tree = parse_svg_cached(&svg_data)?;
 
     let render_sx = scale_x.abs() * flip.abs();
     let render_sy = scale_y.abs();
@@ -1021,9 +1063,7 @@ fn render_svg_to_pixmap(
     camera: &CameraKeyframe,
     is_background: bool,
 ) -> Result<(), AnimError> {
-    let opts = crate::svg_options();
-    let tree = usvg::Tree::from_data(svg_data, &opts)
-        .map_err(|e| AnimError::Render(format!("SVG parse error: {e}")))?;
+    let tree = parse_svg_cached(svg_data)?;
 
     let svg_size = tree.size();
     let svg_w = svg_size.width() as f64;
@@ -1065,17 +1105,39 @@ fn render_svg_to_pixmap(
         return Ok(());
     }
 
-    let mut svg_pixmap = Pixmap::new(render_w, render_h)
-        .ok_or_else(|| AnimError::Render("failed to create SVG pixmap".into()))?;
-
-    let render_transform =
-        Transform::from_scale(final_scale_x.abs() as f32, final_scale_y.abs() as f32);
-
-    resvg::render(&tree, render_transform, &mut svg_pixmap.as_mut());
-
-    if final_scale_x < 0.0 {
-        flip_pixmap_horizontal(&mut svg_pixmap);
-    }
+    // Reuse the rasterised pixmap when identical bytes render at the same size
+    // and flip — under a held camera, that's every frame of the shot.
+    let flip_bg = final_scale_x < 0.0;
+    let pkey = {
+        let mut h = DefaultHasher::new();
+        svg_data.hash(&mut h);
+        render_w.hash(&mut h);
+        render_h.hash(&mut h);
+        flip_bg.hash(&mut h);
+        h.finish()
+    };
+    let svg_pixmap: Arc<Pixmap> =
+        if let Some(p) = PIXMAP_CACHE.with(|c| c.borrow().get(&pkey).cloned()) {
+            p
+        } else {
+            let mut pm = Pixmap::new(render_w, render_h)
+                .ok_or_else(|| AnimError::Render("failed to create SVG pixmap".into()))?;
+            let render_transform =
+                Transform::from_scale(final_scale_x.abs() as f32, final_scale_y.abs() as f32);
+            resvg::render(&tree, render_transform, &mut pm.as_mut());
+            if flip_bg {
+                flip_pixmap_horizontal(&mut pm);
+            }
+            let arc = Arc::new(pm);
+            PIXMAP_CACHE.with(|c| {
+                let mut m = c.borrow_mut();
+                if m.len() > 96 {
+                    m.clear();
+                }
+                m.insert(pkey, arc.clone());
+            });
+            arc
+        };
 
     let dest_x = px - (render_w as f64 / 2.0);
     let dest_y = py - (render_h as f64 / 2.0);
@@ -1096,7 +1158,8 @@ fn render_svg_to_pixmap(
         ..Default::default()
     };
 
-    pixmap.draw_pixmap(0, 0, svg_pixmap.as_ref(), &paint, transform, None);
+    let pm: &Pixmap = &svg_pixmap;
+    pixmap.draw_pixmap(0, 0, pm.as_ref(), &paint, transform, None);
 
     Ok(())
 }
