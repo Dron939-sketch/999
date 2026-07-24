@@ -32,8 +32,10 @@ import urllib.request
 API_URL = "https://api.fish.audio/v1/tts"
 # Frederick — источник правды по озвучке (голос Фреди). Если задан токен, реплики
 # синтезирует он (ключ Fish не покидает сервер Frederick) и кэширует mp3 у себя.
-FREDERICK_BASE = os.environ.get("FREDERICK_TTS_URL", "https://ffred-ddd989.amvera.io").rstrip("/")
-FREDERICK_TOKEN = os.environ.get("FREDERICK_ADMIN_TOKEN", "")
+# `or` (не default-аргумент): пустой секрет FREDERICK_TTS_URL приходит как ""
+# — get(..., default) вернул бы "", а нам нужен дефолтный адрес.
+FREDERICK_BASE = (os.environ.get("FREDERICK_TTS_URL") or "https://ffred-ddd989.amvera.io").rstrip("/")
+FREDERICK_TOKEN = os.environ.get("FREDERICK_ADMIN_TOKEN") or ""
 
 
 def parse_vo_table(md_path):
