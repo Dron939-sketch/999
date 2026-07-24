@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 122" width="44" height="122">
+  <defs>
+    <linearGradient id="fal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#05050a"/><stop offset="45%" stop-color="#2b2b34"/><stop offset="100%" stop-color="#08080e"/></linearGradient>
+    <radialGradient id="hal" cx="40%" cy="30%" r="80%"><stop offset="0%" stop-color="#e7ded2"/><stop offset="100%" stop-color="#c3b6a2"/></radialGradient>
+  </defs>
+  <!-- elbow joint cap (covers the joint when bent) -->
+  <circle cx="22" cy="12" r="10.5" fill="#2a2a33"/>
+  <path d="M10 8 Q22 2 34 8 L32 74 Q31 82 28 86 L16 86 Q13 82 12 74 Z" fill="url(#fal)" stroke="#050508" stroke-width="1.5"/>
+  <path d="M22 16 Q24 50 22 82" fill="none" stroke="#43434d" stroke-width="1.1" opacity="0.5"/>
+  <path d="M15 80 L29 80 L28 88 L16 88 Z" fill="#efece3" stroke="#bcb5a4" stroke-width="0.8"/>
+  <path d="M17 86 Q12 100 21 108 Q33 112 37 99 Q38 90 32 86 Z" fill="url(#hal)" stroke="#5a4f40" stroke-width="1.1"/>
+  <path d="M23 97 Q29 99 34 95" fill="none" stroke="#8a7c66" stroke-width="0.8" opacity="0.6"/>
+</svg>
