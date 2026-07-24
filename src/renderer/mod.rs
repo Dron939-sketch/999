@@ -403,7 +403,7 @@ fn render_rigged_character(
     }
 
     // Apply squash and stretch based on vertical velocity.
-    apply_squash_stretch(&mut bone_states, velocity.1);
+    apply_squash_stretch(&mut bone_states, velocity.0, velocity.1);
 
     // While the character is speaking, the whole body talks — not just the mouth.
     // Detect speech from the cluster of overlay flap events and layer a head nod
@@ -423,7 +423,7 @@ fn render_rigged_character(
     } else {
         apply_idle_motion(&mut bone_states_prev, &rig.skeleton, t_prev);
     }
-    apply_squash_stretch(&mut bone_states_prev, velocity.1);
+    apply_squash_stretch(&mut bone_states_prev, velocity.0, velocity.1);
     let speak_prev = speaking_intensity(&events, pose_time - 1.0 / 12.0);
     if speak_prev > 0.001 {
         apply_speaking_motion(&mut bone_states_prev, t_prev, speak_prev);

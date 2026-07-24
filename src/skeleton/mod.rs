@@ -438,13 +438,16 @@ pub fn apply_anticipation(states: &mut [BoneState], t: f64) {
 }
 
 /// Apply squash and stretch based on vertical velocity.
-pub fn apply_squash_stretch(states: &mut [BoneState], velocity_y: f64) {
-    let factor = (velocity_y * 0.005).clamp(-0.15, 0.15);
+pub fn apply_squash_stretch(states: &mut [BoneState], velocity_x: f64, velocity_y: f64) {
+    // Stretch ALONG the direction of motion and squash across it — the classic
+    // squash/stretch of hand-drawn animation, giving fast moves weight. Applied
+    // to the torso, which propagates to the whole body. Volume roughly kept.
+    let fy = (velocity_y * 0.006).clamp(-0.17, 0.17);
+    let fx = (velocity_x * 0.006).clamp(-0.17, 0.17);
     for state in states.iter_mut() {
         if state.name == "torso" {
-            // Stretch when moving fast vertically, squash on deceleration
-            state.scale.1 *= 1.0 + factor;
-            state.scale.0 *= 1.0 - factor * 0.5; // preserve volume
+            state.scale.1 *= 1.0 + fy - fx.abs() * 0.5;
+            state.scale.0 *= 1.0 + fx - fy.abs() * 0.5;
         }
     }
 }
