@@ -473,6 +473,7 @@ fn render_rigged_character(
         // Whole-character rotation (the `rotate` action): lets a rigged
         // character lie down, lean, etc. Applied as the root rotation.
         state.rotation,
+        None,
         &mut drawables,
     );
     // Same collection at the previous tick — pose-only — to measure per-part motion.
@@ -489,6 +490,7 @@ fn render_rigged_character(
         state.scale_x,
         state.scale_y,
         state.rotation,
+        None,
         &mut prev_draws,
     );
 
@@ -519,6 +521,7 @@ fn render_rigged_character(
                         pivot: d.pivot,
                         z_order: d.z_order,
                         bend: d.bend,
+                        bend_origin: d.bend_origin,
                     });
                 }
             }
@@ -535,6 +538,7 @@ fn render_rigged_character(
             pivot: d.pivot,
             z_order: d.z_order,
             bend: d.bend,
+            bend_origin: d.bend_origin,
         });
     }
 
@@ -543,7 +547,7 @@ fn render_rigged_character(
     for d in &final_draws {
         render_bone_part(
             d.part, pixmap, d.x, d.y, d.sx, d.sy, d.rot, d.flip, d.opacity, &d.pivot,
-            d.bend, boil_seed,
+            d.bend, d.bend_origin, boil_seed,
         )?;
     }
 
@@ -665,9 +669,35 @@ struct Drawable<'a> {
     opacity: f64,
     pivot: (f64, f64),
     z_order: i32,
-    /// Rubber-hose bend: total curl (radians) applied down the part below its
-    /// pivot, so a limb reads as a bending drawing, not a rigid rotated segment.
+    /// Rubber-hose bend: total curl (radians) applied along the part's length,
+    /// so it reads as a bending drawing, not a rigid rotated segment.
     bend: f64,
+    /// Where the curl originates as a fraction of part height: 0.0 = top row
+    /// (limbs hang and curl downward), 1.0 = bottom row (the spine — pelvis
+    /// planted, shoulders sweep).
+    bend_origin: f64,
+}
+
+/// Arc geometry of a bent parent, for mapping child attach points onto the
+/// curved drawing: (bend radians, part length, origin row, pivot row) — all in
+/// part-pixel units, unflipped part space.
+type BendGeom = (f64, f64, f64, f64);
+
+/// Map an attach offset `(ox, oy)` (relative to the parent's pivot) through the
+/// parent's bend arc. Returns the displaced offset plus the tangent angle
+/// (degrees) the child's frame inherits — this is what keeps the head riding a
+/// curved spine instead of hovering where the straight drawing used to be.
+fn bend_map_offset(ox: f64, oy: f64, geom: BendGeom) -> (f64, f64, f64) {
+    let (bend, len, origin, pivot_row) = geom;
+    if bend.abs() < 1e-4 || len <= 0.0 {
+        return (ox, oy, 0.0);
+    }
+    let radius = len / bend;
+    let s = (pivot_row + oy) - origin; // signed arc-length from the origin row
+    let theta = (s / len) * bend;
+    let mx = radius * (1.0 - theta.cos()) + ox * theta.cos();
+    let my = (origin - pivot_row) + radius * theta.sin() + ox * theta.sin();
+    (mx, my, theta.to_degrees())
 }
 
 /// Walk the bone tree computing world transforms (parent → child) and collect a
@@ -686,6 +716,7 @@ fn collect_bone_drawables<'a>(
     entity_scale_x: f64,
     entity_scale_y: f64,
     parent_rot: f64,
+    parent_bend: Option<BendGeom>,
     out: &mut Vec<Drawable<'a>>,
 ) {
     // Find this bone's interpolated state.
@@ -695,6 +726,12 @@ fn collect_bone_drawables<'a>(
     let rotation = state.map(|s| s.rotation).unwrap_or(bone.rotation);
     let (scale_x, scale_y) = state.map(|s| s.scale).unwrap_or(bone.scale);
 
+    // If the parent drawing is bent, this bone's attach point rides the arc.
+    let (offset_x, offset_y, arc_rot) = match parent_bend {
+        Some(geom) => bend_map_offset(offset_x, offset_y, geom),
+        None => (offset_x, offset_y, 0.0),
+    };
+
     // Compute world position of this bone.
     let rot_rad = parent_rot.to_radians();
     let rx = offset_x * rot_rad.cos() - offset_y * rot_rad.sin();
@@ -702,35 +739,63 @@ fn collect_bone_drawables<'a>(
 
     let world_x = parent_x + rx * scale * flip * entity_scale_x;
     let world_y = parent_y + ry * scale * entity_scale_y;
-    let world_rot = parent_rot + rotation * flip;
+    let world_rot = parent_rot + (rotation + arc_rot) * flip;
 
     // Queue this bone's part if it has one. The state's part may be a pose
     // cel-swap (a different drawing); fall back to the bone's default part.
+    // Also compute this bone's own bend so children can ride the arc.
+    let mut child_bend: Option<BendGeom> = None;
+    let mut draw_rot = world_rot;
     let part_name = state.and_then(|s| s.part.as_ref()).or(bone.part.as_ref());
     if let Some(part_name) = part_name {
         if let Some(part) = parts.get(part_name) {
-            // Rubber-hose: give part of the joint's bend to a smooth curl along
-            // the lower limb segment instead of a sharp hinge corner. The arc's
-            // chord runs at (start tangent + bend/2), so subtracting half the
-            // curl keeps the hand/foot where the pose put it — the elbow/knee
-            // softens into a curve but the silhouette of the gesture holds.
-            let bend = if bone.name.contains("forearm") || bone.name.contains("shin") {
-                ((rotation - bone.rotation).to_radians() * 0.55).clamp(-1.1, 1.1) * flip
+            // Rubber-hose: joints give part of their bend to a smooth curl
+            // along the lower limb segment instead of a sharp hinge corner;
+            // the spine curls from a procedural channel (sway, speech). All in
+            // unflipped part space — flip is applied at draw/world composition.
+            let joint_bend = if bone.name.contains("forearm") || bone.name.contains("shin") {
+                ((rotation - bone.rotation).to_radians() * 0.32).clamp(-0.55, 0.55)
             } else {
                 0.0
             };
+            let bend_local = (joint_bend + state.map(|s| s.bend).unwrap_or(0.0)).clamp(-1.2, 1.2);
+            // The spine bends from the pelvis up (feet stay planted, shoulders
+            // sweep); limbs bend from their top joint down.
+            let bend_origin = if bone.name == "torso" { 1.0 } else { 0.0 };
+            if bend_origin == 0.0 {
+                // Chord compensation: the arc's chord runs at (start tangent +
+                // bend/2), so subtracting half the curl keeps the hand/foot
+                // where the pose put it — the elbow/knee softens into a curve
+                // but the silhouette of the gesture holds.
+                draw_rot = world_rot - (bend_local * flip).to_degrees() * 0.5;
+            }
+            if bend_local.abs() > 1e-4 {
+                child_bend = Some((
+                    bend_local,
+                    part.height.max(1.0),
+                    bend_origin * part.height,
+                    bone.pivot.1,
+                ));
+            }
+            if std::env::var("ANIMDSL_DEBUG_BONES").is_ok() {
+                eprintln!(
+                    "BONE {} x={:.1} y={:.1} rot={:.1} draw_rot={:.1} bend={:.3} flip={} off=({:.1},{:.1}) arc_rot={:.2}",
+                    bone.name, world_x, world_y, world_rot, draw_rot, bend_local, flip, offset_x, offset_y, arc_rot
+                );
+            }
             out.push(Drawable {
                 part,
                 x: world_x,
                 y: world_y,
                 sx: scale * scale_x * entity_scale_x,
                 sy: scale * scale_y * entity_scale_y,
-                rot: world_rot - bend.to_degrees() * 0.5,
+                rot: draw_rot,
                 flip,
                 opacity,
                 pivot: bone.pivot,
                 z_order: state.map(|s| s.z_order).unwrap_or(bone.z_order),
-                bend,
+                bend: bend_local * flip,
+                bend_origin,
             });
         }
     }
@@ -749,6 +814,7 @@ fn collect_bone_drawables<'a>(
             entity_scale_x * scale_x,
             entity_scale_y * scale_y,
             world_rot,
+            child_bend,
             out,
         );
     }
@@ -837,6 +903,9 @@ fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64) {
             }
             "torso" => {
                 state.rotation += nod * 0.5 * amt;
+                // Speech pushes a wave through the spine: shoulders lean into
+                // the phrase while the pelvis stays planted.
+                state.bend += nod * 0.035 * amt;
             }
             "upper_arm_left" => {
                 state.rotation += (t * 1.7 * tau).sin() * 3.5 * amt;
@@ -914,6 +983,7 @@ fn render_bone_part(
     opacity: f64,
     pivot: &(f64, f64),
     bend: f64,
+    bend_origin: f64,
     boil_seed: u32,
 ) -> Result<(), AnimError> {
     let svg_data = apply_boil(&part.svg_data, boil_seed);
@@ -962,9 +1032,17 @@ fn render_bone_part(
     };
 
     if bend.abs() > 0.02 {
-        // Deformable draw: bend the part along its length below the pivot, so a
-        // limb curves like a hand-drawn rubber-hose instead of a rigid segment.
-        draw_bent_pixmap(pixmap, &part_pixmap, transform, pivot_px as f32, bend as f32, &paint);
+        // Deformable draw: bend the part along its length, so a limb curves
+        // like a hand-drawn rubber-hose instead of a rigid segment.
+        draw_bent_pixmap(
+            pixmap,
+            &part_pixmap,
+            transform,
+            pivot_px as f32,
+            bend as f32,
+            bend_origin as f32,
+            &paint,
+        );
     } else {
         pixmap.draw_pixmap(0, 0, part_pixmap.as_ref(), &paint, transform, None);
     }
@@ -984,6 +1062,7 @@ fn draw_bent_pixmap(
     base: Transform,
     pivot_px: f32,
     bend: f32,
+    bend_origin: f32,
     paint: &PixmapPaint,
 ) {
     let w = src.width();
@@ -991,26 +1070,34 @@ fn draw_bent_pixmap(
     if w == 0 || h == 0 {
         return;
     }
-    // The part hangs from its top; the bend originates at the top row and the
-    // curl accumulates down the length. Treat the source rows as arc-length
-    // along an inextensible "hose": a strip whose top is at source row `d`
-    // lands at the point on a circular arc of that arc-length, rotated by the
-    // tangent angle there. Anchoring each strip by its TOP edge (not centre)
-    // makes consecutive strips join continuously; a 1px sampling overlap hides
-    // the residual gap from using a single angle across a strip's own height.
+    // Treat the source rows as signed arc-length along an inextensible "hose"
+    // measured from the origin row (top for limbs, bottom for the spine): a
+    // strip whose top is at source row y lands on a circular arc at that
+    // arc-length, rotated by the tangent angle there. The formulas are odd/even
+    // in the sign of s, so rows above the origin sweep the mirrored way —
+    // exactly what a pelvis-anchored spine needs. Anchoring each strip by its
+    // TOP edge (not centre) makes consecutive strips join continuously; a 1px
+    // sampling overlap hides the residual gap from using a single angle across
+    // a strip's own height.
     let len = (h as f32).max(1.0);
+    let origin_row = bend_origin * h as f32;
     let radius = len / bend; // signed arc radius
     // Fine strips (~2px) → the arc reads as a smooth curve, not facets.
     let strips = (h / 2).clamp(8, 48);
     let src_data = src.data();
     let sw = w as usize;
-    // Point + tangent angle (deg) at arc-length d down the hose.
-    let arc = |d: f32| -> (f32, f32, f32) {
+    // Point + tangent angle (deg) at source row y (arc-length s = y - origin).
+    let arc = |y: f32| -> (f32, f32, f32) {
+        let s = y - origin_row;
         if bend.abs() < 1e-3 {
-            return (0.0, d, 0.0);
+            return (0.0, y, 0.0);
         }
-        let theta = (d / len) * bend; // radians turned at this arc-length
-        (radius * (1.0 - theta.cos()), radius * theta.sin(), theta.to_degrees())
+        let theta = (s / len) * bend; // radians turned at this arc-length
+        (
+            radius * (1.0 - theta.cos()),
+            origin_row + radius * theta.sin(),
+            theta.to_degrees(),
+        )
     };
     for i in 0..strips {
         let y0 = (i * h / strips).min(h);

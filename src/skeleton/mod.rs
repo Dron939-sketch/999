@@ -226,6 +226,10 @@ pub struct BoneState {
     pub rotation: f64,
     pub scale: (f64, f64),
     pub z_order: i32,
+    /// Rubber-hose curl (radians) the drawing takes along its length — driven
+    /// procedurally (spine sway, speech emphasis), added to any joint-derived
+    /// bend at render time. 0.0 = rigid part.
+    pub bend: f64,
 }
 
 /// Compute the interpolated bone states for a skeleton, blending between two poses.
@@ -296,6 +300,7 @@ fn interpolate_bone(
             lerp(from_scale.1, to_scale.1, t_smooth),
         ),
         z_order,
+        bend: 0.0,
     });
 
     for child in &bone.children {
@@ -342,6 +347,10 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
                 state.scale.1 *= 1.0 + breath * 0.014; // breathing
                 state.offset.0 += shift * 2.2; // weight shift (whole upper body)
                 state.rotation += sway * 1.0 + shift * 0.8;
+                // Spine curl: the sway/weight-shift flows through the body as a
+                // curve (pelvis planted, shoulders sweep) instead of a rigid
+                // tilt — the drawing breathes as one line, not a cutout.
+                state.bend += sway * 0.045 + shift * 0.055 + breath * 0.012;
             }
             "head" => {
                 state.offset.1 += breath * 1.0;
