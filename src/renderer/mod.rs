@@ -414,6 +414,11 @@ fn render_rigged_character(
         apply_speaking_motion(&mut bone_states, t, speak);
     }
 
+    // Follow-through: the head and hands ride an under-damped spring behind
+    // whatever the pose/idle/speech layers just did, so fast changes land with
+    // a lag and a small overshoot (overlapping action — Spine-style physics).
+    apply_spring_lag(entity_name, &mut bone_states, t);
+
     // Match the same idle/walk/squash/speak float on the previous-tick state, so
     // the smear below measures TOTAL on-screen motion between ticks — not a
     // constant pose-vs-float offset (which would smear a talking head forever).
@@ -942,6 +947,66 @@ fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64) {
             }
             _ => {}
         }
+    }
+}
+
+thread_local! {
+    /// Per-(entity, bone) spring state: (current rotation, angular velocity).
+    /// Frames render in order, so a sequential integrator is safe; the state
+    /// resets whenever time jumps backwards (new scene / new render).
+    static SPRING_STATE: RefCell<HashMap<(String, String), (f64, f64)>> =
+        RefCell::new(HashMap::new());
+    /// Last rendered time per entity, to derive dt and detect restarts.
+    static SPRING_LAST_T: RefCell<HashMap<String, f64>> = RefCell::new(HashMap::new());
+}
+
+/// Follow-through / overlapping action (the Spine 4.2 physics-constraint idea,
+/// distilled): selected bones don't take their computed rotation instantly —
+/// they chase it on an under-damped spring, so a struck pose lands with a lag
+/// and a small bounce, and idle/speech motion gains natural looseness. This is
+/// the classic animation principle our renderer was missing: parts of the body
+/// arrive at different times.
+fn apply_spring_lag(entity: &str, states: &mut [BoneState], t: f64) {
+    let dt = SPRING_LAST_T.with(|m| {
+        let mut m = m.borrow_mut();
+        match m.insert(entity.to_string(), t) {
+            Some(last) if t > last && t - last < 0.5 => t - last,
+            _ => f64::NAN, // restart: snap springs to targets
+        }
+    });
+    let reset = dt.is_nan();
+    for state in states.iter_mut() {
+        // Stiffness (rad/s) and damping ratio per bone: the head is snappier,
+        // hands are looser and bounce a touch more.
+        let (omega, zeta) = match state.name.as_str() {
+            "head" => (18.0, 0.55),
+            n if n.contains("forearm") => (13.0, 0.45),
+            n if n.contains("upper_arm") => (16.0, 0.5),
+            _ => continue,
+        };
+        SPRING_STATE.with(|springs| {
+            let mut springs = springs.borrow_mut();
+            let key = (entity.to_string(), state.name.clone());
+            let target = state.rotation;
+            let entry = springs.entry(key).or_insert((target, 0.0));
+            if reset {
+                *entry = (target, 0.0);
+                return;
+            }
+            let (mut x, mut v) = *entry;
+            // Semi-implicit Euler with substeps — stable at 24 fps.
+            let steps = 3;
+            let h = dt / steps as f64;
+            for _ in 0..steps {
+                let accel = (target - x) * omega * omega - 2.0 * zeta * omega * v;
+                v += accel * h;
+                x += v * h;
+            }
+            // Never lag more than a readable amount — silhouettes must hold.
+            x = x.clamp(target - 22.0, target + 22.0);
+            *entry = (x, v);
+            state.rotation = x;
+        });
     }
 }
 
