@@ -24,6 +24,12 @@ pub struct RenderConfig {
     pub film_grain: f64,
     /// Vignette intensity (0 = off, ~0.3–0.6 = darkened edges).
     pub vignette: f64,
+    /// "Animate on N's": hold each drawing for N rendered frames before the
+    /// pose/procedural motion advances (0 or 1 = smooth 24fps; 2 = on-twos,
+    /// 3 = on-threes). The hand-drawn choppiness that reads as "alive but
+    /// drawn" — the original Freeman animates on 2s–3s, not smooth. Camera
+    /// pushes and transitions stay smooth; only the character drawing steps.
+    pub on_twos: u32,
 }
 
 impl Default for RenderConfig {
@@ -37,6 +43,7 @@ impl Default for RenderConfig {
             mono_contrast: 1.12,
             film_grain: 0.0,
             vignette: 0.0,
+            on_twos: 0,
         }
     }
 }
@@ -85,6 +92,11 @@ impl RenderConfig {
                 "vignette" => {
                     if let Value::Number(n) = &entry.value {
                         cfg.vignette = *n;
+                    }
+                }
+                "on-twos" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.on_twos = *n as u32;
                     }
                 }
                 _ => {}

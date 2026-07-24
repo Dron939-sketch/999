@@ -511,6 +511,10 @@ fn parse_transition(pair: Pair) -> Result<TransitionStmt, AnimError> {
             let dur = parse_duration(kind.into_inner().next().unwrap());
             Ok(TransitionStmt::Static(dur))
         }
+        Rule::transition_invert => {
+            let dur = parse_duration(kind.into_inner().next().unwrap());
+            Ok(TransitionStmt::Invert(dur))
+        }
         Rule::transition_cut => Ok(TransitionStmt::Cut),
         Rule::transition_wipe => {
             let mut inner = kind.into_inner();

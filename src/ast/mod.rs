@@ -281,6 +281,8 @@ pub enum TransitionStmt {
     /// TV-noise glitch cut (Freeman-style): screen bursts to static, then the
     /// next scene snaps in. Hard, jarring — used on the sharpest transitions.
     Static(Duration),
+    /// Invert the frame (white figure on black) for the duration — a punch.
+    Invert(Duration),
     Dissolve(Duration),
     Wipe {
         direction: Direction,

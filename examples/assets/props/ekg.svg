@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200" width="1200" height="200">
+  <defs><filter id="ink" x="-5%" y="-40%" width="110%" height="180%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="1" seed="5" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter></defs>
+  <g filter="url(#ink)" fill="none" stroke="#0e0e0e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- ровная линия с периодическими пульсами-ударами сердца -->
+    <path d="M0 100 H180 l14 -6 8 -70 10 130 12 -80 10 44 H460
+             l14 -6 8 -70 10 130 12 -80 10 44 H760
+             l14 -6 8 -70 10 130 12 -80 10 44 H1060
+             l14 -6 8 -70 10 130 12 -80 10 44 H1200"/>
+  </g>
+</svg>

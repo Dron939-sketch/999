@@ -146,6 +146,21 @@ pub fn render_frame(
         camera.y += ((t * 53.0).cos() + (t * 37.0).sin() * 0.6) * s * 0.7;
     }
 
+    // On-twos/threes: hold the DRAWING for N frames so character motion steps
+    // like hand-drawn animation instead of sliding smoothly. Camera and
+    // transitions keep the true `t` (smooth pushes); only entity motion and the
+    // character's pose/procedural use this quantised time.
+    let anim_t = if config.on_twos >= 2 {
+        // Quantise in integer FRAME space (stable — float division on step
+        // boundaries is not): hold each drawing for N frames.
+        let fps = config.fps.max(1) as f64;
+        let frame = (t * fps).round() as i64;
+        let n = config.on_twos as i64;
+        ((frame / n) * n) as f64 / fps
+    } else {
+        t
+    };
+
     // Render set (background).
     if let Some(name) = set_name {
         if let Some(set_asset) = assets.sets.get(name) {
@@ -166,14 +181,14 @@ pub fn render_frame(
         }
     }
 
-    // Evaluate entity states at time t.
+    // Evaluate entity states at the (stepped) animation time.
     let mut entity_states: Vec<(String, EntityState)> = initial_entities
         .iter()
         .map(|(name, initial)| {
             let mut state = initial.clone();
             for track in &timeline.tracks {
                 if track.entity == *name {
-                    let value = evaluate_track(track, t);
+                    let value = evaluate_track(track, anim_t);
                     match track.property {
                         Property::X => state.x = value,
                         Property::Y => state.y = value,
@@ -206,7 +221,7 @@ pub fn render_frame(
                         w,
                         h,
                         &camera,
-                        t,
+                        anim_t,
                         timeline,
                         name,
                         custom_poses,
@@ -979,11 +994,15 @@ fn apply_spring_lag(entity: &str, states: &mut [BoneState], t: f64) {
     let dt = SPRING_LAST_T.with(|m| {
         let mut m = m.borrow_mut();
         match m.insert(entity.to_string(), t) {
+            // Held frame (on-twos): same animation time as last render — reuse
+            // the stored spring value verbatim so held frames stay pixel-identical.
+            Some(last) if (t - last).abs() < 1e-9 => 0.0,
             Some(last) if t > last && t - last < 0.5 => t - last,
             _ => f64::NAN, // restart: snap springs to targets
         }
     });
     let reset = dt.is_nan();
+    let held = dt == 0.0;
     for state in states.iter_mut() {
         // Stiffness (rad/s) and damping ratio per bone: the head is snappier,
         // hands are looser and bounce a touch more.
@@ -1000,6 +1019,11 @@ fn apply_spring_lag(entity: &str, states: &mut [BoneState], t: f64) {
             let entry = springs.entry(key).or_insert((target, 0.0));
             if reset {
                 *entry = (target, 0.0);
+                return;
+            }
+            if held {
+                // Reapply the stored (stepped) spring value without advancing.
+                state.rotation = entry.0;
                 return;
             }
             let (mut x, mut v) = *entry;
@@ -1502,6 +1526,11 @@ fn apply_transitions(
                 let intensity = 1.0 - (progress * 2.0 - 1.0).abs(); // 0→1→0
                 draw_static_noise(pixmap, t, intensity);
             }
+            TransitionKind::Invert => {
+                // Freeman punch: white figure on black. Invert RGB for the whole
+                // window (held, not ramped) — a hard graphic accent.
+                invert_pixmap(pixmap);
+            }
             TransitionKind::Wipe(direction) => {
                 let w = pixmap.width() as f64;
                 let h = pixmap.height() as f64;
@@ -1554,6 +1583,18 @@ fn draw_static_noise(pixmap: &mut Pixmap, t: f64, amount: f64) {
                 data[idx + c] = ((base * (255 - a) + v * a) / 255) as u8;
             }
         }
+    }
+}
+
+/// Invert RGB of every pixel (alpha untouched) — the negative "punch" shot.
+fn invert_pixmap(pixmap: &mut Pixmap) {
+    let data = pixmap.data_mut();
+    let mut i = 0;
+    while i + 3 < data.len() {
+        data[i] = 255 - data[i];
+        data[i + 1] = 255 - data[i + 1];
+        data[i + 2] = 255 - data[i + 2];
+        i += 4;
     }
 }
 

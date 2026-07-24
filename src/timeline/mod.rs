@@ -88,6 +88,7 @@ pub enum TransitionKind {
     FadeWhite,
     Cut,
     Static,
+    Invert,
     Dissolve,
     Wipe(Direction),
 }
@@ -616,6 +617,7 @@ impl TimelineCompiler {
             TransitionStmt::Cut => (TransitionKind::Cut, 0.0),
             TransitionStmt::Dissolve(d) => (TransitionKind::Dissolve, d.as_secs()),
             TransitionStmt::Static(d) => (TransitionKind::Static, d.as_secs()),
+            TransitionStmt::Invert(d) => (TransitionKind::Invert, d.as_secs()),
             TransitionStmt::Wipe {
                 direction,
                 duration,
