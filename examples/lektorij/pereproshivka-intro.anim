@@ -1,0 +1,122 @@
+// =============================================================================
+//  ПОДВОДКА К КУРСУ «ПЕРЕПРОШИВКА» — hook-ролик (~55 с)
+//  Драматургия:
+//   1) ХУК (тюремная камера): Фримен лежит на нижней наре и говорит в потолок —
+//      «камера = твой здравый смысл». Первые 7 секунд: капля, тишина, взгляд.
+//   2) КНИГА: на столе открыта книга курса — наезд на картинку (голова+чип).
+//   3) КАРТИНКА ОЖИВАЕТ: шестерни крутятся в голове, Фримен-профессор
+//      объясняет у «схемы».
+//  Озвучка: Fish Audio по сценарию pereproshivka-intro-VO.md (там же SFX).
+//  Рендер: cargo run --release -- render examples/lektorij/pereproshivka-intro.anim -o intro.mp4
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set cell from "../assets/sets/prison-cell.svg"
+import set book from "../assets/sets/book-title-page.svg"
+import set mind from "../assets/sets/mind-alive.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #6d746c
+    // рисованное ч/б, как у Фримена (мягкий контраст сохраняет лучи света)
+    monochrome: true
+    mono-contrast: 1.25
+    vignette: 0.45
+    film-grain: 0.14
+}
+
+// === СЦЕНА 1: ХУК В КАМЕРЕ (22 с) ===
+scene "cell-hook" (duration: 22s, set: cell) {
+    place freeman at (0.35, 0.715) facing front
+    freeman rotates -87
+    freeman pose "lying"
+
+    // 0–2.5с: тишина, капля (SFX), общий план камеры
+    camera wide
+    wait 2.5s
+
+    // VO-1 + медленный наезд (кино): «Ты когда-нибудь просыпался с чувством,
+    // что живёшь не свою жизнь?»
+    camera medium freeman
+    freeman speaks for 3.2s
+    // VO-2: «Твои мысли. Твои "так правильно". Тебе их выдали. Как робу — по размеру.»
+    freeman speaks for 4s
+    wait 0.6s
+
+    // VO-3: «Эта камера — не наказание. Это твой здравый смысл.»
+    camera medium freeman
+    freeman speaks for 3.4s
+
+    // САДИТСЯ на наре (буквально «признай, что сидишь») — корпус поднимается из
+    // лёжа в полусидя, персонаж остаётся на кровати. Без левитации через комнату.
+    freeman pose "stern"
+    together {
+        freeman rotates -20 over 0.9s
+        freeman moves-to (0.34, 0.66) over 0.9s
+    }
+    camera medium freeman
+    wait 0.3s
+    // VO-4: «Хочешь выйти? Сначала признай, что сидишь.»
+    freeman speaks for 2.8s
+    freeman pose "point"
+    wait 1s
+    transition dissolve 1.2s
+}
+
+// === СЦЕНА 2: КНИГА НА СТОЛЕ (12 с) ===
+scene "book" (duration: 12s, set: book) {
+    // VO-5: «Курс "Перепрошивка". Десять лекций о том, кто написал твой код.»
+    camera wide
+    wait 2.5s
+    // наезд на страницу
+    camera close-up
+    wait 2s
+    // VO-6: «Лекция первая. Ты — не с нуля.»
+    // подъезд к картинке
+    camera pan-to (0.72, 0.62) over 3s
+    wait 3s
+    transition dissolve 1.4s
+}
+
+// === СЦЕНА 3: КАРТИНКА ОЖИВАЕТ (18 с) ===
+scene "alive" (duration: 18s, set: mind) {
+    let gear1 = prop("gear", "../assets/props/gear.svg") at (0.47, 0.30)
+    let gear2 = prop("gear", "../assets/props/gear.svg") at (0.36, 0.40)
+
+    place freeman at (0.85, 0.74) facing front
+    freeman pose "calm"
+
+    camera wide
+    // шестерни завертелись — картинка ожила; камера медленно давит внутрь
+    together {
+        gear1 rotates 360 over 9s
+        gear2 rotates -360 over 9s
+        do {
+            // VO-7: «Пока ты читаешь эту фразу — прошивка работает.»
+            freeman pose "point"
+            wait 0.8s
+            freeman speaks for 3s
+        }
+    }
+
+    // VO-8: «Мы разберём её на детали. Что твоё. Что вшитое.»
+    freeman pose "think"
+    wait 0.6s
+    freeman speaks for 3.4s
+
+    // VO-9: «И перепишем. Строчка за строчкой.»
+    camera close-up freeman
+    freeman pose "stern"
+    wait 0.5s
+    freeman speaks for 2.6s
+
+    // финал: взгляд в упор
+    camera extreme-close-up freeman
+    freeman pose "wide"
+    wait 1.2s
+    freeman pose "stern"
+    wait 1.4s
+    transition fade-black 1.6s
+}

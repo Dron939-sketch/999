@@ -1,0 +1,68 @@
+{
+  "name": "fredi",
+  "height": 500,
+  "skeleton": {
+    "root": {
+      "name": "root", "pivot": [0, 0], "offset": [0, 0],
+      "children": [
+        {
+          "name": "torso", "part": "torso", "pivot": [95, 12], "offset": [0, 0], "z_order": 2,
+          "children": [
+            {
+              "name": "head", "part": "head", "pivot": [70, 150], "offset": [0, 8], "scale": [0.82, 0.82], "z_order": 5,
+              "children": [
+                { "name": "eye_left",  "part": "eye_left",  "pivot": [17, 12], "offset": [-20, -69], "z_order": 6 },
+                { "name": "eye_right", "part": "eye_right", "pivot": [17, 12], "offset": [20, -69],  "z_order": 6 },
+                { "name": "brow_left",  "part": "brow_left",  "pivot": [34, 10], "offset": [-8, -87], "z_order": 8 },
+                { "name": "brow_right", "part": "brow_right", "pivot": [6, 10],  "offset": [8, -87],  "z_order": 8 },
+                { "name": "mouth", "part": "mouth", "pivot": [25, 6], "offset": [0, -30], "z_order": 6 }
+              ]
+            },
+            {
+              "name": "upper_arm_left", "part": "upper_arm_left", "pivot": [22, 14], "offset": [-60, 16], "rotation": 6, "z_order": 1,
+              "children": [
+                { "name": "forearm_left", "part": "forearm_left", "pivot": [22, 12], "offset": [0, 76], "rotation": 10, "z_order": 1 }
+              ]
+            },
+            {
+              "name": "upper_arm_right", "part": "upper_arm_right", "pivot": [22, 14], "offset": [60, 16], "rotation": -6, "z_order": 3,
+              "children": [
+                { "name": "forearm_right", "part": "forearm_right", "pivot": [24, 12], "offset": [0, 76], "rotation": 4, "z_order": 3 }
+              ]
+            },
+            {
+              "name": "thigh_left", "part": "thigh_left", "pivot": [25, 8], "offset": [-22, 122], "scale": [1.0, 1.14], "z_order": 0,
+              "children": [
+                { "name": "shin_left", "part": "shin_left", "pivot": [27, 12], "offset": [0, 100], "scale": [1.0, 1.14], "z_order": 0 }
+              ]
+            },
+            {
+              "name": "thigh_right", "part": "thigh_right", "pivot": [25, 8], "offset": [22, 122], "scale": [1.0, 1.14], "z_order": 0,
+              "children": [
+                { "name": "shin_right", "part": "shin_right", "pivot": [27, 12], "offset": [0, 100], "scale": [1.0, 1.14], "z_order": 0 }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "poses": {
+    "idle":       { "name": "idle", "bones": { "mouth": { "scale": [1, 0.85] } } },
+    "fredi-calm": { "name": "fredi-calm", "transition_duration": 0.4, "bones": { "upper_arm_left": { "rotation": 6 }, "forearm_left": { "rotation": 10 }, "upper_arm_right": { "rotation": -6 }, "forearm_right": { "rotation": 4 }, "mouth": { "scale": [1, 0.85] } } },
+    "fredi-blink": { "name": "fredi-blink", "transition_duration": 0.12, "bones": { "eye_left": { "scale": [1, 0.12] }, "eye_right": { "scale": [1, 0.12] } } },
+    "fredi-speak": { "name": "fredi-speak", "transition_duration": 0.12, "bones": { "mouth": { "scale": [1, 1.7] } } },
+    "talk": { "name": "talk", "transition_duration": 0.06, "bones": { "mouth": { "scale": [1, 1.6] } } },
+    "gab":  { "name": "gab", "transition_duration": 0.06, "bones": { "mouth": { "scale": [1, 2.0] } } },
+    "fredi-think": { "name": "fredi-think", "transition_duration": 0.45, "bones": { "head": { "rotation": -6 }, "brow_left": { "offset": [0, 2] }, "brow_right": { "offset": [0, 2] }, "mouth": { "scale": [1, 0.6] }, "upper_arm_left": { "rotation": -52 }, "forearm_left": { "rotation": 96 } } },
+    "fredi-explain": { "name": "fredi-explain", "transition_duration": 0.4, "bones": { "torso": { "rotation": 2 }, "brow_left": { "offset": [0, -3] }, "brow_right": { "offset": [0, -3] }, "mouth": { "scale": [1, 1.6] }, "upper_arm_left": { "rotation": -34 }, "forearm_left": { "rotation": 52 } } },
+    "fredi-point": { "name": "fredi-point", "transition_duration": 0.35, "bones": { "torso": { "rotation": 3 }, "brow_left": { "offset": [0, 4], "rotation": -8 }, "brow_right": { "offset": [0, 4], "rotation": 8 }, "mouth": { "scale": [1, 1.4] }, "upper_arm_left": { "rotation": -54 }, "forearm_left": { "rotation": 16 } } },
+    "fredi-stern": { "name": "fredi-stern", "transition_duration": 0.35, "bones": { "head": { "rotation": -3 }, "brow_left": { "offset": [0, 5], "rotation": -10 }, "brow_right": { "offset": [0, 5], "rotation": 10 }, "mouth": { "scale": [1, 0.5] } } },
+    "fredi-angry": { "name": "fredi-angry", "transition_duration": 0.3, "bones": { "head": { "rotation": -2 }, "brow_left": { "offset": [2, 7], "rotation": -16 }, "brow_right": { "offset": [-2, 7], "rotation": 16 }, "eye_left": { "scale": [1, 0.85] }, "eye_right": { "scale": [1, 0.85] }, "mouth": { "scale": [1, 1.7] }, "upper_arm_left": { "rotation": -22 }, "forearm_left": { "rotation": 40 } } },
+    "fredi-surprised": { "name": "fredi-surprised", "transition_duration": 0.25, "bones": { "head": { "rotation": 3 }, "brow_left": { "offset": [0, -7] }, "brow_right": { "offset": [0, -7] }, "eye_left": { "scale": [1, 1.28] }, "eye_right": { "scale": [1, 1.28] }, "mouth": { "scale": [1, 1.9] }, "upper_arm_left": { "rotation": -18 }, "forearm_left": { "rotation": 30 } } },
+    "fredi-skeptical": { "name": "fredi-skeptical", "transition_duration": 0.35, "bones": { "head": { "rotation": 2 }, "brow_left": { "offset": [0, -5] }, "brow_right": { "offset": [0, 4], "rotation": 10 }, "eye_left": { "scale": [1, 0.8] }, "eye_right": { "scale": [1, 0.8] }, "mouth": { "offset": [3, 0], "scale": [1, 0.6] } } },
+    "fredi-smirk": { "name": "fredi-smirk", "transition_duration": 0.35, "bones": { "head": { "rotation": 4 }, "brow_left": { "offset": [0, -3] }, "mouth": { "offset": [4, 0], "scale": [1, 0.7] } } },
+    "fredi-lean": { "name": "fredi-lean", "transition_duration": 0.4, "bones": { "torso": { "rotation": 6 }, "head": { "rotation": 2 }, "brow_left": { "offset": [0, 3] }, "brow_right": { "offset": [0, 3] }, "mouth": { "scale": [1, 1.4] }, "upper_arm_left": { "rotation": -14 }, "forearm_left": { "rotation": 34 }, "shin_left": { "rotation": 4 }, "shin_right": { "rotation": -3 } } },
+    "fredi-flourish": { "name": "fredi-flourish", "transition_duration": 0.5, "bones": { "torso": { "rotation": 9 }, "head": { "rotation": -3 }, "brow_left": { "offset": [0, 4], "rotation": -10 }, "brow_right": { "offset": [0, 4], "rotation": 10 }, "mouth": { "scale": [1, 1.6] }, "upper_arm_left": { "rotation": -96 }, "forearm_left": { "rotation": 74 }, "upper_arm_right": { "rotation": 26 }, "forearm_right": { "rotation": -14 }, "thigh_left": { "rotation": -16 }, "shin_left": { "rotation": 10 }, "thigh_right": { "rotation": 14 }, "shin_right": { "rotation": -8 } } }
+  }
+}

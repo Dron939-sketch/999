@@ -269,16 +269,63 @@ fn render_rigged_character(
     timeline: &Timeline,
     entity_name: &str,
 ) -> Result<(), AnimError> {
-    // Determine current and previous pose, and interpolation progress.
-    let (from_pose_name, to_pose_name, pose_t) = get_pose_interpolation(timeline, entity_name, t);
+    // Limited animation "on twos": the pose clock ticks at ~12 fps so gestures
+    // and cel swaps pop in steps like hand-drawn animation, while the ink boil
+    // and idle float below keep running at full rate.
+    let pose_time = (t * 12.0).floor() / 12.0;
 
-    let from_pose = from_pose_name.and_then(|n| rig.poses.get(n));
-    let to_pose = to_pose_name.and_then(|n| rig.poses.get(n));
+    // Determine current and previous pose events, and interpolation progress.
+    // Overlay events (speech mouth flaps) merge onto the last held body pose,
+    // so a gesture — or a lying character — keeps its posture while talking.
+    let events: Vec<&PoseEvent> = timeline
+        .pose_events
+        .iter()
+        .filter(|e| e.entity == entity_name)
+        .collect();
 
-    let _transition_dur = to_pose.map(|p| p.transition_duration).unwrap_or(0.3);
+    let mut current_idx: Option<usize> = None;
+    for (i, ev) in events.iter().enumerate() {
+        if ev.time <= pose_time {
+            current_idx = Some(i);
+        }
+    }
+
+    let (from_idx, to_idx, pose_t, td) = match current_idx {
+        None => (None, if events.is_empty() { None } else { Some(0) }, 0.0, 0.18),
+        Some(idx) => {
+            // Use the target pose's own transition duration (fast for flaps).
+            let td = events
+                .get(idx)
+                .and_then(|ev| rig.poses.get(&ev.pose))
+                .map(|p| p.transition_duration)
+                .unwrap_or(0.18) // snappier default than a slow 0.3s slide
+                .max(0.01);
+            let elapsed = pose_time - events[idx].time;
+            if elapsed >= td {
+                (Some(idx), Some(idx), 1.0, td)
+            } else {
+                let prev = if idx > 0 { Some(idx - 1) } else { None };
+                (prev, Some(idx), elapsed / td, td)
+            }
+        }
+    };
+
+    let from_pose = resolve_effective_pose(rig, &events, from_idx);
+    let to_pose = resolve_effective_pose(rig, &events, to_idx);
+
+    // Hand-drawn timing. Short transitions (mouth flaps, blinks) just ease out.
+    // Larger gestures get anticipation (a wind-up away from the target) plus an
+    // overshoot, so poses read as struck rather than slid — the core of the
+    // Freeman feel. Extrapolation past [0,1] is intentional here.
+    let eased_t = if td < 0.15 {
+        ease_out_cubic(pose_t)
+    } else {
+        anticipate_back(pose_t)
+    };
 
     // Get interpolated bone states.
-    let mut bone_states = interpolate_skeleton(&rig.skeleton, from_pose, to_pose, pose_t);
+    let mut bone_states =
+        interpolate_skeleton(&rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), eased_t);
 
     // Detect if the character is moving (for walk cycle).
     let velocity = compute_velocity(timeline, entity_name, t);
@@ -299,9 +346,6 @@ fn render_rigged_character(
     // Apply squash and stretch based on vertical velocity.
     apply_squash_stretch(&mut bone_states, velocity.1);
 
-    // Sort bones by z_order for correct draw order.
-    bone_states.sort_by_key(|b| b.z_order);
-
     // Compute the character's screen position.
     let cw = canvas_w as f64;
     let ch = canvas_h as f64;
@@ -320,12 +364,22 @@ fn render_rigged_character(
         _ => 1.0_f64,
     };
 
-    // Render each bone part.
-    render_bone_tree(
+    // Per-frame "boil" seed: cycles the ink-filter turbulence so hand-drawn
+    // edges wobble frame-to-frame (~9 changes/sec). No-op for parts without a
+    // turbulence filter.
+    let boil_seed = (t * 5.0) as i64;
+    let boil_seed = boil_seed.rem_euclid(4096) as u32 + 1;
+
+    // Two-phase draw. First walk the bone tree to compute each part's world
+    // transform (parent transforms propagate to children), collecting drawables;
+    // THEN draw them sorted by z_order. This is what makes a hand tuck BEHIND
+    // the head when the pose says so — tree order alone would always draw a limb
+    // in front of its siblings regardless of intent.
+    let mut drawables: Vec<Drawable> = Vec::new();
+    collect_bone_drawables(
         &rig.skeleton.root,
         &bone_states,
         &rig.parts,
-        pixmap,
         screen_x,
         screen_y,
         char_scale,
@@ -333,8 +387,19 @@ fn render_rigged_character(
         state.opacity,
         state.scale_x,
         state.scale_y,
-        0.0, // parent rotation accumulator
-    )?;
+        // Whole-character rotation (the `rotate` action): lets a rigged
+        // character lie down, lean, etc. Applied as the root rotation.
+        state.rotation,
+        &mut drawables,
+    );
+    // Stable sort keeps tree order among equal z_order (deterministic layering).
+    drawables.sort_by_key(|d| d.z_order);
+    for d in &drawables {
+        render_bone_part(
+            d.part, pixmap, d.x, d.y, d.sx, d.sy, d.rot, d.flip, d.opacity, &d.pivot,
+            boil_seed,
+        )?;
+    }
 
     Ok(())
 }
@@ -400,9 +465,11 @@ fn render_procedural_character(
     } else {
         // Standing still — use facing direction.
         match state.facing {
-            Direction::Left => 315.0, // 3/4 left (not full profile)
-            Direction::Right => 45.0, // 3/4 right
-            _ => 0.0,                 // front
+            Direction::Left => 315.0,  // 3/4 left (not full profile)
+            Direction::Right => 45.0,  // 3/4 right
+            Direction::Back => 180.0,  // facing away
+            Direction::Front => 0.0,   // straight at camera
+            _ => 0.0,                  // up/down → front
         }
     };
     // Smooth transition.
@@ -440,11 +507,28 @@ fn render_procedural_character(
 }
 
 /// Recursively render bones in the skeleton tree, accumulating transforms.
-fn render_bone_tree(
+/// One part ready to be drawn, with its world transform and draw order.
+struct Drawable<'a> {
+    part: &'a skeleton::PartAsset,
+    x: f64,
+    y: f64,
+    sx: f64,
+    sy: f64,
+    rot: f64,
+    flip: f64,
+    opacity: f64,
+    pivot: (f64, f64),
+    z_order: i32,
+}
+
+/// Walk the bone tree computing world transforms (parent → child) and collect a
+/// flat list of drawables. Drawing is deferred so the caller can sort by
+/// `z_order` — the fix for limbs punching through the head/torso.
+#[allow(clippy::too_many_arguments)]
+fn collect_bone_drawables<'a>(
     bone: &skeleton::Bone,
     bone_states: &[BoneState],
-    parts: &HashMap<String, skeleton::PartAsset>,
-    pixmap: &mut Pixmap,
+    parts: &'a HashMap<String, skeleton::PartAsset>,
     parent_x: f64,
     parent_y: f64,
     scale: f64,
@@ -453,7 +537,8 @@ fn render_bone_tree(
     entity_scale_x: f64,
     entity_scale_y: f64,
     parent_rot: f64,
-) -> Result<(), AnimError> {
+    out: &mut Vec<Drawable<'a>>,
+) {
     // Find this bone's interpolated state.
     let state = bone_states.iter().find(|s| s.name == bone.name);
 
@@ -470,31 +555,32 @@ fn render_bone_tree(
     let world_y = parent_y + ry * scale * entity_scale_y;
     let world_rot = parent_rot + rotation * flip;
 
-    // Render this bone's part if it has one.
-    if let Some(ref part_name) = bone.part {
+    // Queue this bone's part if it has one. The state's part may be a pose
+    // cel-swap (a different drawing); fall back to the bone's default part.
+    let part_name = state.and_then(|s| s.part.as_ref()).or(bone.part.as_ref());
+    if let Some(part_name) = part_name {
         if let Some(part) = parts.get(part_name) {
-            render_bone_part(
+            out.push(Drawable {
                 part,
-                pixmap,
-                world_x,
-                world_y,
-                scale * scale_x * entity_scale_x,
-                scale * scale_y * entity_scale_y,
-                world_rot,
+                x: world_x,
+                y: world_y,
+                sx: scale * scale_x * entity_scale_x,
+                sy: scale * scale_y * entity_scale_y,
+                rot: world_rot,
                 flip,
                 opacity,
-                &bone.pivot,
-            )?;
+                pivot: bone.pivot,
+                z_order: state.map(|s| s.z_order).unwrap_or(bone.z_order),
+            });
         }
     }
 
-    // Render children.
+    // Recurse into children (their world transforms build on this bone's).
     for child in &bone.children {
-        render_bone_tree(
+        collect_bone_drawables(
             child,
             bone_states,
             parts,
-            pixmap,
             world_x,
             world_y,
             scale,
@@ -503,10 +589,111 @@ fn render_bone_tree(
             entity_scale_x * scale_x,
             entity_scale_y * scale_y,
             world_rot,
-        )?;
+            out,
+        );
     }
+}
 
-    Ok(())
+/// Resolve the effective pose for a pose-event index. A full (non-overlay)
+/// event resolves to its named pose. An overlay event (speech mouth flap)
+/// resolves to the last held full pose with the overlay's bones merged on top,
+/// so the body keeps its gesture while the mouth talks. `None` (before any
+/// event) resolves to the rig's "idle" pose.
+fn resolve_effective_pose(
+    rig: &CharacterRig,
+    events: &[&PoseEvent],
+    idx: Option<usize>,
+) -> Option<skeleton::Pose> {
+    let idx = match idx {
+        Some(i) => i,
+        None => return rig.poses.get("idle").cloned(),
+    };
+    let ev = events.get(idx)?;
+    let pose = rig.poses.get(&ev.pose)?;
+    if !ev.overlay {
+        return Some(pose.clone());
+    }
+    // Find the base: the most recent non-overlay event at or before this one.
+    let base = events[..idx]
+        .iter()
+        .rev()
+        .find(|e| !e.overlay)
+        .and_then(|e| rig.poses.get(&e.pose))
+        .or_else(|| rig.poses.get("idle"));
+    match base {
+        Some(base) => {
+            let mut merged = base.clone();
+            merged.transition_duration = pose.transition_duration;
+            for (bone, bt) in &pose.bones {
+                merged.bones.insert(bone.clone(), bt.clone());
+            }
+            Some(merged)
+        }
+        None => Some(pose.clone()),
+    }
+}
+
+/// Ease-out-back: decelerates and overshoots slightly past the target before
+/// settling — gives pose changes a snappy, hand-animated feel. t is clamped to
+/// [0,1]; the returned value may exceed 1.0 briefly (the overshoot).
+fn ease_out_back(t: f64) -> f64 {
+    let t = t.clamp(0.0, 1.0);
+    const C1: f64 = 1.30158;
+    const C3: f64 = C1 + 1.0;
+    let u = t - 1.0;
+    1.0 + C3 * u * u * u + C1 * u * u
+}
+
+/// Plain ease-out (cubic), no overshoot — for tiny/fast transitions like mouth
+/// flaps, where an overshoot or wind-up would look wrong.
+fn ease_out_cubic(t: f64) -> f64 {
+    let t = t.clamp(0.0, 1.0);
+    let u = 1.0 - t;
+    1.0 - u * u * u
+}
+
+/// Anticipation + overshoot: the hallmark of hand-drawn timing. The first ~30%
+/// of the move winds up slightly AWAY from the target (extrapolating past the
+/// held pose, hence the negative return), then it snaps forward and overshoots
+/// before settling. Applied to larger gestures (not mouth flaps) so poses read
+/// as struck, not slid — the biggest single step from "puppet" toward Freeman.
+fn anticipate_back(t: f64) -> f64 {
+    let t = t.clamp(0.0, 1.0);
+    const ANTIC: f64 = 0.30; // fraction of the move spent winding up
+    if t < ANTIC {
+        let u = t / ANTIC; // 0→1 over the wind-up
+        -0.10 * (4.0 * u * (1.0 - u)) // dips to ~-0.10 then back to 0
+    } else {
+        ease_out_back((t - ANTIC) / (1.0 - ANTIC))
+    }
+}
+
+/// Swap every `seed="N"` in an SVG (feTurbulence) for the given boil seed, so
+/// the ink filter's noise — and thus the rough hand-drawn edge — changes each
+/// frame. A no-op for SVGs without a turbulence filter.
+fn apply_boil(svg: &[u8], seed: u32) -> Vec<u8> {
+    let s = match std::str::from_utf8(svg) {
+        Ok(s) if s.contains("seed=\"") => s,
+        _ => return svg.to_vec(),
+    };
+    let needle = "seed=\"";
+    let mut out = String::with_capacity(s.len() + 8);
+    let mut rest = s;
+    while let Some(pos) = rest.find(needle) {
+        out.push_str(&rest[..pos + needle.len()]);
+        out.push_str(&seed.to_string());
+        let after = &rest[pos + needle.len()..];
+        // Skip the old value up to (but not including) the closing quote.
+        match after.find('"') {
+            Some(q) => rest = &after[q..],
+            None => {
+                rest = after;
+                break;
+            }
+        }
+    }
+    out.push_str(rest);
+    out.into_bytes()
 }
 
 /// Render a single bone's SVG part at the given world transform.
@@ -521,9 +708,11 @@ fn render_bone_part(
     flip: f64,
     opacity: f64,
     pivot: &(f64, f64),
+    boil_seed: u32,
 ) -> Result<(), AnimError> {
-    let opts = usvg::Options::default();
-    let tree = usvg::Tree::from_data(&part.svg_data, &opts)
+    let opts = crate::svg_options();
+    let svg_data = apply_boil(&part.svg_data, boil_seed);
+    let tree = usvg::Tree::from_data(&svg_data, &opts)
         .map_err(|e| AnimError::Render(format!("SVG parse error: {e}")))?;
 
     let render_sx = scale_x.abs() * flip.abs();
@@ -687,7 +876,7 @@ fn render_svg_to_pixmap(
     camera: &CameraKeyframe,
     is_background: bool,
 ) -> Result<(), AnimError> {
-    let opts = usvg::Options::default();
+    let opts = crate::svg_options();
     let tree = usvg::Tree::from_data(svg_data, &opts)
         .map_err(|e| AnimError::Render(format!("SVG parse error: {e}")))?;
 
@@ -699,10 +888,17 @@ fn render_svg_to_pixmap(
     let ch = canvas_h as f64;
 
     let (base_scale_x, base_scale_y, px, py) = if is_background {
+        // Set fills the scene [0,1]×[0,1]; it must track the camera so that
+        // when the camera pans/zooms to a character, the location follows
+        // (otherwise the character floats off a detailed set). A flat uniform
+        // background looks identical either way, so this is safe for Freeman's
+        // white-field grammar and correct for detailed establishing shots.
         let sx = cw / svg_w;
         let sy = ch / svg_h;
-        let s = sx.max(sy);
-        (s, s, cw / 2.0, ch / 2.0)
+        let s = sx.max(sy) * camera.zoom;
+        let px = ((0.5 - camera.x) * camera.zoom + 0.5) * cw;
+        let py = ((0.5 - camera.y) * camera.zoom + 0.5) * ch;
+        (s, s, px, py)
     } else {
         let target_height = ch * 0.3;
         let base = target_height / svg_h;
@@ -819,6 +1015,8 @@ fn apply_transitions(
                     Direction::Right => (w * (1.0 - progress), 0.0, w * progress, h),
                     Direction::Up => (0.0, 0.0, w, h * progress),
                     Direction::Down => (0.0, h * (1.0 - progress), w, h * progress),
+                    // front/back aren't spatial wipe directions — wipe left-to-right.
+                    Direction::Front | Direction::Back => (0.0, 0.0, w * progress, h),
                 };
                 if let Some(rect) = Rect::from_xywh(rx as f32, ry as f32, rw as f32, rh as f32) {
                     let mut paint = Paint::default();

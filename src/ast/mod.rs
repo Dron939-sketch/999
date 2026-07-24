@@ -168,6 +168,12 @@ pub enum ActionStmt {
         entity: String,
         pose: String,
     },
+    /// `freeman speaks for 3s` — auto-cycles phoneme mouth poses for the
+    /// duration (advances scene time, like a wait that talks).
+    Speak {
+        entity: String,
+        duration: Duration,
+    },
     Show {
         entity: String,
         duration: Option<Duration>,
@@ -321,6 +327,10 @@ pub enum Direction {
     Right,
     Up,
     Down,
+    /// Facing the camera (used for Freeman-style monologues to camera).
+    Front,
+    /// Facing away from the camera.
+    Back,
 }
 
 /// Duration in seconds.

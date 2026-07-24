@@ -207,6 +207,27 @@ fn cmd_render(
         all_frames.extend(frames);
     }
 
+    // Freeman-style black & white ("ink") post-process.
+    if config.monochrome {
+        for frame in &mut all_frames {
+            apply_monochrome(&mut frame.data, config.mono_contrast as f32);
+        }
+    }
+
+    // Aged-film post: vignette + grain (the last layer of the Freeman look).
+    if config.film_grain > 0.0 || config.vignette > 0.0 {
+        for (i, frame) in all_frames.iter_mut().enumerate() {
+            apply_film(
+                &mut frame.data,
+                frame.width,
+                frame.height,
+                i as u32,
+                config.film_grain as f32,
+                config.vignette as f32,
+            );
+        }
+    }
+
     // Output.
     if let Some(dir) = png_dir {
         video::encode_png_sequence(&all_frames, dir)?;
@@ -222,6 +243,77 @@ fn cmd_render(
     );
 
     Ok(())
+}
+
+/// Convert an RGBA frame buffer to a high-contrast black & white "ink" image
+/// in place. Alpha is preserved. This is what gives the Freeman-style lecture
+/// videos their stark hand-inked, mostly-monochrome look.
+fn apply_monochrome(data: &mut [u8], contrast: f32) {
+    // Contrast strength around mid-grey. ~1.1 keeps gradient shading (fabric
+    // sheen, facial form); high values (2–4) blow out to a stark 2-tone
+    // silhouette — the flat-ink "Mr. Freeman" look.
+    let contrast = if contrast > 0.0 { contrast } else { 1.12 };
+    for px in data.chunks_exact_mut(4) {
+        // Rec. 601 luma.
+        let luma = 0.299 * px[0] as f32 + 0.587 * px[1] as f32 + 0.114 * px[2] as f32;
+        // Apply an S-curve style contrast around 128.
+        let adjusted = ((luma - 128.0) * contrast + 128.0).clamp(0.0, 255.0);
+        let v = adjusted as u8;
+        px[0] = v;
+        px[1] = v;
+        px[2] = v;
+        // px[3] (alpha) untouched.
+    }
+}
+
+/// Aged-film post-process: a soft vignette plus per-pixel, per-frame grain —
+/// the "shot on old stock" layer that finishes the Mr. Freeman look. Grain is
+/// deterministic (hash of x,y,frame) so renders are reproducible.
+fn apply_film(data: &mut [u8], width: u32, height: u32, frame: u32, grain: f32, vignette: f32) {
+    let w = width as i64;
+    let h = height as i64;
+    let cx = w as f32 * 0.5;
+    let cy = h as f32 * 0.5;
+    let max_d2 = cx * cx + cy * cy;
+    let grain_amp = grain * 46.0;
+    for y in 0..h {
+        for x in 0..w {
+            let idx = ((y * w + x) * 4) as usize;
+            let mut r = data[idx] as f32;
+            let mut g = data[idx + 1] as f32;
+            let mut b = data[idx + 2] as f32;
+
+            if vignette > 0.0 {
+                let dx = x as f32 - cx;
+                let dy = y as f32 - cy;
+                let d2 = (dx * dx + dy * dy) / max_d2;
+                let f = 1.0 - vignette * d2 * d2; // soft falloff, strong at corners
+                r *= f;
+                g *= f;
+                b *= f;
+            }
+
+            if grain > 0.0 {
+                // cheap integer hash → [-1, 1]
+                let mut hsh = (x as u32)
+                    .wrapping_mul(374761393)
+                    .wrapping_add((y as u32).wrapping_mul(668265263))
+                    .wrapping_add(frame.wrapping_mul(2246822519));
+                hsh ^= hsh >> 13;
+                hsh = hsh.wrapping_mul(1274126177);
+                hsh ^= hsh >> 16;
+                let n = (hsh as f32 / u32::MAX as f32) * 2.0 - 1.0;
+                let gg = n * grain_amp;
+                r += gg;
+                g += gg;
+                b += gg;
+            }
+
+            data[idx] = r.clamp(0.0, 255.0) as u8;
+            data[idx + 1] = g.clamp(0.0, 255.0) as u8;
+            data[idx + 2] = b.clamp(0.0, 255.0) as u8;
+        }
+    }
 }
 
 fn cmd_check(input: &Path) -> Result<()> {

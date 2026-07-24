@@ -1,43 +1,84 @@
-name: Render Animation
+name: Render Videos
 
 on:
   push:
     branches:
       - main
       - master
+      - 'claude/**'      # пуши рабочей ветки тоже запускают завод
+  # Ручной запуск на любой ветке: Actions → Render Videos → Run workflow
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Только один прогон на ветку: новый push отменяет предыдущий незавершённый
+# (не плодим гонки на git-коммите видео и не жжём раннеры).
+concurrency:
+  group: render-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   render:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      
-      - name: Build Docker image (с кэшем)
-        uses: docker/build-push-action@v5
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Rust cache
+        uses: actions/cache@v4
         with:
-          context: .
-          push: false
-          load: true
-          tags: animdsl:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      
-      - name: Render video
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+
+      - name: Build engine
+        run: cargo build --release
+
+      # Один завод: картинки → рендер → озвучка → сведение → videos/*.mp4(+mp3)
+      - name: Studio (render + voice + mux)
+        env:
+          # Озвучка через Frederick (ключ Fish живёт на его сервере) — нужен только токен.
+          # Секрет в репо назван ADMIN_TOKEN (= ADMIN_TOKEN сервера Frederick); поддержим
+          # и FREDERICK_ADMIN_TOKEN, если задан.
+          FREDERICK_ADMIN_TOKEN: ${{ secrets.FREDERICK_ADMIN_TOKEN != '' && secrets.FREDERICK_ADMIN_TOKEN || secrets.ADMIN_TOKEN }}
+          FREDERICK_TTS_URL: ${{ secrets.FREDERICK_TTS_URL }}
+          # ...либо прямой Fish (запасной путь), если Frederick не используем:
+          FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
+          FISH_AUDIO_VOICE_ID: ${{ secrets.FISH_AUDIO_VOICE_ID }}
+          IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
+          IMAGE_API_PROVIDER: ${{ secrets.IMAGE_API_PROVIDER }}
         run: |
-          mkdir -p output
-          echo "Запуск рендеринга..."
-          docker run --rm -v ${{ github.workspace }}/output:/app/output animdsl
-          echo "Проверка результата:"
-          ls -la output/
-      
-      - name: Upload video artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: rendered-video
-          path: output/result.mp4
-          retention-days: 30
+          python3 tools/studio.py
+          echo "=== videos/ ==="
+          ls -la videos/
+
+      - name: Commit videos to the repo
+        run: |
+          git config user.name "render-bot"
+          git config user.email "actions@github.com"
+          # Предохранитель: GitHub жёстко отклоняет push файлов >100МБ. Битрейт
+          # закапан в кодировщике (~14МБ/52с), но на всякий случай не коммитим
+          # ничего тяжелее 95МБ — вместо падения пайплайна честно логируем.
+          for f in videos/*.mp4; do
+            [ -f "$f" ] || continue
+            sz=$(stat -c%s "$f")
+            if [ "$sz" -gt 99614720 ]; then
+              echo "ПРОПУСК (слишком большой, $((sz/1048576))МБ): $f — не коммичу."
+              rm -f "$f"
+            fi
+          done
+          git add videos/*.mp4 videos/*.mp3 2>/dev/null || git add videos/*.mp4
+          if git diff --cached --quiet; then
+            echo "Видео не изменились — коммит не нужен."
+            exit 0
+          fi
+          git commit -m "CI: обновлены готовые видео и озвучка в videos/ [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin HEAD:"${GITHUB_REF_NAME}"

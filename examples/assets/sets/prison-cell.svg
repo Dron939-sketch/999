@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- Камера в графичном стиле Фримена: плоские заливки, жирная чёрная тушь,
+       сплошные тени, высокий контраст. Никаких градиентов (см. LOCATION_STYLE.md). -->
+  <defs>
+    <filter id="ink" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="1" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="inkHeavy" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="1" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- ===== плоские тональные блоки комнаты (без градиентов) ===== -->
+  <rect x="0" y="0" width="1280" height="720" fill="#d4d7cf"/>                      <!-- бумага -->
+  <polygon points="0,0 1280,0 940,120 340,120" fill="#5f625b"/>                     <!-- потолок (тёмный) -->
+  <polygon points="0,0 340,120 340,470 0,720" fill="#a2a59d"/>                       <!-- левая стена -->
+  <polygon points="1280,0 1280,720 940,470 940,120" fill="#9a9d95"/>                 <!-- правая стена -->
+  <rect x="340" y="120" width="600" height="350" fill="#c9ccc3"/>                    <!-- задняя стена (светлая) -->
+  <polygon points="340,470 940,470 1280,720 0,720" fill="#b0b3ab"/>                  <!-- пол -->
+
+  <!-- ===== жирный чёрный контур короба комнаты ===== -->
+  <g fill="none" stroke="#141410" stroke-width="5" filter="url(#ink)" stroke-linejoin="round">
+    <polyline points="0,0 340,120 340,470 0,720"/>
+    <polyline points="1280,0 940,120 940,470 1280,720"/>
+    <rect x="340" y="120" width="600" height="350"/>
+  </g>
+
+  <!-- луч из окна: один плоский полигон, жёсткие грани ===== -->
+  <polygon points="470,150 600,150 800,470 400,470" fill="#f2f4ec" opacity="0.28"/>
+
+  <!-- ===== окно с решёткой: максимальный контраст ===== -->
+  <g filter="url(#ink)">
+    <rect x="470" y="150" width="130" height="104" fill="#e8ebe2" stroke="#141410" stroke-width="7"/>
+    <g stroke="#141410" stroke-width="9" stroke-linecap="square">
+      <line x1="503" y1="150" x2="503" y2="254"/>
+      <line x1="535" y1="150" x2="535" y2="254"/>
+      <line x1="567" y1="150" x2="567" y2="254"/>
+      <line x1="470" y1="187" x2="600" y2="187"/>
+      <line x1="470" y1="220" x2="600" y2="220"/>
+    </g>
+    <rect x="458" y="138" width="154" height="128" fill="none" stroke="#141410" stroke-width="5"/>
+  </g>
+
+  <!-- ===== сплошная чёрная тень под нарой ===== -->
+  <polygon points="250,548 640,566 690,606 232,588" fill="#17170f" opacity="0.8" filter="url(#inkHeavy)"/>
+
+  <!-- ===== одиночная нара у левой стены: чёрная тушь, плоские заливки ===== -->
+  <g filter="url(#ink)">
+    <!-- изголовье (у окна): жирные вертикальные прутья -->
+    <g stroke="#141410" stroke-width="8" fill="none" stroke-linecap="round">
+      <path d="M296 452 L300 508"/><path d="M322 448 L324 512"/><path d="M348 448 L348 514"/>
+      <path d="M296 452 L348 448"/>
+    </g>
+    <!-- изножье (к камере) -->
+    <g stroke="#141410" stroke-width="9" fill="none" stroke-linecap="round">
+      <path d="M600 500 L606 566"/><path d="M638 502 L646 570"/>
+      <path d="M600 500 L638 502"/>
+    </g>
+    <!-- рама + ножки -->
+    <polygon points="300,514 620,534 620,548 300,528" fill="#2b2b24" stroke="#141410" stroke-width="4"/>
+    <line x1="322" y1="540" x2="316" y2="576" stroke="#141410" stroke-width="8"/>
+    <line x1="600" y1="548" x2="606" y2="584" stroke="#141410" stroke-width="8"/>
+    <!-- матрас: плоская светлая форма с жирным контуром -->
+    <polygon points="300,500 620,520 620,540 300,522" fill="#e4e7de" stroke="#141410" stroke-width="4"/>
+    <!-- складки — короткие чёрные штрихи -->
+    <g stroke="#141410" stroke-width="2.4" opacity="0.75">
+      <line x1="382" y1="506" x2="382" y2="526"/><line x1="452" y1="510" x2="452" y2="530"/>
+      <line x1="522" y1="514" x2="522" y2="534"/>
+    </g>
+    <!-- подушка (у окна): белая с контуром -->
+    <polygon points="304,492 372,486 388,502 320,510" fill="#f4f6ef" stroke="#141410" stroke-width="4"/>
+    <path d="M312 496 Q344 490 380 495" fill="none" stroke="#141410" stroke-width="2.2" opacity="0.6"/>
+    <!-- смятое одеяло к изножью: плоская форма, чёрный контур -->
+    <path d="M470 512 Q520 500 590 512 Q556 522 590 528 L470 528 Z" fill="#c3c6bd" stroke="#141410" stroke-width="3.4"/>
+  </g>
+
+  <!-- ===== унитаз в дальнем углу: графичная тушь ===== -->
+  <g filter="url(#ink)">
+    <polygon points="978,470 1080,470 1096,556 962,556" fill="#17170f" opacity="0.7" filter="url(#inkHeavy)"/>
+    <polygon points="986,406 1072,406 1072,452 986,452" fill="#bfc2ba" stroke="#141410" stroke-width="4"/>
+    <path d="M992 452 Q1030 460 1066 452 L1058 520 Q1030 534 1000 520 Z" fill="#cdd0c8" stroke="#141410" stroke-width="4"/>
+    <ellipse cx="1029" cy="470" rx="34" ry="11" fill="#e4e7de" stroke="#141410" stroke-width="4"/>
+    <ellipse cx="1029" cy="470" rx="19" ry="6" fill="#141410"/>
+  </g>
+
+  <!-- ===== надписи-царапины (акценты, не текстура) ===== -->
+  <g filter="url(#ink)" fill="#141410" font-family="DejaVu Sans" opacity="0.72">
+    <text x="700" y="300" font-size="16" font-style="italic" transform="rotate(-4 700 300)">здесь сидел твой здравый смысл</text>
+    <text x="360" y="300" font-size="13" transform="rotate(-3 360 300)">начальник — не прав</text>
+    <text x="720" y="430" font-size="12" transform="rotate(3 720 430)">думать вредно, но приятно</text>
+    <text x="640" y="150" font-size="11" transform="rotate(2 640 150)">выхода нет. вход — был</text>
+  </g>
+  <!-- зарубки у изголовья -->
+  <g stroke="#141410" stroke-width="2.6" opacity="0.8" filter="url(#ink)">
+    <path d="M372 330 v26 M382 330 v26 M392 330 v26 M402 330 v26 M366 338 l42 13"/>
+    <path d="M372 366 v24 M382 366 v24 M392 366 v24"/>
+  </g>
+  <!-- нацарапанная звезда у окна -->
+  <g stroke="#141410" stroke-width="2.2" fill="none" opacity="0.7" filter="url(#ink)">
+    <path d="M690 200 l6 15 l16 1 l-12 11 l4 16 l-14 -9 l-14 9 l4 -16 l-12 -11 l16 -1 z"/>
+  </g>
+
+  <!-- труба по верхнему углу — жирная чёрная линия -->
+  <path d="M340 122 Q640 108 940 122" fill="none" stroke="#141410" stroke-width="8" filter="url(#ink)"/>
+</svg>
