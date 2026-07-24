@@ -17,6 +17,9 @@ pub struct RenderConfig {
     /// When true, frames are post-processed to high-contrast black & white
     /// ("ink" look) — used for the Freeman-style lecture videos.
     pub monochrome: bool,
+    /// Contrast strength for the monochrome post-process. ~1.1 keeps gradient
+    /// shading; crank it (2–4) for a stark 2-tone silhouette ("ink" Freeman).
+    pub mono_contrast: f64,
 }
 
 impl Default for RenderConfig {
@@ -27,6 +30,7 @@ impl Default for RenderConfig {
             fps: 24,
             background: Color::rgb(0, 0, 0),
             monochrome: false,
+            mono_contrast: 1.12,
         }
     }
 }
@@ -62,6 +66,11 @@ impl RenderConfig {
                     Value::Number(n) => cfg.monochrome = *n != 0.0,
                     _ => {}
                 },
+                "mono-contrast" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.mono_contrast = *n;
+                    }
+                }
                 _ => {}
             }
         }

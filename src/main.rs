@@ -210,7 +210,7 @@ fn cmd_render(
     // Freeman-style black & white ("ink") post-process.
     if config.monochrome {
         for frame in &mut all_frames {
-            apply_monochrome(&mut frame.data);
+            apply_monochrome(&mut frame.data, config.mono_contrast as f32);
         }
     }
 
@@ -234,16 +234,16 @@ fn cmd_render(
 /// Convert an RGBA frame buffer to a high-contrast black & white "ink" image
 /// in place. Alpha is preserved. This is what gives the Freeman-style lecture
 /// videos their stark hand-inked, mostly-monochrome look.
-fn apply_monochrome(data: &mut [u8]) {
-    // Contrast strength around mid-grey. >1.0 pushes lights lighter and darks
-    // darker for an inked look, but kept gentle so gradient shading (fabric
-    // sheen, facial form) survives rather than blowing out to flat black/white.
-    const CONTRAST: f32 = 1.12;
+fn apply_monochrome(data: &mut [u8], contrast: f32) {
+    // Contrast strength around mid-grey. ~1.1 keeps gradient shading (fabric
+    // sheen, facial form); high values (2–4) blow out to a stark 2-tone
+    // silhouette — the flat-ink "Mr. Freeman" look.
+    let contrast = if contrast > 0.0 { contrast } else { 1.12 };
     for px in data.chunks_exact_mut(4) {
         // Rec. 601 luma.
         let luma = 0.299 * px[0] as f32 + 0.587 * px[1] as f32 + 0.114 * px[2] as f32;
         // Apply an S-curve style contrast around 128.
-        let adjusted = ((luma - 128.0) * CONTRAST + 128.0).clamp(0.0, 255.0);
+        let adjusted = ((luma - 128.0) * contrast + 128.0).clamp(0.0, 255.0);
         let v = adjusted as u8;
         px[0] = v;
         px[1] = v;
