@@ -110,7 +110,22 @@
                     78
                   ],
                   "rotation": 8,
-                  "z_order": 1
+                  "z_order": 1,
+                  "children": [
+                    {
+                      "name": "hand_left",
+                      "part": "hand_relax",
+                      "pivot": [
+                        23,
+                        4
+                      ],
+                      "offset": [
+                        0,
+                        78
+                      ],
+                      "z_order": 1
+                    }
+                  ]
                 }
               ]
             },
@@ -140,7 +155,22 @@
                     78
                   ],
                   "rotation": -8,
-                  "z_order": 3
+                  "z_order": 3,
+                  "children": [
+                    {
+                      "name": "hand_right",
+                      "part": "hand_relax_r",
+                      "pivot": [
+                        23,
+                        4
+                      ],
+                      "offset": [
+                        0,
+                        78
+                      ],
+                      "z_order": 3
+                    }
+                  ]
                 }
               ]
             },
@@ -360,6 +390,9 @@
         "forearm_left": {
           "rotation": 132,
           "z_order": 7
+        },
+        "hand_left": {
+          "part": "hand_relax"
         }
       }
     },
@@ -388,6 +421,14 @@
         "forearm_right": {
           "rotation": -78,
           "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_offer",
+          "rotation": 160
+        },
+        "hand_right": {
+          "part": "hand_offer_r",
+          "rotation": -160
         }
       }
     },
@@ -408,6 +449,10 @@
         "forearm_left": {
           "rotation": 55,
           "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_point",
+          "rotation": 170
         }
       }
     },
@@ -433,6 +478,12 @@
         "forearm_right": {
           "rotation": 63,
           "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_relax"
+        },
+        "hand_right": {
+          "part": "hand_relax_r"
         }
       }
     },
@@ -521,6 +572,10 @@
         "forearm_left": {
           "rotation": 100,
           "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_fist",
+          "rotation": 170
         }
       }
     },
@@ -573,6 +628,10 @@
         },
         "mouth": {
           "part": "mouth_wide"
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "rotation": 175
         }
       }
     },
@@ -601,6 +660,14 @@
         },
         "mouth": {
           "part": "mouth_m"
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "rotation": 175
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "rotation": -175
         }
       }
     },
@@ -621,6 +688,10 @@
         },
         "mouth": {
           "part": "mouth_frown"
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "rotation": 150
         }
       }
     },
@@ -663,6 +734,14 @@
         },
         "head": {
           "rotation": 2
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "rotation": 170
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "rotation": -170
         }
       }
     },
@@ -721,6 +800,14 @@
         },
         "mouth": {
           "part": "mouth_o"
+        },
+        "hand_left": {
+          "part": "hand_offer",
+          "rotation": 15
+        },
+        "hand_right": {
+          "part": "hand_offer_r",
+          "rotation": -15
         }
       }
     },
