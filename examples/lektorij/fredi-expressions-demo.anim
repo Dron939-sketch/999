@@ -1,0 +1,76 @@
+// =============================================================================
+//  Витрина мимики Фреди — библиотека выражений рига fredi_rig.
+//  Крупный план, Фреди перебирает эмоции и «говорит» (рот открывается).
+//  Рендер: cargo run --release -- render examples/lektorij/fredi-expressions-demo.anim -o demo.mp4
+// =============================================================================
+
+import character fredi from "../assets/characters/fredi_rig"
+import set paper from "../assets/sets/lektorij-paper.svg"
+
+config {
+    width: 720
+    height: 900
+    fps: 24
+    background: #efece3
+    monochrome: true
+}
+
+scene "expressions" (duration: 28s, set: paper) {
+    place fredi at center facing front
+    camera close-up fredi
+
+    fredi pose "fredi-calm"
+    wait 1.2s
+    fredi pose "fredi-blink"
+    wait 0.2s
+
+    // "говорит" — чередуем открытый/закрытый рот
+    fredi pose "fredi-speak"
+    wait 0.28s
+    fredi pose "fredi-explain"
+    wait 0.3s
+    fredi pose "fredi-speak"
+    wait 0.28s
+    fredi pose "fredi-calm"
+    wait 1s
+
+    fredi pose "fredi-stern"
+    wait 1.4s
+    fredi pose "fredi-angry"
+    wait 1.4s
+    fredi pose "fredi-calm"
+    wait 0.6s
+    fredi pose "fredi-blink"
+    wait 0.2s
+
+    fredi pose "fredi-skeptical"
+    wait 1.6s
+    fredi pose "fredi-smirk"
+    wait 1.4s
+
+    fredi pose "fredi-surprised"
+    wait 1.2s
+    fredi pose "fredi-calm"
+    wait 0.8s
+
+    fredi pose "fredi-think"
+    wait 1.8s
+    fredi pose "fredi-speak"
+    wait 0.28s
+    fredi pose "fredi-explain"
+    wait 0.4s
+    fredi pose "fredi-speak"
+    wait 0.28s
+    fredi pose "fredi-point"
+    wait 1.2s
+    fredi pose "fredi-lean"
+    wait 1.4s
+
+    fredi pose "fredi-calm"
+    wait 1s
+    fredi pose "fredi-blink"
+    wait 0.2s
+    fredi pose "fredi-calm"
+    wait 1s
+    transition fade-black 1.5s
+}

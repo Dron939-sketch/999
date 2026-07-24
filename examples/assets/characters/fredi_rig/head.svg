@@ -1,77 +1,73 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 178" width="140" height="178">
   <defs>
-    <radialGradient id="skin" cx="40%" cy="30%" r="80%">
-      <stop offset="0%" stop-color="#efe8de"/>
-      <stop offset="62%" stop-color="#ddd2c4"/>
-      <stop offset="100%" stop-color="#bcae9c"/>
+    <radialGradient id="skin" cx="42%" cy="30%" r="82%">
+      <stop offset="0%" stop-color="#f3ede4"/>
+      <stop offset="58%" stop-color="#e2d8ca"/>
+      <stop offset="100%" stop-color="#b9aa96"/>
     </radialGradient>
-    <radialGradient id="lens" cx="35%" cy="30%" r="80%">
-      <stop offset="0%" stop-color="#3a3a44"/>
-      <stop offset="45%" stop-color="#15151c"/>
-      <stop offset="100%" stop-color="#050509"/>
-    </radialGradient>
-    <linearGradient id="scalpHi" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    <linearGradient id="neckG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d8ccba"/>
+      <stop offset="60%" stop-color="#c2b4a0"/>
+      <stop offset="100%" stop-color="#8f8069"/>
     </linearGradient>
   </defs>
 
-  <!-- Neck (drawn first, behind the head) -->
-  <path d="M50 118 L50 172 Q70 178 90 172 L90 118 Z" fill="#cbbfb0"/>
-  <path d="M50 118 L50 172 Q70 178 90 172 L90 118 Z" fill="#000000" opacity="0.10"/>
-  <!-- collar shadow under jaw -->
-  <path d="M46 120 Q70 140 94 120 Q70 150 46 120 Z" fill="#000000" opacity="0.18"/>
+  <!-- Neck (behind) with cast shadow on the right -->
+  <path d="M50 116 L50 172 Q70 178 90 172 L90 116 Z" fill="url(#neckG)"/>
+  <path d="M70 118 L90 116 L90 172 Q80 176 72 174 Z" fill="#000000" opacity="0.16"/>
+  <path d="M46 118 Q70 138 94 118 Q70 150 46 118 Z" fill="#000000" opacity="0.20"/>
 
-  <!-- Skull + face -->
-  <path d="M70 5
-           C101 5 123 27 125 60
-           C126 82 117 101 99 119
-           C89 129 78 133 70 133
-           C62 133 51 129 41 119
-           C23 101 14 82 15 60
-           C17 27 39 5 70 5 Z"
-        fill="url(#skin)" stroke="#3f382e" stroke-width="1.4"/>
+  <!-- Skull + gaunt face -->
+  <path d="M70 4
+           C102 4 124 26 126 60
+           C127 80 120 96 108 110
+           C101 122 90 132 78 135
+           C74 136 66 136 62 135
+           C50 132 39 122 32 110
+           C20 96 13 80 14 60
+           C16 26 38 4 70 4 Z"
+        fill="url(#skin)" stroke="#42392d" stroke-width="1.5"/>
 
   <!-- Ears -->
-  <path d="M17 64 Q6 66 9 82 Q12 96 24 92 Z" fill="url(#skin)" stroke="#3f382e" stroke-width="1.2"/>
-  <path d="M123 64 Q134 66 131 82 Q128 96 116 92 Z" fill="url(#skin)" stroke="#3f382e" stroke-width="1.2"/>
-  <path d="M14 70 Q11 78 20 86" fill="none" stroke="#8a7c68" stroke-width="1" opacity="0.7"/>
-  <path d="M126 70 Q129 78 120 86" fill="none" stroke="#8a7c68" stroke-width="1" opacity="0.7"/>
+  <path d="M16 62 Q4 64 8 82 Q12 98 26 92 Z" fill="url(#skin)" stroke="#42392d" stroke-width="1.3"/>
+  <path d="M124 62 Q136 64 132 82 Q128 98 114 92 Z" fill="url(#skin)" stroke="#42392d" stroke-width="1.3"/>
+  <path d="M13 68 Q10 79 21 88" fill="none" stroke="#8a7c66" stroke-width="1" opacity="0.7"/>
+  <path d="M127 68 Q130 79 119 88" fill="none" stroke="#8a7c66" stroke-width="1" opacity="0.7"/>
 
-  <!-- Crown highlight (shiny bald head) -->
-  <ellipse cx="58" cy="34" rx="26" ry="20" fill="url(#scalpHi)"/>
+  <!-- Crown highlight -->
+  <ellipse cx="56" cy="30" rx="30" ry="22" fill="#ffffff" opacity="0.45"/>
+  <path d="M60 16 Q54 30 60 44" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.3"/>
 
-  <!-- Form shadow: right side + under cheekbones (gaunt / Statham) -->
-  <path d="M99 20 C120 44 122 78 99 118 C112 96 116 66 104 40 Z" fill="#000000" opacity="0.14"/>
-  <path d="M92 92 Q80 108 70 112 Q84 104 92 92 Z" fill="#000000" opacity="0.12"/>
-  <path d="M48 92 Q60 108 70 112 Q56 104 48 92 Z" fill="#000000" opacity="0.10"/>
-  <!-- stubble hint on the jaw -->
-  <path d="M44 106 Q70 130 96 106 Q92 124 70 128 Q48 124 44 106 Z" fill="#5b5348" opacity="0.16"/>
+  <!-- Chiaroscuro: deep shadow on the right side + jaw -->
+  <path d="M104 22 C124 46 124 82 100 116 C114 92 116 60 106 40 Z" fill="#000000" opacity="0.18"/>
+  <path d="M96 96 Q84 120 74 130 Q92 116 100 96 Z" fill="#000000" opacity="0.16"/>
+  <!-- gaunt cheek hollows -->
+  <path d="M40 96 Q52 116 66 126 Q50 112 42 94 Z" fill="#000000" opacity="0.13"/>
+  <path d="M96 92 Q92 108 82 120" fill="none" stroke="#7a6c58" stroke-width="1.4" opacity="0.5"/>
+  <path d="M44 92 Q48 108 58 120" fill="none" stroke="#7a6c58" stroke-width="1.2" opacity="0.4"/>
+  <!-- temple/forehead furrows -->
+  <path d="M52 52 Q70 47 88 52" fill="none" stroke="#8a7c66" stroke-width="1" opacity="0.4"/>
+  <path d="M56 58 Q70 54 84 58" fill="none" stroke="#8a7c66" stroke-width="1" opacity="0.35"/>
 
-  <!-- Heavy brow (stern) -->
-  <path d="M34 66 Q50 58 64 65 L62 71 Q49 65 36 72 Z" fill="#2a2620"/>
-  <path d="M106 66 Q90 58 76 65 L78 71 Q91 65 104 72 Z" fill="#2a2620"/>
-  <!-- brow crease between (Woland intensity) -->
-  <path d="M67 60 L70 74 M73 60 L70 74" stroke="#8a7c68" stroke-width="1" opacity="0.5"/>
+  <!-- Eye sockets (soft shadow the eyes sit in) -->
+  <ellipse cx="50" cy="80" rx="16" ry="12" fill="#000000" opacity="0.10"/>
+  <ellipse cx="90" cy="80" rx="16" ry="12" fill="#000000" opacity="0.10"/>
 
-  <!-- Tinted round glasses -->
-  <g stroke="#0b0b10" stroke-width="2.4" fill="url(#lens)">
-    <circle cx="49" cy="80" r="17"/>
-    <circle cx="91" cy="80" r="17"/>
+  <!-- Nose (defined, cast shadow to the right) -->
+  <path d="M70 66 L64 104 Q70 110 79 104 L72 66 Z" fill="#000000" opacity="0.08"/>
+  <path d="M72 70 L76 100" stroke="#000000" stroke-width="1" opacity="0.14"/>
+  <path d="M63 104 Q70 111 80 104" fill="none" stroke="#6f6047" stroke-width="1.5"/>
+  <path d="M64 100 Q61 106 66 108" fill="none" stroke="#6f6047" stroke-width="1.1" opacity="0.7"/>
+  <path d="M79 100 Q82 106 77 108" fill="none" stroke="#6f6047" stroke-width="1.1" opacity="0.7"/>
+
+  <!-- Thin round wire glasses (clear lenses over the eyes) -->
+  <g fill="none" stroke="#161219" stroke-width="1.8">
+    <circle cx="50" cy="81" r="18"/>
+    <circle cx="90" cy="81" r="18"/>
+    <path d="M68 79 Q70 76 72 79"/>
+    <path d="M32 79 L16 74"/>
+    <path d="M108 79 L124 74"/>
   </g>
-  <!-- glints -->
-  <path d="M40 73 L48 68" stroke="#e8e8ee" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
-  <path d="M82 73 L90 68" stroke="#e8e8ee" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
-  <!-- bridge + temple arms -->
-  <path d="M66 78 Q70 74 74 78" fill="none" stroke="#0b0b10" stroke-width="2.4"/>
-  <path d="M32 79 L15 74 M108 79 L125 74" stroke="#0b0b10" stroke-width="2.2"/>
-
-  <!-- Nose (defined, angular) -->
-  <path d="M70 82 L64 104 Q70 109 77 104 L70 82" fill="#000000" opacity="0.10"/>
-  <path d="M64 104 Q70 110 78 104" fill="none" stroke="#7a6c58" stroke-width="1.4"/>
-  <path d="M70 84 L70 100" stroke="#6a5c48" stroke-width="1" opacity="0.4"/>
-
-  <!-- Mouth: thin, faintly downturned -->
-  <path d="M56 120 Q70 116 86 120" fill="none" stroke="#4a4034" stroke-width="2" stroke-linecap="round"/>
-  <path d="M58 116 Q70 113 84 116" fill="none" stroke="#000000" stroke-width="1" opacity="0.15"/>
+  <path d="M40 73 L49 68" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" opacity="0.5"/>
+  <path d="M80 73 L89 68" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" opacity="0.5"/>
 </svg>
