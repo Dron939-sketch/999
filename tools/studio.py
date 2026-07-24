@@ -106,8 +106,15 @@ def step_voice(prod, out_voice):
     if not vo_path.exists():
         log(f"  [озвучка] нет VO-файла: {vo} — пропуск.")
         return None
-    run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path), "-o", str(out_voice)])
-    return out_voice
+    # Мягко: сбой озвучки (недоступен Frederick, не тот токен, пустая реплика)
+    # НЕ рушит весь завод — просто отдаём немой ролик и логируем причину.
+    try:
+        run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path), "-o", str(out_voice)])
+        return out_voice
+    except subprocess.CalledProcessError as e:
+        log(f"  [озвучка] не удалась ({e}) — оставляю немой ролик. "
+            "Проверь FREDERICK_ADMIN_TOKEN и /api/tts/video/health.")
+        return None
 
 
 def step_mux(prod, video_mp4, voice_mp3, out_final):
