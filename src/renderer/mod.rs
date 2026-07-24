@@ -277,8 +277,12 @@ fn render_rigged_character(
 
     let _transition_dur = to_pose.map(|p| p.transition_duration).unwrap_or(0.3);
 
+    // Ease pose transitions with a slight overshoot ("ease-out-back") so gestures
+    // snap and settle like hand-drawn animation instead of sliding linearly.
+    let eased_t = ease_out_back(pose_t);
+
     // Get interpolated bone states.
-    let mut bone_states = interpolate_skeleton(&rig.skeleton, from_pose, to_pose, pose_t);
+    let mut bone_states = interpolate_skeleton(&rig.skeleton, from_pose, to_pose, eased_t);
 
     // Detect if the character is moving (for walk cycle).
     let velocity = compute_velocity(timeline, entity_name, t);
@@ -519,6 +523,17 @@ fn render_bone_tree(
     }
 
     Ok(())
+}
+
+/// Ease-out-back: decelerates and overshoots slightly past the target before
+/// settling — gives pose changes a snappy, hand-animated feel. t is clamped to
+/// [0,1]; the returned value may exceed 1.0 briefly (the overshoot).
+fn ease_out_back(t: f64) -> f64 {
+    let t = t.clamp(0.0, 1.0);
+    const C1: f64 = 1.30158;
+    const C3: f64 = C1 + 1.0;
+    let u = t - 1.0;
+    1.0 + C3 * u * u * u + C1 * u * u
 }
 
 /// Swap every `seed="N"` in an SVG (feTurbulence) for the given boil seed, so
