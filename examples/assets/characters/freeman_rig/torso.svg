@@ -2,7 +2,7 @@
   <defs>
     <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
       <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="1" seed="7" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" xChannelSelector="R" yChannelSelector="G"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>
   <g filter="url(#ink)">

@@ -367,7 +367,7 @@ fn render_rigged_character(
     // Per-frame "boil" seed: cycles the ink-filter turbulence so hand-drawn
     // edges wobble frame-to-frame (~9 changes/sec). No-op for parts without a
     // turbulence filter.
-    let boil_seed = (t * 9.0) as i64;
+    let boil_seed = (t * 5.0) as i64;
     let boil_seed = boil_seed.rem_euclid(4096) as u32 + 1;
 
     // Two-phase draw. First walk the bone tree to compute each part's world

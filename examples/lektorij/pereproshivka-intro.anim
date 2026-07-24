@@ -24,7 +24,7 @@ config {
     monochrome: true
     mono-contrast: 1.25
     vignette: 0.45
-    film-grain: 0.32
+    film-grain: 0.14
 }
 
 // === СЦЕНА 1: ХУК В КАМЕРЕ (22 с) ===
@@ -49,12 +49,15 @@ scene "cell-hook" (duration: 22s, set: cell) {
     camera medium freeman
     freeman speaks for 3.4s
 
-    // встал у нары (джамп-кат в стиле Фримена — фронтально в камеру)
-    freeman rotates 0
-    freeman moves-to (0.30, 0.60) over 0.1s
+    // САДИТСЯ на наре (буквально «признай, что сидишь») — корпус поднимается из
+    // лёжа в полусидя, персонаж остаётся на кровати. Без левитации через комнату.
     freeman pose "stern"
+    together {
+        freeman rotates -20 over 0.9s
+        freeman moves-to (0.34, 0.66) over 0.9s
+    }
     camera medium freeman
-    wait 0.8s
+    wait 0.3s
     // VO-4: «Хочешь выйти? Сначала признай, что сидишь.»
     freeman speaks for 2.8s
     freeman pose "point"

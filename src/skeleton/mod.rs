@@ -313,9 +313,9 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
     // Multi-frequency breathing/sway reads more organic than a single sine.
     let breath = (time * 1.05 * tau).sin();
     let sway = (time * 0.33 * tau).sin() * 0.6 + (time * 0.19 * tau).sin() * 0.4;
-    // "Animation boil": the jitter target updates ~8x/sec (held on twos/threes),
-    // so even a static pose is never perfectly still — like drawn animation.
-    let step = (time * 8.0).floor() as i64;
+    // "Animation boil": the jitter target updates ~5x/sec (held on fours), so a
+    // static pose is never perfectly still — but calm, not a tremor.
+    let step = (time * 5.0).floor() as i64;
 
     for state in states.iter_mut() {
         let is_face = state.name.contains("eye")
@@ -328,9 +328,9 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
             let jr = hash_unit(h ^ (step as u32).wrapping_mul(2654435761));
             let jx = hash_unit(h.wrapping_add(97) ^ (step as u32).wrapping_mul(40503));
             let jy = hash_unit(h.wrapping_add(191) ^ (step as u32).wrapping_mul(22695477));
-            state.rotation += jr * 0.9;
-            state.offset.0 += jx * 0.5;
-            state.offset.1 += jy * 0.4;
+            state.rotation += jr * 0.45;
+            state.offset.0 += jx * 0.28;
+            state.offset.1 += jy * 0.22;
         }
 
         match state.name.as_str() {
