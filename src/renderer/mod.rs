@@ -346,9 +346,6 @@ fn render_rigged_character(
     // Apply squash and stretch based on vertical velocity.
     apply_squash_stretch(&mut bone_states, velocity.1);
 
-    // Sort bones by z_order for correct draw order.
-    bone_states.sort_by_key(|b| b.z_order);
-
     // Compute the character's screen position.
     let cw = canvas_w as f64;
     let ch = canvas_h as f64;
@@ -373,12 +370,16 @@ fn render_rigged_character(
     let boil_seed = (t * 9.0) as i64;
     let boil_seed = boil_seed.rem_euclid(4096) as u32 + 1;
 
-    // Render each bone part.
-    render_bone_tree(
+    // Two-phase draw. First walk the bone tree to compute each part's world
+    // transform (parent transforms propagate to children), collecting drawables;
+    // THEN draw them sorted by z_order. This is what makes a hand tuck BEHIND
+    // the head when the pose says so — tree order alone would always draw a limb
+    // in front of its siblings regardless of intent.
+    let mut drawables: Vec<Drawable> = Vec::new();
+    collect_bone_drawables(
         &rig.skeleton.root,
         &bone_states,
         &rig.parts,
-        pixmap,
         screen_x,
         screen_y,
         char_scale,
@@ -389,8 +390,16 @@ fn render_rigged_character(
         // Whole-character rotation (the `rotate` action): lets a rigged
         // character lie down, lean, etc. Applied as the root rotation.
         state.rotation,
-        boil_seed,
-    )?;
+        &mut drawables,
+    );
+    // Stable sort keeps tree order among equal z_order (deterministic layering).
+    drawables.sort_by_key(|d| d.z_order);
+    for d in &drawables {
+        render_bone_part(
+            d.part, pixmap, d.x, d.y, d.sx, d.sy, d.rot, d.flip, d.opacity, &d.pivot,
+            boil_seed,
+        )?;
+    }
 
     Ok(())
 }
@@ -498,11 +507,28 @@ fn render_procedural_character(
 }
 
 /// Recursively render bones in the skeleton tree, accumulating transforms.
-fn render_bone_tree(
+/// One part ready to be drawn, with its world transform and draw order.
+struct Drawable<'a> {
+    part: &'a skeleton::PartAsset,
+    x: f64,
+    y: f64,
+    sx: f64,
+    sy: f64,
+    rot: f64,
+    flip: f64,
+    opacity: f64,
+    pivot: (f64, f64),
+    z_order: i32,
+}
+
+/// Walk the bone tree computing world transforms (parent → child) and collect a
+/// flat list of drawables. Drawing is deferred so the caller can sort by
+/// `z_order` — the fix for limbs punching through the head/torso.
+#[allow(clippy::too_many_arguments)]
+fn collect_bone_drawables<'a>(
     bone: &skeleton::Bone,
     bone_states: &[BoneState],
-    parts: &HashMap<String, skeleton::PartAsset>,
-    pixmap: &mut Pixmap,
+    parts: &'a HashMap<String, skeleton::PartAsset>,
     parent_x: f64,
     parent_y: f64,
     scale: f64,
@@ -511,8 +537,8 @@ fn render_bone_tree(
     entity_scale_x: f64,
     entity_scale_y: f64,
     parent_rot: f64,
-    boil_seed: u32,
-) -> Result<(), AnimError> {
+    out: &mut Vec<Drawable<'a>>,
+) {
     // Find this bone's interpolated state.
     let state = bone_states.iter().find(|s| s.name == bone.name);
 
@@ -529,36 +555,32 @@ fn render_bone_tree(
     let world_y = parent_y + ry * scale * entity_scale_y;
     let world_rot = parent_rot + rotation * flip;
 
-    // Render this bone's part if it has one. The state's part may be a pose
+    // Queue this bone's part if it has one. The state's part may be a pose
     // cel-swap (a different drawing); fall back to the bone's default part.
-    let part_name = state
-        .and_then(|s| s.part.as_ref())
-        .or(bone.part.as_ref());
+    let part_name = state.and_then(|s| s.part.as_ref()).or(bone.part.as_ref());
     if let Some(part_name) = part_name {
         if let Some(part) = parts.get(part_name) {
-            render_bone_part(
+            out.push(Drawable {
                 part,
-                pixmap,
-                world_x,
-                world_y,
-                scale * scale_x * entity_scale_x,
-                scale * scale_y * entity_scale_y,
-                world_rot,
+                x: world_x,
+                y: world_y,
+                sx: scale * scale_x * entity_scale_x,
+                sy: scale * scale_y * entity_scale_y,
+                rot: world_rot,
                 flip,
                 opacity,
-                &bone.pivot,
-                boil_seed,
-            )?;
+                pivot: bone.pivot,
+                z_order: state.map(|s| s.z_order).unwrap_or(bone.z_order),
+            });
         }
     }
 
-    // Render children.
+    // Recurse into children (their world transforms build on this bone's).
     for child in &bone.children {
-        render_bone_tree(
+        collect_bone_drawables(
             child,
             bone_states,
             parts,
-            pixmap,
             world_x,
             world_y,
             scale,
@@ -567,11 +589,9 @@ fn render_bone_tree(
             entity_scale_x * scale_x,
             entity_scale_y * scale_y,
             world_rot,
-            boil_seed,
-        )?;
+            out,
+        );
     }
-
-    Ok(())
 }
 
 /// Resolve the effective pose for a pose-event index. A full (non-overlay)

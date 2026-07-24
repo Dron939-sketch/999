@@ -98,6 +98,11 @@ pub struct BoneTransform {
     /// Flash symbol keyframe): the named `<part>.svg` replaces the default part.
     #[serde(default)]
     pub part: Option<String>,
+    /// Override the bone's draw order for this pose. Lets a limb go BEHIND the
+    /// head/torso in poses where it should (e.g. a hand tucked behind the head),
+    /// then return in front for others — no more limbs punching through.
+    #[serde(default)]
+    pub z_order: Option<i32>,
 }
 
 /// A loaded SVG part.
@@ -269,6 +274,14 @@ fn interpolate_bone(
             .or_else(|| bone.part.clone())
     };
 
+    // Draw order is discrete too — snap it the same way as the cel, so a limb
+    // switches behind/in-front cleanly at the midpoint instead of z-fighting.
+    let z_order = if t >= 0.5 {
+        to_bt.and_then(|bt| bt.z_order).unwrap_or(bone.z_order)
+    } else {
+        from_bt.and_then(|bt| bt.z_order).unwrap_or(bone.z_order)
+    };
+
     states.push(BoneState {
         name: bone.name.clone(),
         part,
@@ -282,7 +295,7 @@ fn interpolate_bone(
             lerp(from_scale.0, to_scale.0, t_smooth),
             lerp(from_scale.1, to_scale.1, t_smooth),
         ),
-        z_order: bone.z_order,
+        z_order,
     });
 
     for child in &bone.children {
