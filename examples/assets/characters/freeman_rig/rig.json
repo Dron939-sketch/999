@@ -555,6 +555,195 @@
           ]
         }
       }
+    },
+    "wave": {
+      "name": "wave",
+      "transition_duration": 0.25,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 128,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": 28,
+          "z_order": 4
+        },
+        "head": {
+          "rotation": 3
+        },
+        "mouth": {
+          "part": "mouth_wide"
+        }
+      }
+    },
+    "no": {
+      "name": "no",
+      "transition_duration": 0.18,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 62,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": 96,
+          "z_order": 4
+        },
+        "upper_arm_right": {
+          "rotation": -62,
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": -96,
+          "z_order": 4
+        },
+        "head": {
+          "rotation": -2
+        },
+        "mouth": {
+          "part": "mouth_m"
+        }
+      }
+    },
+    "facepalm": {
+      "name": "facepalm",
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 90,
+          "z_order": 7
+        },
+        "forearm_left": {
+          "rotation": 146,
+          "z_order": 7
+        },
+        "head": {
+          "rotation": -9
+        },
+        "mouth": {
+          "part": "mouth_frown"
+        }
+      }
+    },
+    "scare": {
+      "name": "scare",
+      "transition_duration": 0.12,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 75,
+          "z_order": 7
+        },
+        "forearm_left": {
+          "rotation": 130,
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -75,
+          "z_order": 7
+        },
+        "forearm_right": {
+          "rotation": -130,
+          "z_order": 7
+        },
+        "eye_left": {
+          "part": "eye_shock",
+          "scale": [
+            1.15,
+            1.15
+          ]
+        },
+        "eye_right": {
+          "part": "eye_shock",
+          "scale": [
+            1.15,
+            1.15
+          ]
+        },
+        "mouth": {
+          "part": "mouth_wide"
+        },
+        "head": {
+          "rotation": 2
+        }
+      }
+    },
+    "laugh": {
+      "name": "laugh",
+      "transition_duration": 0.15,
+      "bones": {
+        "head": {
+          "rotation": 7
+        },
+        "eye_left": {
+          "scale": [
+            1,
+            0.18
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            1,
+            0.18
+          ]
+        },
+        "mouth": {
+          "part": "mouth_teeth"
+        },
+        "upper_arm_left": {
+          "rotation": 30
+        },
+        "upper_arm_right": {
+          "rotation": -30
+        }
+      }
+    },
+    "open": {
+      "name": "open",
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 58,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": 26,
+          "z_order": 4
+        },
+        "upper_arm_right": {
+          "rotation": -58,
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": -26,
+          "z_order": 4
+        },
+        "head": {
+          "rotation": 1
+        },
+        "mouth": {
+          "part": "mouth_o"
+        }
+      }
+    },
+    "bow": {
+      "name": "bow",
+      "transition_duration": 0.4,
+      "bones": {
+        "torso": {
+          "rotation": 24
+        },
+        "head": {
+          "rotation": -12
+        },
+        "upper_arm_left": {
+          "rotation": 20
+        },
+        "upper_arm_right": {
+          "rotation": -20
+        },
+        "mouth": {
+          "part": "mouth_closed"
+        }
+      }
     }
   }
 }

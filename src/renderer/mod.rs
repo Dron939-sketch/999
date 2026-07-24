@@ -737,8 +737,8 @@ fn collect_bone_drawables<'a>(
     let rx = offset_x * rot_rad.cos() - offset_y * rot_rad.sin();
     let ry = offset_x * rot_rad.sin() + offset_y * rot_rad.cos();
 
-    let world_x = parent_x + rx * scale * flip * entity_scale_x;
-    let world_y = parent_y + ry * scale * entity_scale_y;
+    let mut world_x = parent_x + rx * scale * flip * entity_scale_x;
+    let mut world_y = parent_y + ry * scale * entity_scale_y;
     let world_rot = parent_rot + (rotation + arc_rot) * flip;
 
     // Queue this bone's part if it has one. The state's part may be a pose
@@ -746,6 +746,10 @@ fn collect_bone_drawables<'a>(
     // Also compute this bone's own bend so children can ride the arc.
     let mut child_bend: Option<BendGeom> = None;
     let mut draw_rot = world_rot;
+    // Rotation frame the children build on: limbs pass the rigid world rot
+    // (chord compensation is drawing-only), the spine passes its rest-based
+    // frame — children pick up their share of the lean from the arc mapping.
+    let mut child_rot = world_rot;
     let part_name = state.and_then(|s| s.part.as_ref()).or(bone.part.as_ref());
     if let Some(part_name) = part_name {
         if let Some(part) = parts.get(part_name) {
@@ -753,16 +757,29 @@ fn collect_bone_drawables<'a>(
             // along the lower limb segment instead of a sharp hinge corner;
             // the spine curls from a procedural channel (sway, speech). All in
             // unflipped part space — flip is applied at draw/world composition.
+            let delta_deg = rotation - bone.rotation;
+            let is_spine = bone.name == "torso";
             let joint_bend = if bone.name.contains("forearm") || bone.name.contains("shin") {
-                ((rotation - bone.rotation).to_radians() * 0.32).clamp(-0.55, 0.55)
+                (delta_deg.to_radians() * 0.32).clamp(-0.55, 0.55)
+            } else if is_spine {
+                // The spine carries its WHOLE lean in the arc: turn grows
+                // linearly from 0 at the pelvis to the full pose delta at the
+                // shoulders. (Negative: rows above a bottom origin have
+                // negative arc-length, so −δ yields +δ turn at the top.)
+                -delta_deg.to_radians()
             } else {
                 0.0
             };
             let bend_local = (joint_bend + state.map(|s| s.bend).unwrap_or(0.0)).clamp(-1.2, 1.2);
             // The spine bends from the pelvis up (feet stay planted, shoulders
             // sweep); limbs bend from their top joint down.
-            let bend_origin = if bone.name == "torso" { 1.0 } else { 0.0 };
-            if bend_origin == 0.0 {
+            let bend_origin = if is_spine { 1.0 } else { 0.0 };
+            if is_spine {
+                // The rigid rotation stays at rest — the arc does the leaning,
+                // so the pelvis row never swings around the neck pivot.
+                draw_rot = world_rot - delta_deg * flip;
+                child_rot = draw_rot;
+            } else {
                 // Chord compensation: the arc's chord runs at (start tangent +
                 // bend/2), so subtracting half the curl keeps the hand/foot
                 // where the pose put it — the elbow/knee softens into a curve
@@ -813,7 +830,7 @@ fn collect_bone_drawables<'a>(
             opacity,
             entity_scale_x * scale_x,
             entity_scale_y * scale_y,
-            world_rot,
+            child_rot,
             child_bend,
             out,
         );
