@@ -1495,6 +1495,13 @@ fn apply_transitions(
                 let overlay_alpha = (progress * 255.0) as u8;
                 draw_color_overlay(pixmap, 0, 0, 0, overlay_alpha);
             }
+            TransitionKind::Static => {
+                // TV-noise glitch: fill with deterministic per-pixel static.
+                // Strongest in the middle of the transition (bell curve), so it
+                // bursts in and clears out — a hard analog-glitch cut.
+                let intensity = 1.0 - (progress * 2.0 - 1.0).abs(); // 0→1→0
+                draw_static_noise(pixmap, t, intensity);
+            }
             TransitionKind::Wipe(direction) => {
                 let w = pixmap.width() as f64;
                 let h = pixmap.height() as f64;
@@ -1515,6 +1522,39 @@ fn apply_transitions(
         }
     }
     Ok(())
+}
+
+/// Fill the frame with TV static — grayscale white-noise, deterministic per
+/// (pixel, time) so renders are reproducible. `amount` (0..1) is how much of
+/// the frame the noise covers (alpha of the noise over the scene beneath).
+fn draw_static_noise(pixmap: &mut Pixmap, t: f64, amount: f64) {
+    let amount = amount.clamp(0.0, 1.0);
+    if amount <= 0.001 {
+        return;
+    }
+    let w = pixmap.width();
+    let h = pixmap.height();
+    let tsalt = (t * 90.0) as u64; // advance the field ~ per frame at 24-90fps
+    let a = (amount * 255.0) as u32;
+    for y in 0..h {
+        for x in 0..w {
+            // Cheap integer hash → white noise, stable for a given (x,y,frame).
+            let mut n = (x as u64).wrapping_mul(73_856_093)
+                ^ (y as u64).wrapping_mul(19_349_663)
+                ^ tsalt.wrapping_mul(83_492_791);
+            n ^= n >> 13;
+            n = n.wrapping_mul(0x9E3779B97F4A7C15);
+            n ^= n >> 7;
+            let v = (n & 0xFF) as u32;
+            let idx = ((y * w + x) * 4) as usize;
+            let data = pixmap.data_mut();
+            // Alpha-blend the noise grey over the existing pixel.
+            for c in 0..3 {
+                let base = data[idx + c] as u32;
+                data[idx + c] = ((base * (255 - a) + v * a) / 255) as u8;
+            }
+        }
+    }
 }
 
 fn draw_color_overlay(pixmap: &mut Pixmap, r: u8, g: u8, b: u8, a: u8) {

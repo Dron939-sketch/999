@@ -68,7 +68,8 @@ scene "cell-hook" (duration: 22s, set: cell) {
     wait 0.7s
     freeman pose "stern"
     wait 0.5s
-    transition dissolve 0.8s
+    // ТВ-шумовая склейка (глитч-удар в стиле Фримена) → книга
+    transition static 0.5s
 }
 
 // === СЦЕНА 2: КНИГА НА СТОЛЕ (11 с) ===
@@ -122,8 +123,16 @@ scene "alive" (duration: 20s, set: mind) {
     //lip 9
     freeman speaks for 2.6s
 
-    // ПАНЧ: сверхкруп, гротескный оскал в упор + удар тряски. VO-10.
+    // ФЛЭШ-ВСТАВКИ перед панчем: очередь кадров-ударов по 0.08с (мгновенный
+    // снап flash_*), как у Фримена — гротескные морды мелькают одна за другой.
     camera extreme-close-up freeman
+    freeman pose "flash_scream"
+    wait 0.08s
+    freeman pose "flash_rage"
+    wait 0.08s
+    freeman pose "flash_dead"
+    wait 0.08s
+    // ПАНЧ: сверхкруп, гротескный оскал в упор + удар тряски. VO-10.
     camera shake 0.35s intensity 1.4
     freeman pose "grotesque"
     //lip 10

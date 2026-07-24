@@ -1056,6 +1056,104 @@
           "part": "mouth_closed"
         }
       }
+    },
+    "flash_rage": {
+      "name": "flash_rage",
+      "transition_duration": 0.0,
+      "bones": {
+        "head": {
+          "part": "face_rage"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "flash_scream": {
+      "name": "flash_scream",
+      "transition_duration": 0.0,
+      "bones": {
+        "head": {
+          "part": "face_scream"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "flash_dead": {
+      "name": "flash_dead",
+      "transition_duration": 0.0,
+      "bones": {
+        "head": {
+          "part": "face_dead"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "flash_shock": {
+      "name": "flash_shock",
+      "transition_duration": 0.0,
+      "bones": {
+        "head": {
+          "part": "face_shock"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "flash_grotesque": {
+      "name": "flash_grotesque",
+      "transition_duration": 0.0,
+      "bones": {
+        "eye_left": {
+          "part": "eye_shock",
+          "scale": [
+            1.1,
+            1.1
+          ]
+        },
+        "eye_right": {
+          "part": "eye_shock",
+          "scale": [
+            1.1,
+            1.1
+          ]
+        },
+        "mouth": {
+          "part": "mouth_teeth"
+        },
+        "head": {
+          "rotation": 2
+        }
+      }
     }
   }
 }

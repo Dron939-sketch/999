@@ -246,6 +246,7 @@ transition_kind = {
     transition_fade_black
     | transition_fade_white
     | transition_dissolve
+    | transition_static
     | transition_wipe
     | transition_cut
 }
@@ -253,6 +254,7 @@ transition_kind = {
 transition_fade_black = { "fade-black" ~ duration }
 transition_fade_white = { "fade-white" ~ duration }
 transition_dissolve   = { "dissolve" ~ duration }
+transition_static     = { "static" ~ duration }
 transition_cut        = { "cut" }
 transition_wipe       = { "wipe" ~ direction ~ duration }
 

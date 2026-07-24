@@ -278,6 +278,9 @@ pub enum TransitionStmt {
     FadeBlack(Duration),
     FadeWhite(Duration),
     Cut,
+    /// TV-noise glitch cut (Freeman-style): screen bursts to static, then the
+    /// next scene snaps in. Hard, jarring — used on the sharpest transitions.
+    Static(Duration),
     Dissolve(Duration),
     Wipe {
         direction: Direction,
