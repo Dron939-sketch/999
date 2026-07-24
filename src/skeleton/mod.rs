@@ -264,32 +264,64 @@ fn interpolate_bone(
 
 /// Apply idle breathing/swaying animation to bone states.
 pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f64) {
-    let breath_cycle = (time * 1.2 * 2.0 * PI).sin(); // ~1.2 Hz breathing
-    let sway_cycle = (time * 0.4 * 2.0 * PI).sin(); // slow sway
+    let tau = 2.0 * PI;
+    // Multi-frequency breathing/sway reads more organic than a single sine.
+    let breath = (time * 1.05 * tau).sin();
+    let sway = (time * 0.33 * tau).sin() * 0.6 + (time * 0.19 * tau).sin() * 0.4;
+    // "Animation boil": the jitter target updates ~8x/sec (held on twos/threes),
+    // so even a static pose is never perfectly still — like drawn animation.
+    let step = (time * 8.0).floor() as i64;
 
     for state in states.iter_mut() {
+        let is_face = state.name.contains("eye")
+            || state.name.contains("mouth")
+            || state.name.contains("brow");
+
+        // Per-bone procedural micro-float (skipped for facial features).
+        if !is_face {
+            let h = name_hash(&state.name);
+            let jr = hash_unit(h ^ (step as u32).wrapping_mul(2654435761));
+            let jx = hash_unit(h.wrapping_add(97) ^ (step as u32).wrapping_mul(40503));
+            let jy = hash_unit(h.wrapping_add(191) ^ (step as u32).wrapping_mul(22695477));
+            state.rotation += jr * 0.9;
+            state.offset.0 += jx * 0.5;
+            state.offset.1 += jy * 0.4;
+        }
+
         match state.name.as_str() {
             "torso" => {
-                // Subtle breathing — torso scales slightly
-                state.scale.1 = state.scale.1 * (1.0 + breath_cycle * 0.008);
-                // Very slight sway
-                state.rotation += sway_cycle * 0.3;
+                state.scale.1 *= 1.0 + breath * 0.012;
+                state.rotation += sway * 0.8;
             }
             "head" => {
-                // Head bobs slightly with breathing
-                state.offset.1 += breath_cycle * 0.5;
-                // Subtle independent sway
-                state.rotation += (time * 0.5 * 2.0 * PI).sin() * 0.5;
+                state.offset.1 += breath * 0.9;
+                state.rotation += (time * 0.5 * tau).sin() * 0.8 + sway * 0.5;
             }
             name if name.contains("arm") => {
-                // Arms sway slightly
-                let arm_sway =
-                    (time * 0.6 * 2.0 * PI + if name.contains("right") { PI } else { 0.0 }).sin();
-                state.rotation += arm_sway * 1.0;
+                let phase = if name.contains("right") { PI } else { 0.0 };
+                state.rotation += (time * 0.6 * tau + phase).sin() * 1.4;
             }
             _ => {}
         }
     }
+}
+
+/// Small stable hash of a bone name, for per-bone procedural noise.
+fn name_hash(name: &str) -> u32 {
+    let mut h: u32 = 2166136261;
+    for b in name.bytes() {
+        h ^= b as u32;
+        h = h.wrapping_mul(16777619);
+    }
+    h
+}
+
+/// Deterministic hash → [-1, 1].
+fn hash_unit(mut x: u32) -> f64 {
+    x ^= x >> 13;
+    x = x.wrapping_mul(1274126177);
+    x ^= x >> 16;
+    (x as f64 / u32::MAX as f64) * 2.0 - 1.0
 }
 
 /// Apply walk cycle procedural animation.
