@@ -23,6 +23,10 @@ config {
     mono-contrast: 1.25
     vignette: 0.45
     film-grain: 0.14
+    // Фримен-аутентика: рисунок держится «на двойках» (рукотворная дёрганость)
+    // + лёгкая атмосферная крошка. Красное (spot-color) выживает акцентом.
+    on-twos: 2
+    snow: 0.3
 }
 
 // === СЦЕНА 1: ХУК В КАМЕРЕ (22 с) ===
@@ -90,6 +94,8 @@ scene "book" (duration: 11s, set: book) {
 scene "alive" (duration: 20s, set: mind) {
     let gear1 = prop("gear", "../assets/props/gear.svg") at (0.47, 0.30)
     let gear2 = prop("gear", "../assets/props/gear.svg") at (0.36, 0.40)
+    // ЭКГ-линия пульса пересекает кадр на «прошивка работает» (мотив Фримена)
+    let ekg = prop("ekg", "../assets/props/ekg.svg") at (1.15, 0.52)
 
     place freeman at (0.85, 0.74) facing front
     freeman pose "calm"
@@ -98,6 +104,7 @@ scene "alive" (duration: 20s, set: mind) {
     together {
         gear1 rotates 360 over 9s
         gear2 rotates -360 over 9s
+        ekg moves-to (-0.15, 0.52) over 8s
         do {
             // VO-7: «Пока ты читаешь эту фразу — прошивка работает.»
             // декламирующий палец вверх — силуэт, не бормотание в костюм
