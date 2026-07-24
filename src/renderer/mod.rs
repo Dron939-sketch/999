@@ -320,6 +320,12 @@ fn render_rigged_character(
         _ => 1.0_f64,
     };
 
+    // Per-frame "boil" seed: cycles the ink-filter turbulence so hand-drawn
+    // edges wobble frame-to-frame (~9 changes/sec). No-op for parts without a
+    // turbulence filter.
+    let boil_seed = (t * 9.0) as i64;
+    let boil_seed = boil_seed.rem_euclid(4096) as u32 + 1;
+
     // Render each bone part.
     render_bone_tree(
         &rig.skeleton.root,
@@ -334,6 +340,7 @@ fn render_rigged_character(
         state.scale_x,
         state.scale_y,
         0.0, // parent rotation accumulator
+        boil_seed,
     )?;
 
     Ok(())
@@ -455,6 +462,7 @@ fn render_bone_tree(
     entity_scale_x: f64,
     entity_scale_y: f64,
     parent_rot: f64,
+    boil_seed: u32,
 ) -> Result<(), AnimError> {
     // Find this bone's interpolated state.
     let state = bone_states.iter().find(|s| s.name == bone.name);
@@ -486,6 +494,7 @@ fn render_bone_tree(
                 flip,
                 opacity,
                 &bone.pivot,
+                boil_seed,
             )?;
         }
     }
@@ -505,10 +514,39 @@ fn render_bone_tree(
             entity_scale_x * scale_x,
             entity_scale_y * scale_y,
             world_rot,
+            boil_seed,
         )?;
     }
 
     Ok(())
+}
+
+/// Swap every `seed="N"` in an SVG (feTurbulence) for the given boil seed, so
+/// the ink filter's noise — and thus the rough hand-drawn edge — changes each
+/// frame. A no-op for SVGs without a turbulence filter.
+fn apply_boil(svg: &[u8], seed: u32) -> Vec<u8> {
+    let s = match std::str::from_utf8(svg) {
+        Ok(s) if s.contains("seed=\"") => s,
+        _ => return svg.to_vec(),
+    };
+    let needle = "seed=\"";
+    let mut out = String::with_capacity(s.len() + 8);
+    let mut rest = s;
+    while let Some(pos) = rest.find(needle) {
+        out.push_str(&rest[..pos + needle.len()]);
+        out.push_str(&seed.to_string());
+        let after = &rest[pos + needle.len()..];
+        // Skip the old value up to (but not including) the closing quote.
+        match after.find('"') {
+            Some(q) => rest = &after[q..],
+            None => {
+                rest = after;
+                break;
+            }
+        }
+    }
+    out.push_str(rest);
+    out.into_bytes()
 }
 
 /// Render a single bone's SVG part at the given world transform.
@@ -523,9 +561,11 @@ fn render_bone_part(
     flip: f64,
     opacity: f64,
     pivot: &(f64, f64),
+    boil_seed: u32,
 ) -> Result<(), AnimError> {
     let opts = usvg::Options::default();
-    let tree = usvg::Tree::from_data(&part.svg_data, &opts)
+    let svg_data = apply_boil(&part.svg_data, boil_seed);
+    let tree = usvg::Tree::from_data(&svg_data, &opts)
         .map_err(|e| AnimError::Render(format!("SVG parse error: {e}")))?;
 
     let render_sx = scale_x.abs() * flip.abs();
