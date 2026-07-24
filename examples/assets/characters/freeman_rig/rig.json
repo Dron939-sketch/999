@@ -46,15 +46,18 @@
     }
   },
   "poses": {
-    "idle":  { "name": "idle", "bones": { "mouth": { "scale": [1, 0.3] } } },
-    "calm":  { "name": "calm", "transition_duration": 0.4, "bones": { "upper_arm_left": { "rotation": 8 }, "forearm_left": { "rotation": 8 }, "upper_arm_right": { "rotation": -8 }, "forearm_right": { "rotation": -8 }, "mouth": { "scale": [1, 0.32] } } },
+    "idle":  { "name": "idle", "bones": { "mouth": { "part": "mouth_closed" } } },
+    "calm":  { "name": "calm", "transition_duration": 0.4, "bones": { "upper_arm_left": { "rotation": 8 }, "forearm_left": { "rotation": 8 }, "upper_arm_right": { "rotation": -8 }, "forearm_right": { "rotation": -8 }, "mouth": { "part": "mouth_closed" } } },
     "blink": { "name": "blink", "transition_duration": 0.1, "bones": { "eye_left": { "scale": [1, 0.1] }, "eye_right": { "scale": [1, 0.1] } } },
-    "talk":  { "name": "talk", "transition_duration": 0.1, "bones": { "mouth": { "scale": [1, 1.4] } } },
-    "wide":  { "name": "wide", "transition_duration": 0.25, "bones": { "eye_left": { "scale": [1, 1.18] }, "eye_right": { "scale": [1, 1.18] }, "mouth": { "scale": [1, 1.1] }, "head": { "rotation": 2 } } },
-    "stern": { "name": "stern", "transition_duration": 0.3, "bones": { "mouth": { "scale": [1, 0.22] }, "head": { "rotation": -2 } } },
-    "think": { "name": "think", "transition_duration": 0.45, "bones": { "head": { "rotation": -6 }, "mouth": { "scale": [1, 0.3] }, "upper_arm_left": { "rotation": -58 }, "forearm_left": { "rotation": 92 } } },
-    "shrug": { "name": "shrug", "transition_duration": 0.4, "bones": { "head": { "rotation": 2 }, "mouth": { "scale": [1, 0.9] }, "upper_arm_left": { "rotation": -52 }, "forearm_left": { "rotation": 44 }, "upper_arm_right": { "rotation": 52 }, "forearm_right": { "rotation": -44 } } },
-    "point": { "name": "point", "transition_duration": 0.35, "bones": { "head": { "rotation": 1 }, "mouth": { "scale": [1, 1.2] }, "upper_arm_left": { "rotation": -58 }, "forearm_left": { "rotation": 16 } } },
-    "hips":  { "name": "hips", "transition_duration": 0.4, "bones": { "mouth": { "scale": [1, 0.4] }, "upper_arm_left": { "rotation": -30 }, "forearm_left": { "rotation": 92 }, "upper_arm_right": { "rotation": 30 }, "forearm_right": { "rotation": -92 } } }
+    "talk":  { "name": "talk", "transition_duration": 0.06, "bones": { "mouth": { "part": "mouth_o" } } },
+    "gab":   { "name": "gab", "transition_duration": 0.06, "bones": { "mouth": { "part": "mouth_wide" } } },
+    "wide":  { "name": "wide", "transition_duration": 0.2, "bones": { "eye_left": { "scale": [1, 1.15] }, "eye_right": { "scale": [1, 1.15] }, "mouth": { "part": "mouth_wide" }, "head": { "rotation": 2 } } },
+    "stern": { "name": "stern", "transition_duration": 0.28, "bones": { "eye_left": { "part": "eye_angry_left" }, "eye_right": { "part": "eye_angry_right" }, "mouth": { "part": "mouth_m" }, "head": { "rotation": -2 } } },
+    "angry": { "name": "angry", "transition_duration": 0.22, "bones": { "eye_left": { "part": "eye_angry_left" }, "eye_right": { "part": "eye_angry_right" }, "mouth": { "part": "mouth_wide" }, "head": { "rotation": -3 } } },
+    "sad":   { "name": "sad", "transition_duration": 0.4, "bones": { "mouth": { "part": "mouth_frown" }, "head": { "rotation": 5 } } },
+    "think": { "name": "think", "transition_duration": 0.45, "bones": { "head": { "rotation": -6 }, "mouth": { "part": "mouth_closed" }, "upper_arm_left": { "rotation": -58 }, "forearm_left": { "rotation": 92 } } },
+    "shrug": { "name": "shrug", "transition_duration": 0.4, "bones": { "head": { "rotation": 2 }, "mouth": { "part": "mouth_frown" }, "upper_arm_left": { "rotation": -52 }, "forearm_left": { "rotation": 44 }, "upper_arm_right": { "rotation": 52 }, "forearm_right": { "rotation": -44 } } },
+    "point": { "name": "point", "transition_duration": 0.35, "bones": { "head": { "rotation": 1 }, "mouth": { "part": "mouth_o" }, "upper_arm_left": { "rotation": -58 }, "forearm_left": { "rotation": 16 } } },
+    "hips":  { "name": "hips", "transition_duration": 0.4, "bones": { "mouth": { "part": "mouth_m" }, "upper_arm_left": { "rotation": -30 }, "forearm_left": { "rotation": 92 }, "upper_arm_right": { "rotation": 30 }, "forearm_right": { "rotation": -92 } } }
   }
 }

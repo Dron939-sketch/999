@@ -269,8 +269,14 @@ fn render_rigged_character(
     timeline: &Timeline,
     entity_name: &str,
 ) -> Result<(), AnimError> {
+    // Limited animation "on twos": the pose clock ticks at ~12 fps so gestures
+    // and cel swaps pop in steps like hand-drawn animation, while the ink boil
+    // and idle float below keep running at full rate.
+    let pose_time = (t * 12.0).floor() / 12.0;
+
     // Determine current and previous pose, and interpolation progress.
-    let (from_pose_name, to_pose_name, pose_t) = get_pose_interpolation(timeline, entity_name, t);
+    let (from_pose_name, to_pose_name, pose_t) =
+        get_pose_interpolation(timeline, entity_name, pose_time);
 
     let from_pose = from_pose_name.and_then(|n| rig.poses.get(n));
     let to_pose = to_pose_name.and_then(|n| rig.poses.get(n));
@@ -484,8 +490,12 @@ fn render_bone_tree(
     let world_y = parent_y + ry * scale * entity_scale_y;
     let world_rot = parent_rot + rotation * flip;
 
-    // Render this bone's part if it has one.
-    if let Some(ref part_name) = bone.part {
+    // Render this bone's part if it has one. The state's part may be a pose
+    // cel-swap (a different drawing); fall back to the bone's default part.
+    let part_name = state
+        .and_then(|s| s.part.as_ref())
+        .or(bone.part.as_ref());
+    if let Some(part_name) = part_name {
         if let Some(part) = parts.get(part_name) {
             render_bone_part(
                 part,

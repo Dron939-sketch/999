@@ -94,6 +94,10 @@ pub struct BoneTransform {
     pub offset: Option<(f64, f64)>,
     #[serde(default)]
     pub scale: Option<(f64, f64)>,
+    /// Swap the bone's drawing for this pose (frame-by-frame "cel" swap, like a
+    /// Flash symbol keyframe): the named `<part>.svg` replaces the default part.
+    #[serde(default)]
+    pub part: Option<String>,
 }
 
 /// A loaded SVG part.
@@ -129,9 +133,17 @@ pub fn load_rig(name: &str, dir: &Path) -> Result<CharacterRig, AnimError> {
     let rig_def: RigDefinition = serde_json::from_str(&rig_json)
         .map_err(|e| AnimError::Asset(format!("failed to parse rig.json for '{}': {}", name, e)))?;
 
-    // Load all SVG parts referenced in the skeleton.
+    // Load all SVG parts referenced in the skeleton...
     let mut parts = HashMap::new();
     collect_parts(&rig_def.skeleton.root, dir, &mut parts)?;
+    // ...and any alternate drawings referenced only in pose cel-swaps.
+    for pose in rig_def.poses.values() {
+        for bt in pose.bones.values() {
+            if let Some(ref part_name) = bt.part {
+                load_part(part_name, dir, &mut parts)?;
+            }
+        }
+    }
 
     Ok(CharacterRig {
         name: name.to_string(),
@@ -148,42 +160,50 @@ fn collect_parts(
     parts: &mut HashMap<String, PartAsset>,
 ) -> Result<(), AnimError> {
     if let Some(ref part_name) = bone.part {
-        if !parts.contains_key(part_name) {
-            let svg_path = dir.join(format!("{}.svg", part_name));
-            let svg_data = std::fs::read(&svg_path).map_err(|e| {
-                AnimError::Asset(format!(
-                    "failed to read part '{}' from {}: {}",
-                    part_name,
-                    svg_path.display(),
-                    e
-                ))
-            })?;
-
-            let opts = usvg::Options::default();
-            let tree = usvg::Tree::from_data(&svg_data, &opts).map_err(|e| {
-                AnimError::Asset(format!(
-                    "failed to parse SVG for part '{}': {}",
-                    part_name, e
-                ))
-            })?;
-
-            let size = tree.size();
-            parts.insert(
-                part_name.clone(),
-                PartAsset {
-                    name: part_name.clone(),
-                    svg_data,
-                    width: size.width() as f64,
-                    height: size.height() as f64,
-                },
-            );
-        }
+        load_part(part_name, dir, parts)?;
     }
 
     for child in &bone.children {
         collect_parts(child, dir, parts)?;
     }
 
+    Ok(())
+}
+
+/// Load a single `<part_name>.svg` into the parts map (idempotent).
+fn load_part(
+    part_name: &str,
+    dir: &Path,
+    parts: &mut HashMap<String, PartAsset>,
+) -> Result<(), AnimError> {
+    if parts.contains_key(part_name) {
+        return Ok(());
+    }
+    let svg_path = dir.join(format!("{}.svg", part_name));
+    let svg_data = std::fs::read(&svg_path).map_err(|e| {
+        AnimError::Asset(format!(
+            "failed to read part '{}' from {}: {}",
+            part_name,
+            svg_path.display(),
+            e
+        ))
+    })?;
+
+    let opts = usvg::Options::default();
+    let tree = usvg::Tree::from_data(&svg_data, &opts).map_err(|e| {
+        AnimError::Asset(format!("failed to parse SVG for part '{}': {}", part_name, e))
+    })?;
+
+    let size = tree.size();
+    parts.insert(
+        part_name.to_string(),
+        PartAsset {
+            name: part_name.to_string(),
+            svg_data,
+            width: size.width() as f64,
+            height: size.height() as f64,
+        },
+    );
     Ok(())
 }
 
@@ -237,9 +257,21 @@ fn interpolate_bone(
     // Smooth interpolation using ease-in-out
     let t_smooth = smooth_step(t);
 
+    // Cel swap: drawings don't tween — snap to the target pose's part past the
+    // midpoint, else the source pose's part, else the bone's default drawing.
+    let part = if t >= 0.5 {
+        to_bt
+            .and_then(|bt| bt.part.clone())
+            .or_else(|| bone.part.clone())
+    } else {
+        from_bt
+            .and_then(|bt| bt.part.clone())
+            .or_else(|| bone.part.clone())
+    };
+
     states.push(BoneState {
         name: bone.name.clone(),
-        part: bone.part.clone(),
+        part,
         pivot: bone.pivot,
         offset: (
             lerp(from_offset.0, to_offset.0, t_smooth),

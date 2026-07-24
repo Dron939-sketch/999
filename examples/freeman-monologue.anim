@@ -34,11 +34,13 @@ scene "monologue" (duration: 20s, set: stage) {
     // говорит (чередуем открытый/закрытый рот)
     camera close-up freeman
     freeman pose "talk"
-    wait 0.26s
-    freeman pose "calm"
     wait 0.22s
+    freeman pose "gab"
+    wait 0.2s
     freeman pose "talk"
-    wait 0.26s
+    wait 0.22s
+    freeman pose "calm"
+    wait 0.2s
     freeman pose "wide"
     wait 1s
 
@@ -64,8 +66,8 @@ scene "monologue" (duration: 20s, set: stage) {
     camera extreme-close-up freeman
     freeman pose "stern"
     wait 1.4s
-    freeman pose "talk"
-    wait 0.26s
+    freeman pose "angry"
+    wait 0.8s
     freeman pose "stern"
     wait 1.2s
 
