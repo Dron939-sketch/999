@@ -106,6 +106,9 @@ config {
 | `fps`        | Integer   | Frames per second                    | `30`       |
 | `background` | Hex color | Default background color             | `#1a1410`  |
 | `monochrome` | Boolean   | Post-process every frame to high-contrast black & white ("ink" look) | `false` |
+| `mono-contrast` | Float  | Contrast for the monochrome post (~1.1 soft; 2–4 = stark 2-tone silhouette) | `1.12` |
+| `film-grain` | Float     | Aged-film grain intensity (0 = off, 0.3–0.7 typical) | `0` |
+| `vignette`   | Float     | Darkened-corners vignette intensity (0 = off, 0.3–0.6 typical) | `0` |
 
 ### Example
 
@@ -356,6 +359,21 @@ pose is interpolated smoothly.
 ```
 detective pose "thinking"
 informant pose "drinking"
+```
+
+#### speaks
+
+Auto-speech: cycles the entity's phoneme mouth poses (`talk` / `gab` / `idle`)
+in an irregular pattern for the duration, then closes the mouth. Advances scene
+time (a wait that talks) — no need to hand-write every mouth flap. The rig must
+define `talk`, `gab`, and `idle` poses (both `freeman_rig` and `fredi_rig` do).
+
+```
+<entity> speaks for <duration>
+```
+
+```
+freeman speaks for 3s
 ```
 
 #### shows

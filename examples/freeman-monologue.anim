@@ -31,16 +31,9 @@ scene "monologue" (duration: 20s, set: stage) {
     freeman pose "blink"
     wait 0.2s
 
-    // говорит (чередуем открытый/закрытый рот)
+    // говорит (авто-речь: фонемы чередуются сами)
     camera close-up freeman
-    freeman pose "talk"
-    wait 0.22s
-    freeman pose "gab"
-    wait 0.2s
-    freeman pose "talk"
-    wait 0.22s
-    freeman pose "calm"
-    wait 0.2s
+    freeman speaks for 2s
     freeman pose "wide"
     wait 1s
 
@@ -49,13 +42,10 @@ scene "monologue" (duration: 20s, set: stage) {
     freeman pose "shrug"
     wait 1.8s
 
-    // указывает
+    // указывает и говорит
     freeman pose "point"
-    wait 0.3s
-    freeman pose "talk"
-    wait 0.24s
-    freeman pose "point"
-    wait 1.4s
+    wait 0.8s
+    freeman speaks for 1.4s
 
     // задумался
     camera close-up freeman
@@ -68,8 +58,7 @@ scene "monologue" (duration: 20s, set: stage) {
     wait 1.4s
     freeman pose "angry"
     wait 0.8s
-    freeman pose "stern"
-    wait 1.2s
+    freeman speaks for 1.2s
 
     // руки в боки, финал
     camera medium freeman

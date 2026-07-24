@@ -52,6 +52,8 @@
     "fredi-calm": { "name": "fredi-calm", "transition_duration": 0.4, "bones": { "upper_arm_left": { "rotation": 6 }, "forearm_left": { "rotation": 10 }, "upper_arm_right": { "rotation": -6 }, "forearm_right": { "rotation": 4 }, "mouth": { "scale": [1, 0.85] } } },
     "fredi-blink": { "name": "fredi-blink", "transition_duration": 0.12, "bones": { "eye_left": { "scale": [1, 0.12] }, "eye_right": { "scale": [1, 0.12] } } },
     "fredi-speak": { "name": "fredi-speak", "transition_duration": 0.12, "bones": { "mouth": { "scale": [1, 1.7] } } },
+    "talk": { "name": "talk", "transition_duration": 0.06, "bones": { "mouth": { "scale": [1, 1.6] } } },
+    "gab":  { "name": "gab", "transition_duration": 0.06, "bones": { "mouth": { "scale": [1, 2.0] } } },
     "fredi-think": { "name": "fredi-think", "transition_duration": 0.45, "bones": { "head": { "rotation": -6 }, "brow_left": { "offset": [0, 2] }, "brow_right": { "offset": [0, 2] }, "mouth": { "scale": [1, 0.6] }, "upper_arm_left": { "rotation": -52 }, "forearm_left": { "rotation": 96 } } },
     "fredi-explain": { "name": "fredi-explain", "transition_duration": 0.4, "bones": { "torso": { "rotation": 2 }, "brow_left": { "offset": [0, -3] }, "brow_right": { "offset": [0, -3] }, "mouth": { "scale": [1, 1.6] }, "upper_arm_left": { "rotation": -34 }, "forearm_left": { "rotation": 52 } } },
     "fredi-point": { "name": "fredi-point", "transition_duration": 0.35, "bones": { "torso": { "rotation": 3 }, "brow_left": { "offset": [0, 4], "rotation": -8 }, "brow_right": { "offset": [0, 4], "rotation": 8 }, "mouth": { "scale": [1, 1.4] }, "upper_arm_left": { "rotation": -54 }, "forearm_left": { "rotation": 16 } } },

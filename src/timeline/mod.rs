@@ -226,6 +226,36 @@ impl TimelineCompiler {
                     e.pose = pose.clone();
                 }
             }
+            ActionStmt::Speak { entity, duration } => {
+                // Auto-speech: cycle phoneme mouth poses for the duration and
+                // advance time (a wait that talks). The pattern is deterministic
+                // but irregular so the flapping doesn't read as a metronome.
+                let dur = duration.as_secs();
+                let end = self.time + dur;
+                const FLAPS: [&str; 6] = ["talk", "gab", "talk", "idle", "gab", "talk"];
+                let mut t = self.time;
+                let mut i: usize = 0;
+                while t < end - 0.05 {
+                    self.pose_events.push(PoseEvent {
+                        time: t,
+                        entity: entity.clone(),
+                        pose: FLAPS[i % FLAPS.len()].to_string(),
+                    });
+                    // 0.14–0.24s per flap, varied deterministically.
+                    t += 0.14 + 0.05 * ((i * 7 + 3) % 3) as f64;
+                    i += 1;
+                }
+                // Close the mouth at the end of the line.
+                self.pose_events.push(PoseEvent {
+                    time: end,
+                    entity: entity.clone(),
+                    pose: "idle".to_string(),
+                });
+                if let Some(e) = self.entities.get_mut(entity) {
+                    e.pose = "idle".to_string();
+                }
+                self.time = end;
+            }
             ActionStmt::Show {
                 entity,
                 duration,

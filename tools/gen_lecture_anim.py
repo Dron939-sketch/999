@@ -226,13 +226,15 @@ def build_anim(title, sections, summary, scene_name):
         pose = BEAT_POSES[i % len(BEAT_POSES)]
         cam = BEAT_CAMERAS[i % len(BEAT_CAMERAS)]
         w = estimate_wait(sec)
-        total += w + 1.0
+        total += w + 1.6
         block = [
             f"    // === {escape_str(sec)} ===",
             f'    // VO: <раздел {i + 1}>',
             f"    camera {cam} fredi",
             f'    fredi pose "{pose}"',
-            f"    wait {w}s",
+            "    wait 0.6s",
+            # Авто-речь: движок сам чередует фонемные рты на длительность доли.
+            f"    fredi speaks for {w}s",
         ]
         # Изредка добавляем «удар» камеры на акцентных долях.
         if pose in ("fredi-point", "fredi-stern"):

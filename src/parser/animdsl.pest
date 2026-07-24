@@ -135,11 +135,18 @@ action_stmt = {
     | exit_action
     | move_action
     | pose_action
+    | speak_action
     | show_action
     | hide_action
     | scale_action
     | rotate_action
     | fade_action
+}
+
+// Auto-speech: cycles the character's phoneme mouth poses ("talk"/"gab"/"idle")
+// for the given duration, so scripts don't hand-write every mouth flap.
+speak_action = {
+    identifier ~ "speaks" ~ "for" ~ duration
 }
 
 move_action = {
