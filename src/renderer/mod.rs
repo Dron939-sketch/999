@@ -905,8 +905,10 @@ fn speaking_intensity(events: &[&PoseEvent], t: f64) -> f64 {
         // (gab = loud peak, talk = mid, idle/closed = pause), so body emphasis
         // lands on the actual accents of the phrase, not on a generic sine.
         let w = match e.pose.as_str() {
-            "gab" | "wide" => 1.0,
-            "talk" => 0.55,
+            "gab" | "wide" | "visD" => 1.0,
+            "talk" | "visC" | "visE" => 0.55,
+            "visF" => 0.45,
+            "visB" => 0.3,
             _ => 0.12,
         };
         let dt = (e.time - t).abs();

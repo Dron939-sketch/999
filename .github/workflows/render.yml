@@ -29,6 +29,27 @@ jobs:
       - name: Install ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
+      # Rhubarb Lip Sync — фонемный липсинк (рот артикулирует слоги, не флэпы).
+      # Бинарь кэшируется; при недоступности завод честно падает на RMS-огибающую.
+      - name: Rhubarb cache
+        id: rhubarb-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/rhubarb
+          key: rhubarb-1.13.0-linux
+
+      - name: Install Rhubarb Lip Sync
+        if: steps.rhubarb-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/rhubarb
+          curl -sSL -o /tmp/rhubarb.zip \
+            https://github.com/DanielSWolf/rhubarb-lip-sync/releases/download/v1.13.0/Rhubarb-Lip-Sync-1.13.0-Linux.zip
+          unzip -q /tmp/rhubarb.zip -d ~/rhubarb
+          find ~/rhubarb -name rhubarb -type f -exec chmod +x {} \;
+
+      - name: Expose RHUBARB_BIN
+        run: echo "RHUBARB_BIN=$(find ~/rhubarb -name rhubarb -type f | head -1)" >> "$GITHUB_ENV"
+
       - name: Rust cache
         uses: actions/cache@v4
         with:

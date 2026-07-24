@@ -21,9 +21,13 @@ prep_lipsync.py — впаивает липсинк по реальной озв
 """
 
 import argparse
+import json
 import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lipsync import extract_envelope, envelope_to_mouths  # noqa: E402
@@ -31,11 +35,63 @@ from lipsync import extract_envelope, envelope_to_mouths  # noqa: E402
 LIP = re.compile(r"^\s*//lip\s+(\d+)\s*$")
 SPEAK = re.compile(r"^(\s*)(\S+)\s+speaks\s+for\s+([\d.]+)s\s*$")
 
+# Виземы Rhubarb → позы рига (rig.json: visA..visF). Расширенные G/H/X
+# сводим к ближайшим базовым.
+RHUBARB_MAP = {
+    "A": "visA", "B": "visB", "C": "visC", "D": "visD",
+    "E": "visE", "F": "visF", "G": "visB", "H": "visC", "X": "visA",
+}
+
+
+def rhubarb_bin():
+    """Путь к бинарю Rhubarb Lip Sync (или None): $RHUBARB_BIN либо в PATH."""
+    cand = os.environ.get("RHUBARB_BIN") or shutil.which("rhubarb")
+    return cand if cand and os.path.exists(cand) else None
+
+
+def rhubarb_track(mp3):
+    """mp3 → [(поза, длительность)] через фонемный Rhubarb (None при сбое).
+
+    Rhubarb ест wav/ogg — конвертируем ffmpeg'ом; распознаватель phonetic
+    языконезависим (наш текст — русский). Выход: JSON mouthCues (A..X).
+    """
+    rb = rhubarb_bin()
+    if not rb or not shutil.which("ffmpeg"):
+        return None
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            wav = os.path.join(td, "line.wav")
+            subprocess.run(
+                ["ffmpeg", "-y", "-v", "error", "-i", mp3, "-ar", "16000", "-ac", "1", wav],
+                check=True,
+            )
+            res = subprocess.run(
+                [rb, "-r", "phonetic", "-f", "json", "--machineReadable", wav],
+                check=True, capture_output=True, text=True,
+            )
+        cues = json.loads(res.stdout).get("mouthCues", [])
+        track = []
+        for c in cues:
+            dur = float(c["end"]) - float(c["start"])
+            pose = RHUBARB_MAP.get(c["value"], "visA")
+            if track and track[-1][0] == pose:
+                track[-1] = (pose, track[-1][1] + dur)
+            elif dur > 0:
+                track.append((pose, dur))
+        return track or None
+    except Exception as e:  # noqa: BLE001 — любой сбой → честный фолбэк на RMS
+        print(f"  [rhubarb] не сработал ({e}) — амплитудный липсинк.")
+        return None
+
 
 def lips_track_lines(entity, mp3, indent, fps=11.0):
-    hop = 1.0 / fps
-    track = envelope_to_mouths(extract_envelope(mp3, hop), hop)
-    out = [f"{indent}// липсинк {os.path.basename(mp3)} ({len(track)} ртов)"]
+    # Сначала фонемы (Rhubarb): рот артикулирует слоги. Фолбэк — RMS-огибающая.
+    track = rhubarb_track(mp3)
+    src = "фонемы" if track else "амплитуда"
+    if not track:
+        hop = 1.0 / fps
+        track = envelope_to_mouths(extract_envelope(mp3, hop), hop)
+    out = [f"{indent}// липсинк {os.path.basename(mp3)} ({len(track)} ртов, {src})"]
     for pose, dur in track:
         out.append(f'{indent}{entity} lips "{pose}" for {round(dur, 2)}s')
     return out

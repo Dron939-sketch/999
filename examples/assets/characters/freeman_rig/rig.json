@@ -744,6 +744,60 @@
           "part": "mouth_closed"
         }
       }
+    },
+    "visA": {
+      "name": "visA",
+      "transition_duration": 0.04,
+      "bones": {
+        "mouth": {
+          "part": "mouth_closed"
+        }
+      }
+    },
+    "visB": {
+      "name": "visB",
+      "transition_duration": 0.04,
+      "bones": {
+        "mouth": {
+          "part": "mouth_m"
+        }
+      }
+    },
+    "visC": {
+      "name": "visC",
+      "transition_duration": 0.04,
+      "bones": {
+        "mouth": {
+          "part": "mouth_o"
+        }
+      }
+    },
+    "visD": {
+      "name": "visD",
+      "transition_duration": 0.04,
+      "bones": {
+        "mouth": {
+          "part": "mouth_wide"
+        }
+      }
+    },
+    "visE": {
+      "name": "visE",
+      "transition_duration": 0.04,
+      "bones": {
+        "mouth": {
+          "part": "mouth_e"
+        }
+      }
+    },
+    "visF": {
+      "name": "visF",
+      "transition_duration": 0.04,
+      "bones": {
+        "mouth": {
+          "part": "mouth_f"
+        }
+      }
     }
   }
 }
