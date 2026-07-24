@@ -4,3 +4,4 @@
 # ...but finished videos in videos/ are tracked (downloadable from the repo)
 !videos/*.mp4
 output/
+__pycache__/
