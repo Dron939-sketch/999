@@ -146,7 +146,14 @@ def build_one(prod, engine, videos_dir):
     voice = step_voice(prod, voice_mp3)
     step_mux(prod, video_mp4, voice, final_mp4)
 
-    made = [p.name for p in (video_mp4, voice_mp3, final_mp4) if p.exists()]
+    made = []
+    for p in (video_mp4, voice_mp3, final_mp4):
+        if p.exists():
+            mb = p.stat().st_size / 1048576
+            made.append(f"{p.name} ({mb:.1f}МБ)")
+            if p.suffix == ".mp4" and mb > 95:
+                log(f"  [!] {p.name} = {mb:.0f}МБ — превысит лимит GitHub (>100МБ), "
+                    "снизь битрейт/длительность.")
     log(f"  → готово: {', '.join(made)}")
 
 

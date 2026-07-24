@@ -1,159 +1,107 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- Камера в графичном стиле Фримена: плоские заливки, жирная чёрная тушь,
+       сплошные тени, высокий контраст. Никаких градиентов (см. LOCATION_STYLE.md). -->
   <defs>
-    <radialGradient id="wallLight" cx="30%" cy="22%" r="95%">
-      <stop offset="0%" stop-color="#8b847a"/>
-      <stop offset="45%" stop-color="#5f5951"/>
-      <stop offset="100%" stop-color="#2c2a26"/>
-    </radialGradient>
-    <linearGradient id="sideL" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#211f1c"/>
-      <stop offset="100%" stop-color="#4f4a43"/>
-    </linearGradient>
-    <linearGradient id="sideR" x1="1" y1="0" x2="0" y2="0">
-      <stop offset="0%" stop-color="#211f1c"/>
-      <stop offset="100%" stop-color="#4a453f"/>
-    </linearGradient>
-    <linearGradient id="ceil" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#1a1815"/>
-      <stop offset="100%" stop-color="#3d3934"/>
-    </linearGradient>
-    <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#57524a"/>
-      <stop offset="100%" stop-color="#26241f"/>
-    </linearGradient>
-    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#e9ede4" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#e9ede4" stop-opacity="0"/>
-    </linearGradient>
-    <linearGradient id="matt" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#8a8f86"/>
-      <stop offset="100%" stop-color="#5b605a"/>
-    </linearGradient>
     <filter id="ink" x="-6%" y="-6%" width="112%" height="112%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="1" seed="11" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="1" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="inkHeavy" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="1" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="6" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>
 
-  <!-- ============ tight cell: one-point perspective, VP ~ (600,270) ============ -->
-  <rect x="340" y="120" width="600" height="350" fill="url(#wallLight)"/>          <!-- back wall -->
-  <polygon points="0,0 1280,0 940,120 340,120" fill="url(#ceil)"/>                 <!-- ceiling -->
-  <polygon points="0,0 340,120 340,470 0,720" fill="url(#sideL)"/>                 <!-- left wall -->
-  <polygon points="1280,0 1280,720 940,470 940,120" fill="url(#sideR)"/>           <!-- right wall -->
-  <polygon points="340,470 940,470 1280,720 0,720" fill="url(#floorG)"/>           <!-- floor -->
+  <!-- ===== плоские тональные блоки комнаты (без градиентов) ===== -->
+  <rect x="0" y="0" width="1280" height="720" fill="#d4d7cf"/>                      <!-- бумага -->
+  <polygon points="0,0 1280,0 940,120 340,120" fill="#5f625b"/>                     <!-- потолок (тёмный) -->
+  <polygon points="0,0 340,120 340,470 0,720" fill="#a2a59d"/>                       <!-- левая стена -->
+  <polygon points="1280,0 1280,720 940,470 940,120" fill="#9a9d95"/>                 <!-- правая стена -->
+  <rect x="340" y="120" width="600" height="350" fill="#c9ccc3"/>                    <!-- задняя стена (светлая) -->
+  <polygon points="340,470 940,470 1280,720 0,720" fill="#b0b3ab"/>                  <!-- пол -->
 
-  <!-- brick courses on the back wall (staggered joints) -->
-  <g stroke="#2e2b26" stroke-width="2" opacity="0.6" filter="url(#ink)">
-    <line x1="340" y1="163" x2="940" y2="163"/><line x1="340" y1="206" x2="940" y2="206"/>
-    <line x1="340" y1="249" x2="940" y2="249"/><line x1="340" y1="292" x2="940" y2="292"/>
-    <line x1="340" y1="335" x2="940" y2="335"/><line x1="340" y1="378" x2="940" y2="378"/>
-    <line x1="340" y1="421" x2="940" y2="421"/>
-    <line x1="420" y1="120" x2="420" y2="163"/><line x1="560" y1="120" x2="560" y2="163"/><line x1="700" y1="120" x2="700" y2="163"/><line x1="840" y1="120" x2="840" y2="163"/>
-    <line x1="490" y1="163" x2="490" y2="206"/><line x1="630" y1="163" x2="630" y2="206"/><line x1="770" y1="163" x2="770" y2="206"/><line x1="900" y1="163" x2="900" y2="206"/>
-    <line x1="420" y1="206" x2="420" y2="249"/><line x1="560" y1="206" x2="560" y2="249"/><line x1="700" y1="206" x2="700" y2="249"/><line x1="840" y1="206" x2="840" y2="249"/>
-    <line x1="490" y1="249" x2="490" y2="292"/><line x1="630" y1="249" x2="630" y2="292"/><line x1="770" y1="249" x2="770" y2="292"/><line x1="900" y1="249" x2="900" y2="292"/>
-    <line x1="420" y1="292" x2="420" y2="335"/><line x1="560" y1="292" x2="560" y2="335"/><line x1="700" y1="292" x2="700" y2="335"/><line x1="840" y1="292" x2="840" y2="335"/>
-    <line x1="490" y1="335" x2="490" y2="378"/><line x1="630" y1="335" x2="630" y2="378"/><line x1="770" y1="335" x2="770" y2="378"/><line x1="900" y1="335" x2="900" y2="378"/>
-    <line x1="420" y1="378" x2="420" y2="421"/><line x1="560" y1="378" x2="560" y2="421"/><line x1="700" y1="378" x2="700" y2="421"/><line x1="840" y1="378" x2="840" y2="421"/>
-  </g>
-  <!-- rust / blood-brown stains bleeding down the brick -->
-  <g fill="#5c2e26" opacity="0.4" filter="url(#ink)">
-    <path d="M470 150 Q500 210 486 300 Q456 240 460 190 Z"/>
-    <path d="M820 210 Q852 270 838 360 Q808 300 812 250 Z"/>
-    <path d="M640 300 Q664 340 652 420 Q628 370 632 330 Z"/>
-  </g>
-  <!-- floor perspective seams to VP -->
-  <g stroke="#181712" stroke-width="1.6" opacity="0.5">
-    <line x1="0" y1="720" x2="470" y2="472"/>
-    <line x1="1280" y1="720" x2="820" y2="472"/>
-    <line x1="380" y1="640" x2="560" y2="474"/>
-    <line x1="960" y1="640" x2="760" y2="474"/>
+  <!-- ===== жирный чёрный контур короба комнаты ===== -->
+  <g fill="none" stroke="#141410" stroke-width="5" filter="url(#ink)" stroke-linejoin="round">
+    <polyline points="0,0 340,120 340,470 0,720"/>
+    <polyline points="1280,0 940,120 940,470 1280,720"/>
+    <rect x="340" y="120" width="600" height="350"/>
   </g>
 
-  <!-- barred window on the back wall (upper, slightly left of centre like the ref) -->
+  <!-- луч из окна: один плоский полигон, жёсткие грани ===== -->
+  <polygon points="470,150 600,150 800,470 400,470" fill="#f2f4ec" opacity="0.28"/>
+
+  <!-- ===== окно с решёткой: максимальный контраст ===== -->
   <g filter="url(#ink)">
-    <rect x="470" y="150" width="130" height="104" fill="#12140f" stroke="#0b0d09" stroke-width="6"/>
-    <rect x="480" y="160" width="110" height="84" fill="#20241d"/>
-    <rect x="460" y="140" width="150" height="124" fill="none" stroke="#39332c" stroke-width="7"/>
-    <g stroke="#0d0f0b" stroke-width="7">
-      <line x1="497" y1="142" x2="497" y2="262"/>
-      <line x1="524" y1="142" x2="524" y2="262"/>
-      <line x1="551" y1="142" x2="551" y2="262"/>
-      <line x1="578" y1="142" x2="578" y2="262"/>
-      <line x1="462" y1="182" x2="608" y2="182"/>
-      <line x1="462" y1="222" x2="608" y2="222"/>
+    <rect x="470" y="150" width="130" height="104" fill="#e8ebe2" stroke="#141410" stroke-width="7"/>
+    <g stroke="#141410" stroke-width="9" stroke-linecap="square">
+      <line x1="503" y1="150" x2="503" y2="254"/>
+      <line x1="535" y1="150" x2="535" y2="254"/>
+      <line x1="567" y1="150" x2="567" y2="254"/>
+      <line x1="470" y1="187" x2="600" y2="187"/>
+      <line x1="470" y1="220" x2="600" y2="220"/>
     </g>
+    <rect x="458" y="138" width="154" height="128" fill="none" stroke="#141410" stroke-width="5"/>
   </g>
-  <!-- hard light shaft through the bars -->
-  <polygon points="470,154 600,154 760,470 380,470" fill="url(#beam)" opacity="0.5"/>
 
-  <!-- ============ single steel bed against the LEFT wall (side view, readable) ============ -->
+  <!-- ===== сплошная чёрная тень под нарой ===== -->
+  <polygon points="250,548 640,566 690,606 232,588" fill="#17170f" opacity="0.8" filter="url(#inkHeavy)"/>
+
+  <!-- ===== одиночная нара у левой стены: чёрная тушь, плоские заливки ===== -->
   <g filter="url(#ink)">
-    <!-- floor shadow -->
-    <polygon points="250,548 640,570 690,606 232,588" fill="#000000" opacity="0.4"/>
-
-    <!-- HEAD board (window/back end, left): vertical bars -->
-    <g stroke="#3f443f" stroke-width="7" fill="none" stroke-linecap="round">
-      <path d="M296 452 L300 508"/><path d="M320 448 L322 512"/><path d="M344 448 L344 514"/>
-      <path d="M296 452 L344 448"/>
+    <!-- изголовье (у окна): жирные вертикальные прутья -->
+    <g stroke="#141410" stroke-width="8" fill="none" stroke-linecap="round">
+      <path d="M296 452 L300 508"/><path d="M322 448 L324 512"/><path d="M348 448 L348 514"/>
+      <path d="M296 452 L348 448"/>
     </g>
-    <!-- FOOT board (near/front end, right): shorter vertical bars -->
-    <g stroke="#3f443f" stroke-width="8" fill="none" stroke-linecap="round">
-      <path d="M600 500 L606 566"/><path d="M636 502 L644 570"/>
-      <path d="M600 500 L636 502"/>
+    <!-- изножье (к камере) -->
+    <g stroke="#141410" stroke-width="9" fill="none" stroke-linecap="round">
+      <path d="M600 500 L606 566"/><path d="M638 502 L646 570"/>
+      <path d="M600 500 L638 502"/>
     </g>
-    <!-- frame side rail + legs -->
-    <path d="M310 520 L636 540" stroke="#33383300" stroke-width="0"/>
-    <polygon points="300,516 620,536 620,548 300,528" fill="#2f342f" stroke="#12140f" stroke-width="2.6"/>
-    <line x1="322" y1="540" x2="316" y2="574" stroke="#2b302b" stroke-width="7"/>
-    <line x1="600" y1="548" x2="606" y2="582" stroke="#2b302b" stroke-width="7"/>
-
-    <!-- mattress (thin, sagging), head end left -->
-    <polygon points="300,500 620,520 620,540 300,522" fill="url(#matt)" stroke="#2b302b" stroke-width="3"/>
-    <polygon points="300,500 620,520 620,528 300,510" fill="#9aa094"/>
-    <!-- ticking stripes -->
-    <g stroke="#5f645d" stroke-width="2.2" opacity="0.7">
-      <line x1="380" y1="506" x2="380" y2="528"/><line x1="450" y1="510" x2="450" y2="532"/>
-      <line x1="520" y1="514" x2="520" y2="536"/><line x1="580" y1="517" x2="580" y2="539"/>
+    <!-- рама + ножки -->
+    <polygon points="300,514 620,534 620,548 300,528" fill="#2b2b24" stroke="#141410" stroke-width="4"/>
+    <line x1="322" y1="540" x2="316" y2="576" stroke="#141410" stroke-width="8"/>
+    <line x1="600" y1="548" x2="606" y2="584" stroke="#141410" stroke-width="8"/>
+    <!-- матрас: плоская светлая форма с жирным контуром -->
+    <polygon points="300,500 620,520 620,540 300,522" fill="#e4e7de" stroke="#141410" stroke-width="4"/>
+    <!-- складки — короткие чёрные штрихи -->
+    <g stroke="#141410" stroke-width="2.4" opacity="0.75">
+      <line x1="382" y1="506" x2="382" y2="526"/><line x1="452" y1="510" x2="452" y2="530"/>
+      <line x1="522" y1="514" x2="522" y2="534"/>
     </g>
-    <!-- pillow at the head (window) end -->
-    <polygon points="304,492 372,486 388,502 320,510" fill="#c7ccc0" stroke="#2b302b" stroke-width="2.6"/>
-    <path d="M312 496 Q344 490 380 495" fill="none" stroke="#8a9086" stroke-width="1.8"/>
-    <!-- rumpled blanket toward the foot -->
-    <path d="M470 512 Q520 500 590 512 Q556 522 590 528 L470 528 Z" fill="#aeb4a8" stroke="#2b302b" stroke-width="2.4"/>
+    <!-- подушка (у окна): белая с контуром -->
+    <polygon points="304,492 372,486 388,502 320,510" fill="#f4f6ef" stroke="#141410" stroke-width="4"/>
+    <path d="M312 496 Q344 490 380 495" fill="none" stroke="#141410" stroke-width="2.2" opacity="0.6"/>
+    <!-- смятое одеяло к изножью: плоская форма, чёрный контур -->
+    <path d="M470 512 Q520 500 590 512 Q556 522 590 528 L470 528 Z" fill="#c3c6bd" stroke="#141410" stroke-width="3.4"/>
   </g>
 
-  <!-- ============ steel toilet in the right-back corner ============ -->
+  <!-- ===== унитаз в дальнем углу: графичная тушь ===== -->
   <g filter="url(#ink)">
-    <polygon points="978,470 1080,470 1096,556 962,556" fill="#000000" opacity="0.3"/>
-    <!-- tank against the wall -->
-    <polygon points="986,406 1072,406 1072,452 986,452" fill="#4a4f4b" stroke="#181a15" stroke-width="3"/>
-    <!-- bowl -->
-    <path d="M992 452 Q1030 460 1066 452 L1058 520 Q1030 534 1000 520 Z" fill="#54595400" />
-    <path d="M992 452 Q1030 460 1066 452 L1058 520 Q1030 534 1000 520 Z" fill="#565b56" stroke="#181a15" stroke-width="3"/>
-    <ellipse cx="1029" cy="470" rx="34" ry="11" fill="#20241d" stroke="#181a15" stroke-width="3"/>
-    <ellipse cx="1029" cy="470" rx="20" ry="6" fill="#0e100c"/>
+    <polygon points="978,470 1080,470 1096,556 962,556" fill="#17170f" opacity="0.7" filter="url(#inkHeavy)"/>
+    <polygon points="986,406 1072,406 1072,452 986,452" fill="#bfc2ba" stroke="#141410" stroke-width="4"/>
+    <path d="M992 452 Q1030 460 1066 452 L1058 520 Q1030 534 1000 520 Z" fill="#cdd0c8" stroke="#141410" stroke-width="4"/>
+    <ellipse cx="1029" cy="470" rx="34" ry="11" fill="#e4e7de" stroke="#141410" stroke-width="4"/>
+    <ellipse cx="1029" cy="470" rx="19" ry="6" fill="#141410"/>
   </g>
 
-  <!-- ============ graffiti / scratches (дьявол в мелочах) ============ -->
-  <g filter="url(#ink)" fill="#7d837a99" font-family="DejaVu Sans" opacity="0.85">
-    <text x="700" y="300" font-size="15" font-style="italic" transform="rotate(-4 700 300)">здесь сидел твой здравый смысл</text>
-    <text x="640" y="150" font-size="11" transform="rotate(2 640 150)">выхода нет. вход — был</text>
+  <!-- ===== надписи-царапины (акценты, не текстура) ===== -->
+  <g filter="url(#ink)" fill="#141410" font-family="DejaVu Sans" opacity="0.72">
+    <text x="700" y="300" font-size="16" font-style="italic" transform="rotate(-4 700 300)">здесь сидел твой здравый смысл</text>
     <text x="360" y="300" font-size="13" transform="rotate(-3 360 300)">начальник — не прав</text>
     <text x="720" y="430" font-size="12" transform="rotate(3 720 430)">думать вредно, но приятно</text>
+    <text x="640" y="150" font-size="11" transform="rotate(2 640 150)">выхода нет. вход — был</text>
   </g>
-  <!-- tally marks by the head of the bed -->
-  <g stroke="#8a9086" stroke-width="2" opacity="0.8" filter="url(#ink)">
-    <path d="M372 330 v24 M382 330 v24 M392 330 v24 M402 330 v24 M366 338 l42 12"/>
-    <path d="M372 366 v22 M382 366 v22 M392 366 v22"/>
+  <!-- зарубки у изголовья -->
+  <g stroke="#141410" stroke-width="2.6" opacity="0.8" filter="url(#ink)">
+    <path d="M372 330 v26 M382 330 v26 M392 330 v26 M402 330 v26 M366 338 l42 13"/>
+    <path d="M372 366 v24 M382 366 v24 M392 366 v24"/>
   </g>
-  <!-- crude scratched star + sun near the window -->
-  <g stroke="#8a9086" stroke-width="1.8" fill="none" opacity="0.7" filter="url(#ink)">
-    <path d="M690 200 l6 14 l15 1 l-11 10 l4 15 l-14 -8 l-14 8 l4 -15 l-11 -10 l15 -1 z"/>
-    <circle cx="800" cy="180" r="11"/>
-    <path d="M800 163 v-6 M800 197 v6 M783 180 h-6 M817 180 h6"/>
+  <!-- нацарапанная звезда у окна -->
+  <g stroke="#141410" stroke-width="2.2" fill="none" opacity="0.7" filter="url(#ink)">
+    <path d="M690 200 l6 15 l16 1 l-12 11 l4 16 l-14 -9 l-14 9 l4 -16 l-12 -11 l16 -1 z"/>
   </g>
 
-  <!-- pipe along the ceiling corner -->
-  <path d="M340 122 Q640 108 940 122" fill="none" stroke="#181712" stroke-width="8" filter="url(#ink)"/>
+  <!-- труба по верхнему углу — жирная чёрная линия -->
+  <path d="M340 122 Q640 108 940 122" fill="none" stroke="#141410" stroke-width="8" filter="url(#ink)"/>
 </svg>

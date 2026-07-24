@@ -1,26 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
   <defs>
-    <radialGradient id="paper" cx="50%" cy="42%" r="75%">
-      <stop offset="0%" stop-color="#efe9d8"/>
-      <stop offset="70%" stop-color="#e2dac6"/>
-      <stop offset="100%" stop-color="#bdb49c"/>
-    </radialGradient>
-    <linearGradient id="spine" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#8a8168" stop-opacity="0.55"/>
-      <stop offset="100%" stop-color="#8a8168" stop-opacity="0"/>
-    </linearGradient>
     <filter id="ink" x="-5%" y="-5%" width="110%" height="110%">
       <feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="1" seed="6" result="n"/>
       <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>
 
-  <!-- desk around the book -->
-  <rect width="1280" height="720" fill="#3a3f38"/>
-  <!-- open book: left page (shadowed) + right page (title) -->
-  <path d="M80 80 Q360 50 620 84 L620 660 Q360 626 80 640 Z" fill="#d6cfba"/>
-  <path d="M660 84 Q920 50 1200 80 L1200 640 Q920 626 660 660 Z" fill="url(#paper)"/>
-  <rect x="620" y="50" width="40" height="616" fill="url(#spine)"/>
+  <!-- стол-фон: плоская тёмная заливка (графика, без градиентов) -->
+  <rect width="1280" height="720" fill="#2b2f2a"/>
+  <!-- открытая книга: левая страница + правая (титул) — плоские заливки -->
+  <path d="M80 80 Q360 50 620 84 L620 660 Q360 626 80 640 Z" fill="#d0c9b3"/>
+  <path d="M660 84 Q920 50 1200 80 L1200 640 Q920 626 660 660 Z" fill="#e4ddc8"/>
+  <rect x="620" y="50" width="40" height="616" fill="#8a8168" opacity="0.4"/>
+  <!-- жирный чёрный контур книги -->
+  <g fill="none" stroke="#141410" stroke-width="4" filter="url(#ink)" stroke-linejoin="round">
+    <path d="M80 80 Q360 50 620 84 L620 660 Q360 626 80 640 Z"/>
+    <path d="M660 84 Q920 50 1200 80 L1200 640 Q920 626 660 660 Z"/>
+  </g>
   <!-- page edges -->
   <g stroke="#9c9378" stroke-width="2" fill="none" opacity="0.8">
     <path d="M84 646 Q360 632 616 664"/>

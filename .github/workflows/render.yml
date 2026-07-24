@@ -12,6 +12,12 @@ on:
 permissions:
   contents: write
 
+# Только один прогон на ветку: новый push отменяет предыдущий незавершённый
+# (не плодим гонки на git-коммите видео и не жжём раннеры).
+concurrency:
+  group: render-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   render:
     runs-on: ubuntu-latest

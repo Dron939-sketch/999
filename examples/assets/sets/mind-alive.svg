@@ -1,20 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
   <defs>
-    <radialGradient id="pp" cx="50%" cy="45%" r="75%">
-      <stop offset="0%" stop-color="#efe9d8"/>
-      <stop offset="70%" stop-color="#e2dac6"/>
-      <stop offset="100%" stop-color="#b3aa92"/>
-    </radialGradient>
     <filter id="ink" x="-5%" y="-5%" width="110%" height="110%">
       <feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="1" seed="6" result="n"/>
       <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>
-  <rect width="1280" height="720" fill="url(#pp)"/>
-  <!-- huge head profile, now alive -->
+  <!-- плоское светлое поле (бумага), без градиента -->
+  <rect width="1280" height="720" fill="#d4d7cf"/>
+  <!-- огромный профиль головы, ожил — сплошной чёрный -->
   <g filter="url(#ink)">
     <path d="M560 640 Q380 620 360 460 Q345 330 430 250 Q500 180 610 186 Q740 194 800 290 Q840 360 816 460 Q856 490 842 528 Q830 552 800 550 Q806 600 756 606 Q744 640 690 634 Z"
-          fill="#181b17"/>
+          fill="#141410"/>
     <!-- chip socket inside the head (light) -->
     <rect x="500" y="380" width="150" height="110" rx="10" fill="#e9e2cd"/>
     <g stroke="#e9e2cd" stroke-width="8">
@@ -25,8 +21,8 @@
       <path d="M520 412 h96 M520 440 h96 M520 468 h60"/>
     </g>
     <!-- download arrow -->
-    <path d="M575 210 v76 M545 258 l30 34 l30 -34" fill="none" stroke="#4a412f" stroke-width="12"/>
+    <path d="M575 210 v76 M545 258 l30 34 l30 -34" fill="none" stroke="#141410" stroke-width="12"/>
   </g>
   <!-- caption -->
-  <text x="640" y="690" font-size="30" fill="#3a3122" text-anchor="middle" font-family="DejaVu Serif" font-style="italic">прошивка ставится без твоего согласия</text>
+  <text x="640" y="690" font-size="30" fill="#141410" text-anchor="middle" font-family="DejaVu Serif" font-style="italic">прошивка ставится без твоего согласия</text>
 </svg>
