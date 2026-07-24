@@ -234,6 +234,7 @@ fn parse_action(pair: Pair) -> Result<ActionStmt, AnimError> {
         Rule::move_action => parse_move_action(inner),
         Rule::pose_action => parse_pose_action(inner),
         Rule::speak_action => parse_speak_action(inner),
+        Rule::lips_action => parse_lips_action(inner),
         Rule::show_action => parse_show_action(inner),
         Rule::hide_action => parse_hide_action(inner),
         Rule::enter_action => parse_enter_action(inner),
@@ -276,6 +277,19 @@ fn parse_speak_action(pair: Pair) -> Result<ActionStmt, AnimError> {
     let duration = parse_duration(inner.next().unwrap());
 
     Ok(ActionStmt::Speak { entity, duration })
+}
+
+fn parse_lips_action(pair: Pair) -> Result<ActionStmt, AnimError> {
+    let mut inner = pair.into_inner();
+    let entity = inner.next().unwrap().as_str().to_string();
+    let pose = parse_string_literal(inner.next().unwrap());
+    let duration = parse_duration(inner.next().unwrap());
+
+    Ok(ActionStmt::Lips {
+        entity,
+        pose,
+        duration,
+    })
 }
 
 fn parse_show_action(pair: Pair) -> Result<ActionStmt, AnimError> {

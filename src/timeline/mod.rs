@@ -260,6 +260,22 @@ impl TimelineCompiler {
                 });
                 self.time = end;
             }
+            ActionStmt::Lips {
+                entity,
+                pose,
+                duration,
+            } => {
+                // One overlay mouth cel held for the duration. Overlay merges
+                // onto the held body pose, so a lying/gesturing character keeps
+                // its posture while the mouth follows the real audio envelope.
+                self.pose_events.push(PoseEvent {
+                    time: self.time,
+                    entity: entity.clone(),
+                    pose: pose.clone(),
+                    overlay: true,
+                });
+                self.time += duration.as_secs();
+            }
             ActionStmt::Show {
                 entity,
                 duration,

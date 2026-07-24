@@ -40,13 +40,16 @@ scene "cell-hook" (duration: 22s, set: cell) {
     // VO-1 + медленный наезд (кино): «Ты когда-нибудь просыпался с чувством,
     // что живёшь не свою жизнь?»
     camera medium freeman
+    //lip 1
     freeman speaks for 3.2s
     // VO-2: «Твои мысли. Твои "так правильно". Тебе их выдали. Как робу — по размеру.»
+    //lip 2
     freeman speaks for 4s
     wait 0.6s
 
     // VO-3: «Эта камера — не наказание. Это твой здравый смысл.»
     camera medium freeman
+    //lip 3
     freeman speaks for 3.4s
 
     // САДИТСЯ на наре (буквально «признай, что сидишь») — корпус поднимается из
@@ -59,6 +62,7 @@ scene "cell-hook" (duration: 22s, set: cell) {
     camera medium freeman
     wait 0.3s
     // VO-4: «Хочешь выйти? Сначала признай, что сидишь.»
+    //lip 4
     freeman speaks for 2.8s
     freeman pose "point"
     wait 1s
@@ -97,6 +101,7 @@ scene "alive" (duration: 18s, set: mind) {
             // VO-7: «Пока ты читаешь эту фразу — прошивка работает.»
             freeman pose "point"
             wait 0.8s
+            //lip 7
             freeman speaks for 3s
         }
     }
@@ -104,12 +109,14 @@ scene "alive" (duration: 18s, set: mind) {
     // VO-8: «Мы разберём её на детали. Что твоё. Что вшитое.»
     freeman pose "think"
     wait 0.6s
+    //lip 8
     freeman speaks for 3.4s
 
     // VO-9: «И перепишем. Строчка за строчкой.»
     camera close-up freeman
     freeman pose "stern"
     wait 0.5s
+    //lip 9
     freeman speaks for 2.6s
 
     // финал: сверхкруп, гротескный оскал в упор (панч в стиле Фримена), затем взгляд

@@ -174,6 +174,14 @@ pub enum ActionStmt {
         entity: String,
         duration: Duration,
     },
+    /// `freeman lips "gab" for 0.14s` — set an overlay mouth cel for the
+    /// duration (advances time). Emitted by prep_lipsync from the audio
+    /// envelope for amplitude-accurate lipsync; overlay keeps the body pose.
+    Lips {
+        entity: String,
+        pose: String,
+        duration: Duration,
+    },
     Show {
         entity: String,
         duration: Option<Duration>,

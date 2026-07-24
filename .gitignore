@@ -5,3 +5,6 @@
 !videos/*.mp4
 output/
 __pycache__/
+
+# сгенерированные препроцессором липсинка сцены
+*.lipsynced.anim

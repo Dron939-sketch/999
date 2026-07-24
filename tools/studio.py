@@ -82,9 +82,9 @@ def step_images(prod, out_dir):
             log(f"  [картинки] не удалось сгенерить {img['out']}: {e} — пропуск.")
 
 
-def step_render(prod, engine, out_mp4):
+def step_render(src_anim, engine, out_mp4):
     """Немой рендер .anim → mp4."""
-    src = ROOT / prod["anim"]
+    src = Path(src_anim)
     if not src.exists():
         raise FileNotFoundError(f"нет сценария: {src}")
     out_mp4.parent.mkdir(parents=True, exist_ok=True)
@@ -92,8 +92,8 @@ def step_render(prod, engine, out_mp4):
     return out_mp4
 
 
-def step_voice(prod, out_voice):
-    """Озвучка VO-сценария → mp3 (Fish Audio). Возвращает путь или None."""
+def step_voice(prod, out_voice, parts_dir):
+    """Озвучка VO-сценария → mp3 + реплики по файлам (vo-<N>.mp3) для липсинка."""
     vo = prod.get("vo")
     if not vo:
         log("  [озвучка] VO-сценарий не задан — немой ролик.")
@@ -106,15 +106,31 @@ def step_voice(prod, out_voice):
     if not vo_path.exists():
         log(f"  [озвучка] нет VO-файла: {vo} — пропуск.")
         return None
-    # Мягко: сбой озвучки (недоступен Frederick, не тот токен, пустая реплика)
-    # НЕ рушит весь завод — просто отдаём немой ролик и логируем причину.
+    # Мягко: сбой озвучки НЕ рушит завод — просто немой ролик + лог причины.
     try:
-        run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path), "-o", str(out_voice)])
+        run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
+             "-o", str(out_voice), "--parts-dir", str(parts_dir)])
         return out_voice
     except subprocess.CalledProcessError as e:
         log(f"  [озвучка] не удалась ({e}) — оставляю немой ролик. "
             "Проверь FREDERICK_ADMIN_TOKEN и /api/tts/video/health.")
         return None
+
+
+def step_prep_lipsync(prod, parts_dir):
+    """Впаять липсинк по звуку в сценарий (или флэп-фолбэк). Возвращает .anim для рендера.
+
+    Пишем рядом с оригиналом (относительные import'ы разрешаются от папки .anim).
+    """
+    src = ROOT / prod["anim"]
+    prepped = src.with_name(f".{src.stem}.lipsynced.anim")
+    try:
+        run([sys.executable, str(TOOLS / "prep_lipsync.py"), str(src),
+             "--parts", str(parts_dir), "-o", str(prepped)])
+        return prepped
+    except subprocess.CalledProcessError as e:
+        log(f"  [липсинк] препроцессор не сработал ({e}) — рендерю исходный сценарий.")
+        return src
 
 
 def step_mux(prod, video_mp4, voice_mp3, out_final):
@@ -140,10 +156,14 @@ def build_one(prod, engine, videos_dir):
     video_mp4 = videos_dir / f"{pid}.mp4"
     voice_mp3 = videos_dir / f"{pid}-voice.mp3"
     final_mp4 = videos_dir / f"{pid}-final.mp4"
+    parts_dir = videos_dir / f"{pid}-parts"
 
+    # Порядок: картинки → озвучка (реплики по файлам) → липсинк по звуку в сцену →
+    # рендер (уже с амплитудным ртом) → сведение. Рот совпадает со звуком.
     step_images(prod, videos_dir)
-    step_render(prod, engine, video_mp4)
-    voice = step_voice(prod, voice_mp3)
+    voice = step_voice(prod, voice_mp3, parts_dir)
+    src_anim = step_prep_lipsync(prod, parts_dir)
+    step_render(src_anim, engine, video_mp4)
     step_mux(prod, video_mp4, voice, final_mp4)
 
     made = []

@@ -145,6 +145,7 @@ def main(argv):
     ap = argparse.ArgumentParser(description="Озвучка VO-сценария через Fish Audio")
     ap.add_argument("script", help="Путь к *-VO.md со сценарием")
     ap.add_argument("-o", "--output", required=True, help="Куда писать mp3")
+    ap.add_argument("--parts-dir", help="Куда сохранить mp3 по репликам (vo-<N>.mp3) для липсинка")
     args = ap.parse_args(argv)
 
     use_frederick = bool(FREDERICK_TOKEN)
@@ -159,11 +160,17 @@ def main(argv):
     src = f"Frederick ({FREDERICK_BASE})" if use_frederick else f"Fish напрямую (голос {voice_id or 'по умолчанию'})"
     print(f"Реплик: {len(rows)}; озвучка: {src}")
 
+    if args.parts_dir:
+        os.makedirs(args.parts_dir, exist_ok=True)
     replicas = []
-    for start, text in rows:
+    for i, (start, text) in enumerate(rows, start=1):
         print(f"  {start:6.1f}s  {text[:60]}")
         audio = tts_via_frederick(text) if use_frederick else tts_fish_audio(text, api_key, voice_id)
         replicas.append((start, audio))
+        # Сохранить реплику отдельным файлом для липсинка (prep_lipsync).
+        if args.parts_dir:
+            with open(os.path.join(args.parts_dir, f"vo-{i}.mp3"), "wb") as f:
+                f.write(audio)
 
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
     assemble_track(replicas, args.output)
