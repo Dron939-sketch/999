@@ -92,20 +92,41 @@ def tts_fish_audio(text, api_key, voice_id=None):
         return resp.read()
 
 
-def assemble_track(replicas, out_path):
-    """Собирает дорожку: каждая реплика на своём таймкоде, между — тишина."""
+def _mp3_duration(path):
+    """Длительность mp3 в секундах через ffprobe (0.0 при ошибке)."""
+    try:
+        out = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "csv=p=0", path],
+            capture_output=True, text=True, timeout=30)
+        return float(out.stdout.strip())
+    except Exception:
+        return 0.0
+
+
+def assemble_track(replicas, out_path, gap=0.15):
+    """Собирает дубль: каждая реплика на своём таймкоде, но БЕЗ наложения —
+    если озвучка длиннее зазора до следующей, следующая сдвигается вправо
+    (стартует не раньше, чем предыдущая закончилась + короткая пауза)."""
     if not shutil.which("ffmpeg"):
         sys.exit("ffmpeg не найден в PATH.")
     with tempfile.TemporaryDirectory() as td:
         inputs = []
         filters = []
         amix = []
+        cursor = 0.0  # момент, раньше которого следующая реплика начаться не может
         for i, (start, mp3_bytes) in enumerate(replicas):
             p = os.path.join(td, f"r{i}.mp3")
             with open(p, "wb") as f:
                 f.write(mp3_bytes)
+            dur = _mp3_duration(p)
+            place = max(start, cursor)          # не раньше конца предыдущей
+            if place > start + 0.05:
+                print(f"  ⚠ реплика {i+1} сдвинута {start:.1f}s→{place:.1f}s "
+                      f"(предыдущая длиннее зазора) — раздвинь таймкоды в VO")
+            cursor = place + dur + gap
             inputs += ["-i", p]
-            delay_ms = int(start * 1000)
+            delay_ms = int(place * 1000)
             filters.append(f"[{i}:a]adelay={delay_ms}|{delay_ms}[a{i}]")
             amix.append(f"[a{i}]")
         filter_complex = (
