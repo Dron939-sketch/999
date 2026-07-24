@@ -29,8 +29,8 @@ config {
 
 // === СЦЕНА 1: ХУК В КАМЕРЕ (22 с) ===
 scene "cell-hook" (duration: 22s, set: cell) {
-    place freeman at (0.775, 0.71) facing front
-    freeman rotates -86
+    place freeman at (0.35, 0.715) facing front
+    freeman rotates -87
     freeman pose "lying"
 
     // 0–2.5с: тишина, капля (SFX), общий план камеры
@@ -49,9 +49,9 @@ scene "cell-hook" (duration: 22s, set: cell) {
     camera medium freeman
     freeman speaks for 3.4s
 
-    // встал у стола (джамп-кат в стиле Фримена)
+    // встал у нары (джамп-кат в стиле Фримена — фронтально в камеру)
     freeman rotates 0
-    freeman moves-to (0.40, 0.60) over 0.1s
+    freeman moves-to (0.30, 0.60) over 0.1s
     freeman pose "stern"
     camera medium freeman
     wait 0.8s

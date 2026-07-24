@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - 'claude/**'      # пуши рабочей ветки тоже запускают завод
   # Ручной запуск на любой ветке: Actions → Render Videos → Run workflow
   workflow_dispatch:
 
@@ -34,47 +35,16 @@ jobs:
       - name: Build engine
         run: cargo build --release
 
-      - name: Render videos
-        run: |
-          mkdir -p videos
-          # список: "источник.anim -> videos/имя.mp4"
-          RENDERS=(
-            "examples/lektorij/pereproshivka-intro.anim videos/pereproshivka-intro.mp4"
-            "examples/freeman-monologue.anim videos/freeman-monologue.mp4"
-            "examples/lektorij/fredi-expressions-demo.anim videos/fredi-expressions.mp4"
-            "examples/lektorij/lekciya-2-frejd-psihodinamika.anim videos/lekciya-2-frejd.mp4"
-          )
-          for pair in "${RENDERS[@]}"; do
-            src="${pair% *}"; dst="${pair#* }"
-            echo "=== render: $src -> $dst"
-            ./target/release/animdsl render "$src" -o "$dst"
-          done
-          ls -la videos/
-
-      - name: Generate voiceover (Fish Audio) + final mux
+      # Один завод: картинки → рендер → озвучка → сведение → videos/*.mp4(+mp3)
+      - name: Studio (render + voice + mux)
         env:
           FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
           FISH_AUDIO_VOICE_ID: ${{ secrets.FISH_AUDIO_VOICE_ID }}
+          IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
+          IMAGE_API_PROVIDER: ${{ secrets.IMAGE_API_PROVIDER }}
         run: |
-          if [ -z "$FISH_AUDIO_API_KEY" ]; then
-            echo "Секрет FISH_AUDIO_API_KEY не задан — шаг озвучки пропущен."
-            echo "Добавьте его: Settings → Secrets and variables → Actions."
-            exit 0
-          fi
-          # озвучка: "VO-сценарий -> videos/имя-voice.mp3 (+ финальный mp4)"
-          DUBS=(
-            "examples/lektorij/pereproshivka-intro-VO.md videos/pereproshivka-intro"
-          )
-          chmod +x tools/compose_video.sh
-          for pair in "${DUBS[@]}"; do
-            vo="${pair% *}"; base="${pair#* }"
-            echo "=== voice: $vo -> ${base}-voice.mp3"
-            python3 tools/voiceover.py "$vo" -o "${base}-voice.mp3"
-            if [ -f "${base}.mp4" ]; then
-              echo "=== mux: ${base}-final.mp4"
-              tools/compose_video.sh "${base}.mp4" "${base}-voice.mp3" "${base}-final.mp4"
-            fi
-          done
+          python3 tools/studio.py
+          echo "=== videos/ ==="
           ls -la videos/
 
       - name: Commit videos to the repo

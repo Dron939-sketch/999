@@ -1,0 +1,28 @@
+{
+  "_comment": "Манифест завода Лектория. Каждый продакшен → готовый ролик в videos/. Поля: id (имя файлов), anim (сценарий движка), vo (VO-сценарий для Fish Audio, опц.), title (титр, опц.), images (картинки для генерации Nano Banana, опц.). studio.py прогоняет: картинки → рендер → озвучка → сведение.",
+  "productions": [
+    {
+      "id": "pereproshivka-intro",
+      "desc": "Подводка к курсу «Перепрошивка»: камера-хук, книга, оживающая картинка",
+      "anim": "examples/lektorij/pereproshivka-intro.anim",
+      "vo": "examples/lektorij/pereproshivka-intro-VO.md",
+      "title": "Перепрошивка",
+      "images": []
+    },
+    {
+      "id": "freeman-monologue",
+      "desc": "Мистер Фримен: монолог в камеру (витрина стиля)",
+      "anim": "examples/freeman-monologue.anim"
+    },
+    {
+      "id": "fredi-expressions",
+      "desc": "Фреди: библиотека мимики",
+      "anim": "examples/lektorij/fredi-expressions-demo.anim"
+    },
+    {
+      "id": "lekciya-2-frejd",
+      "desc": "Пилот лекции (Фрейд, курс «Теории личности»)",
+      "anim": "examples/lektorij/lekciya-2-frejd-psihodinamika.anim"
+    }
+  ]
+}

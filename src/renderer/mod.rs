@@ -838,10 +838,17 @@ fn render_svg_to_pixmap(
     let ch = canvas_h as f64;
 
     let (base_scale_x, base_scale_y, px, py) = if is_background {
+        // Set fills the scene [0,1]×[0,1]; it must track the camera so that
+        // when the camera pans/zooms to a character, the location follows
+        // (otherwise the character floats off a detailed set). A flat uniform
+        // background looks identical either way, so this is safe for Freeman's
+        // white-field grammar and correct for detailed establishing shots.
         let sx = cw / svg_w;
         let sy = ch / svg_h;
-        let s = sx.max(sy);
-        (s, s, cw / 2.0, ch / 2.0)
+        let s = sx.max(sy) * camera.zoom;
+        let px = ((0.5 - camera.x) * camera.zoom + 0.5) * cw;
+        let py = ((0.5 - camera.y) * camera.zoom + 0.5) * ch;
+        (s, s, px, py)
     } else {
         let target_height = ch * 0.3;
         let base = target_height / svg_h;
