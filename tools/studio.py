@@ -133,17 +133,47 @@ def step_prep_lipsync(prod, parts_dir):
         return src
 
 
-def step_mux(prod, video_mp4, voice_mp3, out_final):
-    """Свести видео+голос → финальный mp4 (ffmpeg)."""
-    if voice_mp3 is None or not Path(voice_mp3).exists():
-        log("  [сведение] нет озвучки — финальный ролик = немой рендер.")
+def step_sfx(prod, video_mp4, out_sfx):
+    """Синтезировать SFX-дорожку по таблице из VO.md (длина = длине видео)."""
+    vo = prod.get("vo")
+    if not vo or not (ROOT / vo).exists() or not have_ffmpeg():
+        return None
+    try:
+        dur = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "csv=p=0", str(video_mp4)],
+            check=True, capture_output=True, text=True).stdout.strip()
+        run([sys.executable, str(TOOLS / "sfx.py"), str(ROOT / vo),
+             "-o", str(out_sfx), "--duration", dur])
+        return out_sfx if Path(out_sfx).exists() else None
+    except subprocess.CalledProcessError as e:
+        log(f"  [sfx] синтез не удался ({e}) — без звуковых эффектов.")
+        return None
+
+
+def step_mux(prod, video_mp4, voice_mp3, sfx_mp3, out_final):
+    """Свести видео + голос + SFX → финальный mp4 (ffmpeg)."""
+    have_voice = voice_mp3 is not None and Path(voice_mp3).exists()
+    have_sfx = sfx_mp3 is not None and Path(sfx_mp3).exists()
+    if not have_voice and not have_sfx:
+        log("  [сведение] нет ни озвучки, ни SFX — финальный ролик = немой рендер.")
         return None
     if not have_ffmpeg():
         log("  [сведение] ffmpeg не найден — сведение пропущено "
             "(в CI ffmpeg ставится; локально установите ffmpeg).")
         return None
+    # Голос + SFX премиксуются в одну дорожку (голос громче, SFX — подложка).
+    audio = voice_mp3 if have_voice else sfx_mp3
+    if have_voice and have_sfx:
+        mixed = Path(video_mp4).with_name(Path(video_mp4).stem + "-mix.mp3")
+        run(["ffmpeg", "-y", "-v", "error", "-i", str(voice_mp3), "-i", str(sfx_mp3),
+             "-filter_complex",
+             "[0]volume=1.0[v];[1]volume=0.75[s];"
+             "[v][s]amix=inputs=2:duration=longest:normalize=0",
+             "-b:a", "160k", str(mixed)])
+        audio = mixed
     cmd = ["bash", str(TOOLS / "compose_video.sh"),
-           str(video_mp4), str(voice_mp3), str(out_final)]
+           str(video_mp4), str(audio), str(out_final)]
     if prod.get("title"):
         cmd.append(prod["title"])
     run(cmd)
@@ -159,12 +189,13 @@ def build_one(prod, engine, videos_dir):
     parts_dir = videos_dir / f"{pid}-parts"
 
     # Порядок: картинки → озвучка (реплики по файлам) → липсинк по звуку в сцену →
-    # рендер (уже с амплитудным ртом) → сведение. Рот совпадает со звуком.
+    # рендер (уже с честным ртом) → SFX по тайм-кодам → сведение голос+SFX.
     step_images(prod, videos_dir)
     voice = step_voice(prod, voice_mp3, parts_dir)
     src_anim = step_prep_lipsync(prod, parts_dir)
     step_render(src_anim, engine, video_mp4)
-    step_mux(prod, video_mp4, voice, final_mp4)
+    sfx = step_sfx(prod, video_mp4, videos_dir / f"{pid}-sfx.mp3")
+    step_mux(prod, video_mp4, voice, sfx, final_mp4)
 
     made = []
     for p in (video_mp4, voice_mp3, final_mp4):
