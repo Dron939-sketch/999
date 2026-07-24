@@ -43,15 +43,23 @@ Workflow `.github/workflows/render.yml`:
    ставится на свой таймкод, между ними тишина → `<имя>-voice.mp3`;
 2. склеивает дубль с видео (`tools/compose_video.sh`) → `<имя>-final.mp4`.
 
+Озвучка идёт **через Frederick** (источник правды): его сервер синтезирует
+голосом Фреди (Fish) и кэширует mp3 у себя — **ключ Fish не хранится в этом
+репо**. Заводу нужен только общий токен.
+
 **Настройка (один раз):** Settings → Secrets and variables → Actions.
-Ключи хранятся ТОЛЬКО в секретах — никогда в коде/чате:
+Секреты хранятся ТОЛЬКО здесь — никогда в коде/чате:
 
 | Секрет | Для чего | Обяз. |
 |--------|----------|:-----:|
-| `FISH_AUDIO_API_KEY`  | озвучка (Fish Audio) | да, для звука |
-| `FISH_AUDIO_VOICE_ID` | reference_id голоса Фреди | желательно |
-| `IMAGE_API_KEY`       | генерация картинок (Nano Banana / провайдер) | опц. |
-| `IMAGE_API_PROVIDER`  | `gemini` (по умолч.) или `openai` | опц. |
+| `FREDERICK_ADMIN_TOKEN` | доступ к видео-озвучке Frederick (тот же `ADMIN_TOKEN`, что в Frederick) | да, для звука |
+| `FREDERICK_TTS_URL`     | база Frederick (по умолч. `https://ffred-ddd989.amvera.io`) | опц. |
+| `IMAGE_API_KEY`         | генерация картинок (Nano Banana / провайдер) | опц. |
+| `IMAGE_API_PROVIDER`    | `gemini` (по умолч.) или `openai` | опц. |
+| `FISH_AUDIO_API_KEY` / `FISH_AUDIO_VOICE_ID` | запасной путь: синтез Fish напрямую в заводе (если не через Frederick) | опц. |
+
+> В Frederick для этого должен быть задан `ADMIN_TOKEN` (и уже настроен Fish:
+> `FISH_AUDIO_API_KEY`/`FISH_AUDIO_VOICE_ID`). Эндпоинт: `POST /api/tts/video/say`.
 
 Как только ключи заданы — при следующем push в ветку завод сам озвучит и
 сведёт финальные ролики. Генерация картинок (`tools/image_gen.py`): пишу

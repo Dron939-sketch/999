@@ -38,6 +38,10 @@ jobs:
       # Один завод: картинки → рендер → озвучка → сведение → videos/*.mp4(+mp3)
       - name: Studio (render + voice + mux)
         env:
+          # Озвучка через Frederick (ключ Fish живёт на его сервере) — нужен только токен:
+          FREDERICK_ADMIN_TOKEN: ${{ secrets.FREDERICK_ADMIN_TOKEN }}
+          FREDERICK_TTS_URL: ${{ secrets.FREDERICK_TTS_URL }}
+          # ...либо прямой Fish (запасной путь), если Frederick не используем:
           FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
           FISH_AUDIO_VOICE_ID: ${{ secrets.FISH_AUDIO_VOICE_ID }}
           IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
@@ -51,6 +55,17 @@ jobs:
         run: |
           git config user.name "render-bot"
           git config user.email "actions@github.com"
+          # Предохранитель: GitHub жёстко отклоняет push файлов >100МБ. Битрейт
+          # закапан в кодировщике (~14МБ/52с), но на всякий случай не коммитим
+          # ничего тяжелее 95МБ — вместо падения пайплайна честно логируем.
+          for f in videos/*.mp4; do
+            [ -f "$f" ] || continue
+            sz=$(stat -c%s "$f")
+            if [ "$sz" -gt 99614720 ]; then
+              echo "ПРОПУСК (слишком большой, $((sz/1048576))МБ): $f — не коммичу."
+              rm -f "$f"
+            fi
+          done
           git add videos/*.mp4 videos/*.mp3 2>/dev/null || git add videos/*.mp4
           if git diff --cached --quiet; then
             echo "Видео не изменились — коммит не нужен."

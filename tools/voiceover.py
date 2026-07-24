@@ -30,6 +30,10 @@ import tempfile
 import urllib.request
 
 API_URL = "https://api.fish.audio/v1/tts"
+# Frederick — источник правды по озвучке (голос Фреди). Если задан токен, реплики
+# синтезирует он (ключ Fish не покидает сервер Frederick) и кэширует mp3 у себя.
+FREDERICK_BASE = os.environ.get("FREDERICK_TTS_URL", "https://ffred-ddd989.amvera.io").rstrip("/")
+FREDERICK_TOKEN = os.environ.get("FREDERICK_ADMIN_TOKEN", "")
 
 
 def parse_vo_table(md_path):
@@ -54,6 +58,18 @@ def parse_vo_table(md_path):
             if text:
                 rows.append((start, text))
     return rows
+
+
+def tts_via_frederick(text):
+    """Одна реплика → mp3-байты через Frederick (голос Фреди, кэш на сервере)."""
+    req = urllib.request.Request(
+        f"{FREDERICK_BASE}/api/tts/video/say",
+        data=json.dumps({"text": text}).encode("utf-8"),
+        headers={"Content-Type": "application/json", "X-Admin": FREDERICK_TOKEN},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=180) as resp:
+        return resp.read()
 
 
 def tts_fish_audio(text, api_key, voice_id=None):
@@ -108,20 +124,23 @@ def main(argv):
     ap.add_argument("-o", "--output", required=True, help="Куда писать mp3")
     args = ap.parse_args(argv)
 
+    use_frederick = bool(FREDERICK_TOKEN)
     api_key = os.environ.get("FISH_AUDIO_API_KEY")
-    if not api_key:
-        sys.exit("FISH_AUDIO_API_KEY не задан — пропускаю озвучку.")
+    if not use_frederick and not api_key:
+        sys.exit("Нет ни FREDERICK_ADMIN_TOKEN, ни FISH_AUDIO_API_KEY — пропускаю озвучку.")
     voice_id = os.environ.get("FISH_AUDIO_VOICE_ID")
 
     rows = parse_vo_table(args.script)
     if not rows:
         sys.exit(f"В {args.script} не найдено реплик VO-таблицы.")
-    print(f"Реплик: {len(rows)}; голос: {voice_id or 'по умолчанию'}")
+    src = f"Frederick ({FREDERICK_BASE})" if use_frederick else f"Fish напрямую (голос {voice_id or 'по умолчанию'})"
+    print(f"Реплик: {len(rows)}; озвучка: {src}")
 
     replicas = []
     for start, text in rows:
         print(f"  {start:6.1f}s  {text[:60]}")
-        replicas.append((start, tts_fish_audio(text, api_key, voice_id)))
+        audio = tts_via_frederick(text) if use_frederick else tts_fish_audio(text, api_key, voice_id)
+        replicas.append((start, audio))
 
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
     assemble_track(replicas, args.output)

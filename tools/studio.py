@@ -98,9 +98,9 @@ def step_voice(prod, out_voice):
     if not vo:
         log("  [озвучка] VO-сценарий не задан — немой ролик.")
         return None
-    if not os.environ.get("FISH_AUDIO_API_KEY"):
-        log("  [озвучка] FISH_AUDIO_API_KEY не задан — озвучка пропущена "
-            "(добавьте секрет в Settings → Secrets and variables → Actions).")
+    if not (os.environ.get("FREDERICK_ADMIN_TOKEN") or os.environ.get("FISH_AUDIO_API_KEY")):
+        log("  [озвучка] нет FREDERICK_ADMIN_TOKEN и FISH_AUDIO_API_KEY — озвучка "
+            "пропущена (добавьте секрет в Settings → Secrets and variables → Actions).")
         return None
     vo_path = ROOT / vo
     if not vo_path.exists():
@@ -166,7 +166,7 @@ def main(argv):
 
     log(f"Завод: {len(prods)} продакшен(ов); движок {engine}; "
         f"ffmpeg={'есть' if have_ffmpeg() else 'нет'}; "
-        f"озвучка={'вкл' if os.environ.get('FISH_AUDIO_API_KEY') else 'выкл'}; "
+        f"озвучка={'вкл' if (os.environ.get('FREDERICK_ADMIN_TOKEN') or os.environ.get('FISH_AUDIO_API_KEY')) else 'выкл'}; "
         f"картинки={'вкл' if os.environ.get('IMAGE_API_KEY') else 'выкл'}")
     for prod in prods:
         build_one(prod, engine, videos_dir)
