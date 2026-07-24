@@ -23,3 +23,23 @@ Workflow `.github/workflows/render.yml`:
 
 Добавить ролик в конвейер — дописать строку в список `RENDERS` в
 `.github/workflows/render.yml`.
+
+## Озвучка (Fish Audio) — приходит в эту же папку
+
+Если в секретах репозитория задан ключ Fish Audio, CI после рендера сам:
+1. генерит голос по VO-сценарию (`tools/voiceover.py`): каждая реплика
+   ставится на свой таймкод, между ними тишина → `<имя>-voice.mp3`;
+2. склеивает дубль с видео (`tools/compose_video.sh`) → `<имя>-final.mp4`.
+
+**Настройка (один раз):** Settings → Secrets and variables → Actions →
+- `FISH_AUDIO_API_KEY` — ключ API Fish Audio (обязателен);
+- `FISH_AUDIO_VOICE_ID` — reference_id голоса Фреди (желателен, иначе
+  голос по умолчанию).
+
+| Файл | Что это |
+|------|---------|
+| `pereproshivka-intro-voice.mp3` | Дубль озвучки подводки (реплики по таймкодам) |
+| `pereproshivka-intro-final.mp4` | Видео + голос, готовый ролик (без SFX) |
+
+SFX (капля, лязг и т.п.) добавляются в редакторе по таблице из
+`examples/lektorij/pereproshivka-intro-VO.md`.

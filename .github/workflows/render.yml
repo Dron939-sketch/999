@@ -51,15 +51,41 @@ jobs:
           done
           ls -la videos/
 
+      - name: Generate voiceover (Fish Audio) + final mux
+        env:
+          FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
+          FISH_AUDIO_VOICE_ID: ${{ secrets.FISH_AUDIO_VOICE_ID }}
+        run: |
+          if [ -z "$FISH_AUDIO_API_KEY" ]; then
+            echo "Секрет FISH_AUDIO_API_KEY не задан — шаг озвучки пропущен."
+            echo "Добавьте его: Settings → Secrets and variables → Actions."
+            exit 0
+          fi
+          # озвучка: "VO-сценарий -> videos/имя-voice.mp3 (+ финальный mp4)"
+          DUBS=(
+            "examples/lektorij/pereproshivka-intro-VO.md videos/pereproshivka-intro"
+          )
+          chmod +x tools/compose_video.sh
+          for pair in "${DUBS[@]}"; do
+            vo="${pair% *}"; base="${pair#* }"
+            echo "=== voice: $vo -> ${base}-voice.mp3"
+            python3 tools/voiceover.py "$vo" -o "${base}-voice.mp3"
+            if [ -f "${base}.mp4" ]; then
+              echo "=== mux: ${base}-final.mp4"
+              tools/compose_video.sh "${base}.mp4" "${base}-voice.mp3" "${base}-final.mp4"
+            fi
+          done
+          ls -la videos/
+
       - name: Commit videos to the repo
         run: |
           git config user.name "render-bot"
           git config user.email "actions@github.com"
-          git add videos/*.mp4
+          git add videos/*.mp4 videos/*.mp3 2>/dev/null || git add videos/*.mp4
           if git diff --cached --quiet; then
             echo "Видео не изменились — коммит не нужен."
             exit 0
           fi
-          git commit -m "CI: обновлены готовые видео в videos/ [skip ci]"
+          git commit -m "CI: обновлены готовые видео и озвучка в videos/ [skip ci]"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin HEAD:"${GITHUB_REF_NAME}"
