@@ -346,6 +346,15 @@ fn render_rigged_character(
     // Apply squash and stretch based on vertical velocity.
     apply_squash_stretch(&mut bone_states, velocity.1);
 
+    // While the character is speaking, the whole body talks — not just the mouth.
+    // Detect speech from the cluster of overlay flap events and layer a head nod
+    // + gentle hand beat on top. This is the biggest step away from "a puppet
+    // with a flapping mouth" toward Freeman's living delivery.
+    let speak = speaking_intensity(&events, pose_time);
+    if speak > 0.001 {
+        apply_speaking_motion(&mut bone_states, t, speak);
+    }
+
     // Compute the character's screen position.
     let cw = canvas_w as f64;
     let ch = canvas_h as f64;
@@ -642,6 +651,51 @@ fn ease_out_back(t: f64) -> f64 {
     const C3: f64 = C1 + 1.0;
     let u = t - 1.0;
     1.0 + C3 * u * u * u + C1 * u * u
+}
+
+/// How strongly the character is speaking at time `t` (0..1), inferred from the
+/// cluster of overlay mouth-flap events. Ramps smoothly at line boundaries so
+/// the talking body-motion fades in/out instead of snapping.
+fn speaking_intensity(events: &[&PoseEvent], t: f64) -> f64 {
+    let mut s = 0.0;
+    for e in events {
+        if !e.overlay {
+            continue;
+        }
+        let dt = (e.time - t).abs();
+        if dt < 0.4 {
+            s += 1.0 - dt / 0.4;
+        }
+    }
+    (s * 0.5).clamp(0.0, 1.0)
+}
+
+/// Layer "talking body" motion onto the held pose while speaking: the head nods
+/// and turns, the torso gives a little emphasis, and the left hand does a gentle
+/// beat gesture. Additive and subtle — the pose still reads, but the delivery is
+/// alive. `amt` (0..1) scales the whole thing by how strongly we're speaking.
+fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64) {
+    let tau = std::f64::consts::TAU;
+    let nod = (t * 2.3 * tau).sin();
+    for state in states.iter_mut() {
+        match state.name.as_str() {
+            "head" => {
+                state.rotation += nod * 2.2 * amt;
+                state.offset.1 += nod * 1.6 * amt;
+                state.offset.0 += (t * 0.9 * tau).sin() * 1.2 * amt; // slight turn
+            }
+            "torso" => {
+                state.rotation += nod * 0.5 * amt;
+            }
+            "upper_arm_left" => {
+                state.rotation += (t * 1.7 * tau).sin() * 3.5 * amt;
+            }
+            "forearm_left" => {
+                state.rotation += (t * 1.7 * tau + 0.6).sin() * 5.0 * amt;
+            }
+            _ => {}
+        }
+    }
 }
 
 /// Plain ease-out (cubic), no overshoot — for tiny/fast transitions like mouth
