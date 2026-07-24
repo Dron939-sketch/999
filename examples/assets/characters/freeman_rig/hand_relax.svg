@@ -4,6 +4,13 @@
     <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
   </filter></defs>
   <g filter="url(#ink)">
+    <line x1="20" y1="1" x2="26" y2="1" stroke="#c2c7c0" stroke-width="9" stroke-linecap="round"/>
+    <path d="M23 6 Q19.2 22.0 15.7 35.1" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
+    <path d="M23 6 Q22.2 24.6 20.0 39.9" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
+    <path d="M23 6 Q26.1 24.6 26.0 39.9" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
+    <path d="M23 6 Q29.1 22.0 30.3 35.1" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
+    <path d="M23 6 Q18.5 9.4 14.6 16.0" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
+  
     <line x1="20" y1="1" x2="26" y2="1" stroke="#0e0e0e" stroke-width="6" stroke-linecap="round"/>
     <path d="M23 6 Q19.2 22.0 15.7 35.1" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
     <path d="M23 6 Q22.2 24.6 20.0 39.9" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
