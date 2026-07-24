@@ -896,12 +896,20 @@ fn speaking_intensity(events: &[&PoseEvent], t: f64) -> f64 {
         if !e.overlay {
             continue;
         }
+        // Amplitude-weighted: lips overlays come from the real voice envelope
+        // (gab = loud peak, talk = mid, idle/closed = pause), so body emphasis
+        // lands on the actual accents of the phrase, not on a generic sine.
+        let w = match e.pose.as_str() {
+            "gab" | "wide" => 1.0,
+            "talk" => 0.55,
+            _ => 0.12,
+        };
         let dt = (e.time - t).abs();
         if dt < 0.4 {
-            s += 1.0 - dt / 0.4;
+            s += (1.0 - dt / 0.4) * w;
         }
     }
-    (s * 0.5).clamp(0.0, 1.0)
+    (s * 0.6).clamp(0.0, 1.0)
 }
 
 /// Layer "talking body" motion onto the held pose while speaking: the head nods
@@ -925,10 +933,12 @@ fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64) {
                 state.bend += nod * 0.035 * amt;
             }
             "upper_arm_left" => {
-                state.rotation += (t * 1.7 * tau).sin() * 3.5 * amt;
+                // amt² — the beat gesture strikes on the loud accents only,
+                // instead of waving uniformly through the whole line.
+                state.rotation += (t * 1.7 * tau).sin() * (3.5 * amt + 4.5 * amt * amt);
             }
             "forearm_left" => {
-                state.rotation += (t * 1.7 * tau + 0.6).sin() * 5.0 * amt;
+                state.rotation += (t * 1.7 * tau + 0.6).sin() * (5.0 * amt + 6.0 * amt * amt);
             }
             _ => {}
         }
