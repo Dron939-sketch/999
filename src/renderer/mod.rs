@@ -518,6 +518,7 @@ fn render_rigged_character(
                         opacity: d.opacity * 0.20,
                         pivot: d.pivot,
                         z_order: d.z_order,
+                        bend: d.bend,
                     });
                 }
             }
@@ -533,6 +534,7 @@ fn render_rigged_character(
             opacity: d.opacity,
             pivot: d.pivot,
             z_order: d.z_order,
+            bend: d.bend,
         });
     }
 
@@ -541,7 +543,7 @@ fn render_rigged_character(
     for d in &final_draws {
         render_bone_part(
             d.part, pixmap, d.x, d.y, d.sx, d.sy, d.rot, d.flip, d.opacity, &d.pivot,
-            boil_seed,
+            d.bend, boil_seed,
         )?;
     }
 
@@ -663,6 +665,9 @@ struct Drawable<'a> {
     opacity: f64,
     pivot: (f64, f64),
     z_order: i32,
+    /// Rubber-hose bend: total curl (radians) applied down the part below its
+    /// pivot, so a limb reads as a bending drawing, not a rigid rotated segment.
+    bend: f64,
 }
 
 /// Walk the bone tree computing world transforms (parent → child) and collect a
@@ -704,17 +709,28 @@ fn collect_bone_drawables<'a>(
     let part_name = state.and_then(|s| s.part.as_ref()).or(bone.part.as_ref());
     if let Some(part_name) = part_name {
         if let Some(part) = parts.get(part_name) {
+            // Rubber-hose: give part of the joint's bend to a smooth curl along
+            // the lower limb segment instead of a sharp hinge corner. The arc's
+            // chord runs at (start tangent + bend/2), so subtracting half the
+            // curl keeps the hand/foot where the pose put it — the elbow/knee
+            // softens into a curve but the silhouette of the gesture holds.
+            let bend = if bone.name.contains("forearm") || bone.name.contains("shin") {
+                ((rotation - bone.rotation).to_radians() * 0.55).clamp(-1.1, 1.1) * flip
+            } else {
+                0.0
+            };
             out.push(Drawable {
                 part,
                 x: world_x,
                 y: world_y,
                 sx: scale * scale_x * entity_scale_x,
                 sy: scale * scale_y * entity_scale_y,
-                rot: world_rot,
+                rot: world_rot - bend.to_degrees() * 0.5,
                 flip,
                 opacity,
                 pivot: bone.pivot,
                 z_order: state.map(|s| s.z_order).unwrap_or(bone.z_order),
+                bend,
             });
         }
     }
@@ -897,6 +913,7 @@ fn render_bone_part(
     flip: f64,
     opacity: f64,
     pivot: &(f64, f64),
+    bend: f64,
     boil_seed: u32,
 ) -> Result<(), AnimError> {
     let svg_data = apply_boil(&part.svg_data, boil_seed);
@@ -944,9 +961,84 @@ fn render_bone_part(
         ..Default::default()
     };
 
-    pixmap.draw_pixmap(0, 0, part_pixmap.as_ref(), &paint, transform, None);
+    if bend.abs() > 0.02 {
+        // Deformable draw: bend the part along its length below the pivot, so a
+        // limb curves like a hand-drawn rubber-hose instead of a rigid segment.
+        draw_bent_pixmap(pixmap, &part_pixmap, transform, pivot_px as f32, bend as f32, &paint);
+    } else {
+        pixmap.draw_pixmap(0, 0, part_pixmap.as_ref(), &paint, transform, None);
+    }
 
     Ok(())
+}
+
+/// Draw a part pixmap bent into an arc below its pivot — the core of deformable
+/// (Live2D/rubber-hose-style) rendering. The part is sliced into horizontal
+/// strips; each strip is placed on a circular arc and rotated, so straight
+/// pixels become a smooth curve. `base` maps part-pixel space to the frame;
+/// `pivot_px` is the pivot column, `bend` the total curl (radians) over the
+/// length below the pivot.
+fn draw_bent_pixmap(
+    target: &mut Pixmap,
+    src: &Pixmap,
+    base: Transform,
+    pivot_px: f32,
+    bend: f32,
+    paint: &PixmapPaint,
+) {
+    let w = src.width();
+    let h = src.height();
+    if w == 0 || h == 0 {
+        return;
+    }
+    // The part hangs from its top; the bend originates at the top row and the
+    // curl accumulates down the length. Treat the source rows as arc-length
+    // along an inextensible "hose": a strip whose top is at source row `d`
+    // lands at the point on a circular arc of that arc-length, rotated by the
+    // tangent angle there. Anchoring each strip by its TOP edge (not centre)
+    // makes consecutive strips join continuously; a 1px sampling overlap hides
+    // the residual gap from using a single angle across a strip's own height.
+    let len = (h as f32).max(1.0);
+    let radius = len / bend; // signed arc radius
+    // Fine strips (~2px) → the arc reads as a smooth curve, not facets.
+    let strips = (h / 2).clamp(8, 48);
+    let src_data = src.data();
+    let sw = w as usize;
+    // Point + tangent angle (deg) at arc-length d down the hose.
+    let arc = |d: f32| -> (f32, f32, f32) {
+        if bend.abs() < 1e-3 {
+            return (0.0, d, 0.0);
+        }
+        let theta = (d / len) * bend; // radians turned at this arc-length
+        (radius * (1.0 - theta.cos()), radius * theta.sin(), theta.to_degrees())
+    };
+    for i in 0..strips {
+        let y0 = (i * h / strips).min(h);
+        // Sample one extra row past the nominal bottom so strips overlap and
+        // leave no seam on the convex side of the curve.
+        let y1 = (((i + 1) * h / strips) + 1).min(h);
+        if y1 <= y0 {
+            continue;
+        }
+        let sh = y1 - y0;
+        let mut strip = match Pixmap::new(w, sh) {
+            Some(p) => p,
+            None => continue,
+        };
+        let start = (y0 as usize) * sw * 4;
+        let n = (sh as usize) * sw * 4;
+        strip.data_mut().copy_from_slice(&src_data[start..start + n]);
+
+        // Anchor the strip's TOP edge (source row y0) onto the arc.
+        let (ax, ay, ang_deg) = arc(y0 as f32);
+        // Strip-local: its pixel (pivot_px, 0) is the top-anchor; move it to the
+        // arc point and rotate the strip by the tangent angle there.
+        let strip_local = Transform::from_translate(pivot_px + ax, ay)
+            .pre_concat(Transform::from_rotate(ang_deg))
+            .pre_concat(Transform::from_translate(-pivot_px, 0.0));
+        let t = base.pre_concat(strip_local);
+        target.draw_pixmap(0, 0, strip.as_ref(), paint, t, None);
+    }
 }
 
 // ---------------------------------------------------------------------------
