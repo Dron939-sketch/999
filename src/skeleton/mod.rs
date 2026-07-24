@@ -313,6 +313,10 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
     // Multi-frequency breathing/sway reads more organic than a single sine.
     let breath = (time * 1.05 * tau).sin();
     let sway = (time * 0.33 * tau).sin() * 0.6 + (time * 0.19 * tau).sin() * 0.4;
+    // Very slow weight-shift (~8s period): the body subtly leans side to side,
+    // head leads/counters it — reads as a living body holding its weight, not a
+    // frozen puppet. Low frequency, so it's life, not the tremor we calmed.
+    let shift = (time * 0.12 * tau).sin();
     // "Animation boil": the jitter target updates ~5x/sec (held on fours), so a
     // static pose is never perfectly still — but calm, not a tremor.
     let step = (time * 5.0).floor() as i64;
@@ -335,16 +339,23 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
 
         match state.name.as_str() {
             "torso" => {
-                state.scale.1 *= 1.0 + breath * 0.012;
-                state.rotation += sway * 0.8;
+                state.scale.1 *= 1.0 + breath * 0.014; // breathing
+                state.offset.0 += shift * 2.2; // weight shift (whole upper body)
+                state.rotation += sway * 1.0 + shift * 0.8;
             }
             "head" => {
-                state.offset.1 += breath * 0.9;
-                state.rotation += (time * 0.5 * tau).sin() * 0.8 + sway * 0.5;
+                state.offset.1 += breath * 1.0;
+                // slow "looking" life + counter to the weight shift (head leads)
+                state.offset.0 += shift * 1.4 + (time * 0.23 * tau).sin() * 1.0;
+                state.rotation += (time * 0.37 * tau).sin() * 1.3 + sway * 0.6 - shift * 0.9;
+            }
+            name if name.contains("thigh") => {
+                state.offset.0 += shift * 0.7; // legs plant against the shift
             }
             name if name.contains("arm") => {
                 let phase = if name.contains("right") { PI } else { 0.0 };
-                state.rotation += (time * 0.6 * tau + phase).sin() * 1.4;
+                // gentle arm float, and hands drift with the weight shift
+                state.rotation += (time * 0.6 * tau + phase).sin() * 1.4 + shift * 0.6;
             }
             _ => {}
         }
