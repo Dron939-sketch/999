@@ -14,6 +14,9 @@ pub struct RenderConfig {
     pub height: u32,
     pub fps: u32,
     pub background: Color,
+    /// When true, frames are post-processed to high-contrast black & white
+    /// ("ink" look) — used for the Freeman-style lecture videos.
+    pub monochrome: bool,
 }
 
 impl Default for RenderConfig {
@@ -23,6 +26,7 @@ impl Default for RenderConfig {
             height: 1080,
             fps: 24,
             background: Color::rgb(0, 0, 0),
+            monochrome: false,
         }
     }
 }
@@ -52,6 +56,12 @@ impl RenderConfig {
                         cfg.background = c.clone();
                     }
                 }
+                "monochrome" => match &entry.value {
+                    Value::Bool(b) => cfg.monochrome = *b,
+                    // Also accept `monochrome: 1` / `monochrome: 0`.
+                    Value::Number(n) => cfg.monochrome = *n != 0.0,
+                    _ => {}
+                },
                 _ => {}
             }
         }
@@ -148,6 +158,8 @@ pub fn resolve_named_position(pos: &NamedPosition) -> (f64, f64) {
         NamedPosition::Offscreen(Direction::Right) => (1.2, 0.5),
         NamedPosition::Offscreen(Direction::Up) => (0.5, -0.2),
         NamedPosition::Offscreen(Direction::Down) => (0.5, 1.2),
+        // front/back have no offscreen edge — treat as below the frame.
+        NamedPosition::Offscreen(Direction::Front | Direction::Back) => (0.5, 1.2),
     }
 }
 

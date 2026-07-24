@@ -598,6 +598,8 @@ fn parse_direction(pair: Pair) -> Direction {
         "right" => Direction::Right,
         "up" => Direction::Up,
         "down" => Direction::Down,
+        "front" => Direction::Front,
+        "back" => Direction::Back,
         _ => Direction::Right,
     }
 }

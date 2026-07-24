@@ -400,9 +400,11 @@ fn render_procedural_character(
     } else {
         // Standing still — use facing direction.
         match state.facing {
-            Direction::Left => 315.0, // 3/4 left (not full profile)
-            Direction::Right => 45.0, // 3/4 right
-            _ => 0.0,                 // front
+            Direction::Left => 315.0,  // 3/4 left (not full profile)
+            Direction::Right => 45.0,  // 3/4 right
+            Direction::Back => 180.0,  // facing away
+            Direction::Front => 0.0,   // straight at camera
+            _ => 0.0,                  // up/down → front
         }
     };
     // Smooth transition.
@@ -819,6 +821,8 @@ fn apply_transitions(
                     Direction::Right => (w * (1.0 - progress), 0.0, w * progress, h),
                     Direction::Up => (0.0, 0.0, w, h * progress),
                     Direction::Down => (0.0, h * (1.0 - progress), w, h * progress),
+                    // front/back aren't spatial wipe directions — wipe left-to-right.
+                    Direction::Front | Direction::Back => (0.0, 0.0, w * progress, h),
                 };
                 if let Some(rect) = Rect::from_xywh(rx as f32, ry as f32, rw as f32, rh as f32) {
                     let mut paint = Paint::default();

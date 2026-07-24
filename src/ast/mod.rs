@@ -321,6 +321,10 @@ pub enum Direction {
     Right,
     Up,
     Down,
+    /// Facing the camera (used for Freeman-style monologues to camera).
+    Front,
+    /// Facing away from the camera.
+    Back,
 }
 
 /// Duration in seconds.

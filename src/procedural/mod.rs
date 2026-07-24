@@ -6,7 +6,7 @@
 
 use std::f64::consts::PI;
 use tiny_skia::{
-    Color as SkiaColor, FillRule, LineCap, LineJoin, Paint, PathBuilder, Pixmap, PixmapPaint,
+    Color as SkiaColor, FillRule, LineCap, LineJoin, Paint, Path, PathBuilder, Pixmap, PixmapPaint,
     Stroke, Transform,
 };
 
@@ -64,6 +64,8 @@ pub enum HairStyle {
     Wavy,
     Short,
     Buzz,
+    /// No hair — a clean, shiny scalp. Used for characters like Fredi.
+    Bald,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -120,6 +122,8 @@ pub enum AccessoryKind {
     Fedora,
     Glasses,
     Tie,
+    /// A bow tie worn at the collar (formal / "Fredi" look).
+    BowTie,
     Scarf,
     Belt,
 }
@@ -890,6 +894,23 @@ pub fn draw_character(
         front_factor,
         back_view,
     );
+
+    // Bow tie — drawn last so it sits on top of the collar/neck. Skipped from
+    // the back where the collar isn't visible.
+    if !back_view {
+        for acc in &desc.outfit.accessories {
+            if acc.kind == AccessoryKind::BowTie {
+                draw_bowtie(
+                    pixmap,
+                    head_x,
+                    shoulder_y - 2.0 * scale,
+                    scale,
+                    acc.color,
+                    opacity,
+                );
+            }
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1190,6 +1211,49 @@ fn draw_torso(
         }
         _ => {}
     }
+
+}
+
+/// Draw a bow tie centered at (cx, cy): two triangular wings meeting at a knot.
+fn draw_bowtie(pixmap: &mut Pixmap, cx: f64, cy: f64, scale: f64, color: [u8; 3], opacity: f64) {
+    let paint = solid_paint(color[0], color[1], color[2], opacity);
+    let wing = 7.5 * scale; // half-width of one wing
+    let hh = 5.0 * scale; // half-height of a wing
+    let knot = 2.0 * scale; // half-width of the central knot
+
+    // Left wing (triangle: knot -> outer-top -> outer-bottom).
+    let mut pb = PathBuilder::new();
+    pb.move_to((cx - knot) as f32, cy as f32);
+    pb.line_to((cx - knot - wing) as f32, (cy - hh) as f32);
+    pb.line_to((cx - knot - wing) as f32, (cy + hh) as f32);
+    pb.close();
+    // Right wing (mirror).
+    pb.move_to((cx + knot) as f32, cy as f32);
+    pb.line_to((cx + knot + wing) as f32, (cy - hh) as f32);
+    pb.line_to((cx + knot + wing) as f32, (cy + hh) as f32);
+    pb.close();
+    if let Some(path) = pb.finish() {
+        pixmap.fill_path(&path, &paint, FillRule::Winding, Transform::identity(), None);
+        // Dark outline for the ink look.
+        let dark = shade_color(color, 0.35);
+        let ol_paint = solid_paint(dark[0], dark[1], dark[2], opacity);
+        let ol_stroke = Stroke {
+            width: 1.0,
+            line_join: LineJoin::Round,
+            ..Stroke::default()
+        };
+        pixmap.stroke_path(&path, &ol_paint, &ol_stroke, Transform::identity(), None);
+    }
+
+    // Central knot.
+    fill_rect(
+        pixmap,
+        cx - knot,
+        cy - hh * 0.7,
+        knot * 2.0,
+        hh * 1.4,
+        &paint,
+    );
 }
 
 fn draw_neck(
@@ -2797,6 +2861,31 @@ fn draw_hair_front(
                 }
             }
         }
+        HairStyle::Bald => {
+            // No hair at all — the head skin is the scalp. Add a soft highlight
+            // on the crown so the bald head reads as shiny rather than flat.
+            let highlight = solid_paint(255, 255, 255, opacity * 0.16);
+            let hx = cx - rx * 0.22;
+            let hy = cy - ry * 0.42;
+            let hrx = rx * 0.34;
+            let hry = ry * 0.26;
+            let mut pb = PathBuilder::new();
+            let steps = 24;
+            for i in 0..=steps {
+                let a = (i as f64 / steps as f64) * 2.0 * PI;
+                let px = hx + a.cos() * hrx;
+                let py = hy + a.sin() * hry;
+                if i == 0 {
+                    pb.move_to(px as f32, py as f32);
+                } else {
+                    pb.line_to(px as f32, py as f32);
+                }
+            }
+            pb.close();
+            if let Some(path) = pb.finish() {
+                pixmap.fill_path(&path, &highlight, FillRule::Winding, transform, None);
+            }
+        }
     }
 }
 
@@ -2905,32 +2994,39 @@ fn draw_glasses(
         ..Stroke::default()
     };
 
-    let lens_w = eye_r * 1.8;
-    let lens_h = eye_r * 1.4;
+    // Round lenses — the signature "Fredi" look.
+    let lens_r = eye_r * 1.55;
+
+    // Helper: build a circle path centered at (ccx, ccy).
+    let circle_path = |ccx: f64, ccy: f64, r: f64| -> Option<Path> {
+        let mut pb = PathBuilder::new();
+        let steps = 28;
+        for i in 0..=steps {
+            let a = (i as f64 / steps as f64) * 2.0 * PI;
+            let px = ccx + a.cos() * r;
+            let py = ccy + a.sin() * r;
+            if i == 0 {
+                pb.move_to(px as f32, py as f32);
+            } else {
+                pb.line_to(px as f32, py as f32);
+            }
+        }
+        pb.close();
+        pb.finish()
+    };
 
     // Left lens.
     let lx = cx - spacing;
-    let mut pb = PathBuilder::new();
-    pb.move_to((lx - lens_w) as f32, (eye_y - lens_h) as f32);
-    pb.line_to((lx + lens_w) as f32, (eye_y - lens_h) as f32);
-    pb.line_to((lx + lens_w) as f32, (eye_y + lens_h) as f32);
-    pb.line_to((lx - lens_w) as f32, (eye_y + lens_h) as f32);
-    pb.close();
-    if let Some(path) = pb.finish() {
+    if let Some(path) = circle_path(lx, eye_y, lens_r) {
         pixmap.stroke_path(&path, &paint, &stroke, transform, None);
     }
 
     // Right lens.
     let rx_pos = cx + spacing;
-    let mut pb = PathBuilder::new();
-    pb.move_to((rx_pos - lens_w) as f32, (eye_y - lens_h) as f32);
-    pb.line_to((rx_pos + lens_w) as f32, (eye_y - lens_h) as f32);
-    pb.line_to((rx_pos + lens_w) as f32, (eye_y + lens_h) as f32);
-    pb.line_to((rx_pos - lens_w) as f32, (eye_y + lens_h) as f32);
-    pb.close();
-    if let Some(path) = pb.finish() {
+    if let Some(path) = circle_path(rx_pos, eye_y, lens_r) {
         pixmap.stroke_path(&path, &paint, &stroke, transform, None);
     }
+    let lens_w = lens_r;
 
     // Bridge.
     let mut pb = PathBuilder::new();

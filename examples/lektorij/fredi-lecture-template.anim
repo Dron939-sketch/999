@@ -1,0 +1,202 @@
+// =============================================================================
+//  ШАБЛОН ЛЕКЦИИ ЛЕКТОРИЯ — Фреди в стиле Мистера Фримена
+// =============================================================================
+//  Чёрно-белый рисованный ролик: Фреди говорит в камеру. Видео немое —
+//  озвучка берётся из Frederick (серверный TTS лекции) и подмешивается на
+//  этапе сборки (tools/compose_video.sh). Тайминг сцены выставлен под
+//  закадровый монолог: одна «доля» (beat) = один смысловой блок лекции.
+//
+//  Как пользоваться:
+//    1. Скопируйте файл в examples/lektorij/lekciya-<slug>.anim
+//    2. Замените реплики в комментариях на реальный текст лекции.
+//    3. Подгоните wait-паузы под длительность озвучки каждой доли.
+//    4. Проверка:  cargo run -- check examples/lektorij/lekciya-<slug>.anim
+//    5. Рендер:    cargo run -- render examples/lektorij/lekciya-<slug>.anim -o out.mp4
+//
+//  Библиотека поз ниже — канон Фреди. Не переопределяйте её без нужды:
+//  генератор (tools/gen_lecture_anim.py) вставляет ровно эти позы.
+// =============================================================================
+
+import character fredi from "../assets/characters/procedural/fredi.json"
+import set paper from "../assets/sets/lektorij-paper.svg"
+
+// 1280x720 @ 24fps — движок держит все кадры в памяти; для лекций этого формата
+// достаточно, а рендер длинных роликов остаётся по силам обычной машине.
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #ece7db
+    monochrome: true
+}
+
+// --- КАНОН ПОЗ ФРЕДИ (Freeman-style, лицом в камеру) --------------------------
+
+// Спокойное наблюдение — база, руки по швам.
+pose "fredi-calm" {
+    torso-squash: 1.02
+    head-nod: -2
+    arm-left-angle: 7
+    arm-right-angle: 7
+    elbow-left-bend: 0.05
+    elbow-right-bend: 0.05
+    eye-open-left: 0.85
+    eye-open-right: 0.85
+    eyebrow-left: -0.15
+    eyebrow-right: -0.15
+    mouth-smile: -0.08
+}
+
+// Моргание — микропауза, «осознание».
+pose "fredi-blink" {
+    head-nod: -1
+    arm-left-angle: 7
+    arm-right-angle: 7
+    eye-open-left: 0.25
+    eye-open-right: 0.25
+}
+
+// Задумчивость — взгляд вверх, рука к подбородку.
+pose "fredi-think" {
+    torso-bend: -2
+    head-tilt: 4
+    head-nod: -8
+    arm-right-angle: -95
+    elbow-right-bend: 0.85
+    arm-left-angle: 6
+    elbow-left-bend: 0.1
+    eye-open-left: 0.8
+    eye-open-right: 0.8
+    eye-direction: 0.4
+    eyebrow-left: 0.1
+    eyebrow-right: 0.1
+    mouth-smile: 0.0
+}
+
+// Объяснение — открытый жест обеими руками.
+pose "fredi-explain" {
+    torso-bend: 2
+    head-nod: -2
+    arm-left-angle: -45
+    elbow-left-bend: 0.35
+    arm-right-angle: -45
+    elbow-right-bend: 0.35
+    eye-open-left: 0.9
+    eye-open-right: 0.9
+    eyebrow-left: 0.05
+    eyebrow-right: 0.05
+    mouth-open: 0.2
+}
+
+// Указание — «это про тебя», правая рука вперёд.
+pose "fredi-point" {
+    torso-bend: 4
+    head-tilt: -2
+    head-nod: -3
+    arm-right-angle: -60
+    elbow-right-bend: 0.2
+    arm-left-angle: 5
+    elbow-left-bend: 0.1
+    eye-open-left: 0.95
+    eye-open-right: 0.95
+    eyebrow-left: -0.3
+    eyebrow-right: -0.3
+    mouth-open: 0.1
+}
+
+// Строгий взгляд — акцент, «серьёзно».
+pose "fredi-stern" {
+    torso-squash: 1.03
+    head-nod: -4
+    arm-left-angle: 6
+    arm-right-angle: 6
+    eye-open-left: 0.9
+    eye-open-right: 0.9
+    eyebrow-left: -0.5
+    eyebrow-right: -0.5
+    mouth-smile: -0.25
+}
+
+// Усмешка — «я знаю, к чему веду».
+pose "fredi-smirk" {
+    head-tilt: 4
+    head-nod: -1
+    arm-left-angle: 7
+    arm-right-angle: 7
+    eye-open-left: 0.8
+    eye-open-right: 0.85
+    eyebrow-left: 0.15
+    eyebrow-right: -0.2
+    mouth-smile: 0.35
+}
+
+// Наклон вперёд — усиление, «слушай внимательно».
+pose "fredi-lean" {
+    torso-bend: 7
+    head-nod: 2
+    arm-left-angle: -20
+    elbow-left-bend: 0.3
+    arm-right-angle: -20
+    elbow-right-bend: 0.3
+    eye-open-left: 1.0
+    eye-open-right: 1.0
+    eyebrow-left: -0.2
+    eyebrow-right: -0.2
+    mouth-open: 0.15
+}
+
+// --- СЦЕНА --------------------------------------------------------------------
+// Замените длительность и реплики под конкретную лекцию.
+
+scene "lecture" (duration: 40s, set: paper) {
+    place fredi at center facing front
+    fredi pose "fredi-calm"
+
+    // === ИНТРО: появление, название лекции звучит за кадром ===
+    // VO: "Тема сегодня — <название лекции>."
+    camera wide
+    wait 1.5s
+    camera medium fredi
+    fredi pose "fredi-blink"
+    wait 0.3s
+    fredi pose "fredi-calm"
+    wait 1.7s
+
+    // === ДОЛЯ 1 ===
+    // VO: <первый смысловой блок>
+    camera close-up fredi
+    fredi pose "fredi-explain"
+    wait 4s
+    fredi pose "fredi-calm"
+    wait 1s
+
+    // === ДОЛЯ 2 ===
+    // VO: <второй смысловой блок>
+    camera medium fredi
+    fredi pose "fredi-think"
+    wait 3s
+    fredi pose "fredi-point"
+    wait 3s
+
+    // === ДОЛЯ 3 ===
+    // VO: <третий смысловой блок>
+    camera close-up fredi
+    fredi pose "fredi-stern"
+    wait 3s
+    camera shake 0.4s intensity 3
+    fredi pose "fredi-calm"
+    wait 2s
+
+    // === ИТОГ ===
+    // VO: "Если коротко — <вывод лекции>."
+    camera medium fredi
+    fredi pose "fredi-smirk"
+    wait 3s
+    fredi pose "fredi-calm"
+    wait 2s
+
+    // === АУТРО: уход ===
+    camera wide
+    wait 1.5s
+    transition fade-black 2s
+}

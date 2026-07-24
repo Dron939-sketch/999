@@ -287,6 +287,7 @@ impl TimelineCompiler {
                     Direction::Right => (1.2, target_y),
                     Direction::Up => (target_x, -0.2),
                     Direction::Down => (target_x, 1.2),
+                    Direction::Front | Direction::Back => (target_x, 1.2),
                 };
 
                 // Set start position.
@@ -325,6 +326,7 @@ impl TimelineCompiler {
                     Direction::Right => (1.2, current_y),
                     Direction::Up => (current_x, -0.2),
                     Direction::Down => (current_x, 1.2),
+                    Direction::Front | Direction::Back => (current_x, 1.2),
                 };
 
                 self.ensure_current_keyframe(entity, Property::X);

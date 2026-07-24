@@ -207,6 +207,13 @@ fn cmd_render(
         all_frames.extend(frames);
     }
 
+    // Freeman-style black & white ("ink") post-process.
+    if config.monochrome {
+        for frame in &mut all_frames {
+            apply_monochrome(&mut frame.data);
+        }
+    }
+
     // Output.
     if let Some(dir) = png_dir {
         video::encode_png_sequence(&all_frames, dir)?;
@@ -222,6 +229,26 @@ fn cmd_render(
     );
 
     Ok(())
+}
+
+/// Convert an RGBA frame buffer to a high-contrast black & white "ink" image
+/// in place. Alpha is preserved. This is what gives the Freeman-style lecture
+/// videos their stark hand-inked, mostly-monochrome look.
+fn apply_monochrome(data: &mut [u8]) {
+    // Contrast strength around mid-grey. >1.0 pushes lights lighter and darks
+    // darker, which reads as bold ink strokes on paper.
+    const CONTRAST: f32 = 1.35;
+    for px in data.chunks_exact_mut(4) {
+        // Rec. 601 luma.
+        let luma = 0.299 * px[0] as f32 + 0.587 * px[1] as f32 + 0.114 * px[2] as f32;
+        // Apply an S-curve style contrast around 128.
+        let adjusted = ((luma - 128.0) * CONTRAST + 128.0).clamp(0.0, 255.0);
+        let v = adjusted as u8;
+        px[0] = v;
+        px[1] = v;
+        px[2] = v;
+        // px[3] (alpha) untouched.
+    }
 }
 
 fn cmd_check(input: &Path) -> Result<()> {

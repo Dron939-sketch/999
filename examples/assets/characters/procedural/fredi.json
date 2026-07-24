@@ -1,0 +1,39 @@
+{
+  "name": "Fredi",
+  "body": {
+    "height": 0.72,
+    "build": 0.5,
+    "skin_color": [232, 216, 200]
+  },
+  "face": {
+    "shape": 0.42,
+    "eye_size": 0.78,
+    "eye_color": [70, 58, 42],
+    "eyebrow_thickness": 0.75,
+    "nose_size": 0.55,
+    "lip_fullness": 0.28
+  },
+  "hair": {
+    "color": [40, 40, 40],
+    "style": "Bald",
+    "length": 0.0
+  },
+  "outfit": {
+    "top": {
+      "kind": "Suit",
+      "color": [22, 22, 26]
+    },
+    "bottom": {
+      "kind": "Pants",
+      "color": [22, 22, 26]
+    },
+    "shoes": {
+      "kind": "Formal",
+      "color": [15, 15, 15]
+    },
+    "accessories": [
+      { "kind": "Glasses", "color": [28, 28, 30] },
+      { "kind": "BowTie", "color": [24, 24, 28] }
+    ]
+  }
+}

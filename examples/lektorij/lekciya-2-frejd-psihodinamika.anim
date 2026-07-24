@@ -1,0 +1,186 @@
+// =============================================================================
+//  Лекция 2. Фрейд: психодинамическое направление
+//  Лекторий → курс «Теории личности»
+//  Источник: blog/lekciya-2-frejd-psihodinamika.html (репозиторий сайта)
+//
+//  Пилотный ролик стиля «Фреди / Мистер Фримен»: чёрно-белый, лицом в камеру.
+//  Видео немое; закадровый голос — серверный TTS лекции (Frederick),
+//  подмешивается в tools/compose_video.sh. Реплики за кадром — в комментариях
+//  VO, паузы wait подогнаны под них.
+// =============================================================================
+
+import character fredi from "../assets/characters/procedural/fredi.json"
+import set paper from "../assets/sets/lektorij-paper.svg"
+
+// 1280x720 @ 24fps — движок держит все кадры в памяти, так что длинные ролики
+// в 1080p прожорливы. Для лекций 720p/24 — надёжный и достаточный формат.
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #ece7db
+    monochrome: true
+}
+
+pose "fredi-calm" {
+    torso-squash: 1.02
+    head-nod: -2
+    arm-left-angle: 7
+    arm-right-angle: 7
+    elbow-left-bend: 0.05
+    elbow-right-bend: 0.05
+    eye-open-left: 0.85
+    eye-open-right: 0.85
+    eyebrow-left: -0.15
+    eyebrow-right: -0.15
+    mouth-smile: -0.08
+}
+
+pose "fredi-blink" {
+    head-nod: -1
+    arm-left-angle: 7
+    arm-right-angle: 7
+    eye-open-left: 0.25
+    eye-open-right: 0.25
+}
+
+pose "fredi-think" {
+    torso-bend: -2
+    head-tilt: 4
+    head-nod: -8
+    arm-right-angle: -95
+    elbow-right-bend: 0.85
+    arm-left-angle: 6
+    elbow-left-bend: 0.1
+    eye-open-left: 0.8
+    eye-open-right: 0.8
+    eye-direction: 0.4
+    eyebrow-left: 0.1
+    eyebrow-right: 0.1
+}
+
+pose "fredi-explain" {
+    torso-bend: 2
+    head-nod: -2
+    arm-left-angle: -45
+    elbow-left-bend: 0.35
+    arm-right-angle: -45
+    elbow-right-bend: 0.35
+    eye-open-left: 0.9
+    eye-open-right: 0.9
+    mouth-open: 0.2
+}
+
+pose "fredi-point" {
+    torso-bend: 4
+    head-tilt: -2
+    head-nod: -3
+    arm-right-angle: -60
+    elbow-right-bend: 0.2
+    arm-left-angle: 5
+    elbow-left-bend: 0.1
+    eye-open-left: 0.95
+    eye-open-right: 0.95
+    eyebrow-left: -0.3
+    eyebrow-right: -0.3
+    mouth-open: 0.1
+}
+
+pose "fredi-stern" {
+    torso-squash: 1.03
+    head-nod: -4
+    arm-left-angle: 6
+    arm-right-angle: 6
+    eye-open-left: 0.9
+    eye-open-right: 0.9
+    eyebrow-left: -0.5
+    eyebrow-right: -0.5
+    mouth-smile: -0.25
+}
+
+pose "fredi-smirk" {
+    head-tilt: 4
+    head-nod: -1
+    arm-left-angle: 7
+    arm-right-angle: 7
+    eye-open-left: 0.8
+    eye-open-right: 0.85
+    eyebrow-left: 0.15
+    eyebrow-right: -0.2
+    mouth-smile: 0.35
+}
+
+pose "fredi-lean" {
+    torso-bend: 7
+    head-nod: 2
+    arm-left-angle: -20
+    elbow-left-bend: 0.3
+    arm-right-angle: -20
+    elbow-right-bend: 0.3
+    eye-open-left: 1.0
+    eye-open-right: 1.0
+    eyebrow-left: -0.2
+    eyebrow-right: -0.2
+    mouth-open: 0.15
+}
+
+scene "frejd" (duration: 36s, set: paper) {
+    place fredi at center facing front
+    fredi pose "fredi-calm"
+
+    // === ИНТРО ===
+    // VO: "Фрейд. Психодинамическое направление. Устройство душевного конфликта."
+    camera wide
+    wait 1.5s
+    camera medium fredi
+    fredi pose "fredi-blink"
+    wait 0.3s
+    fredi pose "fredi-calm"
+    wait 1.2s
+
+    // === 1. В доме не один хозяин ===
+    // VO: "Главная догадка Фрейда: в психике не один хозяин."
+    camera close-up fredi
+    fredi pose "fredi-lean"
+    wait 3s
+    fredi pose "fredi-calm"
+    wait 0.8s
+
+    // === 2. Айсберг: Оно, Я, Сверх-Я ===
+    // VO: "Сознание — лишь верхушка айсберга. Оно, Я и Сверх-Я делят власть."
+    camera medium fredi
+    fredi pose "fredi-explain"
+    wait 3.5s
+    fredi pose "fredi-think"
+    wait 2.5s
+
+    // === 3. Механизмы защиты ===
+    // VO: "Вытеснение, проекция, рационализация. Мы защищаемся, не замечая этого."
+    camera medium fredi
+    fredi pose "fredi-point"
+    wait 3s
+    camera shake 0.4s intensity 3
+    fredi pose "fredi-calm"
+    wait 1.2s
+
+    // === 4. Суд над теорией ===
+    // VO: "Проверяема ли теория? Не всегда. И всё же она изменила нас."
+    camera close-up fredi
+    fredi pose "fredi-stern"
+    wait 3s
+    fredi pose "fredi-smirk"
+    wait 2s
+
+    // === ИТОГ ===
+    // VO: "Если коротко: психика — это переговоры. И вы на них присутствуете."
+    camera medium fredi
+    fredi pose "fredi-lean"
+    wait 3s
+    fredi pose "fredi-calm"
+    wait 1.5s
+
+    // === АУТРО ===
+    camera wide
+    wait 1.5s
+    transition fade-black 2s
+}

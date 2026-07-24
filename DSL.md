@@ -105,6 +105,7 @@ config {
 | `height`     | Integer   | Output height in pixels              | `720`      |
 | `fps`        | Integer   | Frames per second                    | `30`       |
 | `background` | Hex color | Default background color             | `#1a1410`  |
+| `monochrome` | Boolean   | Post-process every frame to high-contrast black & white ("ink" look) | `false` |
 
 ### Example
 
@@ -114,8 +115,13 @@ config {
     height: 720
     fps: 30
     background: #1a1410
+    monochrome: true
 }
 ```
+
+`monochrome: true` converts each rendered frame to a stark grayscale image with
+boosted contrast — the hand-inked, mostly black-and-white look used by the
+Freeman-style Лекторий lecture videos (see `examples/lektorij/`).
 
 All fields are optional. If the config block is omitted entirely, the system
 uses built-in defaults.
@@ -618,13 +624,19 @@ informant moves-to behind detective over 2s
 
 ## Directions
 
-Four cardinal directions are used for `enters`, `exits`, `facing`, and `wipe`
-transitions:
+Directions are used for `enters`, `exits`, `facing`, and `wipe` transitions:
 
 - `left`
 - `right`
 - `up`
 - `down`
+- `front` — facing (or, for wipes, treated as a left-to-right wipe). Use
+  `facing front` for a character talking straight at the camera (body angle 0°),
+  as in the Freeman-style lecture monologues.
+- `back` — facing away from the camera (body angle 180°).
+
+`front`/`back` are meaningful for `facing`; for spatial actions (`enters`,
+`exits`, `wipe`) they fall back to a sensible default.
 
 ---
 
@@ -704,7 +716,7 @@ character's visual appearance.
   },
   "hair": {
     "color": [R, G, B],
-    "style": "SlickedBack|Messy|Straight|Wavy|Short|Buzz",
+    "style": "SlickedBack|Messy|Straight|Wavy|Short|Buzz|Bald",
     "length": 0.0-1.0
   },
   "outfit": {
@@ -757,8 +769,10 @@ character's visual appearance.
 | Field    | Type      | Range     | Description                          |
 |----------|-----------|-----------|--------------------------------------|
 | `color`  | [R, G, B] | 0-255 each| Hair color                          |
-| `style`  | String    | Enum      | One of: SlickedBack, Messy, Straight, Wavy, Short, Buzz |
+| `style`  | String    | Enum      | One of: SlickedBack, Messy, Straight, Wavy, Short, Buzz, Bald |
 | `length` | Float     | 0.0 - 1.0| Hair length (buzzcut to long)        |
+
+`Bald` draws no hair — a clean scalp with a soft crown highlight (used by Fredi).
 
 #### outfit
 
@@ -774,7 +788,9 @@ The `outfit` object contains `top`, `bottom`, `shoes`, and an optional
 array.
 
 **accessories**: An array of objects, each with a `kind` (one of `Hat`,
-`Fedora`, `Glasses`, `Tie`, `Scarf`, `Belt`) and a `color` RGB array.
+`Fedora`, `Glasses`, `Tie`, `BowTie`, `Scarf`, `Belt`) and a `color` RGB array.
+`Glasses` renders as round lenses; `BowTie` renders a bow at the collar (the
+signature "Fredi" look).
 
 ### Example Character File
 
