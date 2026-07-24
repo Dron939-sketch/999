@@ -1,3 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 124" width="52" height="124"><defs><filter id="ink" x="-25%" y="-25%" width="150%" height="150%"><feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="1" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
-<g filter="url(#ink)"><circle cx="30" cy="12" r="9" fill="#0e0e0e"/><path d="M22 8 Q30 3 38 8 L35 96 L32 102 L28 102 L25 96 Z" fill="#0e0e0e"/>
-<path d="M35 98 Q48 108 46 116 Q30 120 18 114 Q18 104 25 98 Z" fill="#0e0e0e"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 124" width="52" height="124"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="8" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<g filter="url(#ink)"><line x1="30" y1="8" x2="30" y2="100" stroke="#0e0e0e" stroke-width="7" stroke-linecap="round"/><path d="M30 100 Q46 106 44 116 Q30 120 20 114 Q19 104 28 100 Z" fill="#0e0e0e"/></g></svg>

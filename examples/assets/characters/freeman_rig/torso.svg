@@ -1,17 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 180" width="140" height="180">
   <defs>
     <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="1" seed="7" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>
   <g filter="url(#ink)">
-    <!-- solid black blocky body -->
-    <path d="M24 26 Q70 8 116 26 L108 120 Q104 150 100 172 L40 172 Q36 150 32 120 Z" fill="#0e0e0e"/>
-    <path d="M24 26 L20 44 L34 40 Z" fill="#0e0e0e"/>
-    <path d="M116 26 L120 44 L106 40 Z" fill="#0e0e0e"/>
-    <!-- small white collar -->
-    <path d="M60 14 L80 14 L74 40 L70 46 L66 40 Z" fill="#eef1ec"/>
-    <path d="M70 20 L70 44" stroke="#0e0e0e" stroke-width="1.4"/>
+    <!-- плечи узкие, книзу раздаётся колоколом до самого низа; рваная кромка -->
+    <path d="M50 14
+             Q70 4 90 14
+             Q116 44 126 112
+             Q133 150 134 178
+             L126 168 120 180 113 166 106 181 98 167 90 180 82 166
+             74 181 66 166 58 180 50 167 42 181 34 166 26 179 20 166
+             L14 178 Q7 150 14 112 Q24 44 50 14 Z" fill="#0e0e0e"/>
+    <path d="M56 54 Q62 120 58 168" fill="none" stroke="#1e1e1e" stroke-width="2.2"/>
+    <path d="M84 54 Q78 120 82 168" fill="none" stroke="#1e1e1e" stroke-width="2.2"/>
   </g>
 </svg>
