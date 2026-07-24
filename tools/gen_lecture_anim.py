@@ -266,7 +266,7 @@ def build_anim(title, sections, summary, scene_name):
     lines.append("//  подмешивается в tools/compose_video.sh. Паузы правьте под озвучку.")
     lines.append("// " + "=" * 76)
     lines.append("")
-    lines.append('import character fredi from "../assets/characters/procedural/fredi.json"')
+    lines.append('import character fredi from "../assets/characters/fredi_rig"')
     lines.append('import set paper from "../assets/sets/lektorij-paper.svg"')
     lines.append("")
     lines.append("// 1280x720 @ 24fps: движок держит все кадры в памяти — этот формат")

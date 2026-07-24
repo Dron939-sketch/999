@@ -9,7 +9,7 @@
 //  VO, паузы wait подогнаны под них.
 // =============================================================================
 
-import character fredi from "../assets/characters/procedural/fredi.json"
+import character fredi from "../assets/characters/fredi_rig"
 import set paper from "../assets/sets/lektorij-paper.svg"
 
 // 1280x720 @ 24fps — движок держит все кадры в памяти, так что длинные ролики

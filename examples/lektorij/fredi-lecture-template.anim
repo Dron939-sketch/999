@@ -17,7 +17,11 @@
 //  генератор (tools/gen_lecture_anim.py) вставляет ровно эти позы.
 // =============================================================================
 
-import character fredi from "../assets/characters/procedural/fredi.json"
+// Fredi is a detailed SVG rig (assets/characters/fredi_rig/) — smooth,
+// gradient-shaded vector art. The pose names below (fredi-calm, fredi-think, …)
+// resolve to the rig's poses in fredi_rig/rig.json. The procedural pose { }
+// blocks further down are ignored for the rig and kept only as documentation.
+import character fredi from "../assets/characters/fredi_rig"
 import set paper from "../assets/sets/lektorij-paper.svg"
 
 // 1280x720 @ 24fps — движок держит все кадры в памяти; для лекций этого формата

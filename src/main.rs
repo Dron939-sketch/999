@@ -236,8 +236,9 @@ fn cmd_render(
 /// videos their stark hand-inked, mostly-monochrome look.
 fn apply_monochrome(data: &mut [u8]) {
     // Contrast strength around mid-grey. >1.0 pushes lights lighter and darks
-    // darker, which reads as bold ink strokes on paper.
-    const CONTRAST: f32 = 1.35;
+    // darker for an inked look, but kept gentle so gradient shading (fabric
+    // sheen, facial form) survives rather than blowing out to flat black/white.
+    const CONTRAST: f32 = 1.12;
     for px in data.chunks_exact_mut(4) {
         // Rec. 601 luma.
         let luma = 0.299 * px[0] as f32 + 0.587 * px[1] as f32 + 0.114 * px[2] as f32;

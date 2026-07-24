@@ -25,6 +25,10 @@ pub struct CharacterDesc {
     pub outfit: OutfitDesc,
 }
 
+fn one() -> f64 {
+    1.0
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BodyDesc {
     /// 0.0=very short, 0.5=average, 1.0=very tall
@@ -32,6 +36,20 @@ pub struct BodyDesc {
     /// 0.0=very thin, 0.5=average, 1.0=heavy
     pub build: f64,
     pub skin_color: [u8; 3],
+    /// Head size multiplier (1.0 = default). <1 reads taller / more elegant.
+    #[serde(default = "one")]
+    pub head_scale: f64,
+    /// Leg length multiplier (1.0 = default). >1 lengthens the figure.
+    #[serde(default = "one")]
+    pub leg_scale: f64,
+    /// Limb thickness multiplier for arms and legs (1.0 = default). >1 is less
+    /// spindly / more solid.
+    #[serde(default = "one")]
+    pub limb_thickness: f64,
+    /// Shoulder / upper-torso width multiplier (1.0 = default). >1 broadens the
+    /// shoulders for a stronger V-taper.
+    #[serde(default = "one")]
+    pub shoulder_scale: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -89,6 +107,8 @@ pub struct ClothingItem {
 pub enum ClothingKind {
     TrenchCoat,
     Suit,
+    /// Formal tailcoat: peaked lapels, white shirt front, pocket square, tails.
+    Tailcoat,
     Hoodie,
     TShirt,
     Dress,
@@ -124,6 +144,8 @@ pub enum AccessoryKind {
     Tie,
     /// A bow tie worn at the collar (formal / "Fredi" look).
     BowTie,
+    /// A walking cane held in the right hand, reaching to the ground.
+    Cane,
     Scarf,
     Belt,
 }
@@ -709,20 +731,26 @@ pub fn draw_character(
     let height_factor = 0.7 + desc.body.height * 0.6; // 0.7 to 1.3
     let width_factor = 0.7 + desc.body.build * 0.6;
 
+    // Per-character proportion multipliers (default 1.0, see BodyDesc).
+    let head_scale = desc.body.head_scale;
+    let leg_scale = desc.body.leg_scale;
+    let limb_thickness = desc.body.limb_thickness;
+    let shoulder_scale = desc.body.shoulder_scale;
+
     let total_h = 200.0 * height_factor * scale;
-    let head_r = 22.0 * scale * (1.0 + desc.body.build * 0.1);
+    let head_r = 22.0 * scale * (1.0 + desc.body.build * 0.1) * head_scale;
     let neck_h = 8.0 * scale;
     let torso_h = 65.0 * height_factor * scale * state.torso_squash;
     let torso_w = 40.0 * width_factor * scale / state.torso_squash.max(0.5)
         * (0.4 + 0.6 * front_factor.abs());
-    let leg_h = 70.0 * height_factor * scale;
-    let arm_len = 60.0 * height_factor * scale;
-    let arm_w = 8.0 * width_factor * scale;
-    let leg_w = 10.0 * width_factor * scale;
+    let leg_h = 70.0 * height_factor * scale * leg_scale;
+    let arm_len = 60.0 * height_factor * scale * (0.85 + 0.15 * leg_scale);
+    let arm_w = 8.0 * width_factor * scale * limb_thickness;
+    let leg_w = 10.0 * width_factor * scale * limb_thickness;
 
-    // Shoulder offsets for turned body.
-    let near_shoulder_offset = torso_w * 0.5 + turn_factor * torso_w * 0.15;
-    let far_shoulder_offset = torso_w * 0.5 - turn_factor * torso_w * 0.15;
+    // Shoulder offsets for turned body (broadened by shoulder_scale).
+    let near_shoulder_offset = (torso_w * 0.5 + turn_factor * torso_w * 0.15) * shoulder_scale;
+    let far_shoulder_offset = (torso_w * 0.5 - turn_factor * torso_w * 0.15) * shoulder_scale;
 
     // Arm width scaling based on depth.
     let far_arm_w = arm_w * (0.7 + 0.3 * front_factor.abs());
@@ -827,6 +855,21 @@ pub fn draw_character(
         front_factor,
     );
 
+    // Tailcoat tails — hang behind the legs (drawn after torso, before legs).
+    if desc.outfit.top.kind == ClothingKind::Tailcoat {
+        draw_tailcoat_tails(
+            pixmap,
+            hip_x,
+            hip_y,
+            leg_h,
+            torso_w * 0.55,
+            scale,
+            state.clothing_swing,
+            desc.outfit.top.color,
+            opacity,
+        );
+    }
+
     // Neck.
     draw_neck(
         pixmap,
@@ -857,6 +900,27 @@ pub fn draw_character(
         &desc.outfit,
         false,
     );
+
+    // Cane held in the right hand, drawn before the arm so the hand grips it.
+    if desc
+        .outfit
+        .accessories
+        .iter()
+        .any(|a| a.kind == AccessoryKind::Cane)
+    {
+        let r_sx = shoulder_x
+            + right_arm_shoulder_offset * flip_sign
+            + state.shoulder_right * 5.0 * scale * flip_sign;
+        let r_sy = shoulder_y + state.shoulder_right * 8.0 * scale;
+        let (grip_x, grip_y) = arm_hand_pos(
+            r_sx,
+            r_sy,
+            state.arm_right_angle * flip_sign,
+            state.elbow_right_bend,
+            arm_len,
+        );
+        draw_cane(pixmap, grip_x, grip_y, foot_y, scale, opacity);
+    }
 
     // Front arm (right arm when facing right).
     draw_arm(
@@ -936,8 +1000,10 @@ fn draw_torso(
     let color = desc.outfit.top.color;
 
     // Organic torso shape with curved shoulders, waist indentation, and chest curvature.
-    // Asymmetric shoulder widths when turned.
-    let base_shoulder_w = w * 0.5;
+    // Asymmetric shoulder widths when turned. shoulder_scale broadens the top
+    // (shoulders + chest) without widening the waist/hips → a stronger V-taper.
+    let sh_scale = desc.body.shoulder_scale;
+    let base_shoulder_w = w * 0.5 * sh_scale;
     // When turn_factor > 0 (turning right), right side is near (wider), left is far (narrower).
     let near_sw_scale = 1.0 + turn_factor.abs() * 0.1;
     let far_sw_scale = 1.0 - turn_factor.abs() * 0.3;
@@ -955,7 +1021,7 @@ fn draw_torso(
         }; // negative X side
     let hip_w = w * 0.4;
     let waist_w = w * 0.35 + desc.body.build * w * 0.08; // narrower at waist, wider for heavier builds
-    let chest_w = w * 0.48;
+    let chest_w = w * 0.48 * (0.5 + 0.5 * sh_scale);
     let bend = state.torso_bend.to_radians();
 
     // Key y positions along the torso.
@@ -1103,6 +1169,89 @@ fn draw_torso(
             pb.line_to(sx as f32 + 6.0, (sy + 20.0 * scale) as f32);
             if let Some(path) = pb.finish() {
                 pixmap.stroke_path(&path, &line_paint, &stroke, Transform::identity(), None);
+            }
+        }
+        ClothingKind::Tailcoat => {
+            // Satin peaked lapels — a touch lighter than the jacket for sheen.
+            let satin = [
+                color[0].saturating_add(46),
+                color[1].saturating_add(46),
+                color[2].saturating_add(50),
+            ];
+            let satin_paint = solid_paint(satin[0], satin[1], satin[2], opacity);
+            let waist_y = lerp(sy, hy, 0.52);
+
+            // Left lapel (our left).
+            let mut pb = PathBuilder::new();
+            pb.move_to(sx as f32, (sy + 3.0 * scale) as f32);
+            pb.line_to((sx - w * 0.42) as f32, (sy + 1.0 * scale) as f32);
+            pb.line_to((sx - w * 0.30) as f32, lerp(sy, hy, 0.26) as f32);
+            pb.line_to((sx - w * 0.06) as f32, waist_y as f32);
+            pb.close();
+            if let Some(path) = pb.finish() {
+                pixmap.fill_path(&path, &satin_paint, FillRule::Winding, Transform::identity(), None);
+            }
+            // Right lapel (mirror).
+            let mut pb = PathBuilder::new();
+            pb.move_to(sx as f32, (sy + 3.0 * scale) as f32);
+            pb.line_to((sx + w * 0.42) as f32, (sy + 1.0 * scale) as f32);
+            pb.line_to((sx + w * 0.30) as f32, lerp(sy, hy, 0.26) as f32);
+            pb.line_to((sx + w * 0.06) as f32, waist_y as f32);
+            pb.close();
+            if let Some(path) = pb.finish() {
+                pixmap.fill_path(&path, &satin_paint, FillRule::Winding, Transform::identity(), None);
+            }
+
+            // White shirt front — a V narrowing to the waist button.
+            let shirt = [236u8, 233, 226];
+            let mut pb = PathBuilder::new();
+            pb.move_to((sx - w * 0.13) as f32, (sy + 4.0 * scale) as f32);
+            pb.line_to((sx + w * 0.13) as f32, (sy + 4.0 * scale) as f32);
+            pb.line_to((sx + w * 0.035) as f32, waist_y as f32);
+            pb.line_to((sx - w * 0.035) as f32, waist_y as f32);
+            pb.close();
+            if let Some(path) = pb.finish() {
+                draw_outlined_path(pixmap, &path, shirt, opacity, Transform::identity());
+            }
+
+            // Ink outlines along the lapel edges.
+            let ink = [10u8, 10, 12];
+            let ink_paint = solid_paint(ink[0], ink[1], ink[2], opacity);
+            let ink_stroke = Stroke {
+                width: 1.4,
+                line_join: LineJoin::Round,
+                ..Stroke::default()
+            };
+            for s in [-1.0f64, 1.0] {
+                let mut pb = PathBuilder::new();
+                pb.move_to((sx + s * w * 0.42) as f32, (sy + 1.0 * scale) as f32);
+                pb.line_to((sx + s * w * 0.30) as f32, lerp(sy, hy, 0.26) as f32);
+                pb.line_to((sx + s * w * 0.06) as f32, waist_y as f32);
+                if let Some(path) = pb.finish() {
+                    pixmap.stroke_path(&path, &ink_paint, &ink_stroke, Transform::identity(), None);
+                }
+            }
+
+            // Waist button.
+            fill_rect(
+                pixmap,
+                sx - 2.0 * scale,
+                waist_y - 1.5 * scale,
+                4.0 * scale,
+                4.0 * scale,
+                &satin_paint,
+            );
+
+            // Pocket square — small white peak on the wearer's left breast.
+            let px = sx + w * 0.22;
+            let py = lerp(sy, hy, 0.24);
+            let mut pb = PathBuilder::new();
+            pb.move_to((px - 4.0 * scale) as f32, py as f32);
+            pb.line_to((px + 4.0 * scale) as f32, py as f32);
+            pb.line_to(px as f32, (py + 6.0 * scale) as f32);
+            pb.close();
+            if let Some(path) = pb.finish() {
+                draw_outlined_path(pixmap, &path, shirt, opacity, Transform::identity());
             }
         }
         ClothingKind::TrenchCoat => {
@@ -1256,6 +1405,98 @@ fn draw_bowtie(pixmap: &mut Pixmap, cx: f64, cy: f64, scale: f64, color: [u8; 3]
     );
 }
 
+/// Two swallowtail panels hanging from the hips — the tails of a tailcoat.
+fn draw_tailcoat_tails(
+    pixmap: &mut Pixmap,
+    hip_x: f64,
+    hip_y: f64,
+    leg_h: f64,
+    half_w: f64,
+    scale: f64,
+    swing: f64,
+    color: [u8; 3],
+    opacity: f64,
+) {
+    let tail_len = leg_h * 0.72;
+    let sway = swing * scale * 0.3;
+    for side in [-1.0f64, 1.0] {
+        let top_in = hip_x + side * half_w * 0.06;
+        let top_out = hip_x + side * half_w * 0.52;
+        let mid_out = hip_x + side * half_w * 0.66;
+        let tip_x = hip_x + side * half_w * 0.40 + sway;
+        let mut pb = PathBuilder::new();
+        pb.move_to(top_in as f32, (hip_y - 3.0 * scale) as f32);
+        pb.line_to(top_out as f32, hip_y as f32);
+        // Outer edge curves down to a hanging point.
+        pb.quad_to(
+            mid_out as f32,
+            (hip_y + tail_len * 0.45) as f32,
+            tip_x as f32,
+            (hip_y + tail_len) as f32,
+        );
+        // Inner edge curves back up to the waist.
+        pb.quad_to(
+            (hip_x + side * half_w * 0.10) as f32,
+            (hip_y + tail_len * 0.4) as f32,
+            top_in as f32,
+            (hip_y - 3.0 * scale) as f32,
+        );
+        pb.close();
+        if let Some(path) = pb.finish() {
+            draw_outlined_path(pixmap, &path, color, opacity, Transform::identity());
+        }
+    }
+}
+
+/// A walking cane from the hand grip down to the ground: dark shaft, a light
+/// silver knob at the top and a ferrule at the tip.
+fn draw_cane(pixmap: &mut Pixmap, hand_x: f64, hand_y: f64, ground_y: f64, scale: f64, opacity: f64) {
+    let shaft = [34u8, 32, 36];
+    let width = 2.8 * scale;
+    let top_y = hand_y - 4.0 * scale;
+
+    // Shaft (slight taper toward the tip).
+    let mut pb = PathBuilder::new();
+    pb.move_to((hand_x - width * 0.5) as f32, top_y as f32);
+    pb.line_to((hand_x + width * 0.5) as f32, top_y as f32);
+    pb.line_to((hand_x + width * 0.35) as f32, ground_y as f32);
+    pb.line_to((hand_x - width * 0.35) as f32, ground_y as f32);
+    pb.close();
+    if let Some(path) = pb.finish() {
+        draw_outlined_path(pixmap, &path, shaft, opacity, Transform::identity());
+    }
+
+    // Silver knob.
+    let knob = [206u8, 206, 212];
+    let r = 4.2 * scale;
+    let mut pb = PathBuilder::new();
+    let steps = 20;
+    for i in 0..=steps {
+        let a = (i as f64 / steps as f64) * 2.0 * PI;
+        let px = hand_x + a.cos() * r;
+        let py = top_y + a.sin() * r * 0.9;
+        if i == 0 {
+            pb.move_to(px as f32, py as f32);
+        } else {
+            pb.line_to(px as f32, py as f32);
+        }
+    }
+    pb.close();
+    if let Some(path) = pb.finish() {
+        draw_outlined_path(pixmap, &path, knob, opacity, Transform::identity());
+    }
+
+    // Ferrule at the tip.
+    fill_rect(
+        pixmap,
+        hand_x - width * 0.45,
+        ground_y - 4.0 * scale,
+        width * 0.9,
+        4.0 * scale,
+        &solid_paint(knob[0], knob[1], knob[2], opacity),
+    );
+}
+
 fn draw_neck(
     pixmap: &mut Pixmap,
     hx: f64,
@@ -1275,6 +1516,20 @@ fn draw_neck(
     if let Some(path) = pb.finish() {
         draw_outlined_path(pixmap, &path, skin, opacity, Transform::identity());
     }
+}
+
+/// Forward-kinematics for the hand position of an arm, matching `draw_arm`.
+/// Used to attach held props (e.g. a cane) to the hand.
+fn arm_hand_pos(sx: f64, sy: f64, angle: f64, elbow_bend: f64, length: f64) -> (f64, f64) {
+    let rad = angle.to_radians();
+    let upper_len = length * 0.5;
+    let lower_len = length * 0.5;
+    let elbow_x = sx + rad.sin() * upper_len;
+    let elbow_y = sy + rad.cos() * upper_len;
+    let elbow_angle = rad + elbow_bend * PI * 0.5 * if angle > 0.0 { 1.0 } else { -1.0 };
+    let hand_x = elbow_x + elbow_angle.sin() * lower_len;
+    let hand_y = elbow_y + elbow_angle.cos() * lower_len;
+    (hand_x, hand_y)
 }
 
 fn draw_arm(
@@ -1384,9 +1639,11 @@ fn draw_arm(
         );
         pb.close();
         if let Some(path) = pb.finish() {
-            draw_outlined_path(pixmap, &path, skin_dark, opacity, Transform::identity());
+            // Elbow is inside the sleeve — fill with sleeve colour, not skin.
+            draw_outlined_path(pixmap, &path, sleeve_color, opacity, Transform::identity());
         }
     }
+    let _ = skin_dark;
 
     // Hand — shaped based on pose.
     let hand_w = width * 0.55;
@@ -3015,16 +3272,29 @@ fn draw_glasses(
         pb.finish()
     };
 
-    // Left lens.
+    // Semi-tinted lens fill + a diagonal glint — reads as dark glasses without
+    // fully hiding the eyes (Statham/Woland).
+    let tint = solid_paint(26, 26, 32, opacity * 0.5);
+    let glint = solid_paint(240, 240, 245, opacity * 0.4);
     let lx = cx - spacing;
-    if let Some(path) = circle_path(lx, eye_y, lens_r) {
-        pixmap.stroke_path(&path, &paint, &stroke, transform, None);
-    }
-
-    // Right lens.
     let rx_pos = cx + spacing;
-    if let Some(path) = circle_path(rx_pos, eye_y, lens_r) {
-        pixmap.stroke_path(&path, &paint, &stroke, transform, None);
+    for &cxl in &[lx, rx_pos] {
+        if let Some(path) = circle_path(cxl, eye_y, lens_r) {
+            pixmap.fill_path(&path, &tint, FillRule::Winding, transform, None);
+            pixmap.stroke_path(&path, &paint, &stroke, transform, None);
+        }
+        // Glint: a short diagonal stroke across the upper-left of the lens.
+        let mut gb = PathBuilder::new();
+        gb.move_to((cxl - lens_r * 0.55) as f32, (eye_y - lens_r * 0.15) as f32);
+        gb.line_to((cxl - lens_r * 0.1) as f32, (eye_y - lens_r * 0.6) as f32);
+        if let Some(path) = gb.finish() {
+            let gstroke = Stroke {
+                width: 1.6,
+                line_cap: LineCap::Round,
+                ..Stroke::default()
+            };
+            pixmap.stroke_path(&path, &glint, &gstroke, transform, None);
+        }
     }
     let lens_w = lens_r;
 
