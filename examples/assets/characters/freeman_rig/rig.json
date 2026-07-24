@@ -58,6 +58,7 @@
     "think": { "name": "think", "transition_duration": 0.45, "bones": { "head": { "rotation": -6 }, "mouth": { "part": "mouth_closed" }, "upper_arm_left": { "rotation": -58 }, "forearm_left": { "rotation": 92 } } },
     "shrug": { "name": "shrug", "transition_duration": 0.4, "bones": { "head": { "rotation": 2 }, "mouth": { "part": "mouth_frown" }, "upper_arm_left": { "rotation": -52 }, "forearm_left": { "rotation": 44 }, "upper_arm_right": { "rotation": 52 }, "forearm_right": { "rotation": -44 } } },
     "point": { "name": "point", "transition_duration": 0.35, "bones": { "head": { "rotation": 1 }, "mouth": { "part": "mouth_o" }, "upper_arm_left": { "rotation": -58 }, "forearm_left": { "rotation": 16 } } },
-    "hips":  { "name": "hips", "transition_duration": 0.4, "bones": { "mouth": { "part": "mouth_m" }, "upper_arm_left": { "rotation": -30 }, "forearm_left": { "rotation": 92 }, "upper_arm_right": { "rotation": 30 }, "forearm_right": { "rotation": -92 } } }
+    "hips":  { "name": "hips", "transition_duration": 0.4, "bones": { "mouth": { "part": "mouth_m" }, "upper_arm_left": { "rotation": -30 }, "forearm_left": { "rotation": 92 }, "upper_arm_right": { "rotation": 30 }, "forearm_right": { "rotation": -92 } } },
+    "lying": { "name": "lying", "transition_duration": 0.5, "bones": { "head": { "rotation": 14 }, "mouth": { "part": "mouth_closed" }, "upper_arm_left": { "rotation": -150 }, "forearm_left": { "rotation": 118 }, "upper_arm_right": { "rotation": -24 }, "forearm_right": { "rotation": -42 }, "thigh_left": { "rotation": -6 }, "shin_left": { "rotation": 4 }, "thigh_right": { "rotation": -34 }, "shin_right": { "rotation": 74 } } }
   }
 }

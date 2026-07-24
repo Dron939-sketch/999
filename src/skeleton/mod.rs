@@ -189,7 +189,7 @@ fn load_part(
         ))
     })?;
 
-    let opts = usvg::Options::default();
+    let opts = crate::svg_options();
     let tree = usvg::Tree::from_data(&svg_data, &opts).map_err(|e| {
         AnimError::Asset(format!("failed to parse SVG for part '{}': {}", part_name, e))
     })?;

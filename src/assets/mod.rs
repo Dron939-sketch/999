@@ -150,7 +150,7 @@ fn load_character(name: &str, path: &Path) -> Result<CharacterAsset, AnimError> 
         ))
     })?;
 
-    let opts = usvg::Options::default();
+    let opts = crate::svg_options();
     let tree = usvg::Tree::from_data(&svg_data, &opts)
         .map_err(|e| AnimError::Asset(format!("failed to parse SVG for '{}': {}", name, e)))?;
 
@@ -175,7 +175,7 @@ fn load_set(name: &str, path: &Path) -> Result<SetAsset, AnimError> {
         ))
     })?;
 
-    let opts = usvg::Options::default();
+    let opts = crate::svg_options();
     let tree = usvg::Tree::from_data(&svg_data, &opts)
         .map_err(|e| AnimError::Asset(format!("failed to parse SVG for set '{}': {}", name, e)))?;
 
@@ -200,7 +200,7 @@ fn load_prop(name: &str, path: &Path) -> Result<PropAsset, AnimError> {
         ))
     })?;
 
-    let opts = usvg::Options::default();
+    let opts = crate::svg_options();
     let tree = usvg::Tree::from_data(&svg_data, &opts)
         .map_err(|e| AnimError::Asset(format!("failed to parse SVG for prop '{}': {}", name, e)))?;
 

@@ -50,6 +50,9 @@ pub struct PoseEvent {
     pub time: f64,
     pub entity: String,
     pub pose: String,
+    /// Overlay events (auto-speech mouth flaps) merge onto the last held
+    /// full pose instead of replacing it — the body keeps its gesture.
+    pub overlay: bool,
 }
 
 /// Camera keyframes.
@@ -221,6 +224,7 @@ impl TimelineCompiler {
                     time: self.time,
                     entity: entity.clone(),
                     pose: pose.clone(),
+                    overlay: false,
                 });
                 if let Some(e) = self.entities.get_mut(entity) {
                     e.pose = pose.clone();
@@ -230,6 +234,7 @@ impl TimelineCompiler {
                 // Auto-speech: cycle phoneme mouth poses for the duration and
                 // advance time (a wait that talks). The pattern is deterministic
                 // but irregular so the flapping doesn't read as a metronome.
+                // Flaps are overlays: they merge onto the held body pose.
                 let dur = duration.as_secs();
                 let end = self.time + dur;
                 const FLAPS: [&str; 6] = ["talk", "gab", "talk", "idle", "gab", "talk"];
@@ -240,6 +245,7 @@ impl TimelineCompiler {
                         time: t,
                         entity: entity.clone(),
                         pose: FLAPS[i % FLAPS.len()].to_string(),
+                        overlay: true,
                     });
                     // 0.14–0.24s per flap, varied deterministically.
                     t += 0.14 + 0.05 * ((i * 7 + 3) % 3) as f64;
@@ -250,10 +256,8 @@ impl TimelineCompiler {
                     time: end,
                     entity: entity.clone(),
                     pose: "idle".to_string(),
+                    overlay: true,
                 });
-                if let Some(e) = self.entities.get_mut(entity) {
-                    e.pose = "idle".to_string();
-                }
                 self.time = end;
             }
             ActionStmt::Show {

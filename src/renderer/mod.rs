@@ -274,21 +274,52 @@ fn render_rigged_character(
     // and idle float below keep running at full rate.
     let pose_time = (t * 12.0).floor() / 12.0;
 
-    // Determine current and previous pose, and interpolation progress.
-    let (from_pose_name, to_pose_name, pose_t) =
-        get_pose_interpolation(timeline, entity_name, pose_time);
+    // Determine current and previous pose events, and interpolation progress.
+    // Overlay events (speech mouth flaps) merge onto the last held body pose,
+    // so a gesture — or a lying character — keeps its posture while talking.
+    let events: Vec<&PoseEvent> = timeline
+        .pose_events
+        .iter()
+        .filter(|e| e.entity == entity_name)
+        .collect();
 
-    let from_pose = from_pose_name.and_then(|n| rig.poses.get(n));
-    let to_pose = to_pose_name.and_then(|n| rig.poses.get(n));
+    let mut current_idx: Option<usize> = None;
+    for (i, ev) in events.iter().enumerate() {
+        if ev.time <= pose_time {
+            current_idx = Some(i);
+        }
+    }
 
-    let _transition_dur = to_pose.map(|p| p.transition_duration).unwrap_or(0.3);
+    let (from_idx, to_idx, pose_t) = match current_idx {
+        None => (None, if events.is_empty() { None } else { Some(0) }, 0.0),
+        Some(idx) => {
+            // Use the target pose's own transition duration (fast for flaps).
+            let td = events
+                .get(idx)
+                .and_then(|ev| rig.poses.get(&ev.pose))
+                .map(|p| p.transition_duration)
+                .unwrap_or(0.3)
+                .max(0.01);
+            let elapsed = pose_time - events[idx].time;
+            if elapsed >= td {
+                (Some(idx), Some(idx), 1.0)
+            } else {
+                let prev = if idx > 0 { Some(idx - 1) } else { None };
+                (prev, Some(idx), elapsed / td)
+            }
+        }
+    };
+
+    let from_pose = resolve_effective_pose(rig, &events, from_idx);
+    let to_pose = resolve_effective_pose(rig, &events, to_idx);
 
     // Ease pose transitions with a slight overshoot ("ease-out-back") so gestures
     // snap and settle like hand-drawn animation instead of sliding linearly.
     let eased_t = ease_out_back(pose_t);
 
     // Get interpolated bone states.
-    let mut bone_states = interpolate_skeleton(&rig.skeleton, from_pose, to_pose, eased_t);
+    let mut bone_states =
+        interpolate_skeleton(&rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), eased_t);
 
     // Detect if the character is moving (for walk cycle).
     let velocity = compute_velocity(timeline, entity_name, t);
@@ -349,7 +380,9 @@ fn render_rigged_character(
         state.opacity,
         state.scale_x,
         state.scale_y,
-        0.0, // parent rotation accumulator
+        // Whole-character rotation (the `rotate` action): lets a rigged
+        // character lie down, lean, etc. Applied as the root rotation.
+        state.rotation,
         boil_seed,
     )?;
 
@@ -535,6 +568,45 @@ fn render_bone_tree(
     Ok(())
 }
 
+/// Resolve the effective pose for a pose-event index. A full (non-overlay)
+/// event resolves to its named pose. An overlay event (speech mouth flap)
+/// resolves to the last held full pose with the overlay's bones merged on top,
+/// so the body keeps its gesture while the mouth talks. `None` (before any
+/// event) resolves to the rig's "idle" pose.
+fn resolve_effective_pose(
+    rig: &CharacterRig,
+    events: &[&PoseEvent],
+    idx: Option<usize>,
+) -> Option<skeleton::Pose> {
+    let idx = match idx {
+        Some(i) => i,
+        None => return rig.poses.get("idle").cloned(),
+    };
+    let ev = events.get(idx)?;
+    let pose = rig.poses.get(&ev.pose)?;
+    if !ev.overlay {
+        return Some(pose.clone());
+    }
+    // Find the base: the most recent non-overlay event at or before this one.
+    let base = events[..idx]
+        .iter()
+        .rev()
+        .find(|e| !e.overlay)
+        .and_then(|e| rig.poses.get(&e.pose))
+        .or_else(|| rig.poses.get("idle"));
+    match base {
+        Some(base) => {
+            let mut merged = base.clone();
+            merged.transition_duration = pose.transition_duration;
+            for (bone, bt) in &pose.bones {
+                merged.bones.insert(bone.clone(), bt.clone());
+            }
+            Some(merged)
+        }
+        None => Some(pose.clone()),
+    }
+}
+
 /// Ease-out-back: decelerates and overshoots slightly past the target before
 /// settling — gives pose changes a snappy, hand-animated feel. t is clamped to
 /// [0,1]; the returned value may exceed 1.0 briefly (the overshoot).
@@ -588,7 +660,7 @@ fn render_bone_part(
     pivot: &(f64, f64),
     boil_seed: u32,
 ) -> Result<(), AnimError> {
-    let opts = usvg::Options::default();
+    let opts = crate::svg_options();
     let svg_data = apply_boil(&part.svg_data, boil_seed);
     let tree = usvg::Tree::from_data(&svg_data, &opts)
         .map_err(|e| AnimError::Render(format!("SVG parse error: {e}")))?;
@@ -754,7 +826,7 @@ fn render_svg_to_pixmap(
     camera: &CameraKeyframe,
     is_background: bool,
 ) -> Result<(), AnimError> {
-    let opts = usvg::Options::default();
+    let opts = crate::svg_options();
     let tree = usvg::Tree::from_data(svg_data, &opts)
         .map_err(|e| AnimError::Render(format!("SVG parse error: {e}")))?;
 
