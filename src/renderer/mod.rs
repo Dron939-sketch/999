@@ -290,22 +290,22 @@ fn render_rigged_character(
         }
     }
 
-    let (from_idx, to_idx, pose_t) = match current_idx {
-        None => (None, if events.is_empty() { None } else { Some(0) }, 0.0),
+    let (from_idx, to_idx, pose_t, td) = match current_idx {
+        None => (None, if events.is_empty() { None } else { Some(0) }, 0.0, 0.18),
         Some(idx) => {
             // Use the target pose's own transition duration (fast for flaps).
             let td = events
                 .get(idx)
                 .and_then(|ev| rig.poses.get(&ev.pose))
                 .map(|p| p.transition_duration)
-                .unwrap_or(0.3)
+                .unwrap_or(0.18) // snappier default than a slow 0.3s slide
                 .max(0.01);
             let elapsed = pose_time - events[idx].time;
             if elapsed >= td {
-                (Some(idx), Some(idx), 1.0)
+                (Some(idx), Some(idx), 1.0, td)
             } else {
                 let prev = if idx > 0 { Some(idx - 1) } else { None };
-                (prev, Some(idx), elapsed / td)
+                (prev, Some(idx), elapsed / td, td)
             }
         }
     };
@@ -313,9 +313,15 @@ fn render_rigged_character(
     let from_pose = resolve_effective_pose(rig, &events, from_idx);
     let to_pose = resolve_effective_pose(rig, &events, to_idx);
 
-    // Ease pose transitions with a slight overshoot ("ease-out-back") so gestures
-    // snap and settle like hand-drawn animation instead of sliding linearly.
-    let eased_t = ease_out_back(pose_t);
+    // Hand-drawn timing. Short transitions (mouth flaps, blinks) just ease out.
+    // Larger gestures get anticipation (a wind-up away from the target) plus an
+    // overshoot, so poses read as struck rather than slid — the core of the
+    // Freeman feel. Extrapolation past [0,1] is intentional here.
+    let eased_t = if td < 0.15 {
+        ease_out_cubic(pose_t)
+    } else {
+        anticipate_back(pose_t)
+    };
 
     // Get interpolated bone states.
     let mut bone_states =
@@ -616,6 +622,30 @@ fn ease_out_back(t: f64) -> f64 {
     const C3: f64 = C1 + 1.0;
     let u = t - 1.0;
     1.0 + C3 * u * u * u + C1 * u * u
+}
+
+/// Plain ease-out (cubic), no overshoot — for tiny/fast transitions like mouth
+/// flaps, where an overshoot or wind-up would look wrong.
+fn ease_out_cubic(t: f64) -> f64 {
+    let t = t.clamp(0.0, 1.0);
+    let u = 1.0 - t;
+    1.0 - u * u * u
+}
+
+/// Anticipation + overshoot: the hallmark of hand-drawn timing. The first ~30%
+/// of the move winds up slightly AWAY from the target (extrapolating past the
+/// held pose, hence the negative return), then it snaps forward and overshoots
+/// before settling. Applied to larger gestures (not mouth flaps) so poses read
+/// as struck, not slid — the biggest single step from "puppet" toward Freeman.
+fn anticipate_back(t: f64) -> f64 {
+    let t = t.clamp(0.0, 1.0);
+    const ANTIC: f64 = 0.30; // fraction of the move spent winding up
+    if t < ANTIC {
+        let u = t / ANTIC; // 0→1 over the wind-up
+        -0.10 * (4.0 * u * (1.0 - u)) // dips to ~-0.10 then back to 0
+    } else {
+        ease_out_back((t - ANTIC) / (1.0 - ANTIC))
+    }
 }
 
 /// Swap every `seed="N"` in an SVG (feTurbulence) for the given boil seed, so
