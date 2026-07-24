@@ -798,6 +798,150 @@
           "part": "mouth_f"
         }
       }
+    },
+    "hero_rage": {
+      "name": "hero_rage",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_rage"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_shock": {
+      "name": "hero_shock",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_shock"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_laugh": {
+      "name": "hero_laugh",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_laugh"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_sly": {
+      "name": "hero_sly",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_sly"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_skeptic": {
+      "name": "hero_skeptic",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_skeptic"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_wow": {
+      "name": "hero_wow",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_wow"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_scream": {
+      "name": "hero_scream",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_scream"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_dead": {
+      "name": "hero_dead",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_dead"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
     }
   }
 }

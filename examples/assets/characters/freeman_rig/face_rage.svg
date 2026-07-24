@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 200" width="160" height="200">
+  <defs>
+    <filter id="ink" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="1" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <g filter="url(#ink)">
+    <path d="M66 158 L64 190 L96 190 L94 158 Z" fill="#0e0e0e"/>
+    <path d="M80 6 Q128 12 130 84 Q130 146 100 172 Q88 182 80 182 Q72 182 60 172 Q30 146 30 84 Q32 12 80 6 Z"
+          fill="#eef1ec" stroke="#0e0e0e" stroke-width="3"/>
+    <path d="M31 96 Q34 150 62 174 Q73 182 80 182 Q88 182 99 174 Q126 152 129 98"
+          fill="none" stroke="#0e0e0e" stroke-width="7.5" stroke-linecap="round"/>
+    <path d="M30 78 Q31 60 36 44" fill="none" stroke="#0e0e0e" stroke-width="5.5" stroke-linecap="round"/>
+
+    <path d="M38 74 L76 92 L72 104 Q52 100 40 90 Z" fill="#0e0e0e"/>
+    <path d="M122 74 L84 92 L88 104 Q108 100 120 90 Z" fill="#0e0e0e"/>
+    <path d="M50 66 L78 84 M110 66 L82 84" stroke="#0e0e0e" stroke-width="6" stroke-linecap="round"/>
+    <path d="M52 128 Q80 116 108 128 Q104 150 80 150 Q56 150 52 128 Z" fill="#0e0e0e"/>
+    <path d="M58 128 L64 138 L70 127 L78 139 L86 127 L94 138 L100 127" fill="none" stroke="#eef1ec" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+</svg>
