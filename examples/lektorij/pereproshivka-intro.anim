@@ -52,8 +52,10 @@ scene "cell-hook" (duration: 22s, set: cell) {
     //lip 3
     freeman speaks for 3.4s
 
-    // САДИТСЯ («признай, что сидишь») — спина гнётся дугой, не доска
+    // САДИТСЯ («признай, что сидишь») — спина гнётся дугой, не доска;
+    // лязг в SFX + короткая тряска = удар акцента
     freeman pose "stern"
+    camera shake 0.25s intensity 0.8
     together {
         freeman rotates 0 over 0.9s
         freeman moves-to (0.36, 0.62) over 0.9s
@@ -122,8 +124,9 @@ scene "alive" (duration: 20s, set: mind) {
     //lip 9
     freeman speaks for 2.6s
 
-    // ПАНЧ: сверхкруп, гротескный оскал в упор. VO-10: «Или не трогай ничего...»
+    // ПАНЧ: сверхкруп, гротескный оскал в упор + удар тряски. VO-10.
     camera extreme-close-up freeman
+    camera shake 0.35s intensity 1.4
     freeman pose "grotesque"
     //lip 10
     freeman speaks for 2.8s

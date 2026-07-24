@@ -137,7 +137,14 @@ pub fn render_frame(
         config.background.a,
     ));
 
-    let camera = evaluate_camera(&timeline.camera_track, t);
+    let mut camera = evaluate_camera(&timeline.camera_track, t);
+    // Camera shake: deterministic multi-frequency jitter (no RNG — renders are
+    // reproducible). Held on ~8ms steps so it reads as a hand-held hit, not blur.
+    if camera.shake > 0.0 {
+        let s = camera.shake * 0.012;
+        camera.x += ((t * 47.0).sin() + (t * 31.0).cos() * 0.6) * s;
+        camera.y += ((t * 53.0).cos() + (t * 37.0).sin() * 0.6) * s * 0.7;
+    }
 
     // Render set (background).
     if let Some(name) = set_name {
