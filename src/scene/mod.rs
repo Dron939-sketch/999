@@ -30,6 +30,9 @@ pub struct RenderConfig {
     /// drawn" — the original Freeman animates on 2s–3s, not smooth. Camera
     /// pushes and transitions stay smooth; only the character drawing steps.
     pub on_twos: u32,
+    /// Falling-particle overlay density (0 = off; ~0.3–0.8 = drifting snow/ash
+    /// specks — Freeman's atmospheric layer). Deterministic per (particle, time).
+    pub snow: f64,
 }
 
 impl Default for RenderConfig {
@@ -44,6 +47,7 @@ impl Default for RenderConfig {
             film_grain: 0.0,
             vignette: 0.0,
             on_twos: 0,
+            snow: 0.0,
         }
     }
 }
@@ -97,6 +101,11 @@ impl RenderConfig {
                 "on-twos" => {
                     if let Value::Number(n) = &entry.value {
                         cfg.on_twos = *n as u32;
+                    }
+                }
+                "snow" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.snow = *n;
                     }
                 }
                 _ => {}

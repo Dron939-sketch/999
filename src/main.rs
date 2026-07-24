@@ -228,6 +228,19 @@ fn cmd_render(
         }
     }
 
+    // Drifting particles (snow/ash) — Freeman's atmospheric layer.
+    if config.snow > 0.0 {
+        for (i, frame) in all_frames.iter_mut().enumerate() {
+            apply_snow(
+                &mut frame.data,
+                frame.width,
+                frame.height,
+                i as u32,
+                config.snow as f32,
+            );
+        }
+    }
+
     // Output.
     if let Some(dir) = png_dir {
         video::encode_png_sequence(&all_frames, dir)?;
@@ -254,8 +267,22 @@ fn apply_monochrome(data: &mut [u8], contrast: f32) {
     // silhouette — the flat-ink "Mr. Freeman" look.
     let contrast = if contrast > 0.0 { contrast } else { 1.12 };
     for px in data.chunks_exact_mut(4) {
+        let (r, g, b) = (px[0] as f32, px[1] as f32, px[2] as f32);
+        // Spot-colour accent (Freeman device): a strongly-red pixel survives the
+        // monochrome pass as blood-red, so any asset drawn in red reads as the
+        // single shock colour on the black-and-white frame. Everything else is
+        // desaturated to ink.
+        let redness = r - g.max(b);
+        if redness > 55.0 && r > 90.0 {
+            // Keep a punchy, slightly darkened blood red; carry a little shading.
+            let k = (r / 255.0).clamp(0.5, 1.0);
+            px[0] = (200.0 * k + 30.0).min(255.0) as u8;
+            px[1] = (18.0 * k) as u8;
+            px[2] = (22.0 * k) as u8;
+            continue;
+        }
         // Rec. 601 luma.
-        let luma = 0.299 * px[0] as f32 + 0.587 * px[1] as f32 + 0.114 * px[2] as f32;
+        let luma = 0.299 * r + 0.587 * g + 0.114 * b;
         // Apply an S-curve style contrast around 128.
         let adjusted = ((luma - 128.0) * contrast + 128.0).clamp(0.0, 255.0);
         let v = adjusted as u8;
@@ -263,6 +290,46 @@ fn apply_monochrome(data: &mut [u8], contrast: f32) {
         px[1] = v;
         px[2] = v;
         // px[3] (alpha) untouched.
+    }
+}
+
+/// Drifting particles (snow / ash specks) — a light atmospheric layer. Each
+/// particle has a fixed column and fall speed derived from its id, so motion is
+/// smooth and fully deterministic (reproducible renders). Density scales the
+/// particle count. Specks are drawn as soft light dots blended over the frame.
+fn apply_snow(data: &mut [u8], width: u32, height: u32, frame: u32, density: f32) {
+    let w = width as i64;
+    let h = height as i64;
+    let count = ((w * h) as f32 * 0.00018 * density).round() as u32;
+    let t = frame as f32;
+    for id in 0..count {
+        // Deterministic per-particle constants from a cheap hash.
+        let mut n = (id as u64).wrapping_mul(0x9E3779B97F4A7C15);
+        n ^= n >> 29;
+        let hx = (n & 0xFFFF) as f32 / 65535.0;
+        let hs = ((n >> 16) & 0xFF) as f32 / 255.0; // speed factor
+        let hd = ((n >> 24) & 0xFF) as f32 / 255.0; // sway phase
+        let speed = 0.6 + hs * 1.8; // px/frame
+        let sway = ((t * 0.05 + hd * 6.28).sin()) * 6.0;
+        let x = (hx * w as f32 + sway).rem_euclid(w as f32) as i64;
+        let y = (t * speed + hd * h as f32).rem_euclid(h as f32) as i64;
+        let bright = 150.0 + hs * 90.0;
+        // 2x2 soft speck.
+        for dy in 0..2 {
+            for dx in 0..2 {
+                let px = x + dx;
+                let py = y + dy;
+                if px < 0 || px >= w || py < 0 || py >= h {
+                    continue;
+                }
+                let idx = ((py * w + px) * 4) as usize;
+                let a = 0.55f32;
+                for c in 0..3 {
+                    let base = data[idx + c] as f32;
+                    data[idx + c] = (base * (1.0 - a) + bright * a).min(255.0) as u8;
+                }
+            }
+        }
     }
 }
 
