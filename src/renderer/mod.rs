@@ -327,6 +327,21 @@ fn render_rigged_character(
     let mut bone_states =
         interpolate_skeleton(&rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), eased_t);
 
+    // Pose-only state one animation tick (1/12s) earlier — lets us measure how
+    // fast each part is moving in THIS gesture, the basis for motion smears.
+    // Pose-only (no idle/speak float) so only deliberate motion smears.
+    let prev_pose_t = match current_idx {
+        Some(idx) => (((pose_time - 1.0 / 12.0) - events[idx].time) / td).clamp(0.0, 1.0),
+        None => 0.0,
+    };
+    let eased_prev = if td < 0.15 {
+        ease_out_cubic(prev_pose_t)
+    } else {
+        anticipate_back(prev_pose_t)
+    };
+    let mut bone_states_prev =
+        interpolate_skeleton(&rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), eased_prev);
+
     // Detect if the character is moving (for walk cycle).
     let velocity = compute_velocity(timeline, entity_name, t);
     let speed = (velocity.0 * velocity.0 + velocity.1 * velocity.1).sqrt();
@@ -353,6 +368,21 @@ fn render_rigged_character(
     let speak = speaking_intensity(&events, pose_time);
     if speak > 0.001 {
         apply_speaking_motion(&mut bone_states, t, speak);
+    }
+
+    // Match the same idle/walk/squash/speak float on the previous-tick state, so
+    // the smear below measures TOTAL on-screen motion between ticks — not a
+    // constant pose-vs-float offset (which would smear a talking head forever).
+    let t_prev = t - 1.0 / 12.0;
+    if is_walking {
+        apply_walk_cycle(&mut bone_states_prev, (t_prev * 2.5) % 1.0, (speed * 8.0).min(1.0));
+    } else {
+        apply_idle_motion(&mut bone_states_prev, &rig.skeleton, t_prev);
+    }
+    apply_squash_stretch(&mut bone_states_prev, velocity.1);
+    let speak_prev = speaking_intensity(&events, pose_time - 1.0 / 12.0);
+    if speak_prev > 0.001 {
+        apply_speaking_motion(&mut bone_states_prev, t_prev, speak_prev);
     }
 
     // Compute the character's screen position.
@@ -401,9 +431,70 @@ fn render_rigged_character(
         state.rotation,
         &mut drawables,
     );
-    // Stable sort keeps tree order among equal z_order (deterministic layering).
-    drawables.sort_by_key(|d| d.z_order);
-    for d in &drawables {
+    // Same collection at the previous tick — pose-only — to measure per-part motion.
+    let mut prev_draws: Vec<Drawable> = Vec::new();
+    collect_bone_drawables(
+        &rig.skeleton.root,
+        &bone_states_prev,
+        &rig.parts,
+        screen_x,
+        screen_y,
+        char_scale,
+        flip,
+        state.opacity,
+        state.scale_x,
+        state.scale_y,
+        state.rotation,
+        &mut prev_draws,
+    );
+
+    // Motion smears: where a part moved fast since the previous tick, insert 1–2
+    // fading ghost copies along its path (drawn BEHIND the real part). This is the
+    // motion-blur of hand-drawn animation — the step that kills the "slide". The
+    // two lists share tree order, so we pair them by index.
+    let mut final_draws: Vec<Drawable> = Vec::with_capacity(drawables.len());
+    for (i, d) in drawables.iter().enumerate() {
+        if let Some(p) = prev_draws.get(i) {
+            let dx = d.x - p.x;
+            let dy = d.y - p.y;
+            let dpos = (dx * dx + dy * dy).sqrt();
+            let motion = dpos + (d.rot - p.rot).abs() * 0.6;
+            if motion > 16.0 {
+                let ghosts = if motion > 40.0 { 2 } else { 1 };
+                for g in 0..ghosts {
+                    let f = (g as f64 + 1.0) / (ghosts as f64 + 1.0); // between prev & cur
+                    final_draws.push(Drawable {
+                        part: d.part,
+                        x: p.x + dx * f,
+                        y: p.y + dy * f,
+                        sx: d.sx,
+                        sy: d.sy,
+                        rot: p.rot + (d.rot - p.rot) * f,
+                        flip: d.flip,
+                        opacity: d.opacity * 0.20,
+                        pivot: d.pivot,
+                        z_order: d.z_order,
+                    });
+                }
+            }
+        }
+        final_draws.push(Drawable {
+            part: d.part,
+            x: d.x,
+            y: d.y,
+            sx: d.sx,
+            sy: d.sy,
+            rot: d.rot,
+            flip: d.flip,
+            opacity: d.opacity,
+            pivot: d.pivot,
+            z_order: d.z_order,
+        });
+    }
+
+    // Stable sort keeps tree/ghost order among equal z_order (deterministic).
+    final_draws.sort_by_key(|d| d.z_order);
+    for d in &final_draws {
         render_bone_part(
             d.part, pixmap, d.x, d.y, d.sx, d.sy, d.rot, d.flip, d.opacity, &d.pivot,
             boil_seed,
