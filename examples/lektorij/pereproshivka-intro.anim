@@ -53,8 +53,8 @@ scene "cell-hook" (duration: 22s, set: cell) {
     // лёжа в полусидя, персонаж остаётся на кровати. Без левитации через комнату.
     freeman pose "stern"
     together {
-        freeman rotates -20 over 0.9s
-        freeman moves-to (0.34, 0.66) over 0.9s
+        freeman rotates 0 over 0.9s
+        freeman moves-to (0.36, 0.62) over 0.9s
     }
     camera medium freeman
     wait 0.3s
@@ -112,11 +112,11 @@ scene "alive" (duration: 18s, set: mind) {
     wait 0.5s
     freeman speaks for 2.6s
 
-    // финал: взгляд в упор
+    // финал: сверхкруп, гротескный оскал в упор (панч в стиле Фримена), затем взгляд
     camera extreme-close-up freeman
-    freeman pose "wide"
-    wait 1.2s
+    freeman pose "grotesque"
+    wait 1.0s
     freeman pose "stern"
-    wait 1.4s
+    wait 1.6s
     transition fade-black 1.6s
 }
