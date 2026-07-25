@@ -245,14 +245,18 @@ def has_audio(path):
     return bool(_ffprobe(path, "stream=codec_type", select="a:0"))
 
 
-def qc_production(prod, video_mp4, final_mp4, voice_expected):
+def qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced):
     """Гейт качества. Возвращает (hard, soft) — списки сообщений.
 
-    HARD = наш дефект (нет рендера, грубый рассинхрон) → должен ронять --strict.
-    SOFT = внешний сбой (TTS недоступен → нет аудио) — НЕ наша вина, только
-    предупреждение; здоровые файлы всё равно должны закоммититься. Разделение
-    важно: иначе падение внешнего Frederick заблокирует коммит ВСЕХ роликов,
-    включая заведомо немые по замыслу — это против принципа «отдать хоть что-то»."""
+    HARD = наш дефект (нет рендера, грубый рассинхрон, ПОТЕРЯ уже сгенеренного
+    голоса в миксе) → должен ронять --strict.
+    SOFT = внешний сбой (TTS недоступен → голос вообще не сгенерился) — НЕ наша
+    вина, только предупреждение; здоровые файлы всё равно должны закоммититься.
+
+    `voice_produced` снимает неоднозначность «нет звука»: если голосовая дорожка
+    БЫЛА собрана (voice.mp3 существует), а в финале звука нет — это НАШ баг микса
+    (step_mux потерял дорожку) → HARD; если голоса не было вовсе → внешний TTS → SOFT.
+    Иначе гейт прощал бы собственные баги сборки под видом внешнего сбоя."""
     hard, soft = [], []
     if not Path(video_mp4).exists():
         hard.append(f"{prod['id']}: нет отрендеренного video ({Path(video_mp4).name})")
@@ -261,9 +265,12 @@ def qc_production(prod, video_mp4, final_mp4, voice_expected):
         if not have_ffmpeg():
             return hard, soft  # без ffprobe проверить нечем
         if not Path(final_mp4).exists() or not has_audio(final_mp4):
-            # Нет звука при заявленном vo — почти всегда внешний сбой TTS. SOFT.
-            soft.append(f"{prod['id']}: заявлен vo, но в финале НЕТ звука "
-                        "(вероятно недоступен TTS) — отдаём немой рендер")
+            if voice_produced:
+                hard.append(f"{prod['id']}: голос СОБРАН (voice.mp3 есть), но в финале "
+                            "нет звука — потеря дорожки в сведении (наш баг микса)")
+            else:
+                soft.append(f"{prod['id']}: заявлен vo, но голос не сгенерился "
+                            "(вероятно недоступен TTS) — отдаём немой рендер")
         else:
             vd, ad = media_duration(video_mp4), media_duration(final_mp4)
             if vd > 0 and abs(ad - vd) / vd > 0.20:
@@ -302,7 +309,8 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
                     "снизь битрейт/длительность.")
     log(f"  → готово: {', '.join(made)}")
 
-    hard, soft = qc_production(prod, video_mp4, final_mp4, voice_expected)
+    voice_produced = voice is not None and Path(voice).exists()
+    hard, soft = qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced)
     for e in hard:
         log(f"  [QC-HARD] {e}")
     for e in soft:
