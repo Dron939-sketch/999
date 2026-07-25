@@ -264,7 +264,27 @@
   "poses": {
     "idle": {
       "name": "idle",
+      "transition_duration": 0.2,
       "bones": {
+        "head": {
+          "offset": [
+            -5,
+            13
+          ],
+          "rotation": -9
+        },
+        "upper_arm_left": {
+          "rotation": 44
+        },
+        "forearm_left": {
+          "rotation": -18
+        },
+        "upper_arm_right": {
+          "rotation": -36
+        },
+        "forearm_right": {
+          "rotation": 8
+        },
         "mouth": {
           "part": "mouth_closed"
         }
