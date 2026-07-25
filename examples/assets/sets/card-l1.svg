@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+<defs><filter id="ink" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="1" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<rect width="1280" height="720" fill="#0b0b0b"/>
+<g filter="url(#ink)">
+<text x="640" y="360" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="140" fill="#e8ebe6" letter-spacing="6">ЛЕКЦИЯ 1</text>
+<text x="640" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-weight="400" font-style="italic" font-size="35" fill="#9aa096">ты никогда не начинался с чистого листа</text>
+</g></svg>
