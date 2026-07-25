@@ -1,2 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 108" width="38" height="108"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
-<g filter="url(#ink)"><path d="M14 8 Q17 55.0 14.75 102 L23.25 102 Q27 55.0 24 8 Z" fill="#0e0e0e"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 66" width="38" height="66"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="None" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<g filter="url(#ink)"><path d="M13 6 Q13 32.0 13.9 58 L24.1 58 Q25 32.0 25 6 Z" fill="#0e0e0e"/></g></svg>
