@@ -1,12 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 30" width="44" height="30">
   <defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%">
     <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="3" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.2" xChannelSelector="R" yChannelSelector="G"/>
   </filter></defs>
   <g filter="url(#ink)">
-    <!-- эталон: улыбка-дуга с ЯВНЫМИ загнутыми вверх крючками-скобками по
-         краям ↼‿↽. Крючки высотой ~18% ширины улыбки; линия толще. -->
-    <path d="M6 4 Q8 13 11 16 Q22 25 33 16 Q36 13 38 4"
-          fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round"/>
+    <!-- эталон: мягкая улыбка-дуга с лёгким загибом концов ВВЕРХ (не резкие
+         скобки), концы чуть подняты крючком. -->
+    <path d="M7 10 Q9 15 12 16 Q22 22 32 16 Q35 15 37 10"
+          fill="none" stroke="#0e0e0e" stroke-width="3" stroke-linecap="round"/>
+    <!-- ХАРАКТЕРНАЯ ЩЁЧНАЯ СКЛАДКА-морщинка ниже правого угла рта -->
+    <path d="M32 18 Q30 23 33 27" fill="none" stroke="#0e0e0e"
+          stroke-width="2.2" stroke-linecap="round"/>
   </g>
 </svg>
