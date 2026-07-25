@@ -13,6 +13,9 @@ pub struct Timeline {
     pub duration: f64,
     pub tracks: Vec<Track>,
     pub pose_events: Vec<PoseEvent>,
+    /// Speech blocks (start,end) in scene time — one per voiced line
+    /// (a `speaks` action or an uninterrupted run of `lips` actions).
+    pub speech_blocks: Vec<(f64, f64)>,
     pub camera_track: CameraTrack,
     pub transitions: Vec<TransitionEvent>,
 }
@@ -101,6 +104,8 @@ pub fn compile(scene: &ResolvedScene) -> Result<Timeline, AnimError> {
         time: 0.0,
         tracks: HashMap::new(),
         pose_events: Vec::new(),
+        speech_blocks: Vec::new(),
+        lips_open: None,
         camera_keyframes: vec![CameraKeyframe {
             time: 0.0,
             x: 0.5,
@@ -137,6 +142,7 @@ pub fn compile(scene: &ResolvedScene) -> Result<Timeline, AnimError> {
         duration,
         tracks,
         pose_events: compiler.pose_events,
+        speech_blocks: compiler.speech_blocks,
         camera_track: CameraTrack {
             keyframes: compiler.camera_keyframes,
         },
@@ -149,6 +155,8 @@ struct TimelineCompiler {
     /// entity -> property -> keyframes
     tracks: HashMap<String, HashMap<Property, Vec<Keyframe>>>,
     pose_events: Vec<PoseEvent>,
+    speech_blocks: Vec<(f64, f64)>,
+    lips_open: Option<usize>,
     camera_keyframes: Vec<CameraKeyframe>,
     transitions: Vec<TransitionEvent>,
     entities: HashMap<String, EntityState>,
@@ -163,6 +171,11 @@ impl TimelineCompiler {
     }
 
     fn compile_statement(&mut self, stmt: &SceneStatement) -> Result<(), AnimError> {
+        // Границы речевых блоков: непрерывный ряд `lips` = одна реплика; любое
+        // другое утверждение (поза, камера, wait) закрывает текущий блок.
+        if !matches!(stmt, SceneStatement::Action(ActionStmt::Lips { .. })) {
+            self.lips_open = None;
+        }
         match stmt {
             SceneStatement::Place(_) => {
                 // Already handled during scene resolution.
@@ -242,6 +255,7 @@ impl TimelineCompiler {
                 // Flaps are overlays: they merge onto the held body pose.
                 let dur = duration.as_secs();
                 let end = self.time + dur;
+                self.speech_blocks.push((self.time, end));
                 const FLAPS: [&str; 6] = ["talk", "gab", "talk", "idle", "gab", "talk"];
                 let mut t = self.time;
                 let mut i: usize = 0;
@@ -279,7 +293,15 @@ impl TimelineCompiler {
                     pose: pose.clone(),
                     overlay: true,
                 });
+                let start = self.time;
                 self.time += duration.as_secs();
+                match self.lips_open {
+                    Some(i) => self.speech_blocks[i].1 = self.time,
+                    None => {
+                        self.speech_blocks.push((start, self.time));
+                        self.lips_open = Some(self.speech_blocks.len() - 1);
+                    }
+                }
             }
             ActionStmt::Show {
                 entity,

@@ -105,6 +105,7 @@ def lips_track_lines(entity, mp3, indent, fps=11.0):
 
 def process(text, parts_dir):
     out, pending, subbed, fell = [], None, 0, 0
+    order = []  # номера vo-N в порядке появления речевых блоков в файле
     for line in text.splitlines():
         m = LIP.match(line)
         if m:
@@ -120,11 +121,12 @@ def process(text, parts_dir):
             else:
                 out.append(line)  # запасной путь: обычные флэпы
                 fell += 1
+            order.append(pending)
             pending = None
             continue
         pending = None  # маркер без следующей за ним речи — просто игнор
         out.append(line)
-    return "\n".join(out) + "\n", subbed, fell
+    return "\n".join(out) + "\n", subbed, fell, order
 
 
 def main(argv):
@@ -135,10 +137,14 @@ def main(argv):
     args = ap.parse_args(argv)
 
     text = open(args.anim, encoding="utf-8").read()
-    result, subbed, fell = process(text, args.parts)
+    result, subbed, fell, order = process(text, args.parts)
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(result)
-    print(f"OK: {args.output} — липсинк по звуку: {subbed}, флэп-фолбэк: {fell}")
+    # Карта «речевой блок № → номер vo-N» для сборки голоса по фактическим
+    # временам движка (animdsl timing) — синхрон по конструкции.
+    with open(args.output + ".map.json", "w", encoding="utf-8") as f:
+        json.dump(order, f)
+    print(f"OK: {args.output} — липсинк по звуку: {subbed}, флэп-фолбэк: {fell}; карта блоков: {order}")
     return 0
 
 

@@ -1,0 +1,142 @@
+// =============================================================================
+//  ТЕСТ ЗАВОДА: покадровая копия 30с фрагмента эталона (Mr. Freeman,
+//  «_9 октября», t=4–34с). Цель — сравнение план-в-план: что завод уже
+//  умеет, что нет. Их тематические кадры (ООН/псы/бензопила) заменены
+//  нашими метафорами той же драматургической функции.
+//  Рендер: ./target/release/animdsl render examples/lektorij/freeman-copy-test.anim
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import character clone1 from "../assets/characters/freeman_rig"
+import character clone2 from "../assets/characters/freeman_rig"
+import character clone3 from "../assets/characters/freeman_rig"
+import set void from "../assets/sets/void.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #54584f
+    monochrome: true
+    mono-contrast: 1.2
+    vignette: 0.5
+    film-grain: 0.14
+    on-twos: 2
+    snow: 0.8
+}
+
+// === ПЛАН 1 (эталон 4–7с): из-под пола по пояс, руки распахнуты, поёт;
+//     затем НЫРОК обратно под пол ===
+scene "ground-sing" (duration: 3.6s, set: void) {
+    let floorf = prop("floorf", "../assets/props/floor-front.svg") at (0.5, 0.86)
+    place freeman at (0.5, 0.96) facing front
+    camera medium freeman
+    freeman pose "despair"
+    //lip 1
+    freeman speaks for 2.2s
+    // нырок под пол (уходит за передний план)
+    freeman moves-to (0.5, 1.55) over 0.6s
+    wait 0.8s
+}
+
+// === ПЛАН 2 (эталон 8–9с): только голова выглядывает над полом, озирается ===
+scene "peek" (duration: 2.2s, set: void) {
+    let floorf = prop("floorf", "../assets/props/floor-front.svg") at (0.5, 0.86)
+    place freeman at (0.5, 1.32) facing front
+    camera medium freeman
+    freeman pose "smug"
+    freeman moves-to (0.5, 1.18) over 0.5s
+    wait 1.7s
+}
+
+// === ПЛАН 3 (эталон 10–13с): поднимается до пояса, руки в боки → к небу,
+//     поёт; в конце выгибается дугой над краем ===
+scene "rise-sing" (duration: 4.4s, set: void) {
+    let floorf = prop("floorf", "../assets/props/floor-front.svg") at (0.5, 0.86)
+    place freeman at (0.5, 1.18) facing front
+    camera medium freeman
+    freeman pose "hips"
+    freeman moves-to (0.5, 0.94) over 0.7s
+    freeman pose "despair"
+    //lip 2
+    freeman speaks for 2.2s
+    freeman pose "bow"
+    wait 1.5s
+}
+
+// === ПЛАН 4 (эталон 14–16с): толпа у красной черты (их: трибуны у моря
+//     крови; наше: клоны-куклы + красная нить) ===
+scene "crowd-red" (duration: 3.0s, set: void) {
+    let thread = prop("thread", "../assets/props/red-thread.svg") at (0.5, 0.42)
+    place clone1 at (0.16, 0.74) facing front
+    place clone2 at (0.38, 0.74) facing front
+    place freeman at (0.62, 0.74) facing front
+    place clone3 at (0.84, 0.74) facing front
+    clone1 pose "puppet"
+    clone2 pose "puppet"
+    clone3 pose "puppet"
+    camera wide
+    freeman pose "point"
+    wait 3.0s
+}
+
+// === ПЛАН 5 (эталон 20с): ярость сверхкрупно, коготь к камере ===
+scene "rage-ecu" (duration: 2.0s, set: void) {
+    place freeman at (0.5, 0.9) facing front
+    camera extreme-close-up freeman
+    camera dutch -7
+    camera shake 0.3s intensity 1.2
+    freeman pose "hero_rage"
+    wait 1.7s
+}
+
+// === ПЛАН 6 (эталон 23с): связан — красная петля опускается ===
+scene "noose" (duration: 2.6s, set: void) {
+    let noose = prop("noose", "../assets/props/red-noose.svg") at (0.5, -0.6)
+    place freeman at (0.5, 0.78) facing front
+    camera medium freeman
+    freeman pose "hunch"
+    noose moves-to (0.5, 0.30) over 1.1s
+    wait 1.5s
+}
+
+// === ПЛАН 7 (эталон 25–26с): съёжился от страха → крик ===
+scene "fear-scream" (duration: 3.2s, set: void) {
+    place freeman at (0.5, 0.8) facing front
+    camera close-up freeman
+    freeman pose "scare"
+    wait 1.4s
+    camera extreme-close-up freeman
+    camera shake 0.3s intensity 1.0
+    freeman pose "hero_scream"
+    wait 1.5s
+}
+
+// === ПЛАН 8 (эталон 27–28с): пустые глаза в упор → флэш смерти ===
+scene "empty-eyes" (duration: 2.4s, set: void) {
+    place freeman at (0.5, 0.9) facing front
+    camera extreme-close-up freeman
+    freeman pose "smug"
+    wait 1.8s
+    freeman pose "flash_dead"
+    wait 0.16s
+    freeman pose "smug"
+    wait 0.4s
+}
+
+// === ПЛАН 9 (эталон 29–33с): возврат в пустоту — крошечный, руки к лицу,
+//     декламация, пожимает плечами ладонями вверх ===
+scene "void-return" (duration: 6.4s, set: void) {
+    place freeman at (0.5, 0.74) facing front
+    camera wide
+    freeman pose "calm"
+    wait 1.6s
+    camera medium freeman
+    freeman pose "scare"
+    wait 1.6s
+    freeman pose "point"
+    //lip 3
+    freeman speaks for 1.6s
+    freeman pose "shrug"
+    wait 1.6s
+}

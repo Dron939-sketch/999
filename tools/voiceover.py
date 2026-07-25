@@ -176,12 +176,63 @@ def assemble_track(replicas, out_path, gap=0.15):
         subprocess.run(cmd, check=True)
 
 
+def assemble_by_timing(script, parts_dir, times_json, map_json, out_path):
+    """Собрать дорожку по ФАКТИЧЕСКИМ временам движка (animdsl timing).
+
+    Синхрон по конструкции: реплика ложится ровно туда, где движок открывает
+    рот. Реплики без маркера (дикторские) ставятся с сохранением сдвига
+    относительно предыдущей синхронизированной (по дельтам из VO.md).
+    """
+    import json as _json
+    rows = parse_vo_table(script)                     # [(md_time, text, remark)]
+    times = _json.load(open(times_json))["blocks"]    # [{"index","start","end"}]
+    order = _json.load(open(map_json))                # [vo_n, ...] в порядке блоков
+    n2block = {n: times[i]["start"] for i, n in enumerate(order) if i < len(times)}
+    replicas = []
+    placed = {}
+    for i, (md_t, text, remark) in enumerate(rows, start=1):
+        p = os.path.join(parts_dir, f"vo-{i}.mp3")
+        if not os.path.isfile(p):
+            continue
+        if i in n2block:
+            t = n2block[i]
+        else:
+            # дикторская: сдвиг от предыдущей размеченной по дельте VO.md
+            prev = max((n for n in n2block if n < i), default=None)
+            if prev is not None:
+                prev_md = rows[prev - 1][0]
+                t = n2block[prev] + (md_t - prev_md)
+            else:
+                t = md_t
+        placed[i] = round(t, 2)
+        replicas.append((t, open(p, "rb").read()))
+    if not replicas:
+        sys.exit("Нет частей vo-N.mp3 — сборка невозможна (сначала --parts-dir).")
+    print(f"Сборка по временам движка: {placed}")
+    assemble_track(replicas, out_path)
+
+
 def main(argv):
     ap = argparse.ArgumentParser(description="Озвучка VO-сценария через Fish Audio")
     ap.add_argument("script", help="Путь к *-VO.md со сценарием")
     ap.add_argument("-o", "--output", required=True, help="Куда писать mp3")
     ap.add_argument("--parts-dir", help="Куда сохранить mp3 по репликам (vo-<N>.mp3) для липсинка")
+    ap.add_argument("--no-assemble", action="store_true",
+                    help="только сгенерить части (сборка позже по временам движка)")
+    ap.add_argument("--assemble-only", action="store_true",
+                    help="только собрать из готовых частей по --times-json/--map-json")
+    ap.add_argument("--times-json", help="JSON от `animdsl timing` (фактические времена)")
+    ap.add_argument("--map-json", help="карта блоков от prep_lipsync (map.json)")
     args = ap.parse_args(argv)
+
+    if args.assemble_only:
+        if not (args.parts_dir and args.times_json and args.map_json):
+            sys.exit("--assemble-only требует --parts-dir, --times-json, --map-json")
+        os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
+        assemble_by_timing(args.script, args.parts_dir, args.times_json,
+                           args.map_json, args.output)
+        print(f"OK: {args.output}")
+        return 0
 
     use_frederick = bool(FREDERICK_TOKEN)
     api_key = os.environ.get("FISH_AUDIO_API_KEY")
@@ -209,6 +260,9 @@ def main(argv):
             with open(os.path.join(args.parts_dir, f"vo-{i}.mp3"), "wb") as f:
                 f.write(audio)
 
+    if args.no_assemble:
+        print("Части готовы (сборка отложена до animdsl timing).")
+        return 0
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
     assemble_track(replicas, args.output)
     print(f"OK: {args.output}")

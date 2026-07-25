@@ -118,8 +118,8 @@
                 12
               ],
               "offset": [
-                -17,
-                26
+                -46,
+                40
               ],
               "rotation": 8,
               "z_order": 4,
@@ -163,8 +163,8 @@
                 12
               ],
               "offset": [
-                17,
-                26
+                46,
+                40
               ],
               "rotation": -8,
               "z_order": 4,
@@ -1546,6 +1546,66 @@
         },
         "mouth": {
           "part": "mouth_closed"
+        }
+      }
+    },
+    "puppet_jerk": {
+      "name": "puppet_jerk",
+      "transition_duration": 0.08,
+      "bones": {
+        "head": {
+          "rotation": -11
+        },
+        "upper_arm_left": {
+          "rotation": 118,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": -30,
+          "z_order": 4
+        },
+        "upper_arm_right": {
+          "rotation": -118,
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": 30,
+          "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_relax"
+        },
+        "hand_right": {
+          "part": "hand_relax_r"
+        },
+        "eye_left": {
+          "part": "eye_shock",
+          "scale": [
+            1.1,
+            1.1
+          ]
+        },
+        "eye_right": {
+          "part": "eye_shock",
+          "scale": [
+            1.1,
+            1.1
+          ]
+        },
+        "mouth": {
+          "part": "mouth_o"
+        },
+        "thigh_left": {
+          "rotation": -8
+        },
+        "shin_left": {
+          "rotation": 16
+        },
+        "thigh_right": {
+          "rotation": 10
+        },
+        "shin_right": {
+          "rotation": -14
         }
       }
     }

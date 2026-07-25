@@ -64,6 +64,12 @@ enum Commands {
         input: PathBuf,
     },
 
+    /// Print JSON timing of speech blocks (lips/speaks) in absolute video time.
+    Timing {
+        /// Path to the .anim source file.
+        input: PathBuf,
+    },
+
     /// Parse a .anim file and dump the AST as JSON.
     Dump {
         /// Path to the .anim source file.
@@ -89,6 +95,9 @@ fn main() -> Result<()> {
         }
         Commands::Check { input } => {
             cmd_check(&input)?;
+        }
+        Commands::Timing { input } => {
+            cmd_timing(&input)?;
         }
         Commands::Dump { input } => {
             cmd_dump(&input)?;
@@ -500,5 +509,59 @@ fn cmd_dump(input: &Path) -> Result<()> {
     let program = animdsl::parser::parse(&source)?;
     let json = serde_json::to_string_pretty(&program)?;
     println!("{json}");
+    Ok(())
+}
+
+/// Print speech-block timing as JSON: for every group of overlay mouth events
+/// (one group = one voiced line, produced by prep_lipsync or `speaks`), the
+/// absolute video-time at which it starts. The factory uses this to place the
+/// voice track EXACTLY where the mouth moves — sync by construction, no
+/// hand-maintained timecodes.
+fn cmd_timing(input: &Path) -> Result<()> {
+    let source = std::fs::read_to_string(input)?;
+    let base_dir = input
+        .parent()
+        .unwrap_or_else(|| Path::new("."))
+        .to_path_buf();
+    let program = animdsl::parser::parse(&source)?;
+
+    let mut assets = AssetRegistry::new();
+    let imports: Vec<_> = program
+        .items
+        .iter()
+        .filter_map(|item| {
+            if let TopLevelItem::Import(imp) = item {
+                Some(imp.clone())
+            } else {
+                None
+            }
+        })
+        .collect();
+    assets.load_imports(&imports, &base_dir)?;
+    for item in &program.items {
+        if let TopLevelItem::Scene(scene) = item {
+            load_let_props(&scene.body, &mut assets, &base_dir)?;
+        }
+    }
+
+    let mut blocks: Vec<(f64, f64)> = Vec::new(); // (start_abs, end_abs)
+    let mut offset = 0.0;
+    for item in &program.items {
+        if let TopLevelItem::Scene(scene_decl) = item {
+            let resolved = resolve_scene(scene_decl, &assets)?;
+            let tl = timeline::compile(&resolved)?;
+            for (s0, e0) in &tl.speech_blocks {
+                blocks.push((offset + s0, offset + e0));
+            }
+            offset += tl.duration;
+        }
+    }
+
+    let items: Vec<String> = blocks
+        .iter()
+        .enumerate()
+        .map(|(i, (s, e))| format!("{{\"index\":{},\"start\":{:.3},\"end\":{:.3}}}", i + 1, s, e))
+        .collect();
+    println!("{{\"total\":{:.3},\"blocks\":[{}]}}", offset, items.join(","));
     Ok(())
 }

@@ -2,18 +2,25 @@
   <defs>
     <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
       <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="7" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="4.4" xChannelSelector="R" yChannelSelector="G"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4.2" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>
   <g filter="url(#ink)">
-    <!-- уже в плечах и по бокам вверху; колоколом только к самому низу -->
-    <path d="M54 14 Q70 6 86 14
-             Q100 44 106 96
-             Q120 144 128 178
-             L120 168 114 180 107 166 100 181 92 167 84 180 76 166
-             68 181 60 166 52 180 44 167 36 181 28 168
-             L20 178 Q12 144 34 96 Q40 44 54 14 Z" fill="#0e0e0e"/>
-    <path d="M60 54 Q64 120 60 168" fill="none" stroke="#1e1e1e" stroke-width="2.2"/>
-    <path d="M80 54 Q76 120 80 168" fill="none" stroke="#1e1e1e" stroke-width="2.2"/>
+    <!-- тело: широкие плечи → колокол с рваным подолом -->
+    <path d="M34 16
+             Q70 5 106 16
+             Q114 60 120 108
+             Q128 148 130 176
+             L122 166 116 178 109 164 102 179 94 165 86 178 78 164
+             70 179 62 164 54 178 46 165 38 179 30 166 22 177 16 166
+             L10 176 Q12 148 20 108 Q26 60 34 16 Z" fill="#0e0e0e"/>
+    <!-- РУКАВА-ОБРУБКИ: скомканные, рваный край; из них растут руки -->
+    <path d="M38 13 L10 40 L14 52 L21 45 L26 57 L34 49 L42 55 L50 22 Z" fill="#0e0e0e"/>
+    <path d="M102 13 L130 40 L126 52 L119 45 L114 57 L106 49 L98 55 L90 22 Z" fill="#0e0e0e"/>
+    <!-- складки -->
+    <path d="M56 50 Q62 118 58 166" fill="none" stroke="#1e1e1e" stroke-width="2.2"/>
+    <path d="M84 50 Q78 118 82 166" fill="none" stroke="#1e1e1e" stroke-width="2.2"/>
+    <path d="M44 30 Q40 42 34 48" fill="none" stroke="#1e1e1e" stroke-width="2"/>
+    <path d="M96 30 Q100 42 106 48" fill="none" stroke="#1e1e1e" stroke-width="2"/>
   </g>
 </svg>

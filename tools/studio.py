@@ -117,6 +117,48 @@ def step_voice(prod, out_voice, parts_dir):
         return None
 
 
+def step_voice_parts(prod, parts_dir):
+    """Сгенерить реплики по файлам (vo-<N>.mp3) БЕЗ сборки дорожки."""
+    vo = prod.get("vo")
+    if not vo:
+        log("  [озвучка] VO-сценарий не задан — немой ролик.")
+        return False
+    if not (os.environ.get("FREDERICK_ADMIN_TOKEN") or os.environ.get("FISH_AUDIO_API_KEY")):
+        log("  [озвучка] нет токенов — озвучка пропущена.")
+        return False
+    vo_path = ROOT / vo
+    if not vo_path.exists():
+        log(f"  [озвучка] нет VO-файла: {vo} — пропуск.")
+        return False
+    try:
+        run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
+             "-o", str(parts_dir / "_unused.mp3"), "--parts-dir", str(parts_dir),
+             "--no-assemble"])
+        return True
+    except subprocess.CalledProcessError as e:
+        log(f"  [озвучка] не удалась ({e}) — немой ролик.")
+        return False
+
+
+def step_assemble_voice(prod, prepped_anim, parts_dir, out_voice, engine):
+    """Собрать голосовую дорожку по фактическим временам движка."""
+    vo_path = ROOT / prod["vo"]
+    times = Path(str(prepped_anim) + ".times.json")
+    mapf = Path(str(prepped_anim) + ".map.json")
+    try:
+        with open(times, "w") as f:
+            subprocess.run([str(engine), "timing", str(prepped_anim)],
+                           check=True, stdout=f)
+        run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
+             "-o", str(out_voice), "--assemble-only",
+             "--parts-dir", str(parts_dir),
+             "--times-json", str(times), "--map-json", str(mapf)])
+        return out_voice
+    except subprocess.CalledProcessError as e:
+        log(f"  [сборка голоса] не удалась ({e}) — немой ролик.")
+        return None
+
+
 def step_prep_lipsync(prod, parts_dir):
     """Впаять липсинк по звуку в сценарий (или флэп-фолбэк). Возвращает .anim для рендера.
 
@@ -188,11 +230,13 @@ def build_one(prod, engine, videos_dir):
     final_mp4 = videos_dir / f"{pid}-final.mp4"
     parts_dir = videos_dir / f"{pid}-parts"
 
-    # Порядок: картинки → озвучка (реплики по файлам) → липсинк по звуку в сцену →
-    # рендер (уже с честным ртом) → SFX по тайм-кодам → сведение голос+SFX.
+    # Порядок: картинки → озвучка ЧАСТЯМИ → липсинк по звуку в сцену →
+    # ФАКТИЧЕСКИЕ времена речи из движка (animdsl timing) → сборка голосовой
+    # дорожки по этим временам (синхрон по конструкции) → рендер → SFX → микс.
     step_images(prod, videos_dir)
-    voice = step_voice(prod, voice_mp3, parts_dir)
+    parts_ok = step_voice_parts(prod, parts_dir)
     src_anim = step_prep_lipsync(prod, parts_dir)
+    voice = step_assemble_voice(prod, src_anim, parts_dir, voice_mp3, engine) if parts_ok else None
     step_render(src_anim, engine, video_mp4)
     sfx = step_sfx(prod, video_mp4, videos_dir / f"{pid}-sfx.mp3")
     step_mux(prod, video_mp4, voice, sfx, final_mp4)

@@ -61,10 +61,21 @@ scene "cell-hook" (duration: 22s, set: cell) {
             freeman speaks for 4s
         }
     }
-    // тишина-удар: он — кукла на нитях, 0.8с
+    // нити ПОДКЛЮЧИЛИСЬ: рывок — его вздёргивает как куклу, ноги болтаются
+    together {
+        freeman pose "puppet_jerk"
+        freeman moves-to (0.36, 0.55) over 0.12s
+        strings moves-to (0.36, 0.37) over 0.12s
+    }
+    wait 0.5s
+    // обвисает на нитях
     freeman pose "puppet"
-    wait 0.8s
-    strings moves-to (0.36, -0.9) over 0.5s
+    wait 0.5s
+    // нити уносят вверх, он падает обратно на нары
+    together {
+        strings moves-to (0.36, -0.9) over 0.5s
+        freeman moves-to (0.36, 0.62) over 0.3s
+    }
 
     // СКЛЕЙКА → обратно средний. VO-3: «Эта камера — не наказание...»
     camera medium freeman
