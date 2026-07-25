@@ -253,6 +253,29 @@ pub fn render_frame(
         }
     }
 
+    // Dutch angle: rotate the composed frame around its centre (slight
+    // overscale hides the corners). Applied before transitions so glitch
+    // overlays stay screen-aligned.
+    if camera.roll.abs() > 0.05 {
+        let mut rolled = Pixmap::new(w, h)
+            .ok_or_else(|| AnimError::Render("failed to create roll pixmap".into()))?;
+        rolled.fill(SkiaColor::from_rgba8(
+            config.background.r,
+            config.background.g,
+            config.background.b,
+            config.background.a,
+        ));
+        let cx = w as f32 * 0.5;
+        let cy = h as f32 * 0.5;
+        let scale = 1.0 + (camera.roll.abs() as f32) * 0.012 + 0.02;
+        let tr = Transform::from_translate(cx, cy)
+            .pre_concat(Transform::from_rotate(camera.roll as f32))
+            .pre_concat(Transform::from_scale(scale, scale))
+            .pre_concat(Transform::from_translate(-cx, -cy));
+        rolled.draw_pixmap(0, 0, pixmap.as_ref(), &PixmapPaint::default(), tr, None);
+        pixmap = rolled;
+    }
+
     // Apply transitions.
     apply_transitions(&mut pixmap, &timeline.transitions, t)?;
 

@@ -64,8 +64,9 @@ scene "cell-hook" (duration: 22s, set: cell) {
     freeman pose "calm"
     freeman moves-to (0.37, 0.66) over 0.9s
     wait 0.3s
-    // СКЛЕЙКА → крупно, в упор. VO-4: «Хочешь выйти? Сначала признай, что сидишь.»
+    // СКЛЕЙКА → крупно, в упор + нервный крен кадра. VO-4.
     camera close-up freeman
+    camera dutch 5
     //lip 4
     freeman speaks for 2.8s
     // жест-приглашение: «выйти?» — руки распахнуты, потом жёсткий взгляд
@@ -146,8 +147,9 @@ scene "void-punch" (duration: 10s, set: void) {
     camera wide
     wait 2.2s
 
-    // СКЛЕЙКА → сверхкруп + очередь флэш-морд + тряска + VO-10
+    // СКЛЕЙКА → сверхкруп + крен + очередь флэш-морд + тряска + VO-10
     camera extreme-close-up freeman
+    camera dutch -6
     freeman pose "flash_scream"
     wait 0.08s
     freeman pose "flash_rage"

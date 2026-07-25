@@ -249,6 +249,8 @@ pub enum CameraStmt {
     },
     /// `camera shake 0.3s intensity 5`
     Shake { duration: Duration, intensity: f64 },
+    /// `camera dutch 6` — крен кадра (dutch-угол) в градусах, до смены/reset.
+    Dutch { angle: f64 },
     /// `camera reset over 0.5s`
     Reset { duration: Option<Duration> },
 }

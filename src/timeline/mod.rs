@@ -69,6 +69,8 @@ pub struct CameraKeyframe {
     pub y: f64,
     /// Zoom level (1.0 = full scene visible).
     pub zoom: f64,
+    /// Крен кадра в градусах (dutch-угол); 0 = ровно.
+    pub roll: f64,
     pub easing: Easing,
     /// Optional shake intensity (0 = no shake).
     pub shake: f64,
@@ -106,6 +108,7 @@ pub fn compile(scene: &ResolvedScene) -> Result<Timeline, AnimError> {
             zoom: 1.0,
             easing: Easing::Linear,
             shake: 0.0,
+            roll: 0.0,
         }],
         transitions: Vec::new(),
         entities: scene.entities.clone(),
@@ -505,6 +508,7 @@ impl TimelineCompiler {
                     zoom,
                     easing: Easing::EaseInOut,
                     shake: 0.0,
+            roll: 0.0,
                 });
             }
             CameraStmt::ZoomTo {
@@ -524,6 +528,7 @@ impl TimelineCompiler {
                     zoom: 2.5,
                     easing: easing.unwrap_or(Easing::EaseInOut),
                     shake: 0.0,
+            roll: 0.0,
                 });
                 self.time += dur;
             }
@@ -551,6 +556,7 @@ impl TimelineCompiler {
                     zoom: last_zoom,
                     easing: easing.unwrap_or(Easing::EaseInOut),
                     shake: 0.0,
+            roll: 0.0,
                 });
                 self.time += dur;
             }
@@ -570,6 +576,7 @@ impl TimelineCompiler {
                         zoom: 1.0,
                         easing: Easing::Linear,
                         shake: 0.0,
+            roll: 0.0,
                     });
 
                 // Start shake.
@@ -580,6 +587,7 @@ impl TimelineCompiler {
                     zoom: last.zoom,
                     easing: Easing::Linear,
                     shake: *intensity,
+                    roll: last.roll,
                 });
 
                 // End shake.
@@ -590,9 +598,35 @@ impl TimelineCompiler {
                     zoom: last.zoom,
                     easing: Easing::Linear,
                     shake: 0.0,
+                    roll: last.roll,
                 });
 
                 self.time += dur;
+            }
+            CameraStmt::Dutch { angle } => {
+                // Мгновенный крен кадра: держится до следующего плана/reset.
+                let last = self
+                    .camera_keyframes
+                    .last()
+                    .cloned()
+                    .unwrap_or(CameraKeyframe {
+                        time: 0.0,
+                        x: 0.5,
+                        y: 0.5,
+                        zoom: 1.0,
+                        easing: Easing::Linear,
+                        shake: 0.0,
+                        roll: 0.0,
+                    });
+                self.camera_keyframes.push(CameraKeyframe {
+                    time: self.time,
+                    x: last.x,
+                    y: last.y,
+                    zoom: last.zoom,
+                    easing: Easing::Linear,
+                    shake: last.shake,
+                    roll: *angle,
+                });
             }
             CameraStmt::Reset { duration } => {
                 let dur = duration.map(|d| d.as_secs()).unwrap_or(0.0);
@@ -603,6 +637,7 @@ impl TimelineCompiler {
                     zoom: 1.0,
                     easing: Easing::EaseInOut,
                     shake: 0.0,
+            roll: 0.0,
                 });
                 self.time += dur;
             }
@@ -762,6 +797,7 @@ pub fn evaluate_camera(camera_track: &CameraTrack, t: f64) -> CameraKeyframe {
             zoom: 1.0,
             easing: Easing::Linear,
             shake: 0.0,
+            roll: 0.0,
         };
     }
     if kfs.len() == 1 || t <= kfs[0].time {
@@ -786,6 +822,7 @@ pub fn evaluate_camera(camera_track: &CameraTrack, t: f64) -> CameraKeyframe {
                 zoom: lerp(kfs[i].zoom, kfs[i + 1].zoom, eased),
                 easing: kfs[i + 1].easing,
                 shake: lerp(kfs[i].shake, kfs[i + 1].shake, eased),
+                roll: lerp(kfs[i].roll, kfs[i + 1].roll, eased),
             };
         }
     }

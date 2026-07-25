@@ -200,7 +200,8 @@ fade_action = {
 camera_stmt = { "camera" ~ camera_command }
 
 camera_command = {
-    camera_shake
+    camera_dutch
+    | camera_shake
     | camera_reset
     | camera_zoom
     | camera_pan
@@ -221,6 +222,10 @@ camera_pan = {
 
 camera_shake = {
     "shake" ~ duration ~ ("intensity" ~ number)?
+}
+
+camera_dutch = {
+    "dutch" ~ number
 }
 
 camera_reset = {

@@ -458,6 +458,16 @@ fn parse_camera(pair: Pair) -> Result<CameraStmt, AnimError> {
                 intensity,
             })
         }
+        Rule::camera_dutch => {
+            let angle = cmd
+                .into_inner()
+                .next()
+                .unwrap()
+                .as_str()
+                .parse::<f64>()
+                .unwrap_or(0.0);
+            Ok(CameraStmt::Dutch { angle })
+        }
         Rule::camera_reset => {
             let mut inner = cmd.into_inner();
             let duration = inner.next().map(parse_duration);
