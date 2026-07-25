@@ -85,30 +85,28 @@ jobs:
           echo "=== videos/ ==="
           ls -la videos/
 
-      - name: Commit videos to the repo
-        # always(): даже если QC-гейт свалил studio.py (красный прогон), уже
-        # отрендеренные здоровые ролики должны закоммититься — принцип «отдать
-        # хоть что-то». Красный статус остаётся сигналом, но не стирает готовое.
+      - name: Upload videos to a GitHub Release
+        # always(): даже при красном QC уже отрендеренные здоровые ролики должны
+        # уехать в Release — принцип «отдать хоть что-то». B2: артефакты НЕ в git
+        # (иначе videos/ и история пухнут линейно по прогонам), а в Releases по
+        # rolling-тегу на ветку. GitHub Releases держат до 2ГБ на файл — прежний
+        # 95МБ-предохранитель под git-пуш больше не нужен.
         if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "render-bot"
-          git config user.email "actions@github.com"
-          # Предохранитель: GitHub жёстко отклоняет push файлов >100МБ. Битрейт
-          # закапан в кодировщике (~14МБ/52с), но на всякий случай не коммитим
-          # ничего тяжелее 95МБ — вместо падения пайплайна честно логируем.
-          for f in videos/*.mp4; do
-            [ -f "$f" ] || continue
-            sz=$(stat -c%s "$f")
-            if [ "$sz" -gt 99614720 ]; then
-              echo "ПРОПУСК (слишком большой, $((sz/1048576))МБ): $f — не коммичу."
-              rm -f "$f"
-            fi
-          done
-          git add videos/*.mp4 videos/*.mp3 2>/dev/null || git add videos/*.mp4
-          if git diff --cached --quiet; then
-            echo "Видео не изменились — коммит не нужен."
+          shopt -s nullglob
+          assets=(videos/*.mp4 videos/*.mp3)
+          if [ ${#assets[@]} -eq 0 ]; then
+            echo "Нет готовых роликов — заливать нечего."
             exit 0
           fi
-          git commit -m "CI: обновлены готовые видео и озвучка в videos/ [skip ci]"
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin HEAD:"${GITHUB_REF_NAME}"
+          TAG="renders-${GITHUB_REF_NAME//\//-}"
+          echo "Заливаю ${#assets[@]} файл(ов) в Release '$TAG' (commit $GITHUB_SHA)"
+          # Пересоздаём rolling-релиз на текущий SHA (assets заменяются целиком).
+          gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "$TAG" "${assets[@]}" \
+            --target "$GITHUB_SHA" \
+            --title "Renders — $GITHUB_REF_NAME" \
+            --notes "Автосборка роликов и озвучки для ветки \`$GITHUB_REF_NAME\` (commit \`$GITHUB_SHA\`). Обновляется на каждый прогон CI. Немой = рендер без голоса (TTS был недоступен)."
+          echo "Готово: $(gh release view "$TAG" --json url -q .url)"

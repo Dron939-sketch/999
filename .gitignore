@@ -1,8 +1,10 @@
 /target
 **/*.rs.bk
 *.mp4
-# ...but finished videos in videos/ are tracked (downloadable from the repo)
-!videos/*.mp4
+*.mp3
+# Готовые ролики и озвучка НЕ хранятся в git — заливаются в GitHub Releases
+# (rolling-тег на ветку), см. videos/README.md. В репозитории — только исходники
+# и манифест: иначе videos/ и история пухнут линейно по числу прогонов CI.
 output/
 __pycache__/
 
