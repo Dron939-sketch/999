@@ -55,6 +55,33 @@ thread_local! {
     /// rasterise once and just re-composite the cached pixmap. This is the big
     /// render-speed win (the parse cache only saves XML parsing).
     static PIXMAP_CACHE: RefCell<HashMap<u64, Arc<Pixmap>>> = RefCell::new(HashMap::new());
+
+    /// Rasterised BONE-PART cache. Character parts re-rasterise every frame (the
+    /// pixmap cache above only covered sets). A part's raster (before flip/rotate,
+    /// which happen at composite time) is fully determined by its identity, the
+    /// boil seed and the render size — so on the 2nd frame of an on-twos hold, and
+    /// across clones sharing a drawing, we reuse it instead of re-running resvg +
+    /// the ink filter. Keyed by (part name, boil seed, render w, render h).
+    static PART_RASTER_CACHE: RefCell<HashMap<u64, Arc<Pixmap>>> = RefCell::new(HashMap::new());
+}
+
+/// Whether the part-raster cache is enabled (disabled via ANIMDSL_NO_PART_CACHE
+/// for A/B timing). Resolved once.
+static PART_CACHE_ON: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+
+/// Stable key for the bone-part raster cache. `part.name` uniquely identifies the
+/// SVG bytes (parts live in a name→asset map), so we hash the name, not the bytes.
+fn part_raster_key(name: &str, boil: u32, w: u32, h: u32) -> u64 {
+    let mut k: u64 = 0xcbf2_9ce4_8422_2325;
+    for b in name.bytes() {
+        k ^= b as u64;
+        k = k.wrapping_mul(0x0000_0100_0000_01B3);
+    }
+    for v in [boil, w, h] {
+        k ^= v as u64;
+        k = k.wrapping_mul(0x0000_0100_0000_01B3);
+    }
+    k
 }
 
 /// Parse SVG bytes into a tree, reusing a cached parse for identical bytes.
@@ -1467,9 +1494,6 @@ fn render_bone_part(
     bend_origin: f64,
     boil_seed: u32,
 ) -> Result<(), AnimError> {
-    let svg_data = apply_boil(&part.svg_data, boil_seed);
-    let tree = parse_svg_cached(&svg_data)?;
-
     let render_sx = scale_x.abs() * flip.abs();
     let render_sy = scale_y.abs();
 
@@ -1480,35 +1504,62 @@ fn render_bone_part(
         return Ok(());
     }
 
-    let mut part_pixmap = Pixmap::new(render_w, render_h)
-        .ok_or_else(|| AnimError::Render("failed to create part pixmap".into()))?;
-
-    let render_transform = Transform::from_scale(render_sx as f32, render_sy as f32);
-    // resvg's feDisplacementMap has a size-assertion (src.height == map.height)
-    // that trips at certain raster sizes (e.g. an ink-filtered part rasterized
-    // large under an ECU camera): a 1px rounding mismatch between the turbulence
-    // and source buffers panics the whole render. The factory must not die for a
-    // single part's filter edge case — catch it and re-render THIS part with the
-    // ink filter stripped (correct silhouette, just no boil-displacement).
-    let panicked = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-        resvg::render(&tree, render_transform, &mut part_pixmap.as_mut());
-    }))
-    .is_err();
-    if panicked {
-        let stripped = strip_ink_filter(&svg_data);
-        if let Ok(tree2) = parse_svg_cached(&stripped) {
-            part_pixmap = Pixmap::new(render_w, render_h)
+    // Get the UNFLIPPED raster from cache, or rasterise once and store it.
+    // ANIMDSL_NO_PART_CACHE bypasses the cache (for A/B timing only).
+    let use_cache = *PART_CACHE_ON.get_or_init(|| std::env::var("ANIMDSL_NO_PART_CACHE").is_err());
+    let key = part_raster_key(&part.name, boil_seed, render_w, render_h);
+    let base: Arc<Pixmap> =
+        if let Some(p) = PART_RASTER_CACHE
+            .with(|c| if use_cache { c.borrow().get(&key).cloned() } else { None })
+        {
+            p
+        } else {
+            let svg_data = apply_boil(&part.svg_data, boil_seed);
+            let tree = parse_svg_cached(&svg_data)?;
+            let mut pm = Pixmap::new(render_w, render_h)
                 .ok_or_else(|| AnimError::Render("failed to create part pixmap".into()))?;
-            let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                resvg::render(&tree2, render_transform, &mut part_pixmap.as_mut());
-            }));
-        }
-    }
+            let render_transform = Transform::from_scale(render_sx as f32, render_sy as f32);
+            // resvg's feDisplacementMap has a size-assertion (src.height == map.height)
+            // that trips at certain raster sizes: catch it and re-render THIS part
+            // with the ink filter stripped (correct silhouette, no boil-displace).
+            let panicked = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                resvg::render(&tree, render_transform, &mut pm.as_mut());
+            }))
+            .is_err();
+            if panicked {
+                let stripped = strip_ink_filter(&svg_data);
+                if let Ok(tree2) = parse_svg_cached(&stripped) {
+                    pm = Pixmap::new(render_w, render_h)
+                        .ok_or_else(|| AnimError::Render("failed to create part pixmap".into()))?;
+                    let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                        resvg::render(&tree2, render_transform, &mut pm.as_mut());
+                    }));
+                }
+            }
+            let arc = Arc::new(pm);
+            if use_cache {
+                PART_RASTER_CACHE.with(|c| {
+                    let mut m = c.borrow_mut();
+                    if m.len() >= 1024 {
+                        m.clear(); // bound memory; keys churn with boil seed + zoom scale
+                    }
+                    m.insert(key, arc.clone());
+                });
+            }
+            arc
+        };
 
-    // Flip horizontally if needed.
-    if flip < 0.0 {
-        flip_pixmap_horizontal(&mut part_pixmap);
-    }
+    // Flip is applied at composite time. The cache holds the unflipped raster, so
+    // only clone+flip when needed; otherwise borrow the shared pixmap directly.
+    let mut flipped: Option<Pixmap> = None;
+    let part_pixmap: &Pixmap = if flip < 0.0 {
+        let mut c = (*base).clone();
+        flip_pixmap_horizontal(&mut c);
+        flipped = Some(c);
+        flipped.as_ref().unwrap()
+    } else {
+        &base
+    };
 
     // The pivot point in rendered pixel space.
     let pivot_px = pivot.0 * render_sx;
@@ -1540,7 +1591,7 @@ fn render_bone_part(
         // like a hand-drawn rubber-hose instead of a rigid segment.
         draw_bent_pixmap(
             pixmap,
-            &part_pixmap,
+            part_pixmap,
             transform,
             pivot_px as f32,
             bend as f32,
