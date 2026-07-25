@@ -410,9 +410,30 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
             // lids close together.
             let cycle = 3.4 + hash_unit(name_hash("eye")).abs() * 1.2;
             let ph = time % cycle as f64;
-            if ph < 0.12 {
+            let lids_shut = ph < 0.12;
+            if lids_shut {
                 let k = (ph / 0.12 * PI).sin(); // 0→1→0
                 state.scale.1 *= (1.0 - 0.92 * k).max(0.06);
+            }
+
+            // --- Микро-саккады (дарты взгляда) --------------------------------
+            // Огромные глаза Фримена «мертвеют» между морганиями, если зрачок
+            // не двигается. Настоящий взгляд НЕ плывёт — он ДЁРГАЕТСЯ: держит
+            // точку фиксации ~0.9–1.5с, затем МГНОВЕННО прыгает на новую
+            // (саккада ~1 кадр). Детерминированно; общий хэш «gaze» → оба глаза
+            // смотрят в одну точку (не косят). Амплитуда крошечная — глаз крупный
+            // на экране, поэтому смещение баесится к центру (gx*|gx|): почти все
+            // дарты мелкие, изредка — заметный взгляд в сторону.
+            let sac = std::env::var("ANIMDSL_SACCADE_AMP").ok()
+                .and_then(|v| v.parse::<f64>().ok())
+                .unwrap_or(1.0);
+            if !lids_shut && sac > 0.0 {
+                let hold = 0.95 + hash_unit(name_hash("gaze")).abs() * 0.55; // 0.95–1.5с
+                let idx = (time / hold).floor() as i64 as u32;
+                let gx = hash_unit(idx.wrapping_mul(2_654_435_761) ^ 0x00A5_A5A5);
+                let gy = hash_unit(idx.wrapping_mul(40_503) ^ 0x0000_1357);
+                state.offset.0 += gx * gx.abs() * 6.0 * sac; // взгляд по горизонтали шире
+                state.offset.1 += gy * gy.abs() * 3.5 * sac; // по вертикали — уже
             }
         }
     }
