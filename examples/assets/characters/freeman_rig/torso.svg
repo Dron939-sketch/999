@@ -23,16 +23,9 @@
              Q36 138 21 106
              Q30 92 26 70
              Q34 42 60 18 Z" fill="#0e0e0e"/>
-    <!-- ПРУЖИНКИ-ЗАВИТКИ у плеч: плечо оканчивается спиральной каракулей,
-         из неё растёт рука -->
-    <path d="M74 16 q-8 -2 -10 6 q-2 8 5 10 q7 2 9 -5 q2 -7 -4 -9 q-6 -2 -8 4 q-1 5 4 6"
-          fill="none" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
-    <path d="M66 30 q-7 0 -8 7 q-1 8 6 9 q7 1 8 -6 q1 -7 -5 -8"
-          fill="none" stroke="#0e0e0e" stroke-width="4.2" stroke-linecap="round"/>
-    <path d="M146 16 q8 -2 10 6 q2 8 -5 10 q-7 2 -9 -5 q-2 -7 4 -9 q6 -2 8 4 q1 5 -4 6"
-          fill="none" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
-    <path d="M154 30 q7 0 8 7 q1 8 -6 9 q-7 1 -8 -6 q-1 -7 5 -8"
-          fill="none" stroke="#0e0e0e" stroke-width="4.2" stroke-linecap="round"/>
+    <!-- (засученные рукава-пружины теперь на самих руках upper_arm_*.svg —
+         на стыке рука↔тело, видны на фоне; в чёрной массе плаща они бы
+         сливались чёрное-на-чёрном) -->
     <!-- рваные боковые «клочья» ткани (выступы по бокам, не только внизу) -->
     <path d="M201 166 q14 6 10 20 q-8 -4 -12 -10 Z" fill="#0e0e0e"/>
     <path d="M21 106 q-13 4 -9 18 q9 -3 12 -9 Z" fill="#0e0e0e"/>

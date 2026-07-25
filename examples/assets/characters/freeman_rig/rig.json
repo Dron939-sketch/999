@@ -236,8 +236,8 @@
                 6
               ],
               "offset": [
-                -14,
-                152
+                -26,
+                180
               ],
               "z_order": 0,
               "children": [
@@ -250,7 +250,7 @@
                   ],
                   "offset": [
                     0,
-                    50
+                    76
                   ],
                   "z_order": 0
                 }
@@ -264,8 +264,8 @@
                 6
               ],
               "offset": [
-                14,
-                152
+                26,
+                180
               ],
               "z_order": 0,
               "children": [
@@ -278,7 +278,7 @@
                   ],
                   "offset": [
                     0,
-                    50
+                    76
                   ],
                   "z_order": 0
                 }
@@ -296,22 +296,22 @@
       "bones": {
         "head": {
           "offset": [
-            -6,
-            13
+            -7,
+            26
           ],
-          "rotation": -11
+          "rotation": -8
         },
         "upper_arm_left": {
-          "rotation": 68
+          "rotation": 82
         },
         "forearm_left": {
-          "rotation": -20
+          "rotation": -14
         },
         "upper_arm_right": {
-          "rotation": -38
+          "rotation": -46
         },
         "forearm_right": {
-          "rotation": 20
+          "rotation": 26
         },
         "mouth": {
           "part": "mouth_closed"

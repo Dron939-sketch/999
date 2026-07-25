@@ -1,4 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 102" width="40" height="102"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
 <!-- эталон-разбор: рука — тонкая чёрная сужающаяся линия с лёгким изгибом,
      без серой окантовки (на пересечении с рясой сливается — так и у оригинала) -->
-<g filter="url(#ink)"><path d="M15 6 Q11 30 13 55 Q14 75 16 92 L23 92 Q24 75 24 55 Q26 30 25 6 Z" fill="#0e0e0e"/></g></svg>
+<g filter="url(#ink)"><path d="M15 6 Q11 30 13 55 Q14 75 16 92 L23 92 Q24 75 24 55 Q26 30 25 6 Z" fill="#0e0e0e"/>
+<!-- ЗАСУЧЕННЫЙ РУКАВ-ПРУЖИНА на стыке рука↔тело: скомканная спираль-манжета
+     у плечевого конца (видна на фоне, где рука выходит из рясы) -->
+<path d="M13 10 q-8 3 -6 12 q2 9 12 8 q10 -1 8 -11 q-2 -9 -11 -7 q-7 2 -5 9"
+      fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round"/>
+<path d="M20 16 q-5 2 -4 8 q1 6 8 5 q6 -1 5 -7" fill="none" stroke="#0e0e0e" stroke-width="4" stroke-linecap="round"/></g></svg>
