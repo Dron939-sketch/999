@@ -528,6 +528,24 @@ impl TimelineCompiler {
                     ShotType::OverShoulder => (0.5, 0.45, 1.8),
                 };
 
+                // Hard cut: `evaluate_camera` tweens smoothly across the ENTIRE
+                // gap since the last keyframe. That gap can be many seconds —
+                // e.g. a `speak for Ns` placeholder that prep_lipsync replaces
+                // with the real (often longer) voice duration — so without a
+                // hold, a punchy "СКЛЕЙКА → крупно" cut renders as a slow dolly
+                // zoom instead of an instant Freeman-style cut. Freeze the
+                // previous camera state right up to just before this cut, so
+                // the actual tween window collapses to ~1 frame.
+                if let Some(prev) = self.camera_keyframes.last().cloned() {
+                    let hold_time = (self.time - 0.04).max(prev.time);
+                    if hold_time > prev.time {
+                        self.camera_keyframes.push(CameraKeyframe {
+                            time: hold_time,
+                            ..prev
+                        });
+                    }
+                }
+
                 self.camera_keyframes.push(CameraKeyframe {
                     time: self.time,
                     x,
