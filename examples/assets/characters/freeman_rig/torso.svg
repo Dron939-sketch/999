@@ -1,33 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 205" width="140" height="205">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 300" width="220" height="300">
   <defs>
     <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="7" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="4.2" xChannelSelector="R" yChannelSelector="G"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>
   <g filter="url(#ink)">
-    <!-- тело: ШИРШИЕ плечи (1.6x головы) → колокол с рваным подолом -->
-    <path d="M20 18
-             Q70 2 120 18
-             Q128 60 132 108
-             Q138 172 140 200
-             L132 190 126 202 119 188 112 203 104 189 96 202 88 188
-             80 203 72 188 64 202 56 189 48 203 40 190 32 201 24 190
-             L8 200 Q6 172 8 108 Q12 60 20 18 Z" fill="#0e0e0e"/>
-    <!-- ПРУЖИНКИ-ЗАВИТКИ у плеч (подлинные кадры + эталон-разбор): плечо
-         оканчивается спиральной "мятой" каракулей, из неё растёт рука -->
-    <path d="M34 16 q-8 -2 -10 6 q-2 8 5 10 q7 2 9 -5 q2 -7 -4 -9 q-6 -2 -8 4 q-1 5 4 6"
+    <!-- ЭТАЛОН (разбор по частям + подлинные кадры): плащ — ОГРОМНАЯ
+         бесформенная чёрная масса, ~60% фигуры, расширяется книзу и
+         драпирует бо́льшую часть ног. Рваный хаотичный подол. Плечи ~1.6
+         головы, из них растут пружинки-завитки, откуда идут руки.
+         Pivot смещён на (110,12) — шея-центр, дети не съезжают. -->
+    <path d="M60 18
+             Q110 0 160 18
+             Q176 70 186 140
+             Q198 210 206 252
+             L198 290 190 260 180 296 168 264 156 300 144 268 132 296
+             120 262 108 300 96 266 84 298 72 262 60 300 48 266 36 294
+             26 260 14 290
+             Q6 210 18 140
+             Q28 70 60 18 Z" fill="#0e0e0e"/>
+    <!-- ПРУЖИНКИ-ЗАВИТКИ у плеч: плечо оканчивается спиральной «мятой»
+         каракулей, из неё растёт рука (сдвиг +40x относительно старых) -->
+    <path d="M74 16 q-8 -2 -10 6 q-2 8 5 10 q7 2 9 -5 q2 -7 -4 -9 q-6 -2 -8 4 q-1 5 4 6"
           fill="none" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
-    <path d="M26 30 q-7 0 -8 7 q-1 8 6 9 q7 1 8 -6 q1 -7 -5 -8"
+    <path d="M66 30 q-7 0 -8 7 q-1 8 6 9 q7 1 8 -6 q1 -7 -5 -8"
           fill="none" stroke="#0e0e0e" stroke-width="4.2" stroke-linecap="round"/>
-    <path d="M106 16 q8 -2 10 6 q2 8 -5 10 q-7 2 -9 -5 q-2 -7 4 -9 q6 -2 8 4 q1 5 -4 6"
+    <path d="M146 16 q8 -2 10 6 q2 8 -5 10 q-7 2 -9 -5 q-2 -7 4 -9 q6 -2 8 4 q1 5 -4 6"
           fill="none" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
-    <path d="M114 30 q7 0 8 7 q1 8 -6 9 q-7 1 -8 -6 q-1 -7 5 -8"
+    <path d="M154 30 q7 0 8 7 q1 8 -6 9 q-7 1 -8 -6 q-1 -7 5 -8"
           fill="none" stroke="#0e0e0e" stroke-width="4.2" stroke-linecap="round"/>
-    <!-- складки -->
-    <path d="M56 50 Q62 118 58 166" fill="none" stroke="#1e1e1e" stroke-width="2.2"/>
-    <path d="M84 50 Q78 118 82 166" fill="none" stroke="#1e1e1e" stroke-width="2.2"/>
-    <path d="M44 30 Q40 42 34 48" fill="none" stroke="#1e1e1e" stroke-width="2"/>
-    <path d="M96 30 Q100 42 106 48" fill="none" stroke="#1e1e1e" stroke-width="2"/>
+    <!-- складки драпировки (тёмно-серые, «жизнь» ткани) -->
+    <path d="M92 54 Q100 150 92 240" fill="none" stroke="#1c1c1c" stroke-width="2.4"/>
+    <path d="M128 54 Q120 150 130 238" fill="none" stroke="#1c1c1c" stroke-width="2.4"/>
+    <path d="M70 120 Q60 190 66 250" fill="none" stroke="#1c1c1c" stroke-width="2"/>
+    <path d="M150 120 Q160 190 154 250" fill="none" stroke="#1c1c1c" stroke-width="2"/>
   </g>
 </svg>
