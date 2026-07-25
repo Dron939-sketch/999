@@ -85,12 +85,27 @@
     <ellipse cx="1029" cy="470" rx="19" ry="6" fill="#141410"/>
   </g>
 
-  <!-- ===== надписи-царапины (акценты, не текстура) ===== -->
+  <!-- ===== официальная казённая маркировка (трафарет-стиль: жирный моно,
+       заглавные, разрядка — читается как трафарет-штамп) ===== -->
+  <g filter="url(#ink)" fill="#141410" font-family="DejaVu Sans Mono"
+     font-weight="bold" letter-spacing="3">
+    <text x="352" y="172" font-size="23" opacity="0.9">БЛОК 7</text>
+    <text x="352" y="200" font-size="19" opacity="0.85">КАМЕРА 14</text>
+  </g>
+
+  <!-- ===== нацарапанные даты/инициалы (аутентичные метки срока) ===== -->
+  <g filter="url(#ink)" fill="#141410" font-family="DejaVu Sans Mono" opacity="0.72">
+    <text x="612" y="250" font-size="15" transform="rotate(-3 612 250)">A.G. 1974</text>
+    <text x="770" y="300" font-size="14" transform="rotate(2 770 300)">12.04.81</text>
+    <text x="885" y="238" font-size="14" transform="rotate(-2 885 238)">К.М.</text>
+    <text x="742" y="418" font-size="20" font-weight="bold"
+          transform="rotate(-4 742 418)">FREEDOM?</text>
+  </g>
+
+  <!-- ===== надписи-царапины «тюрьмы ума» (акценты, не текстура) ===== -->
   <g filter="url(#ink)" fill="#141410" font-family="DejaVu Sans" opacity="0.72">
-    <text x="700" y="300" font-size="16" font-style="italic" transform="rotate(-4 700 300)">здесь сидел твой здравый смысл</text>
-    <text x="360" y="300" font-size="13" transform="rotate(-3 360 300)">начальник — не прав</text>
-    <text x="720" y="430" font-size="12" transform="rotate(3 720 430)">думать вредно, но приятно</text>
-    <text x="640" y="150" font-size="11" transform="rotate(2 640 150)">выхода нет. вход — был</text>
+    <text x="352" y="300" font-size="13" transform="rotate(-3 352 300)">начальник — не прав</text>
+    <text x="638" y="150" font-size="11" transform="rotate(2 638 150)">выхода нет. вход — был</text>
   </g>
   <!-- зарубки у изголовья -->
   <g stroke="#141410" stroke-width="2.6" opacity="0.8" filter="url(#ink)">
