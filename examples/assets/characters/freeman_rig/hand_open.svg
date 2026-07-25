@@ -1,21 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" width="54" height="54">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 52" width="52" height="58">
   <defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="32" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="42" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
   </filter></defs>
   <g filter="url(#ink)">
-    <line x1="20" y1="1" x2="26" y2="1" stroke="#c2c7c0" stroke-width="9" stroke-linecap="round"/>
-    <path d="M23 6 Q10.1 19.5 2.4 30.5" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
-    <path d="M23 6 Q18.0 25.1 13.7 40.8" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
-    <path d="M23 6 Q28.3 25.5 29.3 41.5" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
-    <path d="M23 6 Q36.3 20.4 41.4 32.2" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
-    <path d="M23 6 Q16.8 7.3 11.5 12.1" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
-  
-    <line x1="20" y1="1" x2="26" y2="1" stroke="#0e0e0e" stroke-width="6" stroke-linecap="round"/>
-    <path d="M23 6 Q10.1 19.5 2.4 30.5" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
-    <path d="M23 6 Q18.0 25.1 13.7 40.8" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
-    <path d="M23 6 Q28.3 25.5 29.3 41.5" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
-    <path d="M23 6 Q36.3 20.4 41.4 32.2" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
-    <path d="M23 6 Q16.8 7.3 11.5 12.1" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M19 2 L27 2 L26 8 L20 8 Z" fill="#0e0e0e"/>
+    <path d="M23 6 L12.6 16.8 L-1.4 25.5" fill="none" stroke="#c2c7c0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L12.6 16.8 L-1.4 25.5" fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L17.9 23.8 L9.6 42.4" fill="none" stroke="#c2c7c0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L17.9 23.8 L9.6 42.4" fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L26.3 24.7 L32.1 44.8" fill="none" stroke="#c2c7c0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L26.3 24.7 L32.1 44.8" fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L32.5 18.2 L46.0 28.7" fill="none" stroke="#c2c7c0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L32.5 18.2 L46.0 28.7" fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 Q16.5 8.6 9.1 11.6" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
+    <path d="M23 6 Q16.5 8.6 9.1 11.6" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
   </g>
 </svg>

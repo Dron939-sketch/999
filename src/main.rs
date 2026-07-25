@@ -333,30 +333,32 @@ fn load_let_props(
 fn apply_snow(data: &mut [u8], width: u32, height: u32, frame: u32, density: f32) {
     let w = width as i64;
     let h = height as i64;
-    let count = ((w * h) as f32 * 0.00018 * density).round() as u32;
+    let count = ((w * h) as f32 * 0.00008 * density).round() as u32;
     let t = frame as f32;
     for id in 0..count {
-        // Deterministic per-particle constants from a cheap hash.
         let mut n = (id as u64).wrapping_mul(0x9E3779B97F4A7C15);
         n ^= n >> 29;
         let hx = (n & 0xFFFF) as f32 / 65535.0;
-        let hs = ((n >> 16) & 0xFF) as f32 / 255.0; // speed factor
-        let hd = ((n >> 24) & 0xFF) as f32 / 255.0; // sway phase
-        let speed = 0.6 + hs * 1.8; // px/frame
-        let sway = ((t * 0.05 + hd * 6.28).sin()) * 6.0;
-        let x = (hx * w as f32 + sway).rem_euclid(w as f32) as i64;
-        let y = (t * speed + hd * h as f32).rem_euclid(h as f32) as i64;
-        let bright = 150.0 + hs * 90.0;
-        // 2x2 soft speck.
-        for dy in 0..2 {
-            for dx in 0..2 {
-                let px = x + dx;
-                let py = y + dy;
-                if px < 0 || px >= w || py < 0 || py >= h {
-                    continue;
-                }
+        let hs = ((n >> 16) & 0xFF) as f32 / 255.0; // скорость/глубина
+        let hd = ((n >> 24) & 0xFF) as f32 / 255.0; // фаза покачивания
+        let speed = 0.5 + hs * 1.6;
+        let sway = ((t * 0.045 + hd * 6.28).sin()) * 8.0;
+        let x = (hx * w as f32 + sway).rem_euclid(w as f32);
+        let y = (t * speed + hd * h as f32).rem_euclid(h as f32);
+        // Крупные мягкие хлопья: радиус 1.5–4 px, ближние ярче и больше
+        let r = 1.5 + hs * 2.8;
+        let bright = 190.0 + hs * 60.0;
+        let ir = r.ceil() as i64;
+        for dy in -ir..=ir {
+            for dx in -ir..=ir {
+                let px = x as i64 + dx;
+                let py = y as i64 + dy;
+                if px < 0 || px >= w || py < 0 || py >= h { continue; }
+                let d2 = (dx as f32 - (x - x.floor())).powi(2) + (dy as f32 - (y - y.floor())).powi(2);
+                let fall = (1.0 - (d2.sqrt() / r)).clamp(0.0, 1.0);
+                if fall <= 0.0 { continue; }
+                let a = 0.75 * fall * fall; // мягкая кромка
                 let idx = ((py * w + px) * 4) as usize;
-                let a = 0.55f32;
                 for c in 0..3 {
                     let base = data[idx + c] as f32;
                     data[idx + c] = (base * (1.0 - a) + bright * a).min(255.0) as u8;

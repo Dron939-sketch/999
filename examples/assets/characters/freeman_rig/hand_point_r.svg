@@ -1,15 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" width="54" height="54">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 52" width="52" height="58">
   <defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="34" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="44" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
   </filter></defs>
   <g filter="url(#ink)" transform="translate(46,0) scale(-1,1)">
-    <line x1="20" y1="1" x2="26" y2="1" stroke="#c2c7c0" stroke-width="9" stroke-linecap="round"/>
-    <path d="M23 6 Q24.2 28.0 23.0 46.0" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
-    <path d="M23 6 Q18.1 8.9 13.8 15.2" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
-  
-    <line x1="20" y1="1" x2="26" y2="1" stroke="#0e0e0e" stroke-width="6" stroke-linecap="round"/>
-    <path d="M23 6 Q24.2 28.0 23.0 46.0" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
-    <path d="M23 6 Q18.1 8.9 13.8 15.2" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M19 2 L27 2 L26 8 L20 8 Z" fill="#0e0e0e"/>
+    <path d="M23 6 L23.7 27.0 L22.9 50.1" fill="none" stroke="#c2c7c0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L23.7 27.0 L22.9 50.1" fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 Q17.6 10.5 14.6 13.1" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
+    <path d="M23 6 Q17.6 10.5 14.6 13.1" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
   </g>
 </svg>
