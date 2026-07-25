@@ -174,6 +174,11 @@ pub fn render_frame(
     } else {
         t
     };
+    // Duration of ONE held drawing — the single animation clock. Pose, ink boil
+    // and smear-prev all key off `anim_t` and this step, so the redrawn line and
+    // the pose snap change on the SAME beat (no boil crawling out of sync with
+    // the on-twos hold).
+    let step_dt = (config.on_twos.max(1) as f64) / (config.fps.max(1) as f64);
 
     // Render set (background).
     if let Some(name) = set_name {
@@ -244,6 +249,7 @@ pub fn render_frame(
                             cast_shadow: config.cast_shadow,
                             light_angle: config.light_angle,
                         },
+                        step_dt,
                     )?;
                 }
             }
@@ -328,6 +334,7 @@ fn render_character(
     entity_name: &str,
     custom_poses: &HashMap<String, Vec<(String, f64)>>,
     light: LightCfg,
+    step_dt: f64,
 ) -> Result<(), AnimError> {
     match asset {
         CharacterAsset::Legacy { svg_data, .. } => {
@@ -361,6 +368,7 @@ fn render_character(
             timeline,
             entity_name,
             light,
+            step_dt,
         ),
         CharacterAsset::Procedural(desc) => render_procedural_character(
             desc,
@@ -389,11 +397,16 @@ fn render_rigged_character(
     timeline: &Timeline,
     entity_name: &str,
     light: LightCfg,
+    step_dt: f64,
 ) -> Result<(), AnimError> {
-    // Limited animation "on twos": the pose clock ticks at ~12 fps so gestures
-    // and cel swaps pop in steps like hand-drawn animation, while the ink boil
-    // and idle float below keep running at full rate.
-    let pose_time = (t * 12.0).floor() / 12.0;
+    // SINGLE animation clock. `t` is already the held-drawing timestamp (anim_t,
+    // quantised to on-twos upstream). Pose, ink boil and smear-prev all key off
+    // it and `step_dt`, so the redrawn line and the pose snap change on the SAME
+    // beat — the on-twos read stays crisp instead of the boil crawling out of
+    // sync. (Previously pose re-quantised to 12fps and boil ran on t*5 — three
+    // clocks fighting.)
+    let pose_time = t;
+    let step_dt = if step_dt > 1e-6 { step_dt } else { 1.0 / 12.0 };
 
     // Determine current and previous pose events, and interpolation progress.
     // Overlay events (speech mouth flaps) merge onto the last held body pose,
@@ -470,7 +483,7 @@ fn render_rigged_character(
     // fast each part is moving in THIS gesture, the basis for motion smears.
     // Pose-only (no idle/speak float) so only deliberate motion smears.
     let prev_pose_t = match current_idx {
-        Some(idx) => (((pose_time - 1.0 / 12.0) - events[idx].time) / td).clamp(0.0, 1.0),
+        Some(idx) => (((pose_time - step_dt) - events[idx].time) / td).clamp(0.0, 1.0),
         None => 0.0,
     };
     let eased_prev = if td < 0.15 {
@@ -553,8 +566,9 @@ fn render_rigged_character(
     // Per-frame "boil" seed: cycles the ink-filter turbulence so hand-drawn
     // edges wobble frame-to-frame (~9 changes/sec). No-op for parts without a
     // turbulence filter.
-    let boil_seed = (t * 5.0) as i64;
-    let boil_seed = boil_seed.rem_euclid(4096) as u32 + 1;
+    // Ink re-inks ONCE per held drawing, in lockstep with the pose snap: the
+    // line looks "redrawn" each new drawing, and is pixel-stable across the hold.
+    let boil_seed = ((t / step_dt).round() as i64).rem_euclid(4096) as u32 + 1;
 
     // Two-phase draw. First walk the bone tree to compute each part's world
     // transform (parent transforms propagate to children), collecting drawables;
@@ -616,8 +630,12 @@ fn render_rigged_character(
             let dy = d.y - p.y;
             let dpos = (dx * dx + dy * dy).sqrt();
             let motion = dpos + (d.rot - p.rot).abs() * 0.6;
-            if motion > 16.0 {
-                let ghosts = if motion > 40.0 { 2 } else { 1 };
+            // Threshold scales with canvas so it's resolution-independent, and is
+            // set HIGH enough that idle/speech float never spawns ghosts — only a
+            // real gesture smears. (Spurious ghosts on tiny motion read as jitter.)
+            let thr = (canvas_h as f64 * 0.05).max(24.0);
+            if motion > thr {
+                let ghosts = if motion > thr * 2.2 { 2 } else { 1 };
                 for g in 0..ghosts {
                     let f = (g as f64 + 1.0) / (ghosts as f64 + 1.0); // between prev & cur
                     final_draws.push(Drawable {
@@ -1221,25 +1239,27 @@ fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64, accent: f64
     let nod = (t * 2.3 * tau).sin();
     for state in states.iter_mut() {
         match state.name.as_str() {
+            // Amplitudes kept LOW: this runs on every syllable through the whole
+            // `speaks for`, stepped by on-twos ×N characters — loud values read as
+            // constant «дёрганье». The STRESS accents still punch; the between-
+            // beats float is a whisper so the delivery reads without buzzing.
             "head" => {
-                state.rotation += nod * 2.2 * amt;
+                state.rotation += nod * 1.1 * amt;
                 // Accent: the head dips INTO the stressed syllable (down-beat).
-                state.offset.1 += nod * 1.6 * amt - accent * 2.6;
-                state.offset.0 += (t * 0.9 * tau).sin() * 1.2 * amt; // slight turn
+                state.offset.1 += nod * 0.8 * amt - accent * 2.6;
+                state.offset.0 += (t * 0.9 * tau).sin() * 0.6 * amt; // slight turn
             }
             "torso" => {
-                state.rotation += nod * 0.5 * amt;
-                // Speech pushes a wave through the spine: shoulders lean into
-                // the phrase while the pelvis stays planted.
-                state.bend += nod * 0.035 * amt + accent * 0.03;
+                state.rotation += nod * 0.25 * amt;
+                state.bend += nod * 0.018 * amt + accent * 0.03;
             }
             "upper_arm_left" => {
-                // Gentle float while talking + a sharp STRIKE on the attack of
-                // each stressed syllable (the orator's downbeat).
-                state.rotation += (t * 1.7 * tau).sin() * 3.0 * amt + accent * 9.0;
+                // Whisper float while talking + a sharp STRIKE on the stressed
+                // syllable (the orator's downbeat carries the gesture).
+                state.rotation += (t * 1.7 * tau).sin() * 1.5 * amt + accent * 9.0;
             }
             "forearm_left" => {
-                state.rotation += (t * 1.7 * tau + 0.6).sin() * 4.2 * amt + accent * 12.0;
+                state.rotation += (t * 1.7 * tau + 0.6).sin() * 2.1 * amt + accent * 12.0;
             }
             "brow_left" | "brow_right" => {
                 // Brows pop up on the accent — the face acts the stress.

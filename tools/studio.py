@@ -222,7 +222,53 @@ def step_mux(prod, video_mp4, voice_mp3, sfx_mp3, out_final):
     return out_final
 
 
-def build_one(prod, engine, videos_dir):
+def _ffprobe(path, entries, select=None):
+    cmd = ["ffprobe", "-v", "error", "-show_entries", entries,
+           "-of", "default=nw=1:nk=1"]
+    if select:
+        cmd += ["-select_streams", select]
+    cmd.append(str(path))
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True).stdout.strip()
+    except Exception:
+        return ""
+
+
+def media_duration(path):
+    try:
+        return float(_ffprobe(path, "format=duration") or 0.0)
+    except ValueError:
+        return 0.0
+
+
+def has_audio(path):
+    return bool(_ffprobe(path, "stream=codec_type", select="a:0"))
+
+
+def qc_production(prod, video_mp4, final_mp4, voice_expected):
+    """Гейт качества: ловит немой/рассинхронный ролик. Возвращает список ошибок.
+
+    Философия завода — «отдать хоть что-то» — годится для черновика, но в CI с
+    ключами (voice_expected=True) немой или рассинхронный ролик НЕ должен
+    проходить зелёным. Проверяем: выход существует; если заявлен vo — есть
+    звук; длительности video≈final."""
+    errs = []
+    if not Path(video_mp4).exists():
+        return [f"{prod['id']}: нет отрендеренного video ({Path(video_mp4).name})"]
+    if voice_expected and prod.get("vo"):
+        if not have_ffmpeg():
+            return errs  # без ffprobe проверить нечем
+        if not Path(final_mp4).exists() or not has_audio(final_mp4):
+            errs.append(f"{prod['id']}: заявлен vo, но в финале НЕТ звуковой дорожки")
+        else:
+            vd, ad = media_duration(video_mp4), media_duration(final_mp4)
+            if vd > 0 and abs(ad - vd) / vd > 0.20:
+                errs.append(f"{prod['id']}: рассинхрон длительностей "
+                            f"video={vd:.1f}s vs final={ad:.1f}s (>20%)")
+    return errs
+
+
+def build_one(prod, engine, videos_dir, voice_expected=False):
     pid = prod["id"]
     log(f"\n=== ПРОДАКШЕН: {pid} — {prod.get('desc', '')}")
     video_mp4 = videos_dir / f"{pid}.mp4"
@@ -251,6 +297,11 @@ def build_one(prod, engine, videos_dir):
                     "снизь битрейт/длительность.")
     log(f"  → готово: {', '.join(made)}")
 
+    errs = qc_production(prod, video_mp4, final_mp4, voice_expected)
+    for e in errs:
+        log(f"  [QC-FAIL] {e}")
+    return errs
+
 
 def main(argv):
     ap = argparse.ArgumentParser(description="Завод Лектория: ролики со звуком")
@@ -258,7 +309,10 @@ def main(argv):
     ap.add_argument("--manifest", default=str(DEFAULT_MANIFEST))
     ap.add_argument("--engine", default=str(DEFAULT_ENGINE))
     ap.add_argument("--videos", default=str(ROOT / "videos"))
+    ap.add_argument("--strict", action="store_true",
+                    help="ненулевой выход, если QC-гейт нашёл немой/рассинхронный ролик")
     args = ap.parse_args(argv)
+    strict = args.strict or bool(os.environ.get("QC_STRICT"))
 
     manifest = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
     prods = manifest["productions"]
@@ -277,9 +331,20 @@ def main(argv):
         f"ffmpeg={'есть' if have_ffmpeg() else 'нет'}; "
         f"озвучка={'вкл' if (os.environ.get('FREDERICK_ADMIN_TOKEN') or os.environ.get('FISH_AUDIO_API_KEY')) else 'выкл'}; "
         f"картинки={'вкл' if os.environ.get('IMAGE_API_KEY') else 'выкл'}")
+    voice_expected = bool(
+        os.environ.get("FREDERICK_ADMIN_TOKEN") or os.environ.get("FISH_AUDIO_API_KEY")
+    )
+    all_errs = []
     for prod in prods:
-        build_one(prod, engine, videos_dir)
+        all_errs += build_one(prod, engine, videos_dir, voice_expected) or []
     log("\nЗавод отработал.")
+    if all_errs:
+        log(f"\nQC: {len(all_errs)} проблема(ы):")
+        for e in all_errs:
+            log(f"  - {e}")
+        if strict:
+            log("QC-гейт строгий → падаем (немой/рассинхронный ролик не проходит).")
+            return 1
     return 0
 
 

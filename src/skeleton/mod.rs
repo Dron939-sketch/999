@@ -368,35 +368,35 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
             let h = name_hash(&state.name);
             let ph1 = hash_unit(h) * PI;
             let ph2 = hash_unit(h ^ 0x9E37_79B9) * PI;
-            let f = 0.18 + hash_unit(h ^ 0x1234_5678).abs() * 0.12; // ~0.18–0.30 Hz
-            state.rotation += (time * f * tau + ph1).sin() * 0.18;
-            state.offset.0 += (time * f * 0.7 * tau + ph2).sin() * 0.12;
-            state.offset.1 += (time * f * 0.5 * tau + ph1).sin() * 0.10;
+            let f = 0.14 + hash_unit(h ^ 0x1234_5678).abs() * 0.08; // ~0.14–0.22 Hz, slow
+            state.rotation += (time * f * tau + ph1).sin() * 0.06;
+            state.offset.0 += (time * f * 0.7 * tau + ph2).sin() * 0.045;
+            state.offset.1 += (time * f * 0.5 * tau + ph1).sin() * 0.035;
         }
 
         match state.name.as_str() {
+            // NOTE: amplitudes deliberately SMALL. On-twos steps this idle every
+            // 1/12s; loud idle → visible «дёрганье» ×N characters. A held drawing
+            // must nearly HOLD (like the original) — life comes from deliberate
+            // gestures + the occasional blink, not constant breathing/bobbing.
             "torso" => {
-                state.scale.1 *= 1.0 + breath * 0.014; // breathing
-                state.offset.0 += shift * 2.2; // weight shift (whole upper body)
-                state.rotation += sway * 1.0 + shift * 0.8;
-                // Spine curl: the sway/weight-shift flows through the body as a
-                // curve (pelvis planted, shoulders sweep) instead of a rigid
-                // tilt — the drawing breathes as one line, not a cutout.
-                state.bend += sway * 0.045 + shift * 0.055 + breath * 0.012;
+                state.scale.1 *= 1.0 + breath * 0.008; // faint breathing
+                state.offset.0 += shift * 0.7; // slow weight shift
+                state.rotation += sway * 0.3 + shift * 0.25;
+                state.bend += sway * 0.02 + shift * 0.025 + breath * 0.005;
             }
             "head" => {
-                state.offset.1 += breath * 1.0;
-                // slow "looking" life + counter to the weight shift (head leads)
-                state.offset.0 += shift * 1.4 + (time * 0.23 * tau).sin() * 1.0;
-                state.rotation += (time * 0.37 * tau).sin() * 1.3 + sway * 0.6 - shift * 0.9;
+                state.offset.1 += breath * 0.5;
+                // very slow "looking" life, small
+                state.offset.0 += shift * 0.5 + (time * 0.19 * tau).sin() * 0.35;
+                state.rotation += (time * 0.29 * tau).sin() * 0.45 + sway * 0.2 - shift * 0.3;
             }
             name if name.contains("thigh") => {
-                state.offset.0 += shift * 0.7; // legs plant against the shift
+                state.offset.0 += shift * 0.22;
             }
             name if name.contains("arm") => {
                 let phase = if name.contains("right") { PI } else { 0.0 };
-                // gentle arm float, and hands drift with the weight shift
-                state.rotation += (time * 0.6 * tau + phase).sin() * 1.4 + shift * 0.6;
+                state.rotation += (time * 0.5 * tau + phase).sin() * 0.5 + shift * 0.22;
             }
             _ => {}
         }

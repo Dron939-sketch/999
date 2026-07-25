@@ -61,11 +61,13 @@ impl Default for RenderConfig {
             background: Color::rgb(0, 0, 0),
             monochrome: false,
             mono_contrast: 1.12,
-            film_grain: 0.0,
+            // Фримен-пресет по умолчанию: ни один ролик не стартует «стерильным»
+            // (гладкий 24fps, чистая линия). Сцена может переопределить любой ключ.
+            film_grain: 0.08,
             vignette: 0.0,
-            on_twos: 0,
+            on_twos: 2,
             snow: 0.0,
-            line_boil: 0.0,
+            line_boil: 0.6,
             ground_shadow: false,
             cast_shadow: 0.0,
             light_angle: 35.0,
