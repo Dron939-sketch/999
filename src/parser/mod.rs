@@ -468,6 +468,26 @@ fn parse_camera(pair: Pair) -> Result<CameraStmt, AnimError> {
                 .unwrap_or(0.0);
             Ok(CameraStmt::Dutch { angle })
         }
+        Rule::camera_pitch => {
+            let angle = cmd
+                .into_inner()
+                .next()
+                .unwrap()
+                .as_str()
+                .parse::<f64>()
+                .unwrap_or(0.0);
+            Ok(CameraStmt::Pitch { angle })
+        }
+        Rule::camera_angle => {
+            let mut inner = cmd.into_inner();
+            let kind = match inner.next().unwrap().as_str() {
+                "high" => crate::ast::AngleKind::High,
+                "low" => crate::ast::AngleKind::Low,
+                _ => crate::ast::AngleKind::Level,
+            };
+            let target = inner.next().map(|p| p.as_str().to_string());
+            Ok(CameraStmt::Angle { kind, target })
+        }
         Rule::camera_reset => {
             let mut inner = cmd.into_inner();
             let duration = inner.next().map(parse_duration);

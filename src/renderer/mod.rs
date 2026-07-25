@@ -10,7 +10,10 @@ use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 use std::sync::Arc;
 
-use tiny_skia::{Color as SkiaColor, Paint, Pixmap, PixmapPaint, Rect, Transform};
+use tiny_skia::{
+    Color as SkiaColor, FillRule, FilterQuality, Paint, PathBuilder, Pixmap, PixmapPaint, Rect,
+    Transform,
+};
 
 use crate::assets::{AssetRegistry, CharacterAsset};
 use crate::ast::Direction;
@@ -225,6 +228,7 @@ pub fn render_frame(
                         timeline,
                         name,
                         custom_poses,
+                        config.ground_shadow,
                     )?;
                 }
             }
@@ -272,7 +276,17 @@ pub fn render_frame(
             .pre_concat(Transform::from_rotate(camera.roll as f32))
             .pre_concat(Transform::from_scale(scale, scale))
             .pre_concat(Transform::from_translate(-cx, -cy));
-        rolled.draw_pixmap(0, 0, pixmap.as_ref(), &PixmapPaint::default(), tr, None);
+        rolled.draw_pixmap(
+            0,
+            0,
+            pixmap.as_ref(),
+            &PixmapPaint {
+                quality: FilterQuality::Bilinear,
+                ..Default::default()
+            },
+            tr,
+            None,
+        );
         pixmap = rolled;
     }
 
@@ -298,6 +312,7 @@ fn render_character(
     timeline: &Timeline,
     entity_name: &str,
     custom_poses: &HashMap<String, Vec<(String, f64)>>,
+    ground_shadow: bool,
 ) -> Result<(), AnimError> {
     match asset {
         CharacterAsset::Legacy { svg_data, .. } => {
@@ -330,6 +345,7 @@ fn render_character(
             t,
             timeline,
             entity_name,
+            ground_shadow,
         ),
         CharacterAsset::Procedural(desc) => render_procedural_character(
             desc,
@@ -357,6 +373,7 @@ fn render_rigged_character(
     t: f64,
     timeline: &Timeline,
     entity_name: &str,
+    ground_shadow: bool,
 ) -> Result<(), AnimError> {
     // Limited animation "on twos": the pose clock ticks at ~12 fps so gestures
     // and cel swaps pop in steps like hand-drawn animation, while the ink boil
@@ -565,6 +582,14 @@ fn render_rigged_character(
         &mut prev_draws,
     );
 
+    // Camera lens: vertical angle (pitch) → real foreshortening. Applied to both
+    // the current and previous drawable sets in the SAME way, so smear pairing
+    // and the on-twos hold stay consistent. This is what makes proportions read
+    // "through the lens": the body part nearest the camera enlarges, the far one
+    // recedes — instead of the flat orthographic scale-by-one-number.
+    apply_camera_pitch(&mut drawables, camera.pitch);
+    apply_camera_pitch(&mut prev_draws, camera.pitch);
+
     // Motion smears: where a part moved fast since the previous tick, insert 1–2
     // fading ghost copies along its path (drawn BEHIND the real part). This is the
     // motion-blur of hand-drawn animation — the step that kills the "slide". The
@@ -614,6 +639,35 @@ fn render_rigged_character(
     }
 
     // Stable sort keeps tree/ghost order among equal z_order (deterministic).
+    // Ground contact shadow (opt-in per scene): a soft dark ellipse under the
+    // feet, drawn BEHIND the character, so the figure sits on the floor instead
+    // of floating. Extent taken from the live drawables.
+    if ground_shadow && state.opacity > 0.35 {
+        let mut min_x = f64::INFINITY;
+        let mut max_x = f64::NEG_INFINITY;
+        let mut feet_y = f64::NEG_INFINITY;
+        for d in final_draws.iter().filter(|d| d.opacity > 0.5) {
+            if d.x < min_x {
+                min_x = d.x;
+            }
+            if d.x > max_x {
+                max_x = d.x;
+            }
+            // True silhouette bottom of this part: its anchor y plus the part
+            // extent below the pivot, scaled. Legs are near-vertical so this
+            // lands the shadow at the actual feet, not the shin's top anchor.
+            let bottom = d.y + (d.part.height - d.pivot.1) * d.sy.abs();
+            if bottom > feet_y {
+                feet_y = bottom;
+            }
+        }
+        if max_x > min_x && feet_y.is_finite() {
+            let cx = 0.5 * (min_x + max_x);
+            let half_w = ((max_x - min_x) * 0.55).max(20.0);
+            draw_ground_shadow(pixmap, cx, feet_y - 4.0, half_w, state.opacity);
+        }
+    }
+
     final_draws.sort_by_key(|d| d.z_order);
     for d in &final_draws {
         render_bone_part(
@@ -769,6 +823,82 @@ fn bend_map_offset(ox: f64, oy: f64, geom: BendGeom) -> (f64, f64, f64) {
     let mx = radius * (1.0 - theta.cos()) + ox * theta.cos();
     let my = (origin - pivot_row) + radius * theta.sin() + ox * theta.sin();
     (mx, my, theta.to_degrees())
+}
+
+/// Soft ground-contact shadow: three stacked, fading black ellipses (a cheap
+/// blur) centred under the feet. Drawn before the character so it reads as a
+/// shadow ON the floor, not a smudge over the legs.
+fn draw_ground_shadow(pixmap: &mut Pixmap, cx: f64, cy: f64, half_w: f64, opacity: f64) {
+    let ry = (half_w * 0.26).max(5.0);
+    for i in 0..3 {
+        let k = 1.0 - i as f64 * 0.26; // outer rings larger, fainter
+        let rx = half_w * (1.0 + i as f64 * 0.10);
+        let rry = ry * (1.0 + i as f64 * 0.10);
+        let alpha = (0.16 * (1.0 - i as f64 * 0.28) * opacity).clamp(0.0, 0.5);
+        let _ = k;
+        if let Some(rect) = Rect::from_xywh(
+            (cx - rx) as f32,
+            (cy - rry) as f32,
+            (2.0 * rx) as f32,
+            (2.0 * rry) as f32,
+        ) {
+            let mut pb = PathBuilder::new();
+            pb.push_oval(rect);
+            if let Some(path) = pb.finish() {
+                let mut paint = Paint::default();
+                paint.set_color_rgba8(0, 0, 0, (alpha * 255.0) as u8);
+                paint.anti_alias = true;
+                pixmap.fill_path(&path, &paint, FillRule::Winding, Transform::identity(), None);
+            }
+        }
+    }
+}
+
+/// Camera lens foreshortening from vertical angle (`pitch`, degrees).
+///
+/// Orthographic composition scales the whole figure by ONE number, so a low or
+/// high shot reads flat. A real lens tilted up/down foreshortens the vertical
+/// axis: the body part NEAREST the camera enlarges, the far part recedes and
+/// compresses toward the vanishing line. We approximate that on the already-
+/// composed drawables (each carries its world y + pivot), so attachment is
+/// preserved: the transform is a pure function of screen-y, mapping coincident
+/// points identically (a joint shared by two parts stays joined).
+///
+/// pitch > 0 → camera ABOVE looking down: head/shoulders near → bigger, legs far
+/// → smaller (fig. pressed down). pitch < 0 → camera BELOW looking up: legs/pelvis
+/// near → bigger, head far → smaller (fig. towers). pitch 0 → untouched.
+fn apply_camera_pitch(draws: &mut [Drawable], pitch_deg: f64) {
+    if pitch_deg.abs() < 0.05 || draws.is_empty() {
+        return;
+    }
+    // Vertical extent of the figure in screen space (part anchor points).
+    let mut min_y = f64::INFINITY; // top
+    let mut max_y = f64::NEG_INFINITY; // bottom / feet
+    for d in draws.iter() {
+        if d.y < min_y {
+            min_y = d.y;
+        }
+        if d.y > max_y {
+            max_y = d.y;
+        }
+    }
+    let span = (max_y - min_y).max(1.0);
+    let mid = 0.5 * (min_y + max_y);
+    // tan(pitch) is the perspective strength; clamp so a steep angle can't invert.
+    let p = pitch_deg.to_radians().tan().clamp(-0.85, 0.85);
+    const SIZE_GAIN: f64 = 0.55; // how strongly near/far parts grow/shrink
+    const VERT_GAIN: f64 = 0.30; // vertical compression of the far half
+    for d in draws.iter_mut() {
+        // s: +0.5 at the top of the figure, −0.5 at the feet.
+        let s = (max_y - d.y) / span - 0.5;
+        // pitch>0 (down): top (s>0) nearer → bigger. pitch<0 (up): feet (s<0) bigger.
+        let m = (1.0 + p * s * SIZE_GAIN).clamp(0.55, 1.7);
+        d.sx *= m;
+        d.sy *= m;
+        // Gentle vertical foreshortening: near half spreads from mid, far compresses.
+        let vf = (1.0 + p * s * VERT_GAIN).clamp(0.7, 1.4);
+        d.y = mid + (d.y - mid) * vf;
+    }
 }
 
 /// Walk the bone tree computing world transforms (parent → child) and collect a
@@ -1268,6 +1398,10 @@ fn render_bone_part(
 
     let paint = PixmapPaint {
         opacity: opacity as f32,
+        // Bilinear resampling: the part is pre-rasterized then composited under a
+        // rotation/scale. Nearest sampling stair-steps the inked edge and crawls
+        // sub-pixel frame-to-frame; bilinear keeps the line clean.
+        quality: FilterQuality::Bilinear,
         ..Default::default()
     };
 
@@ -1591,6 +1725,8 @@ fn render_svg_to_pixmap(
 
     let paint = PixmapPaint {
         opacity: opacity as f32,
+        // Bicubic for the set/background: smoothest under camera zoom/pan.
+        quality: FilterQuality::Bicubic,
         ..Default::default()
     };
 

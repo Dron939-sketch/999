@@ -74,6 +74,10 @@ pub struct CameraKeyframe {
     pub zoom: f64,
     /// Крен кадра в градусах (dutch-угол); 0 = ровно.
     pub roll: f64,
+    /// Вертикальный ракурс (наклон объектива) в градусах. >0 — камера сверху
+    /// (смотрит вниз), <0 — снизу (вверх), 0 — на уровне глаз. Двигатель
+    /// превращает это в форшортенинг по высоте фигуры (ближняя часть крупнее).
+    pub pitch: f64,
     pub easing: Easing,
     /// Optional shake intensity (0 = no shake).
     pub shake: f64,
@@ -114,6 +118,7 @@ pub fn compile(scene: &ResolvedScene) -> Result<Timeline, AnimError> {
             easing: Easing::Linear,
             shake: 0.0,
             roll: 0.0,
+            pitch: 0.0,
         }],
         transitions: Vec::new(),
         entities: scene.entities.clone(),
@@ -485,6 +490,9 @@ impl TimelineCompiler {
     }
 
     fn compile_camera(&mut self, cam: &CameraStmt) -> Result<(), AnimError> {
+        // Ракурс (pitch) держится ПОПЕРЁК склеек: смена размера плана не сбивает
+        // «снизу/сверху». Захватываем текущий наклон на входе в команду.
+        let carry_pitch = self.camera_keyframes.last().map(|k| k.pitch).unwrap_or(0.0);
         match cam {
             CameraStmt::ShotType { shot, target } => {
                 let (x, y, zoom) = match shot {
@@ -553,7 +561,8 @@ impl TimelineCompiler {
                     zoom,
                     easing: Easing::EaseInOut,
                     shake: 0.0,
-            roll: 0.0,
+                    roll: 0.0,
+                    pitch: carry_pitch,
                 });
             }
             CameraStmt::ZoomTo {
@@ -573,7 +582,8 @@ impl TimelineCompiler {
                     zoom: 2.5,
                     easing: easing.unwrap_or(Easing::EaseInOut),
                     shake: 0.0,
-            roll: 0.0,
+                    roll: 0.0,
+                    pitch: carry_pitch,
                 });
                 self.time += dur;
             }
@@ -601,7 +611,8 @@ impl TimelineCompiler {
                     zoom: last_zoom,
                     easing: easing.unwrap_or(Easing::EaseInOut),
                     shake: 0.0,
-            roll: 0.0,
+                    roll: 0.0,
+                    pitch: carry_pitch,
                 });
                 self.time += dur;
             }
@@ -621,7 +632,8 @@ impl TimelineCompiler {
                         zoom: 1.0,
                         easing: Easing::Linear,
                         shake: 0.0,
-            roll: 0.0,
+                        roll: 0.0,
+                        pitch: carry_pitch,
                     });
 
                 // Start shake.
@@ -633,6 +645,7 @@ impl TimelineCompiler {
                     easing: Easing::Linear,
                     shake: *intensity,
                     roll: last.roll,
+                    pitch: last.pitch,
                 });
 
                 // End shake.
@@ -644,6 +657,7 @@ impl TimelineCompiler {
                     easing: Easing::Linear,
                     shake: 0.0,
                     roll: last.roll,
+                    pitch: last.pitch,
                 });
 
                 self.time += dur;
@@ -662,6 +676,7 @@ impl TimelineCompiler {
                         easing: Easing::Linear,
                         shake: 0.0,
                         roll: 0.0,
+                        pitch: carry_pitch,
                     });
                 self.camera_keyframes.push(CameraKeyframe {
                     time: self.time,
@@ -671,6 +686,64 @@ impl TimelineCompiler {
                     easing: Easing::Linear,
                     shake: last.shake,
                     roll: *angle,
+                    pitch: last.pitch,
+                });
+            }
+            CameraStmt::Pitch { angle } => {
+                // Мгновенная смена ракурса, держится до следующего pitch/reset.
+                let last = self.camera_keyframes.last().cloned().unwrap_or(CameraKeyframe {
+                    time: 0.0,
+                    x: 0.5,
+                    y: 0.5,
+                    zoom: 1.0,
+                    easing: Easing::Linear,
+                    shake: 0.0,
+                    roll: 0.0,
+                    pitch: 0.0,
+                });
+                self.camera_keyframes.push(CameraKeyframe {
+                    time: self.time,
+                    x: last.x,
+                    y: last.y,
+                    zoom: last.zoom,
+                    easing: Easing::Linear,
+                    shake: last.shake,
+                    roll: last.roll,
+                    pitch: *angle,
+                });
+            }
+            CameraStmt::Angle { kind, target } => {
+                // Пресет ракурса: наклон объектива + вертикальное кадрирование.
+                // Низ (снизу вверх) — фигура возвышается: центр ниже, наклон −.
+                // Верх (сверху вниз) — фигура придавлена: центр выше, наклон +.
+                let (pitch, dy) = match kind {
+                    crate::ast::AngleKind::Low => (-26.0, 0.10),
+                    crate::ast::AngleKind::High => (26.0, -0.10),
+                    crate::ast::AngleKind::Level => (0.0, 0.0),
+                };
+                let (cx, cy, zoom) = if let Some(name) = target {
+                    let e = self.entities.get(name).ok_or_else(|| {
+                        AnimError::Timeline(format!("unknown entity: {name}"))
+                    })?;
+                    (e.x, (e.y + dy).clamp(0.1, 0.9), 1.0)
+                } else {
+                    (0.5, (0.5 + dy).clamp(0.1, 0.9), 1.0)
+                };
+                if let Some(prev) = self.camera_keyframes.last().cloned() {
+                    let hold_time = (self.time - 0.04).max(prev.time);
+                    if hold_time > prev.time {
+                        self.camera_keyframes.push(CameraKeyframe { time: hold_time, ..prev });
+                    }
+                }
+                self.camera_keyframes.push(CameraKeyframe {
+                    time: self.time,
+                    x: cx,
+                    y: cy,
+                    zoom,
+                    easing: Easing::EaseInOut,
+                    shake: 0.0,
+                    roll: 0.0,
+                    pitch,
                 });
             }
             CameraStmt::Reset { duration } => {
@@ -682,7 +755,8 @@ impl TimelineCompiler {
                     zoom: 1.0,
                     easing: Easing::EaseInOut,
                     shake: 0.0,
-            roll: 0.0,
+                    roll: 0.0,
+                    pitch: 0.0,
                 });
                 self.time += dur;
             }
@@ -843,6 +917,7 @@ pub fn evaluate_camera(camera_track: &CameraTrack, t: f64) -> CameraKeyframe {
             easing: Easing::Linear,
             shake: 0.0,
             roll: 0.0,
+            pitch: 0.0,
         };
     }
     if kfs.len() == 1 || t <= kfs[0].time {
@@ -868,6 +943,7 @@ pub fn evaluate_camera(camera_track: &CameraTrack, t: f64) -> CameraKeyframe {
                 easing: kfs[i + 1].easing,
                 shake: lerp(kfs[i].shake, kfs[i + 1].shake, eased),
                 roll: lerp(kfs[i].roll, kfs[i + 1].roll, eased),
+                pitch: lerp(kfs[i].pitch, kfs[i + 1].pitch, eased),
             };
         }
     }

@@ -39,6 +39,10 @@ pub struct RenderConfig {
     /// background stay perfectly solid. This is what a rig can't get from pose
     /// interpolation alone: no two holds of the same drawing are pixel-identical.
     pub line_boil: f64,
+    /// Мягкая контактная тень под ногами персонажа (0/false = выкл). Прибивает
+    /// фигуру к полу — она перестаёт «парить». Включать в сценах, где персонаж
+    /// стоит на поверхности (не в пустоте/полёте).
+    pub ground_shadow: bool,
 }
 
 impl Default for RenderConfig {
@@ -55,6 +59,7 @@ impl Default for RenderConfig {
             on_twos: 0,
             snow: 0.0,
             line_boil: 0.0,
+            ground_shadow: false,
         }
     }
 }
@@ -120,6 +125,11 @@ impl RenderConfig {
                         cfg.line_boil = *n;
                     }
                 }
+                "ground-shadow" => match &entry.value {
+                    Value::Bool(b) => cfg.ground_shadow = *b,
+                    Value::Number(n) => cfg.ground_shadow = *n != 0.0,
+                    _ => {}
+                },
                 _ => {}
             }
         }

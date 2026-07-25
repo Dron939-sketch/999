@@ -352,22 +352,26 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
     let shift = (time * 0.12 * tau).sin();
     // "Animation boil": the jitter target updates ~5x/sec (held on fours), so a
     // static pose is never perfectly still — but calm, not a tremor.
-    let step = (time * 5.0).floor() as i64;
-
     for state in states.iter_mut() {
         let is_face = state.name.contains("eye")
             || state.name.contains("mouth")
             || state.name.contains("brow");
 
         // Per-bone procedural micro-float (skipped for facial features).
+        // SMOOTH coherent drift, not a stepped random jump: earlier this
+        // resampled a hash ~5×/sec, which made every limb TWITCH (read as
+        // «дёрганье»). Now each bone floats on slow, low-amplitude sines with a
+        // per-bone phase — the figure breathes without jittering. The hand-drawn
+        // «redrawn» wobble is carried by the ink line-boil (outline), not by
+        // shaking the skeleton.
         if !is_face {
             let h = name_hash(&state.name);
-            let jr = hash_unit(h ^ (step as u32).wrapping_mul(2654435761));
-            let jx = hash_unit(h.wrapping_add(97) ^ (step as u32).wrapping_mul(40503));
-            let jy = hash_unit(h.wrapping_add(191) ^ (step as u32).wrapping_mul(22695477));
-            state.rotation += jr * 0.45;
-            state.offset.0 += jx * 0.28;
-            state.offset.1 += jy * 0.22;
+            let ph1 = hash_unit(h) * PI;
+            let ph2 = hash_unit(h ^ 0x9E37_79B9) * PI;
+            let f = 0.18 + hash_unit(h ^ 0x1234_5678).abs() * 0.12; // ~0.18–0.30 Hz
+            state.rotation += (time * f * tau + ph1).sin() * 0.18;
+            state.offset.0 += (time * f * 0.7 * tau + ph2).sin() * 0.12;
+            state.offset.1 += (time * f * 0.5 * tau + ph1).sin() * 0.10;
         }
 
         match state.name.as_str() {

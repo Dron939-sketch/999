@@ -252,8 +252,24 @@ pub enum CameraStmt {
     Shake { duration: Duration, intensity: f64 },
     /// `camera dutch 6` — крен кадра (dutch-угол) в градусах, до смены/reset.
     Dutch { angle: f64 },
+    /// `camera pitch 25` — вертикальный ракурс в градусах. >0 камера сверху
+    /// (смотрит вниз), <0 снизу (вверх). Даёт форшортенинг по высоте фигуры.
+    Pitch { angle: f64 },
+    /// `camera angle high|low|level [target]` — пресет ракурса: ставит и
+    /// наклон камеры, и подходящее кадрирование по вертикали.
+    Angle {
+        kind: AngleKind,
+        target: Option<String>,
+    },
     /// `camera reset over 0.5s`
     Reset { duration: Option<Duration> },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum AngleKind {
+    High,
+    Low,
+    Level,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

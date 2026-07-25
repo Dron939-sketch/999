@@ -201,6 +201,8 @@ camera_stmt = { "camera" ~ camera_command }
 
 camera_command = {
     camera_dutch
+    | camera_pitch
+    | camera_angle
     | camera_shake
     | camera_reset
     | camera_zoom
@@ -227,6 +229,20 @@ camera_shake = {
 camera_dutch = {
     "dutch" ~ number
 }
+
+// Вертикальный ракурс (наклон камеры вверх/вниз). Положительный градус —
+// камера СВЕРХУ (смотрит вниз), отрицательный — СНИЗУ (смотрит вверх).
+// Даёт настоящий форшортенинг: ближняя к камере часть тела крупнее.
+camera_pitch = {
+    "pitch" ~ number
+}
+
+// Сахар: camera angle high|low|level [target] — ставит и наклон, и кадр.
+camera_angle = {
+    "angle" ~ angle_kind ~ identifier?
+}
+
+angle_kind = { "high" | "low" | "level" }
 
 camera_reset = {
     "reset" ~ ("over" ~ duration)?
