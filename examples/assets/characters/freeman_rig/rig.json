@@ -307,6 +307,9 @@
         "forearm_left": {
           "rotation": 16
         },
+        "hand_left": {
+          "rotation": -18
+        },
         "upper_arm_right": {
           "rotation": -38
         },
