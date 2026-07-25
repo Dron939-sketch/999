@@ -13,12 +13,13 @@ import character freeman from "../assets/characters/freeman_rig"
 import set cell from "../assets/sets/prison-cell.svg"
 import set book from "../assets/sets/book-title-page.svg"
 import set mind from "../assets/sets/mind-alive.svg"
+import set void from "../assets/sets/void.svg"
 
 config {
     width: 1280
     height: 720
     fps: 24
-    background: #6d746c
+    background: #3a3d38
     monochrome: true
     mono-contrast: 1.25
     vignette: 0.45
@@ -91,7 +92,7 @@ scene "book" (duration: 11s, set: book) {
 }
 
 // === СЦЕНА 3: КАРТИНКА ОЖИВАЕТ (20 с) ===
-scene "alive" (duration: 20s, set: mind) {
+scene "alive" (duration: 14s, set: mind) {
     let gear1 = prop("gear", "../assets/props/gear.svg") at (0.47, 0.30)
     let gear2 = prop("gear", "../assets/props/gear.svg") at (0.36, 0.40)
     // ЭКГ-линия пульса пересекает кадр на «прошивка работает» (мотив Фримена)
@@ -130,8 +131,22 @@ scene "alive" (duration: 20s, set: mind) {
     //lip 9
     freeman speaks for 2.6s
 
-    // ФЛЭШ-ВСТАВКИ перед панчем: очередь кадров-ударов по 0.08с (мгновенный
-    // снап flash_*), как у Фримена — гротескные морды мелькают одна за другой.
+    // обрыв сцены в ТВ-шум → финал в пустоте
+    transition static 0.5s
+}
+
+// === СЦЕНА 4: ПУСТОТА — ПАНЧ (10 с) ===
+// Эталонная композиция: крошечная фигура в пустоте на штрихованном полу,
+// тишина. Затем — сверхкруп, флэш-морды, гротескный оскал с VO-10.
+scene "void-punch" (duration: 10s, set: void) {
+    place freeman at (0.5, 0.74) facing front
+    freeman pose "calm"
+
+    // тишина-удар: одиночество, снег, 2.2с ничего не происходит
+    camera wide
+    wait 2.2s
+
+    // СКЛЕЙКА → сверхкруп + очередь флэш-морд + тряска + VO-10
     camera extreme-close-up freeman
     freeman pose "flash_scream"
     wait 0.08s
@@ -139,13 +154,12 @@ scene "alive" (duration: 20s, set: mind) {
     wait 0.08s
     freeman pose "flash_dead"
     wait 0.08s
-    // ПАНЧ: сверхкруп, гротескный оскал в упор + удар тряски. VO-10.
     camera shake 0.35s intensity 1.4
     freeman pose "grotesque"
     //lip 10
     freeman speaks for 2.8s
-    // финал: оскал гаснет в жёсткий взгляд, тишина, обрыв в черноту
-    freeman pose "stern"
-    wait 1.2s
+    // оскал гаснет в прищур-ухмылку, тишина, обрыв в черноту
+    freeman pose "smug"
+    wait 1.4s
     transition fade-black 1.2s
 }

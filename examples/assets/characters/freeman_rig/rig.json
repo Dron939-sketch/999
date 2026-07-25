@@ -81,6 +81,32 @@
                     -46
                   ],
                   "z_order": 6
+                },
+                {
+                  "name": "brow_left",
+                  "part": "brow",
+                  "pivot": [
+                    15,
+                    6
+                  ],
+                  "offset": [
+                    -22,
+                    -124
+                  ],
+                  "z_order": 6
+                },
+                {
+                  "name": "brow_right",
+                  "part": "brow",
+                  "pivot": [
+                    15,
+                    6
+                  ],
+                  "offset": [
+                    22,
+                    -124
+                  ],
+                  "z_order": 6
                 }
               ]
             },
@@ -340,6 +366,20 @@
         },
         "head": {
           "rotation": -2
+        },
+        "brow_left": {
+          "rotation": 18,
+          "offset": [
+            -20,
+            -114
+          ]
+        },
+        "brow_right": {
+          "rotation": -18,
+          "offset": [
+            20,
+            -114
+          ]
         }
       }
     },
@@ -358,6 +398,20 @@
         },
         "head": {
           "rotation": -3
+        },
+        "brow_left": {
+          "rotation": 18,
+          "offset": [
+            -20,
+            -114
+          ]
+        },
+        "brow_right": {
+          "rotation": -18,
+          "offset": [
+            20,
+            -114
+          ]
         }
       }
     },
@@ -572,6 +626,20 @@
         },
         "hand_left": {
           "part": "hand_fist"
+        },
+        "brow_left": {
+          "rotation": 18,
+          "offset": [
+            -20,
+            -114
+          ]
+        },
+        "brow_right": {
+          "rotation": -18,
+          "offset": [
+            20,
+            -114
+          ]
         }
       }
     },
@@ -1152,6 +1220,68 @@
         },
         "head": {
           "rotation": 2
+        }
+      }
+    },
+    "smug": {
+      "name": "smug",
+      "transition_duration": 0.25,
+      "bones": {
+        "eye_left": {
+          "part": "eye_squint"
+        },
+        "eye_right": {
+          "part": "eye_squint"
+        },
+        "brow_left": {
+          "rotation": 6
+        },
+        "brow_right": {
+          "rotation": -6
+        },
+        "mouth": {
+          "part": "mouth_m"
+        }
+      }
+    },
+    "doubt": {
+      "name": "doubt",
+      "transition_duration": 0.22,
+      "bones": {
+        "eye_left": {
+          "part": "eye_squint"
+        },
+        "brow_left": {
+          "rotation": 10,
+          "offset": [
+            -22,
+            -116
+          ]
+        },
+        "brow_right": {
+          "rotation": -14,
+          "offset": [
+            22,
+            -132
+          ]
+        },
+        "mouth": {
+          "part": "mouth_frown"
+        }
+      }
+    },
+    "happy": {
+      "name": "happy",
+      "transition_duration": 0.2,
+      "bones": {
+        "eye_left": {
+          "part": "eye_arc"
+        },
+        "eye_right": {
+          "part": "eye_arc"
+        },
+        "mouth": {
+          "part": "mouth_wide"
         }
       }
     }

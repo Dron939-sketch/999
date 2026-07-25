@@ -13,12 +13,12 @@
   </defs>
 
   <!-- ===== плоские тональные блоки комнаты (без градиентов) ===== -->
-  <rect x="0" y="0" width="1280" height="720" fill="#d4d7cf"/>                      <!-- бумага -->
-  <polygon points="0,0 1280,0 940,120 340,120" fill="#5f625b"/>                     <!-- потолок (тёмный) -->
-  <polygon points="0,0 340,120 340,470 0,720" fill="#a2a59d"/>                       <!-- левая стена -->
-  <polygon points="1280,0 1280,720 940,470 940,120" fill="#9a9d95"/>                 <!-- правая стена -->
-  <rect x="340" y="120" width="600" height="350" fill="#c9ccc3"/>                    <!-- задняя стена (светлая) -->
-  <polygon points="340,470 940,470 1280,720 0,720" fill="#b0b3ab"/>                  <!-- пол -->
+  <rect x="0" y="0" width="1280" height="720" fill="#787a75"/>                      <!-- бумага -->
+  <polygon points="0,0 1280,0 940,120 340,120" fill="#2e2f2c"/>                     <!-- потолок (тёмный) -->
+  <polygon points="0,0 340,120 340,470 0,720" fill="#565853"/>                       <!-- левая стена -->
+  <polygon points="1280,0 1280,720 940,470 940,120" fill="#51524e"/>                 <!-- правая стена -->
+  <rect x="340" y="120" width="600" height="350" fill="#70726d"/>                    <!-- задняя стена (светлая) -->
+  <polygon points="340,470 940,470 1280,720 0,720" fill="#5f615c"/>                  <!-- пол -->
 
   <!-- ===== жирный чёрный контур короба комнаты ===== -->
   <g fill="none" stroke="#141410" stroke-width="5" filter="url(#ink)" stroke-linejoin="round">
@@ -28,11 +28,11 @@
   </g>
 
   <!-- луч из окна: один плоский полигон, жёсткие грани ===== -->
-  <polygon points="470,150 600,150 800,470 400,470" fill="#f2f4ec" opacity="0.28"/>
+  <polygon points="470,150 600,150 800,470 400,470" fill="#8e8f8b" opacity="0.28"/>
 
   <!-- ===== окно с решёткой: максимальный контраст ===== -->
   <g filter="url(#ink)">
-    <rect x="470" y="150" width="130" height="104" fill="#e8ebe2" stroke="#141410" stroke-width="7"/>
+    <rect x="470" y="150" width="130" height="104" fill="#878983" stroke="#141410" stroke-width="7"/>
     <g stroke="#141410" stroke-width="9" stroke-linecap="square">
       <line x1="503" y1="150" x2="503" y2="254"/>
       <line x1="535" y1="150" x2="535" y2="254"/>
@@ -63,25 +63,25 @@
     <line x1="322" y1="540" x2="316" y2="576" stroke="#141410" stroke-width="8"/>
     <line x1="600" y1="548" x2="606" y2="584" stroke="#141410" stroke-width="8"/>
     <!-- матрас: плоская светлая форма с жирным контуром -->
-    <polygon points="300,500 620,520 620,540 300,522" fill="#e4e7de" stroke="#141410" stroke-width="4"/>
+    <polygon points="300,500 620,520 620,540 300,522" fill="#848680" stroke="#141410" stroke-width="4"/>
     <!-- складки — короткие чёрные штрихи -->
     <g stroke="#141410" stroke-width="2.4" opacity="0.75">
       <line x1="382" y1="506" x2="382" y2="526"/><line x1="452" y1="510" x2="452" y2="530"/>
       <line x1="522" y1="514" x2="522" y2="534"/>
     </g>
     <!-- подушка (у окна): белая с контуром -->
-    <polygon points="304,492 372,486 388,502 320,510" fill="#f4f6ef" stroke="#141410" stroke-width="4"/>
+    <polygon points="304,492 372,486 388,502 320,510" fill="#90918d" stroke="#141410" stroke-width="4"/>
     <path d="M312 496 Q344 490 380 495" fill="none" stroke="#141410" stroke-width="2.2" opacity="0.6"/>
     <!-- смятое одеяло к изножью: плоская форма, чёрный контур -->
-    <path d="M470 512 Q520 500 590 512 Q556 522 590 528 L470 528 Z" fill="#c3c6bd" stroke="#141410" stroke-width="3.4"/>
+    <path d="M470 512 Q520 500 590 512 Q556 522 590 528 L470 528 Z" fill="#6c6e69" stroke="#141410" stroke-width="3.4"/>
   </g>
 
   <!-- ===== унитаз в дальнем углу: графичная тушь ===== -->
   <g filter="url(#ink)">
     <polygon points="978,470 1080,470 1096,556 962,556" fill="#17170f" opacity="0.7" filter="url(#inkHeavy)"/>
-    <polygon points="986,406 1072,406 1072,452 986,452" fill="#bfc2ba" stroke="#141410" stroke-width="4"/>
-    <path d="M992 452 Q1030 460 1066 452 L1058 520 Q1030 534 1000 520 Z" fill="#cdd0c8" stroke="#141410" stroke-width="4"/>
-    <ellipse cx="1029" cy="470" rx="34" ry="11" fill="#e4e7de" stroke="#141410" stroke-width="4"/>
+    <polygon points="986,406 1072,406 1072,452 986,452" fill="#696b67" stroke="#141410" stroke-width="4"/>
+    <path d="M992 452 Q1030 460 1066 452 L1058 520 Q1030 534 1000 520 Z" fill="#737570" stroke="#141410" stroke-width="4"/>
+    <ellipse cx="1029" cy="470" rx="34" ry="11" fill="#848680" stroke="#141410" stroke-width="4"/>
     <ellipse cx="1029" cy="470" rx="19" ry="6" fill="#141410"/>
   </g>
 
