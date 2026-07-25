@@ -38,8 +38,8 @@
                 14
               ],
               "scale": [
-                1.08,
-                1.35
+                0.95,
+                1.18
               ],
               "z_order": 5,
               "children": [
@@ -296,22 +296,22 @@
       "bones": {
         "head": {
           "offset": [
-            -5,
+            -6,
             13
           ],
-          "rotation": -9
+          "rotation": -11
         },
         "upper_arm_left": {
-          "rotation": 44
+          "rotation": 68
         },
         "forearm_left": {
-          "rotation": -18
+          "rotation": -20
         },
         "upper_arm_right": {
-          "rotation": -36
+          "rotation": -38
         },
         "forearm_right": {
-          "rotation": 8
+          "rotation": 20
         },
         "mouth": {
           "part": "mouth_closed"

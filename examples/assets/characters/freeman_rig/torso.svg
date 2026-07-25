@@ -1,27 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 300" width="220" height="300">
   <defs>
-    <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="5.5" xChannelSelector="R" yChannelSelector="G"/>
+    <filter id="ink" x="-18%" y="-18%" width="136%" height="136%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>
   <g filter="url(#ink)">
-    <!-- ЭТАЛОН (разбор по частям + подлинные кадры): плащ — ОГРОМНАЯ
-         бесформенная чёрная масса, ~60% фигуры, расширяется книзу и
-         драпирует бо́льшую часть ног. Рваный хаотичный подол. Плечи ~1.6
-         головы, из них растут пружинки-завитки, откуда идут руки.
-         Pivot смещён на (110,12) — шея-центр, дети не съезжают. -->
+    <!-- ЭТАЛОН: плащ — БЕСФОРМЕННОЕ неровное облако тьмы, НЕ симметричная
+         юбка. Правый край шире и на ~20% длиннее левого; по бокам выступы
+         и впадины (не только внизу); хаотичный рваный контур. Складок-
+         линий нет — грязь даёт сам рваный силуэт + ink-displacement.
+         Pivot (110,12) — шея-центр. -->
     <path d="M60 18
              Q110 0 160 18
-             Q176 70 186 140
-             Q198 210 206 252
-             L198 290 190 260 180 296 168 264 156 300 144 268 132 296
-             120 262 108 300 96 266 84 298 72 262 60 300 48 266 36 294
-             26 260 14 290
-             Q6 210 18 140
-             Q28 70 60 18 Z" fill="#0e0e0e"/>
-    <!-- ПРУЖИНКИ-ЗАВИТКИ у плеч: плечо оканчивается спиральной «мятой»
-         каракулей, из неё растёт рука (сдвиг +40x относительно старых) -->
+             Q186 50 173 90
+             Q165 126 201 166
+             Q216 210 210 256
+             L214 300 205 258 197 292 191 268 179 300 170 259 161 287
+             149 300 141 253 129 289 121 271 110 301 99 258 91 285
+             79 300 71 255 61 291 52 267 44 250
+             Q31 214 41 178
+             Q36 138 21 106
+             Q30 92 26 70
+             Q34 42 60 18 Z" fill="#0e0e0e"/>
+    <!-- ПРУЖИНКИ-ЗАВИТКИ у плеч: плечо оканчивается спиральной каракулей,
+         из неё растёт рука -->
     <path d="M74 16 q-8 -2 -10 6 q-2 8 5 10 q7 2 9 -5 q2 -7 -4 -9 q-6 -2 -8 4 q-1 5 4 6"
           fill="none" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
     <path d="M66 30 q-7 0 -8 7 q-1 8 6 9 q7 1 8 -6 q1 -7 -5 -8"
@@ -30,10 +33,9 @@
           fill="none" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
     <path d="M154 30 q7 0 8 7 q1 8 -6 9 q-7 1 -8 -6 q-1 -7 5 -8"
           fill="none" stroke="#0e0e0e" stroke-width="4.2" stroke-linecap="round"/>
-    <!-- складки драпировки (тёмно-серые, «жизнь» ткани) -->
-    <path d="M92 54 Q100 150 92 240" fill="none" stroke="#1c1c1c" stroke-width="2.4"/>
-    <path d="M128 54 Q120 150 130 238" fill="none" stroke="#1c1c1c" stroke-width="2.4"/>
-    <path d="M70 120 Q60 190 66 250" fill="none" stroke="#1c1c1c" stroke-width="2"/>
-    <path d="M150 120 Q160 190 154 250" fill="none" stroke="#1c1c1c" stroke-width="2"/>
+    <!-- рваные боковые «клочья» ткани (выступы по бокам, не только внизу) -->
+    <path d="M201 166 q14 6 10 20 q-8 -4 -12 -10 Z" fill="#0e0e0e"/>
+    <path d="M21 106 q-13 4 -9 18 q9 -3 12 -9 Z" fill="#0e0e0e"/>
+    <path d="M210 232 q13 8 8 22 q-9 -5 -11 -13 Z" fill="#0e0e0e"/>
   </g>
 </svg>
