@@ -27,19 +27,31 @@ config {
 scene "cell" (duration: 16s, set: cell) {
     place freeman at (0.5, 0.80) facing front
     freeman scales 1.5
-    // ФОНОВЫЙ АКТЁР (кастинг): крыса пробегает по полу справа налево —
-    // заземлена (y на линии пола), двигается ТОЛЬКО по сценарию. Координаты —
-    // из prison-cell.surfaces.json. (Полная несуразная одиссея крысы
-    // пол→стена→окно+вейв — в плане улучшений: чиню семантику пути пропа.)
-    let rat = prop("rat", "../assets/props/rat.svg") at (1.15, 0.90)
-    rat scales 1.5
+    // ФОНОВЫЙ АКТЁР + НЕСУРАЗИЦА (фирменный приём): крыса вылезает из унитаза,
+    // бежит по полу, лезет по стене и ныряет в окно. Координаты — из
+    // prison-cell.surfaces.json. Масштаб задаём ОДИН РАЗ при размещении (scale
+    // как action в середине пути ломает трек пропа — проверено).
+    let rat = prop("rat", "../assets/props/rat.svg") at (0.80, 0.66)
+    rat scales 1.3
 
     // --- общий: клетка целиком, фигура в центре ---
     camera wide
     freeman pose "calm"
-    rat moves-to (-0.15, 0.90) over 1.7s
+    // из унитаза — на пол
+    rat moves-to (0.70, 0.93) over 0.7s ease-out
+    // по полу к стене под окном (floor → wall_base_window)
+    rat moves-to (0.45, 0.66) over 1.0s
+    // ЛЕЗЕТ ВВЕРХ по задней стене (встаёт вертикально)
+    together {
+        rat moves-to (0.42, 0.34) over 1.0s
+        rat rotates -80 over 0.6s
+    }
+    // у окна — «машет в камеру» (короткий холд; полный вейв+подмиг — впереди)
+    wait 0.3s
+    // ныряет в окно (уходит вверх наружу)
+    rat moves-to (0.42, 0.22) over 0.5s ease-in
     freeman pose "think"
-    wait 1.2s
+    wait 1.0s
 
     // --- средний: завязка в упор (VO-1: «тебя держат стены») ---
     camera medium freeman
