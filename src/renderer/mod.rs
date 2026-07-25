@@ -831,7 +831,11 @@ fn collect_bone_drawables<'a>(
             let delta_deg = rotation - bone.rotation;
             let is_spine = bone.name == "torso";
             let joint_bend = if bone.name.contains("forearm") || bone.name.contains("shin") {
-                (delta_deg.to_radians() * 0.32).clamp(-0.55, 0.55)
+                // Softer rubber-hose curl (was 0.32): a strong curl bent the
+                // forearm's drawn tip away from where the rigid hand attaches,
+                // so the hand read as floating above the arm's vector. Gentler
+                // curl keeps the forearm nearly straight → hand continues it.
+                (delta_deg.to_radians() * 0.15).clamp(-0.4, 0.4)
             } else if is_spine {
                 // The spine carries its WHOLE lean in the arc: turn grows
                 // linearly from 0 at the pelvis to the full pose delta at the
