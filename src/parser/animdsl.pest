@@ -123,7 +123,7 @@ let_kind = {
 }
 
 let_prop = {
-    "prop" ~ "(" ~ string_literal ~ "," ~ string_literal ~ ")" ~ ("at" ~ position)?
+    "prop" ~ "(" ~ string_literal ~ "," ~ string_literal ~ ")" ~ ("at" ~ position)? ~ ("layer" ~ integer)?
 }
 
 // ---------------------------------------------------------------------------

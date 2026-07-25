@@ -149,6 +149,7 @@ pub enum LetKind {
         label: String,
         path: String,
         position: Option<Position>,
+        layer: Option<i32>,
     },
 }
 

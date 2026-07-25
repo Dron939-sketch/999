@@ -489,34 +489,39 @@ impl TimelineCompiler {
             CameraStmt::ShotType { shot, target } => {
                 let (x, y, zoom) = match shot {
                     ShotType::Wide => (0.5, 0.5, 1.0),
+                    // Кадрирование эталона: фигура ЗАПОЛНЯЕТ кадр. Якорь
+                    // сущности — в ногах, поэтому центр смещаем на корпус.
                     ShotType::Medium => {
+                        // пояс-вверх крупно
                         if let Some(name) = target {
                             let e = self.entities.get(name).ok_or_else(|| {
                                 AnimError::Timeline(format!("unknown entity: {name}"))
                             })?;
-                            (e.x, e.y, 1.5)
+                            (e.x, e.y - 0.16, 2.2)
                         } else {
-                            (0.5, 0.5, 1.5)
+                            (0.5, 0.38, 2.2)
                         }
                     }
                     ShotType::CloseUp => {
+                        // голова и плечи
                         if let Some(name) = target {
                             let e = self.entities.get(name).ok_or_else(|| {
                                 AnimError::Timeline(format!("unknown entity: {name}"))
                             })?;
-                            (e.x, e.y - 0.1, 2.5) // slightly above center for face
+                            (e.x, e.y - 0.26, 3.4)
                         } else {
-                            (0.5, 0.4, 2.5)
+                            (0.5, 0.3, 3.4)
                         }
                     }
                     ShotType::ExtremeCloseUp => {
+                        // морда на весь кадр
                         if let Some(name) = target {
                             let e = self.entities.get(name).ok_or_else(|| {
                                 AnimError::Timeline(format!("unknown entity: {name}"))
                             })?;
-                            (e.x, e.y - 0.15, 4.0)
+                            (e.x, e.y - 0.30, 6.0)
                         } else {
-                            (0.5, 0.35, 4.0)
+                            (0.5, 0.28, 6.0)
                         }
                     }
                     ShotType::TwoShot => (0.5, 0.5, 1.2),

@@ -554,13 +554,22 @@ fn parse_let(pair: Pair) -> Result<LetStmt, AnimError> {
             let mut parts = prop_pair.into_inner();
             let label = parse_string_literal(parts.next().unwrap());
             let path = parse_string_literal(parts.next().unwrap());
-            let position = parts.next().map(|p| parse_position(p)).transpose()?;
+            let mut position = None;
+            let mut layer = None;
+            for p in parts {
+                match p.as_rule() {
+                    Rule::position => position = Some(parse_position(p)?),
+                    Rule::integer => layer = p.as_str().parse::<i32>().ok(),
+                    _ => {}
+                }
+            }
             Ok(LetStmt {
                 name,
                 kind: LetKind::Prop {
                     label,
                     path,
                     position,
+                    layer,
                 },
             })
         }

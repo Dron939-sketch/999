@@ -321,7 +321,7 @@ fn register_let_props(
     for stmt in stmts {
         match stmt {
             SceneStatement::Let(let_stmt) => {
-                let LetKind::Prop { position, .. } = &let_stmt.kind;
+                let LetKind::Prop { position, layer, .. } = &let_stmt.kind;
                 if entities.contains_key(&let_stmt.name) {
                     continue;
                 }
@@ -330,6 +330,9 @@ fn register_let_props(
                     let (x, y) = resolve_position(pos, entities)?;
                     state.x = x;
                     state.y = y;
+                }
+                if let Some(l) = layer {
+                    state.layer = *l;
                 }
                 entities.insert(let_stmt.name.clone(), state);
             }

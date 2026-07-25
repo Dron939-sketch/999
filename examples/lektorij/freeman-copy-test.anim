@@ -28,8 +28,8 @@ config {
 // === ПЛАН 1 (эталон 4–7с): из-под пола по пояс, руки распахнуты, поёт;
 //     затем НЫРОК обратно под пол ===
 scene "ground-sing" (duration: 3.6s, set: void) {
-    let floorf = prop("floorf", "../assets/props/floor-front.svg") at (0.5, 0.86)
-    place freeman at (0.5, 0.96) facing front
+    let floorf = prop("floorf", "../assets/props/floor-front.svg") at (0.5, 1.02) layer 10
+    place freeman at (0.5, 0.92) facing front
     camera medium freeman
     freeman pose "despair"
     //lip 1
@@ -41,7 +41,7 @@ scene "ground-sing" (duration: 3.6s, set: void) {
 
 // === ПЛАН 2 (эталон 8–9с): только голова выглядывает над полом, озирается ===
 scene "peek" (duration: 2.2s, set: void) {
-    let floorf = prop("floorf", "../assets/props/floor-front.svg") at (0.5, 0.86)
+    let floorf = prop("floorf", "../assets/props/floor-front.svg") at (0.5, 1.02) layer 10
     place freeman at (0.5, 1.32) facing front
     camera medium freeman
     freeman pose "smug"
@@ -52,7 +52,7 @@ scene "peek" (duration: 2.2s, set: void) {
 // === ПЛАН 3 (эталон 10–13с): поднимается до пояса, руки в боки → к небу,
 //     поёт; в конце выгибается дугой над краем ===
 scene "rise-sing" (duration: 4.4s, set: void) {
-    let floorf = prop("floorf", "../assets/props/floor-front.svg") at (0.5, 0.86)
+    let floorf = prop("floorf", "../assets/props/floor-front.svg") at (0.5, 1.02) layer 10
     place freeman at (0.5, 1.18) facing front
     camera medium freeman
     freeman pose "hips"
