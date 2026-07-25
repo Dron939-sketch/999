@@ -14,9 +14,16 @@
              L132 190 126 202 119 188 112 203 104 189 96 202 88 188
              80 203 72 188 64 202 56 189 48 203 40 190 32 201 24 190
              L8 200 Q6 172 8 108 Q12 60 20 18 Z" fill="#0e0e0e"/>
-    <!-- РУКАВА-ОБРУБКИ: скомканные, рваный край; из них растут руки -->
-    <path d="M38 13 L10 40 L14 52 L21 45 L26 57 L34 49 L42 55 L50 22 Z" fill="#0e0e0e"/>
-    <path d="M102 13 L130 40 L126 52 L119 45 L114 57 L106 49 L98 55 L90 22 Z" fill="#0e0e0e"/>
+    <!-- ПРУЖИНКИ-ЗАВИТКИ у плеч (подлинные кадры + эталон-разбор): плечо
+         оканчивается спиральной "мятой" каракулей, из неё растёт рука -->
+    <path d="M34 16 q-8 -2 -10 6 q-2 8 5 10 q7 2 9 -5 q2 -7 -4 -9 q-6 -2 -8 4 q-1 5 4 6"
+          fill="none" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
+    <path d="M26 30 q-7 0 -8 7 q-1 8 6 9 q7 1 8 -6 q1 -7 -5 -8"
+          fill="none" stroke="#0e0e0e" stroke-width="4.2" stroke-linecap="round"/>
+    <path d="M106 16 q8 -2 10 6 q2 8 -5 10 q-7 2 -9 -5 q-2 -7 4 -9 q6 -2 8 4 q1 5 -4 6"
+          fill="none" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
+    <path d="M114 30 q7 0 8 7 q1 8 -6 9 q-7 1 -8 -6 q-1 -7 5 -8"
+          fill="none" stroke="#0e0e0e" stroke-width="4.2" stroke-linecap="round"/>
     <!-- складки -->
     <path d="M56 50 Q62 118 58 166" fill="none" stroke="#1e1e1e" stroke-width="2.2"/>
     <path d="M84 50 Q78 118 82 166" fill="none" stroke="#1e1e1e" stroke-width="2.2"/>

@@ -1,2 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 84" width="52" height="84"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="l" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
-<g filter="url(#ink)"><path d="M16 6 Q16 31.0 16.9 56 L27.1 56 Q28 31.0 28 6 Z" fill="#0e0e0e"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 84" width="52" height="84"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="23" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<!-- эталон-разбор: голень сужается почти в нить + маленькая плоская стопа-капля наружу -->
+<g filter="url(#ink)"><path d="M19 4 Q18 28 20 58 L24 58 Q26 28 25 4 Z" fill="#0e0e0e"/>
+<path d="M20 54 Q12 58 7 62 Q4 66 9 68 L24 67 Q27 62 24 56 Z" fill="#0e0e0e"/></g></svg>
