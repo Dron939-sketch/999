@@ -246,26 +246,31 @@ def has_audio(path):
 
 
 def qc_production(prod, video_mp4, final_mp4, voice_expected):
-    """Гейт качества: ловит немой/рассинхронный ролик. Возвращает список ошибок.
+    """Гейт качества. Возвращает (hard, soft) — списки сообщений.
 
-    Философия завода — «отдать хоть что-то» — годится для черновика, но в CI с
-    ключами (voice_expected=True) немой или рассинхронный ролик НЕ должен
-    проходить зелёным. Проверяем: выход существует; если заявлен vo — есть
-    звук; длительности video≈final."""
-    errs = []
+    HARD = наш дефект (нет рендера, грубый рассинхрон) → должен ронять --strict.
+    SOFT = внешний сбой (TTS недоступен → нет аудио) — НЕ наша вина, только
+    предупреждение; здоровые файлы всё равно должны закоммититься. Разделение
+    важно: иначе падение внешнего Frederick заблокирует коммит ВСЕХ роликов,
+    включая заведомо немые по замыслу — это против принципа «отдать хоть что-то»."""
+    hard, soft = [], []
     if not Path(video_mp4).exists():
-        return [f"{prod['id']}: нет отрендеренного video ({Path(video_mp4).name})"]
+        hard.append(f"{prod['id']}: нет отрендеренного video ({Path(video_mp4).name})")
+        return hard, soft
     if voice_expected and prod.get("vo"):
         if not have_ffmpeg():
-            return errs  # без ffprobe проверить нечем
+            return hard, soft  # без ffprobe проверить нечем
         if not Path(final_mp4).exists() or not has_audio(final_mp4):
-            errs.append(f"{prod['id']}: заявлен vo, но в финале НЕТ звуковой дорожки")
+            # Нет звука при заявленном vo — почти всегда внешний сбой TTS. SOFT.
+            soft.append(f"{prod['id']}: заявлен vo, но в финале НЕТ звука "
+                        "(вероятно недоступен TTS) — отдаём немой рендер")
         else:
             vd, ad = media_duration(video_mp4), media_duration(final_mp4)
             if vd > 0 and abs(ad - vd) / vd > 0.20:
-                errs.append(f"{prod['id']}: рассинхрон длительностей "
+                # Рассинхрон при СУЩЕСТВУЮЩЕМ звуке — дефект сборки. HARD.
+                hard.append(f"{prod['id']}: рассинхрон длительностей "
                             f"video={vd:.1f}s vs final={ad:.1f}s (>20%)")
-    return errs
+    return hard, soft
 
 
 def build_one(prod, engine, videos_dir, voice_expected=False):
@@ -297,10 +302,12 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
                     "снизь битрейт/длительность.")
     log(f"  → готово: {', '.join(made)}")
 
-    errs = qc_production(prod, video_mp4, final_mp4, voice_expected)
-    for e in errs:
-        log(f"  [QC-FAIL] {e}")
-    return errs
+    hard, soft = qc_production(prod, video_mp4, final_mp4, voice_expected)
+    for e in hard:
+        log(f"  [QC-HARD] {e}")
+    for e in soft:
+        log(f"  [QC-soft] {e}")
+    return hard, soft
 
 
 def main(argv):
@@ -334,16 +341,25 @@ def main(argv):
     voice_expected = bool(
         os.environ.get("FREDERICK_ADMIN_TOKEN") or os.environ.get("FISH_AUDIO_API_KEY")
     )
-    all_errs = []
+    all_hard, all_soft = [], []
     for prod in prods:
-        all_errs += build_one(prod, engine, videos_dir, voice_expected) or []
+        h, s = build_one(prod, engine, videos_dir, voice_expected)
+        all_hard += h
+        all_soft += s
     log("\nЗавод отработал.")
-    if all_errs:
-        log(f"\nQC: {len(all_errs)} проблема(ы):")
-        for e in all_errs:
+    if all_soft:
+        log(f"\nQC soft ({len(all_soft)}) — внешние сбои, файлы всё равно отданы:")
+        for e in all_soft:
+            log(f"  - {e}")
+    if all_hard:
+        log(f"\nQC HARD ({len(all_hard)}) — дефекты сборки:")
+        for e in all_hard:
             log(f"  - {e}")
         if strict:
-            log("QC-гейт строгий → падаем (немой/рассинхронный ролик не проходит).")
+            # ВАЖНО: даже при hard-fail здоровые файлы уже записаны; шаг CI
+            # «Commit videos» стоит под if: always() и закоммитит их. Ненулевой
+            # выход помечает прогон красным, но не стирает готовое.
+            log("QC-гейт строгий → красный прогон (дефект сборки).")
             return 1
     return 0
 

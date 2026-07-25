@@ -86,6 +86,10 @@ jobs:
           ls -la videos/
 
       - name: Commit videos to the repo
+        # always(): даже если QC-гейт свалил studio.py (красный прогон), уже
+        # отрендеренные здоровые ролики должны закоммититься — принцип «отдать
+        # хоть что-то». Красный статус остаётся сигналом, но не стирает готовое.
+        if: always()
         run: |
           git config user.name "render-bot"
           git config user.email "actions@github.com"
