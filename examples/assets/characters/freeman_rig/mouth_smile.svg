@@ -4,12 +4,14 @@
     <feDisplacementMap in="SourceGraphic" in2="n" scale="1.2" xChannelSelector="R" yChannelSelector="G"/>
   </filter></defs>
   <g filter="url(#ink)">
-    <!-- эталон: мягкая улыбка-дуга с лёгким загибом концов ВВЕРХ (не резкие
-         скобки), концы чуть подняты крючком. -->
-    <path d="M7 10 Q9 15 12 16 Q22 22 32 16 Q35 15 37 10"
+    <!-- эталон: мягкая улыбка-дуга -->
+    <path d="M8 11 Q12 15 15 16 Q22 21 29 16 Q32 15 36 11"
           fill="none" stroke="#0e0e0e" stroke-width="3" stroke-linecap="round"/>
-    <!-- ХАРАКТЕРНАЯ ЩЁЧНАЯ СКЛАДКА-морщинка ниже правого угла рта -->
-    <path d="M32 18 Q30 23 33 27" fill="none" stroke="#0e0e0e"
+    <!-- засечки-складки у ОБОИХ углов рта, короткие и немного ПЕРПЕНДИКУЛЯРНЫ
+         улыбке (уголки как скобки ⟨ ⟩) -->
+    <path d="M12 14 Q9 18 11 23" fill="none" stroke="#0e0e0e"
+          stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M32 14 Q35 18 33 23" fill="none" stroke="#0e0e0e"
           stroke-width="2.2" stroke-linecap="round"/>
   </g>
 </svg>
