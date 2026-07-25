@@ -1,9 +1,9 @@
 // =============================================================================
-//  ТЮРЬМА — интро (регистр «перепрошивка / тюрьма ума»).
-//  Парадокс Фримена: рисованный тушевой герой в ФОТО-мире (камера — растровый
-//  сет prison-cell-photo.svg, обёрнутый через raster_to_svg). Надписи на стенах
-//  аутентичные («БЛОК 7 КАМЕРА 14», «FREEDOM?») — казённый шрифт «бесплатно».
-//  Локально немой (флэпы); с озвучкой //lip 1 даст синхрон по конструкции.
+//  ТЮРЬМА УМА — интро (регистр «выйти из клетки»).
+//  Локация НАРИСОВАНА (prison-cell.svg, плоский тушевый стиль по LOCATION_STYLE.md),
+//  не фото — персонаж читается на графичном поле. Три речевых удара:
+//  завязка → поворот → добивание. //lip 1..3 → синхрон по конструкции с озвучкой
+//  (examples/lektorij/prison-intro-VO.md). Локально немой (флэпы).
 //  Рендер: cargo run --release -- render examples/lektorij/prison-intro.anim -o prison.mp4
 // =============================================================================
 
@@ -19,44 +19,46 @@ config {
     line-boil: 0.6
     film-grain: 0.30
     vignette: 0.55
-    // свет из зарешёченного окна — правый верх; объём на маске
     light-angle: 58
     form-shadow: 0.42
     cast-shadow: 0.30
 }
 
-scene "cell" (duration: 13s, set: cell) {
+scene "cell" (duration: 16s, set: cell) {
     place freeman at (0.5, 0.80) facing front
-    // крупнее дефолта: тушевая фигура читается в фотокамере, маска у стены-графити
     freeman scales 1.5
 
-    // --- средний: фигура сразу читаема (маска + торс у светлой стены) ---
-    camera medium freeman
+    // --- общий: клетка целиком, фигура в центре ---
+    camera wide
     freeman pose "calm"
     wait 1.4s
     freeman pose "think"
     wait 1.2s
 
-    // --- общий: теперь видно всю клетку, фигура НЕ теряется (скейл 1.5) ---
-    camera wide
+    // --- средний: завязка в упор (VO-1: «тебя держат стены») ---
+    camera medium freeman
     freeman pose "talk"
     //lip 1
-    freeman speaks for 3.0s
+    freeman speaks for 2.6s
     freeman pose "point"
+    wait 0.4s
+
+    // --- крупно: поворот мысли (VO-2: «стен нет, дверь открыта») ---
+    camera close-up freeman
+    freeman pose "talk"
+    //lip 2
+    freeman speaks for 4.8s
+    freeman pose "stern"
     wait 0.5s
 
-    // --- крупно: в упор, пробитие 4-й стены ---
-    camera close-up freeman
-    freeman pose "stern"
-    wait 1.2s
-    freeman pose "wide"
-    wait 0.8s
-
-    // --- сверхкруп: панч на глаз/рот ---
+    // --- сверхкруп: добивание в упор (VO-3: «выход — это мысль... выйди») ---
     camera extreme-close-up freeman
+    freeman pose "talk"
+    //lip 3
+    freeman speaks for 4.8s
     freeman pose "grotesque"
-    wait 1.0s
+    wait 0.6s
     freeman pose "calm"
-    wait 0.9s
+    wait 0.6s
     transition fade-black 1.3s
 }
