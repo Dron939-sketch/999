@@ -118,8 +118,8 @@
                 12
               ],
               "offset": [
-                -46,
-                20
+                -17,
+                26
               ],
               "rotation": 8,
               "z_order": 4,
@@ -163,8 +163,8 @@
                 12
               ],
               "offset": [
-                46,
-                20
+                17,
+                26
               ],
               "rotation": -8,
               "z_order": 4,
@@ -1381,6 +1381,171 @@
             1.06,
             1.1
           ]
+        }
+      }
+    },
+    "despair": {
+      "name": "despair",
+      "transition_duration": 0.3,
+      "bones": {
+        "head": {
+          "rotation": 14,
+          "offset": [
+            0,
+            6
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": 152,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": 14,
+          "z_order": 4
+        },
+        "upper_arm_right": {
+          "rotation": -152,
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": -14,
+          "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_open"
+        },
+        "hand_right": {
+          "part": "hand_open_r"
+        },
+        "eye_left": {
+          "part": "eye_arc"
+        },
+        "eye_right": {
+          "part": "eye_arc"
+        },
+        "mouth": {
+          "part": "mouth_wide"
+        }
+      }
+    },
+    "lunge": {
+      "name": "lunge",
+      "transition_duration": 0.2,
+      "bones": {
+        "torso": {
+          "rotation": 10
+        },
+        "head": {
+          "rotation": -8
+        },
+        "upper_arm_left": {
+          "rotation": 85,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": -12,
+          "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_point"
+        },
+        "brow_left": {
+          "rotation": 18,
+          "offset": [
+            -20,
+            -114
+          ]
+        },
+        "brow_right": {
+          "rotation": -18,
+          "offset": [
+            20,
+            -114
+          ]
+        },
+        "eye_left": {
+          "part": "eye_squint"
+        },
+        "mouth": {
+          "part": "mouth_m"
+        }
+      }
+    },
+    "hunch": {
+      "name": "hunch",
+      "transition_duration": 0.35,
+      "bones": {
+        "head": {
+          "rotation": -4,
+          "offset": [
+            0,
+            26
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": -24
+        },
+        "forearm_left": {
+          "rotation": -70
+        },
+        "upper_arm_right": {
+          "rotation": 24
+        },
+        "forearm_right": {
+          "rotation": 70
+        },
+        "mouth": {
+          "part": "mouth_frown"
+        },
+        "brow_left": {
+          "rotation": -12,
+          "offset": [
+            -22,
+            -118
+          ]
+        },
+        "brow_right": {
+          "rotation": 12,
+          "offset": [
+            22,
+            -118
+          ]
+        }
+      }
+    },
+    "puppet": {
+      "name": "puppet",
+      "transition_duration": 0.3,
+      "bones": {
+        "head": {
+          "rotation": 9
+        },
+        "upper_arm_left": {
+          "rotation": 30
+        },
+        "forearm_left": {
+          "rotation": 24
+        },
+        "upper_arm_right": {
+          "rotation": -26
+        },
+        "forearm_right": {
+          "rotation": -20
+        },
+        "hand_left": {
+          "part": "hand_relax"
+        },
+        "hand_right": {
+          "part": "hand_relax_r"
+        },
+        "eye_left": {
+          "part": "eye_squint"
+        },
+        "eye_right": {
+          "part": "eye_squint"
+        },
+        "mouth": {
+          "part": "mouth_closed"
         }
       }
     }

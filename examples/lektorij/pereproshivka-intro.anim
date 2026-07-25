@@ -10,6 +10,10 @@
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
+import character clone1 from "../assets/characters/freeman_rig"
+import character clone2 from "../assets/characters/freeman_rig"
+import character clone3 from "../assets/characters/freeman_rig"
+import character clone4 from "../assets/characters/freeman_rig"
 import set cell from "../assets/sets/prison-cell.svg"
 import set book from "../assets/sets/book-title-page.svg"
 import set mind from "../assets/sets/mind-alive.svg"
@@ -34,6 +38,8 @@ config {
 scene "cell-hook" (duration: 22s, set: cell) {
     // СИДИТ на краю нар — фронтально, устойчивый силуэт (без лежания и ракурсов)
     place freeman at (0.36, 0.62) facing front
+    let strings = prop("strings", "../assets/props/puppet-strings.svg") at (0.36, -0.9)
+    strings scales 2.3
     freeman pose "sit"
 
     // 0–2.2с: тишина, капля (SFX), общий план. Пауза — это тоже удар.
@@ -45,12 +51,20 @@ scene "cell-hook" (duration: 22s, set: cell) {
     //lip 1
     freeman speaks for 3.2s
 
-    // СКЛЕЙКА → крупный на самой неудобной фразе. VO-2: «Тебе их выдали — как робу.»
+    // СКЛЕЙКА → крупный. VO-2: «Тебе их выдали — как робу» + МЕТАФОРА:
+    // нити марионетки опускаются на него, он обвисает как кукла
     camera close-up freeman
-    //lip 2
-    freeman speaks for 4s
-    // тишина-удар: 0.8с никто не говорит, ничего не движется
+    together {
+        strings moves-to (0.36, 0.28) over 1.4s
+        do {
+            //lip 2
+            freeman speaks for 4s
+        }
+    }
+    // тишина-удар: он — кукла на нитях, 0.8с
+    freeman pose "puppet"
     wait 0.8s
+    strings moves-to (0.36, -0.9) over 0.5s
 
     // СКЛЕЙКА → обратно средний. VO-3: «Эта камера — не наказание...»
     camera medium freeman
@@ -98,6 +112,8 @@ scene "alive" (duration: 14s, set: mind) {
     let gear2 = prop("gear", "../assets/props/gear.svg") at (0.36, 0.40)
     // ЭКГ-линия пульса пересекает кадр на «прошивка работает» (мотив Фримена)
     let ekg = prop("ekg", "../assets/props/ekg.svg") at (1.15, 0.52)
+    // и КАБЕЛЬ ползёт к голове-схеме — тебя прошивают прямо сейчас
+    let cable = prop("cable", "../assets/props/cable.svg") at (1.25, 0.33)
 
     place freeman at (0.85, 0.74) facing front
     freeman pose "calm"
@@ -107,6 +123,7 @@ scene "alive" (duration: 14s, set: mind) {
         gear1 rotates 360 over 9s
         gear2 rotates -360 over 9s
         ekg moves-to (-0.15, 0.52) over 8s
+        cable moves-to (0.72, 0.33) over 7s
         do {
             // VO-7: «Пока ты читаешь эту фразу — прошивка работает.»
             // декламирующий палец вверх — силуэт, не бормотание в костюм
@@ -140,12 +157,23 @@ scene "alive" (duration: 14s, set: mind) {
 // Эталонная композиция: крошечная фигура в пустоте на штрихованном полу,
 // тишина. Затем — сверхкруп, флэш-морды, гротескный оскал с VO-10.
 scene "void-punch" (duration: 10s, set: void) {
+    // толпа одинаковых кукол в пустоте — «таких, как ты, здесь тысячи»
+    place clone1 at (0.12, 0.74) facing front
+    place clone2 at (0.31, 0.74) facing front
     place freeman at (0.5, 0.74) facing front
+    place clone3 at (0.69, 0.74) facing front
+    place clone4 at (0.88, 0.74) facing front
+    clone1 pose "puppet"
+    clone2 pose "puppet"
+    clone3 pose "puppet"
+    clone4 pose "puppet"
     freeman pose "calm"
 
-    // тишина-удар: одиночество, снег, 2.2с ничего не происходит
+    // тишина: строй кукол, снег... герой ломает строй криком к небу
     camera wide
-    wait 2.2s
+    wait 1.0s
+    freeman pose "despair"
+    wait 1.2s
 
     // СКЛЕЙКА → сверхкруп + крен + очередь флэш-морд + тряска + VO-10
     camera extreme-close-up freeman
