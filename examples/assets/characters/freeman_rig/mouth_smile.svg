@@ -7,11 +7,11 @@
     <!-- эталон: мягкая улыбка-дуга -->
     <path d="M8 11 Q12 15 15 16 Q22 21 29 16 Q32 15 36 11"
           fill="none" stroke="#0e0e0e" stroke-width="3" stroke-linecap="round"/>
-    <!-- засечки-складки у ОБОИХ углов рта, короткие и немного ПЕРПЕНДИКУЛЯРНЫ
-         улыбке (уголки как скобки ⟨ ⟩) -->
-    <path d="M12 14 Q9 18 11 23" fill="none" stroke="#0e0e0e"
-          stroke-width="2.2" stroke-linecap="round"/>
-    <path d="M32 14 Q35 18 33 23" fill="none" stroke="#0e0e0e"
-          stroke-width="2.2" stroke-linecap="round"/>
+    <!-- засечки ТОЧНО в углах рта (концы линии улыбки), короткие и немного
+         ПЕРПЕНДИКУЛЯРНЫ улыбке — уголки как скобки ⟨ ⟩ -->
+    <path d="M8 11 Q5 15 7 20" fill="none" stroke="#0e0e0e"
+          stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M36 11 Q39 15 37 20" fill="none" stroke="#0e0e0e"
+          stroke-width="2.4" stroke-linecap="round"/>
   </g>
 </svg>
