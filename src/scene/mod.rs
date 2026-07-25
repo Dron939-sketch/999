@@ -43,6 +43,13 @@ pub struct RenderConfig {
     /// фигуру к полу — она перестаёт «парить». Включать в сценах, где персонаж
     /// стоит на поверхности (не в пустоте/полёте).
     pub ground_shadow: bool,
+    /// Отбрасываемая тень-силуэт персонажа на пол (0 = выкл; ~0.3–0.6 сила).
+    /// Силуэт проецируется на землю по направлению света — киношный объём.
+    pub cast_shadow: f64,
+    /// Направление света в градусах: 0 = прямо сверху (тень строго вниз),
+    /// >0 свет справа (тень клонится влево), <0 свет слева. Управляет наклоном
+    /// отбрасываемой тени.
+    pub light_angle: f64,
 }
 
 impl Default for RenderConfig {
@@ -60,6 +67,8 @@ impl Default for RenderConfig {
             snow: 0.0,
             line_boil: 0.0,
             ground_shadow: false,
+            cast_shadow: 0.0,
+            light_angle: 35.0,
         }
     }
 }
@@ -130,6 +139,16 @@ impl RenderConfig {
                     Value::Number(n) => cfg.ground_shadow = *n != 0.0,
                     _ => {}
                 },
+                "cast-shadow" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.cast_shadow = *n;
+                    }
+                }
+                "light-angle" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.light_angle = *n;
+                    }
+                }
                 _ => {}
             }
         }

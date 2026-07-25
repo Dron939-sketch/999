@@ -10,6 +10,14 @@
       "images": []
     },
     {
+      "id": "biznes-myshlenie-intro",
+      "desc": "Подводка к курсу «Бизнес-мышление»: толпа обходит красную «проблему», Фримен поднимает — это куш. Оптика. Свет/тень + ракурсы.",
+      "anim": "examples/lektorij/biznes-myshlenie-intro.anim",
+      "vo": "examples/lektorij/biznes-myshlenie-intro-VO.md",
+      "title": "Бизнес-мышление",
+      "images": []
+    },
+    {
       "id": "freeman-monologue",
       "desc": "Мистер Фримен: монолог в камеру (витрина стиля)",
       "anim": "examples/freeman-monologue.anim"

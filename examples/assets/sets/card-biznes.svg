@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <filter id="ink" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="1" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="720" fill="#d4d7cf"/>
+  <!-- красный «глаз-оптика»: то, чем видит предприниматель -->
+  <g filter="url(#ink)">
+    <ellipse cx="640" cy="250" rx="150" ry="92" fill="none" stroke="#141410" stroke-width="9"/>
+    <circle cx="640" cy="250" r="46" fill="#c31a1a" stroke="#7a0e0e" stroke-width="6"/>
+    <circle cx="655" cy="236" r="12" fill="#e23b3b"/>
+  </g>
+  <g filter="url(#ink)" fill="#141410" font-family="DejaVu Sans, sans-serif" text-anchor="middle">
+    <text x="640" y="440" font-size="96" font-weight="bold" letter-spacing="2">БИЗНЕС-МЫШЛЕНИЕ</text>
+    <text x="640" y="510" font-size="40">10 лекций · оптика предпринимателя</text>
+  </g>
+  <text x="640" y="600" fill="#7a0e0e" font-family="DejaVu Sans, sans-serif"
+        text-anchor="middle" font-size="34" filter="url(#ink)">бизнес — это решённая чужая проблема</text>
+</svg>

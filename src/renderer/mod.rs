@@ -11,9 +11,20 @@ use std::hash::{Hash, Hasher};
 use std::sync::Arc;
 
 use tiny_skia::{
-    Color as SkiaColor, FillRule, FilterQuality, Paint, PathBuilder, Pixmap, PixmapPaint, Rect,
-    Transform,
+    Color as SkiaColor, FillRule, FilterQuality, Paint, PathBuilder, Pixmap, PixmapPaint,
+    PremultipliedColorU8, Rect, Transform,
 };
+
+/// Light/shadow settings passed to a character render (resolved from config).
+#[derive(Clone, Copy)]
+pub struct LightCfg {
+    /// Soft contact ellipse under the feet.
+    pub ground_shadow: bool,
+    /// Cast silhouette-shadow strength (0 = off).
+    pub cast_shadow: f64,
+    /// Light direction in degrees (0 = overhead, >0 = from the right).
+    pub light_angle: f64,
+}
 
 use crate::assets::{AssetRegistry, CharacterAsset};
 use crate::ast::Direction;
@@ -228,7 +239,11 @@ pub fn render_frame(
                         timeline,
                         name,
                         custom_poses,
-                        config.ground_shadow,
+                        LightCfg {
+                            ground_shadow: config.ground_shadow,
+                            cast_shadow: config.cast_shadow,
+                            light_angle: config.light_angle,
+                        },
                     )?;
                 }
             }
@@ -312,7 +327,7 @@ fn render_character(
     timeline: &Timeline,
     entity_name: &str,
     custom_poses: &HashMap<String, Vec<(String, f64)>>,
-    ground_shadow: bool,
+    light: LightCfg,
 ) -> Result<(), AnimError> {
     match asset {
         CharacterAsset::Legacy { svg_data, .. } => {
@@ -345,7 +360,7 @@ fn render_character(
             t,
             timeline,
             entity_name,
-            ground_shadow,
+            light,
         ),
         CharacterAsset::Procedural(desc) => render_procedural_character(
             desc,
@@ -373,7 +388,7 @@ fn render_rigged_character(
     t: f64,
     timeline: &Timeline,
     entity_name: &str,
-    ground_shadow: bool,
+    light: LightCfg,
 ) -> Result<(), AnimError> {
     // Limited animation "on twos": the pose clock ticks at ~12 fps so gestures
     // and cel swaps pop in steps like hand-drawn animation, while the ink boil
@@ -639,36 +654,85 @@ fn render_rigged_character(
     }
 
     // Stable sort keeps tree/ghost order among equal z_order (deterministic).
-    // Ground contact shadow (opt-in per scene): a soft dark ellipse under the
-    // feet, drawn BEHIND the character, so the figure sits on the floor instead
-    // of floating. Extent taken from the live drawables.
-    if ground_shadow && state.opacity > 0.35 {
-        let mut min_x = f64::INFINITY;
-        let mut max_x = f64::NEG_INFINITY;
-        let mut feet_y = f64::NEG_INFINITY;
-        for d in final_draws.iter().filter(|d| d.opacity > 0.5) {
-            if d.x < min_x {
-                min_x = d.x;
-            }
-            if d.x > max_x {
-                max_x = d.x;
-            }
-            // True silhouette bottom of this part: its anchor y plus the part
-            // extent below the pivot, scaled. Legs are near-vertical so this
-            // lands the shadow at the actual feet, not the shin's top anchor.
-            let bottom = d.y + (d.part.height - d.pivot.1) * d.sy.abs();
-            if bottom > feet_y {
-                feet_y = bottom;
-            }
+    final_draws.sort_by_key(|d| d.z_order);
+
+    // Figure extent (feet + width) for both shadow kinds. Feet = true silhouette
+    // bottom (anchor + part extent below pivot), not the shin's top anchor.
+    let mut min_x = f64::INFINITY;
+    let mut max_x = f64::NEG_INFINITY;
+    let mut feet_y = f64::NEG_INFINITY;
+    for d in final_draws.iter().filter(|d| d.opacity > 0.5) {
+        if d.x < min_x {
+            min_x = d.x;
         }
-        if max_x > min_x && feet_y.is_finite() {
-            let cx = 0.5 * (min_x + max_x);
-            let half_w = ((max_x - min_x) * 0.55).max(20.0);
-            draw_ground_shadow(pixmap, cx, feet_y - 4.0, half_w, state.opacity);
+        if d.x > max_x {
+            max_x = d.x;
+        }
+        let bottom = d.y + (d.part.height - d.pivot.1) * d.sy.abs();
+        if bottom > feet_y {
+            feet_y = bottom;
         }
     }
+    let have_extent = max_x > min_x && feet_y.is_finite();
+    let cx = if have_extent { 0.5 * (min_x + max_x) } else { 0.0 };
 
-    final_draws.sort_by_key(|d| d.z_order);
+    // CAST SHADOW: render the character to its own layer, make a black
+    // silhouette of it, and project that onto the ground by the light direction
+    // (shear + vertical squash anchored at the feet), drawn BEHIND the figure.
+    // This is the biggest "cinematic" win — a real thrown shadow. Off unless
+    // `cast-shadow` is set, so existing scenes are byte-identical.
+    if light.cast_shadow > 0.0 && have_extent && state.opacity > 0.2 {
+        let mut layer = Pixmap::new(canvas_w, canvas_h)
+            .ok_or_else(|| AnimError::Render("failed to alloc shadow layer".into()))?;
+        for d in &final_draws {
+            render_bone_part(
+                d.part, &mut layer, d.x, d.y, d.sx, d.sy, d.rot, d.flip, d.opacity, &d.pivot,
+                d.bend, d.bend_origin, boil_seed,
+            )?;
+        }
+        // Black silhouette from the layer's alpha (premultiplied → rgb=0).
+        let mut sil = layer.clone();
+        let strength = light.cast_shadow.clamp(0.0, 1.0) * state.opacity;
+        for px in sil.pixels_mut() {
+            let a = (px.alpha() as f64 * strength) as u8;
+            *px = PremultipliedColorU8::from_rgba(0, 0, 0, a)
+                .unwrap_or_else(|| PremultipliedColorU8::from_rgba(0, 0, 0, 0).unwrap());
+        }
+        // Project onto the ground: shear horizontally by light angle, flatten
+        // vertically, anchored at the feet. Light from the right → shadow leans
+        // left; overhead → nearly straight down.
+        let ang = (light.light_angle.clamp(-80.0, 80.0)).to_radians();
+        let skew = -ang.sin() * 1.5; // light from the right (+) → shadow leans left
+        let squash = 0.34; // flatten onto the floor plane
+        let fx = cx as f32;
+        let fy = feet_y as f32;
+        let shear = Transform::from_row(1.0, 0.0, -skew as f32, squash as f32, 0.0, 0.0);
+        let tr = Transform::from_translate(fx, fy)
+            .pre_concat(shear)
+            .pre_concat(Transform::from_translate(-fx, -fy));
+        pixmap.draw_pixmap(
+            0,
+            0,
+            sil.as_ref(),
+            &PixmapPaint {
+                quality: FilterQuality::Bilinear,
+                ..Default::default()
+            },
+            tr,
+            None,
+        );
+        // Composite the real character on top of its shadow.
+        pixmap.draw_pixmap(0, 0, layer.as_ref(), &PixmapPaint::default(), Transform::identity(), None);
+        return Ok(());
+    }
+
+    // Ground contact shadow (opt-in): soft ellipse under the feet, behind the
+    // figure — used when there's no full cast shadow.
+    if light.ground_shadow && have_extent && state.opacity > 0.35 {
+        let half_w = ((max_x - min_x) * 0.55).max(20.0);
+        draw_ground_shadow(pixmap, cx, feet_y - 4.0, half_w, state.opacity);
+    }
+
     for d in &final_draws {
         render_bone_part(
             d.part, pixmap, d.x, d.y, d.sx, d.sy, d.rot, d.flip, d.opacity, &d.pivot,

@@ -1,0 +1,145 @@
+// =============================================================================
+//  ПОДВОДКА К КУРСУ «БИЗНЕС-МЫШЛЕНИЕ» — hook-ролик (~42 с)
+//  Идея курса: бизнес — это РЕШЁННАЯ ЧУЖАЯ ПРОБЛЕМА; дело не в товаре, а в
+//  ОПТИКЕ — предприниматель видит ценность там, где другие видят проблему.
+//  Метафора: толпа перешагивает через красную «проблему» на асфальте; Фримен
+//  поднимает её — в его руках это куш. Разница — оптика.
+//  Регистр Фримена: прямое обращение в объектив, паузы-удары, жёсткие склейки.
+//  Свет/тень: отбрасываемые тени (cast-shadow) на светлом тротуаре — объём.
+//  Озвучка: Frederick/Fish Audio по biznes-myshlenie-intro-VO.md.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import character clone1 from "../assets/characters/freeman_rig"
+import character clone2 from "../assets/characters/freeman_rig"
+import character clone3 from "../assets/characters/freeman_rig"
+import set street from "../assets/sets/biznes-street.svg"
+import set card from "../assets/sets/card-biznes.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #d4d7cf
+    monochrome: true
+    mono-contrast: 1.2
+    vignette: 0.35
+    film-grain: 0.12
+    on-twos: 2
+    line-boil: 0.8
+    // Свет и тень: отбрасываемая тень-силуэт на светлый тротуар, свет справа.
+    cast-shadow: 0.42
+    light-angle: 34
+    ground-shadow: 1
+}
+
+// === СЦЕНА 1: УЛИЦА — ТОЛПА ПЕРЕШАГИВАЕТ ЧЕРЕЗ ПРОБЛЕМУ (13 с) ===
+scene "street" (duration: 13s, set: street) {
+    // Толпа безликих кукол бредёт по тротуару, сутулясь.
+    place clone1 at (0.16, 0.74) facing front
+    place clone2 at (0.72, 0.74) facing front
+    place clone3 at (0.92, 0.74) facing front
+    clone1 pose "puppet"
+    clone2 pose "puppet"
+    clone3 pose "puppet"
+    // Красная «проблема» валяется на асфальте — все её обходят.
+    let problem = prop("problem", "../assets/props/red-problem.svg") at (0.60, 0.88)
+    problem scales 0.8
+    // Фримен стоит отдельно, смотрит в объектив.
+    place freeman at (0.42, 0.74) facing front
+    freeman pose "calm"
+
+    // 0–2.2с: тишина, толпа тянется мимо (лёгкий дрейф). Пауза — это удар.
+    camera wide
+    together {
+        clone2 moves-to (0.64, 0.74) over 3.0s
+        clone3 moves-to (0.82, 0.74) over 3.0s
+    }
+    wait 2.2s
+
+    // СКЛЕЙКА → средний. VO-1: наивная вера.
+    camera medium freeman
+    freeman pose "talk"
+    freeman speaks for 3.6s
+    freeman pose "point"
+    wait 0.4s
+
+    // VO-2: «поэтому и не выходит» — жёстко, пауза.
+    freeman pose "stern"
+    freeman speaks for 2.6s
+    wait 0.8s
+}
+
+// === СЦЕНА 2: ОН ПОДНИМАЕТ ПРОБЛЕМУ — ЭТО КУШ (12 с) ===
+scene "pickup" (duration: 12s, set: street) {
+    place clone1 at (0.16, 0.74) facing front
+    clone1 pose "puppet"
+    place freeman at (0.5, 0.74) facing front
+    freeman pose "calm"
+    let problem = prop("problem", "../assets/props/red-problem.svg") at (0.60, 0.88)
+    problem scales 0.8
+
+    // Крупно: VO-3 «бизнес — это решённая чужая проблема».
+    camera close-up freeman
+    freeman pose "talk"
+    freeman speaks for 3.8s
+
+    // Поднимает «проблему» — она едет ему в руку; он выпрямляется с ней.
+    // НИЖНИЙ РАКУРС: с добычей он возвышается (свет/форшортенинг).
+    camera angle low freeman
+    together {
+        problem moves-to (0.5, 0.5) over 1.1s
+        do {
+            freeman pose "open"
+            wait 0.3s
+            freeman pose "confident"
+        }
+    }
+    // VO-4: «то, мимо чего они прошли — для тебя куш».
+    freeman speaks for 4.2s
+    wait 0.6s
+}
+
+// === СЦЕНА 3: ОПТИКА — В УПОР К ЗРИТЕЛЮ (9 с) ===
+scene "optics" (duration: 9s, set: street) {
+    place freeman at (0.5, 0.72) facing front
+    freeman pose "calm"
+    let problem = prop("problem", "../assets/props/red-problem.svg") at (0.5, 0.5)
+    problem scales 0.85
+
+    // Крупно + лёгкий крен: пробитие 4-й стены.
+    camera close-up freeman
+    camera dutch 4
+    freeman pose "talk"
+    // VO-5: «разница не в удаче. В оптике. Ты смотришь не теми глазами».
+    freeman speaks for 4.4s
+    freeman pose "stern"
+    // Пауза-давление: смотрит в тебя.
+    wait 1.4s
+    // Оптика «переключается» — инверсия.
+    transition invert 0.4s
+}
+
+// === СЦЕНА 4: ПАНЧ + ОБЕЩАНИЕ КУРСА (8 с) ===
+scene "punch" (duration: 8s, set: street) {
+    place freeman at (0.5, 0.72) facing front
+    freeman pose "smug"
+
+    // Сверхкруп, добивающая мысль в упор.
+    camera extreme-close-up freeman
+    freeman speaks for 4.0s
+    wait 0.4s
+
+    // СКЛЕЙКА на титр-карту курса.
+    transition static 0.4s
+}
+
+// === КАРТА КУРСА (титр) ===
+scene "title" (duration: 5s, set: card) {
+    camera wide
+    wait 1.0s
+    // VO-7: название курса.
+    // (голос поверх статичной карты)
+    wait 2.6s
+    transition fade-black 1.2s
+}
