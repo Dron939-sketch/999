@@ -312,6 +312,34 @@ fn interpolate_bone(
 // Procedural animations
 // ---------------------------------------------------------------------------
 
+/// Per-occurrence pose variance: nudges non-facial bone rotation/offset by a
+/// small amount that's stable for the ENTIRE hold of one pose occurrence (not
+/// per-frame — that's `apply_idle_motion`'s job). A rig reuses the exact same
+/// numbers every time a named pose fires; a hand artist never traces an old
+/// page twice. This is the cheap stand-in: seed from (entity, pose, start
+/// time) so the same "confident" pose on freeman at t=4s and on a clone at
+/// t=19s reads as two distinct drawings, while a single occurrence stays
+/// internally consistent across its own frames (no swimming mid-hold).
+pub fn apply_pose_variance(states: &mut [BoneState], seed: u64) {
+    for state in states.iter_mut() {
+        let is_face = state.name.contains("eye")
+            || state.name.contains("mouth")
+            || state.name.contains("brow")
+            || state.name == "hat"
+            || state.name == "cane";
+        if is_face {
+            continue;
+        }
+        let h = name_hash(&state.name) as u64 ^ seed.wrapping_mul(0x9E37_79B9_7F4A_7C15);
+        let r = hash_unit((h ^ (h >> 32)) as u32);
+        let ox = hash_unit((h.wrapping_add(97) ^ (h >> 17)) as u32);
+        let oy = hash_unit((h.wrapping_add(191) ^ (h >> 23)) as u32);
+        state.rotation += r * 3.2;
+        state.offset.0 += ox * 1.6;
+        state.offset.1 += oy * 1.6;
+    }
+}
+
 /// Apply idle breathing/swaying animation to bone states.
 pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f64) {
     let tau = 2.0 * PI;

@@ -412,9 +412,27 @@ fn render_rigged_character(
         anticipate_back(pose_t)
     };
 
+    // Stable per-occurrence seed: same (entity, pose, start time) always nudges
+    // the same way (reproducible renders), but a different occurrence of the
+    // same named pose — a different scene, a different clone — draws its own
+    // slightly different version, the way an artist never traces an old page.
+    let pose_seed: u64 = {
+        let key = match to_idx.and_then(|i| events.get(i)) {
+            Some(ev) => format!("{entity_name}|{}|{:.3}", ev.pose, ev.time),
+            None => format!("{entity_name}|idle"),
+        };
+        let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+        for b in key.bytes() {
+            h ^= b as u64;
+            h = h.wrapping_mul(0x0000_0100_0000_01B3);
+        }
+        h
+    };
+
     // Get interpolated bone states.
     let mut bone_states =
         interpolate_skeleton(&rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), eased_t);
+    skeleton::apply_pose_variance(&mut bone_states, pose_seed);
 
     // Pose-only state one animation tick (1/12s) earlier — lets us measure how
     // fast each part is moving in THIS gesture, the basis for motion smears.
@@ -430,6 +448,7 @@ fn render_rigged_character(
     };
     let mut bone_states_prev =
         interpolate_skeleton(&rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), eased_prev);
+    skeleton::apply_pose_variance(&mut bone_states_prev, pose_seed);
 
     // Detect if the character is moving (for walk cycle).
     let velocity = compute_velocity(timeline, entity_name, t);

@@ -232,6 +232,23 @@ fn cmd_render(
         }
     }
 
+    // Hand-drawn line boil: the ink outline resettles every held drawing-frame,
+    // as if redrawn — the single biggest gap between a rigged puppet and real
+    // frame-by-frame animation. Runs on the post-monochrome near-binary image,
+    // so "edge" simply means a black/white transition.
+    if config.line_boil > 0.0 {
+        for (i, frame) in all_frames.iter_mut().enumerate() {
+            apply_line_boil(
+                &mut frame.data,
+                frame.width,
+                frame.height,
+                i as u32,
+                config.on_twos,
+                config.line_boil as f32,
+            );
+        }
+    }
+
     // Aged-film post: vignette + grain (the last layer of the Freeman look).
     if config.film_grain > 0.0 || config.vignette > 0.0 {
         for (i, frame) in all_frames.iter_mut().enumerate() {
@@ -373,6 +390,90 @@ fn apply_snow(data: &mut [u8], width: u32, height: u32, frame: u32, density: f32
                     data[idx + c] = (base * (1.0 - a) + bright * a).min(255.0) as u8;
                 }
             }
+        }
+    }
+}
+
+/// Hand-drawn "line boil": every held drawing-frame, ink OUTLINE pixels
+/// resettle to a new position along a smooth per-stroke noise field — as if
+/// the line were redrawn — while flat fills and background stay perfectly
+/// solid (only real black/white transitions move). This is the mechanism a
+/// pose-interpolated rig structurally lacks: two holds of the "same" drawing
+/// are never pixel-identical in hand animation. Deterministic per
+/// (pixel, boil_step) so renders stay reproducible.
+fn apply_line_boil(data: &mut [u8], width: u32, height: u32, frame: u32, on_twos: u32, strength: f32) {
+    if strength <= 0.0 {
+        return;
+    }
+    let w = width as i64;
+    let h = height as i64;
+    let stride = (w * 4) as usize;
+    // Resettle once per held drawing-frame, not every rendered frame — the
+    // wobble reads as re-inking on the same cadence as the pose itself holds,
+    // not as video noise crawling underneath a static pose.
+    let hold = on_twos.max(1);
+    let boil_step = frame / hold;
+
+    let src = data.to_vec();
+    let luma = |idx: usize| -> f32 {
+        0.299 * src[idx] as f32 + 0.587 * src[idx + 1] as f32 + 0.114 * src[idx + 2] as f32
+    };
+
+    // Coherent low-frequency value noise (bilinear-interpolated hash grid) so
+    // neighbouring pixels along a stroke wobble together as one line, not as
+    // per-pixel static.
+    let cell = 22.0_f32;
+    let hash2 = |cx: i64, cy: i64, salt: u32| -> f32 {
+        let mut n = (cx as u32)
+            .wrapping_mul(374761393)
+            .wrapping_add((cy as u32).wrapping_mul(668265263))
+            .wrapping_add(boil_step.wrapping_mul(2246822519))
+            .wrapping_add(salt.wrapping_mul(3266489917));
+        n ^= n >> 13;
+        n = n.wrapping_mul(1274126177);
+        n ^= n >> 16;
+        (n as f32 / u32::MAX as f32) * 2.0 - 1.0
+    };
+    let noise_at = |x: f32, y: f32, salt: u32| -> f32 {
+        let gx = x / cell;
+        let gy = y / cell;
+        let x0 = gx.floor() as i64;
+        let y0 = gy.floor() as i64;
+        let fx = gx - x0 as f32;
+        let fy = gy - y0 as f32;
+        let sx = fx * fx * (3.0 - 2.0 * fx);
+        let sy = fy * fy * (3.0 - 2.0 * fy);
+        let n00 = hash2(x0, y0, salt);
+        let n10 = hash2(x0 + 1, y0, salt);
+        let n01 = hash2(x0, y0 + 1, salt);
+        let n11 = hash2(x0 + 1, y0 + 1, salt);
+        let nx0 = n00 * (1.0 - sx) + n10 * sx;
+        let nx1 = n01 * (1.0 - sx) + n11 * sx;
+        nx0 * (1.0 - sy) + nx1 * sy
+    };
+
+    for y in 0..h {
+        for x in 0..w {
+            let idx = (y as usize) * stride + (x as usize) * 4;
+            let l0 = luma(idx);
+            let lr = if x + 1 < w { luma(idx + 4) } else { l0 };
+            let ld = if y + 1 < h { luma(idx + stride) } else { l0 };
+            let edge = (l0 - lr).abs().max((l0 - ld).abs());
+            if edge < 40.0 {
+                continue; // flat fill or background — stays rock solid
+            }
+            let dx = noise_at(x as f32, y as f32, 1) * strength;
+            let dy = noise_at(x as f32, y as f32, 2) * strength;
+            let sx = (x as f32 + dx).round() as i64;
+            let sy = (y as f32 + dy).round() as i64;
+            if sx < 0 || sx >= w || sy < 0 || sy >= h {
+                continue;
+            }
+            let sidx = (sy as usize) * stride + (sx as usize) * 4;
+            data[idx] = src[sidx];
+            data[idx + 1] = src[sidx + 1];
+            data[idx + 2] = src[sidx + 2];
+            data[idx + 3] = src[sidx + 3];
         }
     }
 }

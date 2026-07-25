@@ -33,6 +33,12 @@ pub struct RenderConfig {
     /// Falling-particle overlay density (0 = off; ~0.3–0.8 = drifting snow/ash
     /// specks — Freeman's atmospheric layer). Deterministic per (particle, time).
     pub snow: f64,
+    /// Hand-drawn "line boil" (0 = off; ~0.8–1.6 = px wobble amplitude). Every
+    /// held drawing-frame, the ink OUTLINE resettles to a new position along a
+    /// smooth per-stroke noise field, as if redrawn — while flat fills and the
+    /// background stay perfectly solid. This is what a rig can't get from pose
+    /// interpolation alone: no two holds of the same drawing are pixel-identical.
+    pub line_boil: f64,
 }
 
 impl Default for RenderConfig {
@@ -48,6 +54,7 @@ impl Default for RenderConfig {
             vignette: 0.0,
             on_twos: 0,
             snow: 0.0,
+            line_boil: 0.0,
         }
     }
 }
@@ -106,6 +113,11 @@ impl RenderConfig {
                 "snow" => {
                     if let Value::Number(n) = &entry.value {
                         cfg.snow = *n;
+                    }
+                }
+                "line-boil" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.line_boil = *n;
                     }
                 }
                 _ => {}

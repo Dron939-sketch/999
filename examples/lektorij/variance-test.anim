@@ -1,0 +1,25 @@
+import character freeman from "../assets/characters/freeman_rig"
+
+config {
+    width: 900
+    height: 800
+    fps: 24
+    background: #54584f
+    monochrome: true
+    mono-contrast: 1.2
+    on-twos: 2
+}
+
+scene "instance-a" (duration: 0.6s) {
+    place freeman at (0.5, 0.6) facing front
+    camera medium freeman
+    freeman pose "confident"
+    wait 0.6s
+}
+
+scene "instance-b" (duration: 0.6s) {
+    place freeman at (0.5, 0.6) facing front
+    camera medium freeman
+    freeman pose "confident"
+    wait 0.6s
+}
