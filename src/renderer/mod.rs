@@ -628,7 +628,18 @@ fn render_rigged_character(
     // two lists share tree order, so we pair them by index.
     let mut final_draws: Vec<Drawable> = Vec::with_capacity(drawables.len());
     for (i, d) in drawables.iter().enumerate() {
-        if let Some(p) = prev_draws.get(i) {
+        // Facial features (brows, eyes, mouth, face cels) must NEVER smear: they
+        // are tiny and cel-swap, so a ghost copy reads as a phantom DUPLICATE
+        // (e.g. a second pair of brows drifting up the forehead on a speech
+        // accent), not motion blur. Smears are for limbs/body/props only.
+        let is_facial = {
+            let pn = d.part.name.as_str();
+            pn.starts_with("brow")
+                || pn.starts_with("eye")
+                || pn.starts_with("mouth")
+                || pn.starts_with("face")
+        };
+        if let Some(p) = prev_draws.get(i).filter(|_| !is_facial) {
             let dx = d.x - p.x;
             let dy = d.y - p.y;
             let dpos = (dx * dx + dy * dy).sqrt();
