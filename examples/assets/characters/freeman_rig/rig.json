@@ -107,6 +107,19 @@
                     -124
                   ],
                   "z_order": 6
+                },
+                {
+                  "name": "hat",
+                  "part": "blank",
+                  "pivot": [
+                    50,
+                    70
+                  ],
+                  "offset": [
+                    0,
+                    -150
+                  ],
+                  "z_order": 7
                 }
               ]
             },
@@ -194,7 +207,22 @@
                         0,
                         112
                       ],
-                      "z_order": 4
+                      "z_order": 4,
+                      "children": [
+                        {
+                          "name": "cane",
+                          "part": "blank",
+                          "pivot": [
+                            10,
+                            10
+                          ],
+                          "offset": [
+                            10,
+                            10
+                          ],
+                          "z_order": 3
+                        }
+                      ]
                     }
                   ]
                 }
@@ -287,6 +315,82 @@
         },
         "mouth": {
           "part": "mouth_closed"
+        }
+      }
+    },
+    "confident": {
+      "name": "confident",
+      "transition_duration": 0.35,
+      "bones": {
+        "torso": {
+          "rotation": 7
+        },
+        "head": {
+          "offset": [
+            -8,
+            8
+          ],
+          "rotation": -16
+        },
+        "upper_arm_left": {
+          "rotation": 132,
+          "z_order": 8
+        },
+        "forearm_left": {
+          "rotation": 30,
+          "z_order": 8
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 9
+        },
+        "upper_arm_right": {
+          "rotation": -16
+        },
+        "forearm_right": {
+          "rotation": -6
+        },
+        "hand_right": {
+          "part": "hand_fist_r"
+        },
+        "thigh_left": {
+          "rotation": 6
+        },
+        "shin_left": {
+          "rotation": -4
+        },
+        "thigh_right": {
+          "rotation": -14
+        },
+        "shin_right": {
+          "rotation": 20
+        },
+        "eye_left": {
+          "part": "eye_squint"
+        },
+        "brow_left": {
+          "rotation": 10,
+          "part": "brow"
+        },
+        "brow_right": {
+          "rotation": -8,
+          "part": "brow"
+        },
+        "mouth": {
+          "part": "mouth_teeth"
+        },
+        "hat": {
+          "part": "hat",
+          "offset": [
+            -18,
+            -114
+          ],
+          "rotation": -18,
+          "z_order": 6
+        },
+        "cane": {
+          "part": "cane",
+          "rotation": 26
         }
       }
     },
