@@ -629,7 +629,12 @@ fn render_rigged_character(
             let dx = d.x - p.x;
             let dy = d.y - p.y;
             let dpos = (dx * dx + dy * dy).sqrt();
-            let motion = dpos + (d.rot - p.rot).abs() * 0.6;
+            // Weight ANGULAR velocity strongly: a limb whipping around its joint
+            // (hand strike, arm throw) carries weight/inertia and must smear even
+            // when its pivot barely translates. Scaled by the part's length so a
+            // long limb's tip-sweep reads as the fast motion it is.
+            let ang = (d.rot - p.rot).abs() * (d.part.height * d.sy.abs() * 0.012);
+            let motion = dpos + ang;
             // Threshold scales with canvas so it's resolution-independent, and is
             // set HIGH enough that idle/speech float never spawns ghosts — only a
             // real gesture smears. (Spurious ghosts on tiny motion read as jitter.)
@@ -648,7 +653,9 @@ fn render_rigged_character(
                         flip: d.flip,
                         opacity: d.opacity * 0.20,
                         pivot: d.pivot,
-                        z_order: d.z_order,
+                        // Ghost always BEHIND the live part (and the body), so a
+                        // trailing hand-smear never punches in front of the torso.
+                        z_order: d.z_order - 1000,
                         bend: d.bend,
                         bend_origin: d.bend_origin,
                     });
@@ -1300,12 +1307,20 @@ fn apply_spring_lag(entity: &str, states: &mut [BoneState], t: f64) {
     let reset = dt.is_nan();
     let held = dt == 0.0;
     for state in states.iter_mut() {
-        // Stiffness (rad/s) and damping ratio per bone: the head is snappier,
-        // hands are looser and bounce a touch more.
+        // Stiffness (rad/s) and damping ratio per bone. OVERLAPPING ACTION: the
+        // chain gets looser toward the extremities, so a gesture travels OUT the
+        // limb — torso/head lead, upper arm follows, forearm later, hand last —
+        // instead of the whole rig snapping to the pose in lockstep (the #1
+        // "cutout/puppet" tell). Looser ω = more lag; lower ζ = more settle-bounce.
         let (omega, zeta) = match state.name.as_str() {
             "head" => (18.0, 0.55),
-            n if n.contains("forearm") => (13.0, 0.45),
-            n if n.contains("upper_arm") => (16.0, 0.5),
+            n if n.contains("upper_arm") => (15.0, 0.5),
+            n if n.contains("forearm") => (12.0, 0.42),
+            n if n.starts_with("hand") => (9.5, 0.38), // hand trails the arm, bounces
+            n if n.contains("thigh") => (14.0, 0.5),
+            n if n.contains("shin") => (10.5, 0.42),
+            "hat" => (8.5, 0.34),  // loose accessory — lags & wobbles
+            "cane" => (10.0, 0.4), // prop swings after the hand
             _ => continue,
         };
         SPRING_STATE.with(|springs| {
