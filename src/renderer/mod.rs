@@ -1148,6 +1148,20 @@ fn anticipate_back(t: f64) -> f64 {
 /// Swap every `seed="N"` in an SVG (feTurbulence) for the given boil seed, so
 /// the ink filter's noise — and thus the rough hand-drawn edge — changes each
 /// frame. A no-op for SVGs without a turbulence filter.
+/// Remove the `filter="url(#ink)"` attribute from every element so the SVG
+/// rasterizes without the feTurbulence/feDisplacementMap ink pass. Used as a
+/// fallback when resvg's displacement-map size assertion panics at a given
+/// raster scale — the silhouette stays correct, only the boil texture is lost.
+fn strip_ink_filter(svg: &[u8]) -> Vec<u8> {
+    match std::str::from_utf8(svg) {
+        Ok(s) => s
+            .replace(" filter=\"url(#ink)\"", "")
+            .replace("filter=\"url(#ink)\"", "")
+            .into_bytes(),
+        Err(_) => svg.to_vec(),
+    }
+}
+
 fn apply_boil(svg: &[u8], seed: u32) -> Vec<u8> {
     let s = match std::str::from_utf8(svg) {
         Ok(s) if s.contains("seed=\"") => s,
@@ -1206,7 +1220,26 @@ fn render_bone_part(
         .ok_or_else(|| AnimError::Render("failed to create part pixmap".into()))?;
 
     let render_transform = Transform::from_scale(render_sx as f32, render_sy as f32);
-    resvg::render(&tree, render_transform, &mut part_pixmap.as_mut());
+    // resvg's feDisplacementMap has a size-assertion (src.height == map.height)
+    // that trips at certain raster sizes (e.g. an ink-filtered part rasterized
+    // large under an ECU camera): a 1px rounding mismatch between the turbulence
+    // and source buffers panics the whole render. The factory must not die for a
+    // single part's filter edge case — catch it and re-render THIS part with the
+    // ink filter stripped (correct silhouette, just no boil-displacement).
+    let panicked = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        resvg::render(&tree, render_transform, &mut part_pixmap.as_mut());
+    }))
+    .is_err();
+    if panicked {
+        let stripped = strip_ink_filter(&svg_data);
+        if let Ok(tree2) = parse_svg_cached(&stripped) {
+            part_pixmap = Pixmap::new(render_w, render_h)
+                .ok_or_else(|| AnimError::Render("failed to create part pixmap".into()))?;
+            let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                resvg::render(&tree2, render_transform, &mut part_pixmap.as_mut());
+            }));
+        }
+    }
 
     // Flip horizontally if needed.
     if flip < 0.0 {
@@ -1506,7 +1539,24 @@ fn render_svg_to_pixmap(
                 .ok_or_else(|| AnimError::Render("failed to create SVG pixmap".into()))?;
             let render_transform =
                 Transform::from_scale(final_scale_x.abs() as f32, final_scale_y.abs() as f32);
-            resvg::render(&tree, render_transform, &mut pm.as_mut());
+            // Same resvg feDisplacementMap panic guard as the part renderer:
+            // a set/background SVG's ink filter can trip the size assertion at
+            // some scales — fall back to a filter-stripped render instead of
+            // killing the whole video.
+            let panicked = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                resvg::render(&tree, render_transform, &mut pm.as_mut());
+            }))
+            .is_err();
+            if panicked {
+                let stripped = strip_ink_filter(svg_data);
+                if let Ok(tree2) = parse_svg_cached(&stripped) {
+                    pm = Pixmap::new(render_w, render_h)
+                        .ok_or_else(|| AnimError::Render("failed to create SVG pixmap".into()))?;
+                    let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                        resvg::render(&tree2, render_transform, &mut pm.as_mut());
+                    }));
+                }
+            }
             if flip_bg {
                 flip_pixmap_horizontal(&mut pm);
             }
