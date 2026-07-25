@@ -10,9 +10,9 @@
     <!-- засечки в углах рта ПЕРПЕНДИКУЛЯРНО линии улыбки: концы улыбки идут
          по диагонали вверх, значит штрих — диагональ под 90° к ней, идущая
          и выше, и ниже края губы (короткая). -->
-    <path d="M5 14 L11 8" fill="none" stroke="#0e0e0e"
+    <path d="M6 13 L10 9" fill="none" stroke="#0e0e0e"
           stroke-width="2.9" stroke-linecap="round"/>
-    <path d="M33 8 L39 14" fill="none" stroke="#0e0e0e"
+    <path d="M34 9 L38 13" fill="none" stroke="#0e0e0e"
           stroke-width="2.9" stroke-linecap="round"/>
   </g>
 </svg>
