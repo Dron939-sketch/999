@@ -38,7 +38,7 @@
                 14
               ],
               "scale": [
-                1.10,
+                1.1,
                 1.115
               ],
               "z_order": 5,
@@ -1715,6 +1715,128 @@
         },
         "shin_right": {
           "rotation": -14
+        }
+      }
+    },
+    "low_angle": {
+      "name": "low_angle",
+      "transition_duration": 0.35,
+      "bones": {
+        "head": {
+          "scale": [
+            0.95,
+            0.92
+          ],
+          "rotation": -3,
+          "offset": [
+            0,
+            10
+          ]
+        },
+        "torso": {
+          "rotation": 0
+        },
+        "thigh_left": {
+          "offset": [
+            -44,
+            165
+          ],
+          "rotation": 7,
+          "scale": [
+            1.22,
+            1.24
+          ]
+        },
+        "shin_left": {
+          "scale": [
+            1.2,
+            1.24
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            44,
+            165
+          ],
+          "rotation": -7,
+          "scale": [
+            1.22,
+            1.24
+          ]
+        },
+        "shin_right": {
+          "scale": [
+            1.2,
+            1.24
+          ]
+        }
+      }
+    },
+    "high_angle": {
+      "name": "high_angle",
+      "transition_duration": 0.35,
+      "bones": {
+        "head": {
+          "scale": [
+            1.34,
+            1.32
+          ],
+          "rotation": 6,
+          "offset": [
+            0,
+            24
+          ]
+        },
+        "torso": {
+          "rotation": 6
+        },
+        "upper_arm_left": {
+          "offset": [
+            -84,
+            40
+          ],
+          "rotation": 34
+        },
+        "upper_arm_right": {
+          "offset": [
+            84,
+            40
+          ],
+          "rotation": -34
+        },
+        "thigh_left": {
+          "offset": [
+            -22,
+            165
+          ],
+          "rotation": -5,
+          "scale": [
+            0.8,
+            0.8
+          ]
+        },
+        "shin_left": {
+          "scale": [
+            0.8,
+            0.8
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            22,
+            165
+          ],
+          "rotation": 5,
+          "scale": [
+            0.8,
+            0.8
+          ]
+        },
+        "shin_right": {
+          "scale": [
+            0.8,
+            0.8
+          ]
         }
       }
     }

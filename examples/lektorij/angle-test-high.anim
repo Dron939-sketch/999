@@ -1,0 +1,15 @@
+import character freeman from "../assets/characters/freeman_rig"
+
+config {
+    width: 720
+    height: 900
+    fps: 24
+    background: #54584f
+}
+
+scene "test" (duration: 1.0s) {
+    place freeman at center facing front
+    camera wide freeman
+    freeman pose "high_angle"
+    wait 1.0s
+}
