@@ -22,6 +22,7 @@ config {
     light-angle: 58
     form-shadow: 0.42
     cast-shadow: 0.30
+    rim-light: 0.5
 }
 
 scene "cell" (duration: 16s, set: cell) {

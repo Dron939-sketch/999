@@ -109,6 +109,11 @@ config {
 | `mono-contrast` | Float  | Contrast for the monochrome post (~1.1 soft; 2–4 = stark 2-tone silhouette) | `1.12` |
 | `film-grain` | Float     | Aged-film grain intensity (0 = off, 0.3–0.7 typical) | `0` |
 | `vignette`   | Float     | Darkened-corners vignette intensity (0 = off, 0.3–0.6 typical) | `0` |
+| `light-angle`| Float     | Light direction in degrees (0 = overhead, >0 = from the right, <0 = left). Drives shadow lean and the lit side | `35` |
+| `ground-shadow` | Boolean | Soft contact ellipse under the feet — pins the figure to the floor | `false` |
+| `cast-shadow`| Float     | Thrown silhouette-shadow strength projected onto the ground by `light-angle` (0 = off, 0.3–0.6 typical) | `0` |
+| `form-shadow`| Float     | Self (form) shadow: the side away from the light darkens with a hard cel edge — volume on the mask (0 = off, 0.35–0.5 typical) | `0` |
+| `rim-light`  | Float     | Rim/back light: a warm off-white contour on the lit edge of the silhouette — separates the figure from a dark background (0 = off, 0.4–0.7 typical). Pair with `form-shadow` for volume. Reads only against darker backgrounds | `0` |
 
 ### Example
 

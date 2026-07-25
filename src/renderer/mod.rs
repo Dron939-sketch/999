@@ -26,6 +26,8 @@ pub struct LightCfg {
     pub light_angle: f64,
     /// Form (self) shadow strength on the character (0 = off).
     pub form_shadow: f64,
+    /// Rim/back light strength: bright contour on the lit edge (0 = off).
+    pub rim: f64,
 }
 
 use crate::assets::{AssetRegistry, CharacterAsset};
@@ -278,6 +280,7 @@ pub fn render_frame(
                             cast_shadow: config.cast_shadow,
                             light_angle: config.light_angle,
                             form_shadow: config.form_shadow,
+                            rim: config.rim_light,
                         },
                         step_dt,
                     )?;
@@ -747,7 +750,10 @@ fn render_rigged_character(
     // (shear + vertical squash anchored at the feet), drawn BEHIND the figure.
     // This is the biggest "cinematic" win — a real thrown shadow. Off unless
     // `cast-shadow` is set, so existing scenes are byte-identical.
-    if (light.cast_shadow > 0.0 || light.form_shadow > 0.0) && have_extent && state.opacity > 0.2 {
+    if (light.cast_shadow > 0.0 || light.form_shadow > 0.0 || light.rim > 0.0)
+        && have_extent
+        && state.opacity > 0.2
+    {
         let mut layer = Pixmap::new(canvas_w, canvas_h)
             .ok_or_else(|| AnimError::Render("failed to alloc shadow layer".into()))?;
         for d in &final_draws {
@@ -799,6 +805,34 @@ fn render_rigged_character(
             layer.draw_pixmap(
                 0, 0, shade.as_ref(),
                 &PixmapPaint { blend_mode: BlendMode::SourceAtop, ..Default::default() },
+                Transform::from_translate(off_x, off_y),
+                None,
+            );
+        }
+
+        // RIM / контровой: светлая кромка на освещённой стороне. Тонируем
+        // силуэт в тёплый офф-вайт и рисуем со сдвигом К СВЕТУ, ЗА фигурой —
+        // наружу торчит только освещённая грань, отделяя фигуру от фона
+        // (классический контровой/бэклайт). Рисуется на pixmap до фигуры, чтобы
+        // центр перекрылся, а кромка осталась.
+        if light.rim > 0.0 {
+            let mut rim = layer.clone();
+            let ra = light.rim.clamp(0.0, 1.0) * state.opacity;
+            for px in rim.pixels_mut() {
+                let pa = (px.alpha() as f64 * ra) as u8;
+                // тёплый офф-вайт (240,238,225), premultiplied по альфе пикселя
+                let pr = (240.0 * pa as f64 / 255.0) as u8;
+                let pg = (238.0 * pa as f64 / 255.0) as u8;
+                let pb = (225.0 * pa as f64 / 255.0) as u8;
+                *px = PremultipliedColorU8::from_rgba(pr, pg, pb, pa)
+                    .unwrap_or_else(|| PremultipliedColorU8::from_rgba(0, 0, 0, 0).unwrap());
+            }
+            let w = (max_x - min_x).max(20.0);
+            let off_x = (ang.sin() * w * 0.05) as f32; // к свету (обратно form-тени)
+            let off_y = (-w * 0.03) as f32; // свет слегка сверху
+            pixmap.draw_pixmap(
+                0, 0, rim.as_ref(),
+                &PixmapPaint { quality: FilterQuality::Bilinear, ..Default::default() },
                 Transform::from_translate(off_x, off_y),
                 None,
             );
