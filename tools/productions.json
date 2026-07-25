@@ -29,6 +29,11 @@
       "anim": "examples/freeman-monologue.anim"
     },
     {
+      "id": "prison-intro",
+      "desc": "Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото). Немой — под озвучку с //lip.",
+      "anim": "examples/lektorij/prison-intro.anim"
+    },
+    {
       "id": "fredi-expressions",
       "desc": "Фреди: библиотека мимики",
       "anim": "examples/lektorij/fredi-expressions-demo.anim"

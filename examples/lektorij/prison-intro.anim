@@ -1,0 +1,62 @@
+// =============================================================================
+//  ТЮРЬМА — интро (регистр «перепрошивка / тюрьма ума»).
+//  Парадокс Фримена: рисованный тушевой герой в ФОТО-мире (камера — растровый
+//  сет prison-cell-photo.svg, обёрнутый через raster_to_svg). Надписи на стенах
+//  аутентичные («БЛОК 7 КАМЕРА 14», «FREEDOM?») — казённый шрифт «бесплатно».
+//  Локально немой (флэпы); с озвучкой //lip 1 даст синхрон по конструкции.
+//  Рендер: cargo run --release -- render examples/lektorij/prison-intro.anim -o prison.mp4
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set cell from "../assets/sets/prison-cell.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #1a1c1a
+    on-twos: 2
+    line-boil: 0.6
+    film-grain: 0.30
+    vignette: 0.55
+    // свет из зарешёченного окна — правый верх; объём на маске
+    light-angle: 58
+    form-shadow: 0.42
+    cast-shadow: 0.30
+}
+
+scene "cell" (duration: 13s, set: cell) {
+    place freeman at (0.5, 0.80) facing front
+    // крупнее дефолта: тушевая фигура читается в фотокамере, маска у стены-графити
+    freeman scales 1.5
+
+    // --- средний: фигура сразу читаема (маска + торс у светлой стены) ---
+    camera medium freeman
+    freeman pose "calm"
+    wait 1.4s
+    freeman pose "think"
+    wait 1.2s
+
+    // --- общий: теперь видно всю клетку, фигура НЕ теряется (скейл 1.5) ---
+    camera wide
+    freeman pose "talk"
+    //lip 1
+    freeman speaks for 3.0s
+    freeman pose "point"
+    wait 0.5s
+
+    // --- крупно: в упор, пробитие 4-й стены ---
+    camera close-up freeman
+    freeman pose "stern"
+    wait 1.2s
+    freeman pose "wide"
+    wait 0.8s
+
+    // --- сверхкруп: панч на глаз/рот ---
+    camera extreme-close-up freeman
+    freeman pose "grotesque"
+    wait 1.0s
+    freeman pose "calm"
+    wait 0.9s
+    transition fade-black 1.3s
+}
