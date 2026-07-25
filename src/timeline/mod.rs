@@ -497,9 +497,9 @@ impl TimelineCompiler {
                             let e = self.entities.get(name).ok_or_else(|| {
                                 AnimError::Timeline(format!("unknown entity: {name}"))
                             })?;
-                            (e.x, e.y - 0.16, 2.2)
+                            (e.x, e.y + 0.05, 2.2)
                         } else {
-                            (0.5, 0.38, 2.2)
+                            (0.5, 0.55, 2.2)
                         }
                     }
                     ShotType::CloseUp => {
@@ -508,9 +508,9 @@ impl TimelineCompiler {
                             let e = self.entities.get(name).ok_or_else(|| {
                                 AnimError::Timeline(format!("unknown entity: {name}"))
                             })?;
-                            (e.x, e.y - 0.26, 3.4)
+                            (e.x, e.y - 0.045, 3.4)
                         } else {
-                            (0.5, 0.3, 3.4)
+                            (0.5, 0.45, 3.4)
                         }
                     }
                     ShotType::ExtremeCloseUp => {
@@ -519,9 +519,9 @@ impl TimelineCompiler {
                             let e = self.entities.get(name).ok_or_else(|| {
                                 AnimError::Timeline(format!("unknown entity: {name}"))
                             })?;
-                            (e.x, e.y - 0.30, 6.0)
+                            (e.x, e.y - 0.06, 6.0)
                         } else {
-                            (0.5, 0.28, 6.0)
+                            (0.5, 0.42, 6.0)
                         }
                     }
                     ShotType::TwoShot => (0.5, 0.5, 1.2),
