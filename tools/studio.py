@@ -280,6 +280,43 @@ def qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced):
     return hard, soft
 
 
+def run_planka(prod, engine, render_sec, final_mp4):
+    """Гонит tools/qc_metrics.py на эталоне и переводит результат в (hard, soft).
+
+    HARD-метрики планки (длина плана, скорость рендера, golden-frame diff) идут в
+    общий hard-бакет → под --strict роняют прогон (не взяли планку = красный).
+    loudness — soft (чинится нормализом, не дефект картинки). Голдены лежат в
+    tests/golden/<id>; их обновление — отдельной командой (--update-golden),
+    не на каждом прогоне, иначе diff бессмыслен."""
+    hard, soft = [], []
+    anim = ROOT / prod["anim"]
+    golden_dir = ROOT / "tests" / "golden" / prod["id"]
+    out_json = ROOT / "videos" / f".{prod['id']}.planka.json"
+    cmd = [sys.executable, str(TOOLS / "qc_metrics.py"),
+           "--anim", str(anim), "--engine", str(engine),
+           "--golden-dir", str(golden_dir),
+           "--render-sec", f"{render_sec:.1f}", "--json", str(out_json)]
+    if final_mp4 and Path(final_mp4).exists():
+        cmd += ["--final", str(final_mp4)]
+    try:
+        run(cmd)
+    except subprocess.CalledProcessError as e:
+        soft.append(f"{prod['id']}: планка не измерена ({e})")
+        return hard, soft
+    try:
+        data = json.loads(Path(out_json).read_text(encoding="utf-8"))
+    except Exception:
+        soft.append(f"{prod['id']}: планка — нет отчёта JSON")
+        return hard, soft
+    for name, m in data.get("metrics", {}).items():
+        if m.get("pass"):
+            continue
+        msg = (f"{prod['id']}: планка «{name}» = {m.get('value')} "
+               f"(цель {m.get('target', '?')})")
+        (hard if m.get("kind") == "hard" else soft).append(msg)
+    return hard, soft
+
+
 def build_one(prod, engine, videos_dir, voice_expected=False):
     pid = prod["id"]
     log(f"\n=== ПРОДАКШЕН: {pid} — {prod.get('desc', '')}")
@@ -295,7 +332,10 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
     parts_ok = step_voice_parts(prod, parts_dir)
     src_anim = step_prep_lipsync(prod, parts_dir)
     voice = step_assemble_voice(prod, src_anim, parts_dir, voice_mp3, engine) if parts_ok else None
+    import time as _time
+    _t0 = _time.monotonic()
     step_render(src_anim, engine, video_mp4)
+    render_sec = _time.monotonic() - _t0
     sfx = step_sfx(prod, video_mp4, videos_dir / f"{pid}-sfx.mp3")
     step_mux(prod, video_mp4, voice, sfx, final_mp4)
 
@@ -311,6 +351,15 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
 
     voice_produced = voice is not None and Path(voice).exists()
     hard, soft = qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced)
+
+    # Планка Фримена: на эталонных продакшенах (флаг "planka") гоняем машинные
+    # метрики Рубежа 2 — средняя длина плана / скорость рендера / golden-frame /
+    # громкость. Без этого правки движения проверяются только глазами.
+    if prod.get("planka"):
+        ph, ps = run_planka(prod, engine, render_sec, final_mp4)
+        hard += ph
+        soft += ps
+
     for e in hard:
         log(f"  [QC-HARD] {e}")
     for e in soft:
