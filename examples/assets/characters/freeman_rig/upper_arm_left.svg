@@ -2,8 +2,11 @@
 <!-- эталон-разбор: рука — тонкая чёрная сужающаяся линия с лёгким изгибом,
      без серой окантовки (на пересечении с рясой сливается — так и у оригинала) -->
 <g filter="url(#ink)"><path d="M15 6 Q11 30 13 55 Q14 75 16 92 L23 92 Q24 75 24 55 Q26 30 25 6 Z" fill="#0e0e0e"/>
-<!-- ЗАСУЧЕННЫЙ РУКАВ-ПРУЖИНА на стыке рука↔тело: скомканная спираль-манжета
-     у плечевого конца (видна на фоне, где рука выходит из рясы) -->
-<path d="M13 10 q-8 3 -6 12 q2 9 12 8 q10 -1 8 -11 q-2 -9 -11 -7 q-7 2 -5 9"
-      fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round"/>
-<path d="M20 16 q-5 2 -4 8 q1 6 8 5 q6 -1 5 -7" fill="none" stroke="#0e0e0e" stroke-width="4" stroke-linecap="round"/></g></svg>
+<!-- ЗАСУЧЕННЫЙ РУКАВ-ВАЛИК на стыке рука↔тело: толстый скомканный
+     закатанный манжет — крупная спираль + стопка стянутых складок-колец
+     (виден на фоне, где рука выходит из рясы) -->
+<path d="M4 12 q-1 -10 12 -12 q13 -2 17 8 q3 10 -8 14 q-11 4 -16 -4 q-4 -7 4 -10 q7 -2 9 5"
+      fill="none" stroke="#0e0e0e" stroke-width="6.4" stroke-linecap="round"/>
+<path d="M5 20 q11 6 28 2" fill="none" stroke="#0e0e0e" stroke-width="5.4" stroke-linecap="round"/>
+<path d="M7 27 q10 5 23 1" fill="none" stroke="#0e0e0e" stroke-width="4.8" stroke-linecap="round"/>
+<path d="M9 33 q8 4 19 1" fill="none" stroke="#0e0e0e" stroke-width="4.2" stroke-linecap="round"/></g></svg>
