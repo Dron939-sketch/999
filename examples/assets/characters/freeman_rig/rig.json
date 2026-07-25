@@ -407,19 +407,19 @@
           "part": "mouth_frown"
         },
         "upper_arm_left": {
-          "rotation": -72,
+          "rotation": 66,
           "z_order": 4
         },
         "forearm_left": {
-          "rotation": -18,
+          "rotation": 20,
           "z_order": 4
         },
         "upper_arm_right": {
-          "rotation": 72,
+          "rotation": -66,
           "z_order": 4
         },
         "forearm_right": {
-          "rotation": 18,
+          "rotation": -20,
           "z_order": 4
         },
         "hand_left": {
@@ -441,11 +441,11 @@
           "part": "mouth_o"
         },
         "upper_arm_left": {
-          "rotation": -82,
+          "rotation": 78,
           "z_order": 4
         },
         "forearm_left": {
-          "rotation": 8,
+          "rotation": -8,
           "z_order": 4
         },
         "hand_left": {
@@ -461,19 +461,19 @@
           "part": "mouth_m"
         },
         "upper_arm_left": {
-          "rotation": -88,
+          "rotation": 84,
           "z_order": 4
         },
         "forearm_left": {
-          "rotation": 104,
+          "rotation": -96,
           "z_order": 4
         },
         "upper_arm_right": {
-          "rotation": 88,
+          "rotation": -84,
           "z_order": 4
         },
         "forearm_right": {
-          "rotation": -104,
+          "rotation": 96,
           "z_order": 4
         },
         "hand_left": {
@@ -563,11 +563,11 @@
           "rotation": -3
         },
         "upper_arm_left": {
-          "rotation": -70,
+          "rotation": 68,
           "z_order": 4
         },
         "forearm_left": {
-          "rotation": 6,
+          "rotation": -6,
           "z_order": 4
         },
         "hand_left": {
@@ -635,19 +635,19 @@
       "transition_duration": 0.18,
       "bones": {
         "upper_arm_left": {
-          "rotation": -84,
+          "rotation": 80,
           "z_order": 4
         },
         "forearm_left": {
-          "rotation": -6,
+          "rotation": 10,
           "z_order": 4
         },
         "upper_arm_right": {
-          "rotation": 84,
+          "rotation": -80,
           "z_order": 4
         },
         "forearm_right": {
-          "rotation": 6,
+          "rotation": -10,
           "z_order": 4
         },
         "head": {
@@ -770,19 +770,19 @@
       "transition_duration": 0.3,
       "bones": {
         "upper_arm_left": {
-          "rotation": -72,
+          "rotation": 70,
           "z_order": 4
         },
         "forearm_left": {
-          "rotation": -18,
+          "rotation": 16,
           "z_order": 4
         },
         "upper_arm_right": {
-          "rotation": 72,
+          "rotation": -70,
           "z_order": 4
         },
         "forearm_right": {
-          "rotation": 18,
+          "rotation": -16,
           "z_order": 4
         },
         "head": {
