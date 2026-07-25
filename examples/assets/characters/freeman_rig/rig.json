@@ -38,8 +38,8 @@
                 14
               ],
               "scale": [
-                1.10,
-                1.44
+                1.04,
+                1.56
               ],
               "z_order": 5,
               "children": [
@@ -51,7 +51,7 @@
                     30
                   ],
                   "offset": [
-                    -20,
+                    -28,
                     -92
                   ],
                   "z_order": 6
@@ -64,7 +64,7 @@
                     30
                   ],
                   "offset": [
-                    20,
+                    28,
                     -92
                   ],
                   "z_order": 6
@@ -131,7 +131,7 @@
                 12
               ],
               "offset": [
-                -58,
+                -70,
                 40
               ],
               "rotation": 26,
@@ -176,7 +176,7 @@
                 12
               ],
               "offset": [
-                58,
+                70,
                 40
               ],
               "rotation": -26,
@@ -297,24 +297,28 @@
         "head": {
           "offset": [
             -4,
-            62
+            70
           ],
           "rotation": -6
         },
         "upper_arm_left": {
-          "rotation": 58
+          "rotation": 40
         },
         "forearm_left": {
-          "rotation": 24
+          "rotation": 16
         },
         "upper_arm_right": {
-          "rotation": -56
+          "rotation": -38
         },
         "forearm_right": {
-          "rotation": -24
+          "rotation": -16
         },
         "mouth": {
-          "part": "mouth_smile"
+          "part": "mouth_smile",
+          "scale": [
+            2.1,
+            1.7
+          ]
         }
       }
     },
