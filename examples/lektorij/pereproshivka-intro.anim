@@ -55,7 +55,7 @@ scene "cell-hook" (duration: 22s, set: cell) {
     // нити марионетки опускаются на него, он обвисает как кукла
     camera close-up freeman
     together {
-        strings moves-to (0.36, 0.28) over 1.4s
+        strings moves-to (0.36, 0.44) over 1.4s
         do {
             //lip 2
             freeman speaks for 4s
