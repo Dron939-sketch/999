@@ -8,10 +8,10 @@
     <path d="M8 11 Q12 15 15 16 Q22 21 29 16 Q32 15 36 11"
           fill="none" stroke="#0e0e0e" stroke-width="3" stroke-linecap="round"/>
     <!-- засечки в углах рта: короткий штрих, идущий И ВВЕРХ И ВНИЗ от края
-         губы, пересекая её перпендикулярно — уголки как скобки ⟨ ⟩ -->
-    <path d="M6 4 Q9 11 6 19" fill="none" stroke="#0e0e0e"
+         губы (в 2 раза короче), пересекая её перпендикулярно — скобки ⟨ ⟩ -->
+    <path d="M7 8 Q8.5 11 7 15" fill="none" stroke="#0e0e0e"
           stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M38 4 Q35 11 38 19" fill="none" stroke="#0e0e0e"
+    <path d="M37 8 Q35.5 11 37 15" fill="none" stroke="#0e0e0e"
           stroke-width="2.4" stroke-linecap="round"/>
   </g>
 </svg>
