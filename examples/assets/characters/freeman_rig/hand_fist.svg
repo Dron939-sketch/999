@@ -5,15 +5,15 @@
   </filter></defs>
   <g filter="url(#ink)">
     <path d="M19 2 L27 2 L26 8 L20 8 Z" fill="#0e0e0e"/>
-    <path d="M23 6 L21.4 12.3 L26.6 17.3" fill="none" stroke="#c2c7c0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L21.4 12.3 L26.6 17.3" fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L22.4 13.0 L29.1 16.7" fill="none" stroke="#c2c7c0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L22.4 13.0 L29.1 16.7" fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L23.6 13.0 L30.9 15.5" fill="none" stroke="#c2c7c0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L23.6 13.0 L30.9 15.5" fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L24.6 12.3 L31.4 14.3" fill="none" stroke="#c2c7c0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L24.6 12.3 L31.4 14.3" fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 Q16.7 9.1 13.1 10.8" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
-    <path d="M23 6 Q16.7 9.1 13.1 10.8" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
+    
+    <path d="M23 6 L21.4 12.3 L26.6 17.3" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <path d="M23 6 L22.4 13.0 L29.1 16.7" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <path d="M23 6 L23.6 13.0 L30.9 15.5" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <path d="M23 6 L24.6 12.3 L31.4 14.3" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <path d="M23 6 Q16.7 9.1 13.1 10.8" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round"/>
   </g>
 </svg>

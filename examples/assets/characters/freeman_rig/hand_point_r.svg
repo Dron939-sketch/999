@@ -5,9 +5,9 @@
   </filter></defs>
   <g filter="url(#ink)" transform="translate(46,0) scale(-1,1)">
     <path d="M19 2 L27 2 L26 8 L20 8 Z" fill="#0e0e0e"/>
-    <path d="M23 6 L23.7 27.0 L22.9 50.1" fill="none" stroke="#c2c7c0" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L23.7 27.0 L22.9 50.1" fill="none" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 Q17.6 10.5 14.6 13.1" fill="none" stroke="#c2c7c0" stroke-width="6" stroke-linecap="round"/>
-    <path d="M23 6 Q17.6 10.5 14.6 13.1" fill="none" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
+    
+    <path d="M23 6 L23.7 27.0 L22.9 50.1" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <path d="M23 6 Q17.6 10.5 14.6 13.1" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round"/>
   </g>
 </svg>
