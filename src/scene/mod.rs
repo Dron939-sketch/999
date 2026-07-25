@@ -50,6 +50,9 @@ pub struct RenderConfig {
     /// >0 свет справа (тень клонится влево), <0 свет слева. Управляет наклоном
     /// отбрасываемой тени.
     pub light_angle: f64,
+    /// Собственная (form) тень на персонаже: сторона, обратная свету, темнеет
+    /// жёсткой cel-гранью — объём на маске. 0 = выкл, ~0.35–0.5 — норма.
+    pub form_shadow: f64,
 }
 
 impl Default for RenderConfig {
@@ -71,6 +74,7 @@ impl Default for RenderConfig {
             ground_shadow: false,
             cast_shadow: 0.0,
             light_angle: 35.0,
+            form_shadow: 0.0,
         }
     }
 }
@@ -149,6 +153,11 @@ impl RenderConfig {
                 "light-angle" => {
                     if let Value::Number(n) = &entry.value {
                         cfg.light_angle = *n;
+                    }
+                }
+                "form-shadow" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.form_shadow = *n;
                     }
                 }
                 _ => {}

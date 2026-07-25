@@ -11,7 +11,7 @@ use std::hash::{Hash, Hasher};
 use std::sync::Arc;
 
 use tiny_skia::{
-    Color as SkiaColor, FillRule, FilterQuality, Paint, PathBuilder, Pixmap, PixmapPaint,
+    BlendMode, Color as SkiaColor, FillRule, FilterQuality, Paint, PathBuilder, Pixmap, PixmapPaint,
     PremultipliedColorU8, Rect, Transform,
 };
 
@@ -24,6 +24,8 @@ pub struct LightCfg {
     pub cast_shadow: f64,
     /// Light direction in degrees (0 = overhead, >0 = from the right).
     pub light_angle: f64,
+    /// Form (self) shadow strength on the character (0 = off).
+    pub form_shadow: f64,
 }
 
 use crate::assets::{AssetRegistry, CharacterAsset};
@@ -248,6 +250,7 @@ pub fn render_frame(
                             ground_shadow: config.ground_shadow,
                             cast_shadow: config.cast_shadow,
                             light_angle: config.light_angle,
+                            form_shadow: config.form_shadow,
                         },
                         step_dt,
                     )?;
@@ -706,7 +709,7 @@ fn render_rigged_character(
     // (shear + vertical squash anchored at the feet), drawn BEHIND the figure.
     // This is the biggest "cinematic" win — a real thrown shadow. Off unless
     // `cast-shadow` is set, so existing scenes are byte-identical.
-    if light.cast_shadow > 0.0 && have_extent && state.opacity > 0.2 {
+    if (light.cast_shadow > 0.0 || light.form_shadow > 0.0) && have_extent && state.opacity > 0.2 {
         let mut layer = Pixmap::new(canvas_w, canvas_h)
             .ok_or_else(|| AnimError::Render("failed to alloc shadow layer".into()))?;
         for d in &final_draws {
@@ -715,38 +718,55 @@ fn render_rigged_character(
                 d.bend, d.bend_origin, boil_seed,
             )?;
         }
-        // Black silhouette from the layer's alpha (premultiplied → rgb=0).
-        let mut sil = layer.clone();
-        let strength = light.cast_shadow.clamp(0.0, 1.0) * state.opacity;
-        for px in sil.pixels_mut() {
-            let a = (px.alpha() as f64 * strength) as u8;
-            *px = PremultipliedColorU8::from_rgba(0, 0, 0, a)
-                .unwrap_or_else(|| PremultipliedColorU8::from_rgba(0, 0, 0, 0).unwrap());
-        }
-        // Project onto the ground: shear horizontally by light angle, flatten
-        // vertically, anchored at the feet. Light from the right → shadow leans
-        // left; overhead → nearly straight down.
         let ang = (light.light_angle.clamp(-80.0, 80.0)).to_radians();
-        let skew = -ang.sin() * 1.5; // light from the right (+) → shadow leans left
-        let squash = 0.34; // flatten onto the floor plane
-        let fx = cx as f32;
-        let fy = feet_y as f32;
-        let shear = Transform::from_row(1.0, 0.0, -skew as f32, squash as f32, 0.0, 0.0);
-        let tr = Transform::from_translate(fx, fy)
-            .pre_concat(shear)
-            .pre_concat(Transform::from_translate(-fx, -fy));
-        pixmap.draw_pixmap(
-            0,
-            0,
-            sil.as_ref(),
-            &PixmapPaint {
-                quality: FilterQuality::Bilinear,
-                ..Default::default()
-            },
-            tr,
-            None,
-        );
-        // Composite the real character on top of its shadow.
+
+        // CAST shadow: black silhouette projected onto the ground (behind figure).
+        if light.cast_shadow > 0.0 {
+            let mut sil = layer.clone();
+            let strength = light.cast_shadow.clamp(0.0, 1.0) * state.opacity;
+            for px in sil.pixels_mut() {
+                let a = (px.alpha() as f64 * strength) as u8;
+                *px = PremultipliedColorU8::from_rgba(0, 0, 0, a)
+                    .unwrap_or_else(|| PremultipliedColorU8::from_rgba(0, 0, 0, 0).unwrap());
+            }
+            let skew = -ang.sin() * 1.5; // light from the right (+) → shadow leans left
+            let squash = 0.34; // flatten onto the floor plane
+            let (fx, fy) = (cx as f32, feet_y as f32);
+            let shear = Transform::from_row(1.0, 0.0, -skew as f32, squash as f32, 0.0, 0.0);
+            let tr = Transform::from_translate(fx, fy)
+                .pre_concat(shear)
+                .pre_concat(Transform::from_translate(-fx, -fy));
+            pixmap.draw_pixmap(
+                0, 0, sil.as_ref(),
+                &PixmapPaint { quality: FilterQuality::Bilinear, ..Default::default() },
+                tr, None,
+            );
+        }
+
+        // FORM (self) shadow: darken the side AWAY from the light with a hard cel
+        // edge — a dark silhouette offset toward the shadow side, drawn ONTO the
+        // character (SourceAtop clips it to the figure). Gives the light mask
+        // volume without any per-part shading. Offset scales with figure width.
+        if light.form_shadow > 0.0 {
+            let mut shade = layer.clone();
+            let a = (light.form_shadow.clamp(0.0, 0.85) * 255.0) as u8;
+            for px in shade.pixels_mut() {
+                let pa = ((px.alpha() as u16 * a as u16) / 255) as u8;
+                *px = PremultipliedColorU8::from_rgba(0, 0, 0, pa)
+                    .unwrap_or_else(|| PremultipliedColorU8::from_rgba(0, 0, 0, 0).unwrap());
+            }
+            let w = (max_x - min_x).max(20.0);
+            let off_x = (-ang.sin() * w * 0.16) as f32; // toward shadow side
+            let off_y = (w * 0.05) as f32; // light comes slightly from above
+            layer.draw_pixmap(
+                0, 0, shade.as_ref(),
+                &PixmapPaint { blend_mode: BlendMode::SourceAtop, ..Default::default() },
+                Transform::from_translate(off_x, off_y),
+                None,
+            );
+        }
+
+        // Composite the (now form-shaded) character over its cast shadow.
         pixmap.draw_pixmap(0, 0, layer.as_ref(), &PixmapPaint::default(), Transform::identity(), None);
         return Ok(());
     }
