@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 64" width="140" height="64">
+  <defs>
+    <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="1" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- Крыса, вид сбоку, мордой ВПРАВО (по ходу движения). Плоский чёрный
+       силуэт с живой тушевой кромкой — фоновый актёр, «отвлекает глаз».
+       Точка привязки — лапы у низа viewBox (стоит на полу, не висит). -->
+  <g filter="url(#ink)" fill="#141410">
+    <!-- хвост: длинный тонкий, тянется влево-назад -->
+    <path d="M40 42 Q16 44 6 30 Q3 24 8 24 Q14 34 42 38 Z"/>
+    <!-- тело + голова, сходящая в морду вправо -->
+    <path d="M36 44
+             Q30 22 60 22
+             Q86 20 104 30
+             Q118 36 128 36
+             Q120 46 104 44
+             Q80 50 56 48
+             Q42 50 36 44 Z"/>
+    <!-- ухо -->
+    <circle cx="92" cy="24" r="7"/>
+    <!-- лапки: четыре коротких штриха к полу (низ viewBox) -->
+    <g stroke="#141410" stroke-width="5" stroke-linecap="round">
+      <line x1="52" y1="47" x2="50" y2="60"/>
+      <line x1="66" y1="48" x2="65" y2="61"/>
+      <line x1="86" y1="46" x2="88" y2="60"/>
+      <line x1="100" y1="44" x2="103" y2="59"/>
+    </g>
+  </g>
+  <!-- глаз-блик (светлая точка) -->
+  <circle cx="106" cy="33" r="2.2" fill="#d4d7cf"/>
+</svg>

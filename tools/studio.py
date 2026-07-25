@@ -280,6 +280,129 @@ def qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced):
     return hard, soft
 
 
+def lint_sync(prod):
+    """Статический линт синхрона голос↔рот. Возвращает (hard, soft).
+
+    Ловит класс бага «Бизнес-мышления»: у продакшена есть VO, но в сцене нет
+    машинных тегов //lip → синхрон завода не включается, голос кладётся по
+    рукописным таймкодам и разъезжается с движением рта. Проверка статическая
+    (без рендера/ключей), гоняется до сборки — падаем быстро.
+
+    Легитимно: //lip меньше, чем реплик VO (дикторские строки поверх
+    неговорящих планов — напр. титр). Нелегитимно: 0 тегов при говорящей сцене,
+    дубли, ссылка на несуществующую реплику."""
+    hard, soft = [], []
+    vo = prod.get("vo")
+    if not vo:
+        return hard, soft
+    anim = ROOT / prod.get("anim", "")
+    vo_path = ROOT / vo
+    if not anim.exists() or not vo_path.exists():
+        return hard, soft  # отсутствие файлов ловит step_render/step_voice
+    import re
+    text = anim.read_text(encoding="utf-8")
+    lips = [int(m.group(1)) for m in re.finditer(r"^\s*//lip\s+(\d+)\s*$", text, re.M)]
+    n_speaks = len(re.findall(r"^\s*\S+\s+speaks\s+for\s", text, re.M))
+    n_vo = len(re.findall(r"^\s*\|\s*VO-\d+\s*\|", vo_path.read_text(encoding="utf-8"), re.M))
+
+    if n_speaks > 0 and not lips:
+        hard.append(f"{prod['id']}: VO задан, но в сцене НЕТ ни одного //lip — "
+                    f"синхрон не включится (голос ляжет по таймкодам и разъедется)")
+    dups = {n for n in lips if lips.count(n) > 1}
+    if dups:
+        hard.append(f"{prod['id']}: дублируются //lip {sorted(dups)} — карта блоков сломается")
+    over = [n for n in lips if n_vo and n > n_vo]
+    if over:
+        hard.append(f"{prod['id']}: //lip {sorted(set(over))} ссылаются на реплики "
+                    f"сверх VO (в VO {n_vo} шт.)")
+    if lips and n_speaks > len(lips):
+        soft.append(f"{prod['id']}: {n_speaks - len(lips)} speaks-блок(ов) без //lip — "
+                    f"озвучатся флэпами без синхрона")
+    return hard, soft
+
+
+def lint_location(prod):
+    """Приёмщик локаций: проверяет сеты продакшена на «готовность». (hard, soft).
+
+    Пропускает локацию к съёмке, только если надписи в порядке:
+    - ЯЗЫК: текст на стенах — русский по умолчанию (кириллица). Латинские слова
+      (2+ буквы подряд) выносятся как замечание, если в манифесте не задан
+      "allow_latin": true (напр. бренд/аббревиатура). SOFT — на утверждение.
+    - ЧИТАЕМОСТЬ: оценка ширины строки не должна вылезать за кадр (обрезка
+      текста = нечитаемо). SOFT.
+    Геометрию берём из <text ...>content</text> сета."""
+    import re
+    hard, soft = [], []
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return hard, soft
+    allow_latin = bool(prod.get("allow_latin"))
+    text = anim.read_text(encoding="utf-8")
+    sets = re.findall(r'import\s+set\s+\w+\s+from\s+"([^"]+)"', text)
+    for rel in sets:
+        svg_path = (anim.parent / rel).resolve()
+        if not svg_path.exists():
+            continue
+        svg = svg_path.read_text(encoding="utf-8")
+        W = 1280
+        mv = re.search(r'viewBox="0 0 (\d+)', svg)
+        if mv:
+            W = int(mv.group(1))
+        for m in re.finditer(r'<text\b([^>]*)>(.*?)</text>', svg, re.S):
+            attrs, content = m.group(1), re.sub(r"\s+", " ", m.group(2)).strip()
+            if not content:
+                continue
+            # язык: латинское СЛОВО (2+ подряд) при default-русском
+            if not allow_latin and re.search(r"[A-Za-z]{2,}", content):
+                soft.append(f"{prod['id']}: {svg_path.name}: нерусский текст "
+                            f"«{content}» (русский по умолчанию; задай allow_latin)")
+            # читаемость: грубая ширина строки не должна вылезать за кадр
+            fs = float((re.search(r'font-size="([\d.]+)"', attrs) or [0, 12])[1])
+            x = float((re.search(r'\bx="([\d.]+)"', attrs) or [0, 0])[1])
+            approx_w = len(content) * fs * 0.6
+            if x + approx_w > W + 8:
+                soft.append(f"{prod['id']}: {svg_path.name}: строка «{content}» "
+                            f"вылезает за кадр (обрезка → нечитаемо)")
+    return hard, soft
+
+
+def run_planka(prod, engine, render_sec, final_mp4):
+    """Гонит tools/qc_metrics.py на эталоне и переводит результат в (hard, soft).
+
+    HARD-метрики планки (длина плана, скорость рендера, golden-frame diff) идут в
+    общий hard-бакет → под --strict роняют прогон (не взяли планку = красный).
+    loudness — soft (чинится нормализом, не дефект картинки). Голдены лежат в
+    tests/golden/<id>; их обновление — отдельной командой (--update-golden),
+    не на каждом прогоне, иначе diff бессмыслен."""
+    hard, soft = [], []
+    anim = ROOT / prod["anim"]
+    golden_dir = ROOT / "tests" / "golden" / prod["id"]
+    out_json = ROOT / "videos" / f".{prod['id']}.planka.json"
+    cmd = [sys.executable, str(TOOLS / "qc_metrics.py"),
+           "--anim", str(anim), "--engine", str(engine),
+           "--golden-dir", str(golden_dir),
+           "--render-sec", f"{render_sec:.1f}", "--json", str(out_json)]
+    if final_mp4 and Path(final_mp4).exists():
+        cmd += ["--final", str(final_mp4)]
+    try:
+        run(cmd)
+    except subprocess.CalledProcessError as e:
+        soft.append(f"{prod['id']}: планка не измерена ({e})")
+        return hard, soft
+    try:
+        data = json.loads(Path(out_json).read_text(encoding="utf-8"))
+    except Exception:
+        soft.append(f"{prod['id']}: планка — нет отчёта JSON")
+        return hard, soft
+    for name, m in data.get("metrics", {}).items():
+        if m.get("pass"):
+            continue
+        msg = (f"{prod['id']}: планка «{name}» = {m.get('value')} "
+               f"(цель {m.get('target', '?')})")
+        (hard if m.get("kind") == "hard" else soft).append(msg)
+    return hard, soft
+
+
 def build_one(prod, engine, videos_dir, voice_expected=False):
     pid = prod["id"]
     log(f"\n=== ПРОДАКШЕН: {pid} — {prod.get('desc', '')}")
@@ -295,7 +418,10 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
     parts_ok = step_voice_parts(prod, parts_dir)
     src_anim = step_prep_lipsync(prod, parts_dir)
     voice = step_assemble_voice(prod, src_anim, parts_dir, voice_mp3, engine) if parts_ok else None
+    import time as _time
+    _t0 = _time.monotonic()
     step_render(src_anim, engine, video_mp4)
+    render_sec = _time.monotonic() - _t0
     sfx = step_sfx(prod, video_mp4, videos_dir / f"{pid}-sfx.mp3")
     step_mux(prod, video_mp4, voice, sfx, final_mp4)
 
@@ -311,6 +437,15 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
 
     voice_produced = voice is not None and Path(voice).exists()
     hard, soft = qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced)
+
+    # Планка Фримена: на эталонных продакшенах (флаг "planka") гоняем машинные
+    # метрики Рубежа 2 — средняя длина плана / скорость рендера / golden-frame /
+    # громкость. Без этого правки движения проверяются только глазами.
+    if prod.get("planka"):
+        ph, ps = run_planka(prod, engine, render_sec, final_mp4)
+        hard += ph
+        soft += ps
+
     for e in hard:
         log(f"  [QC-HARD] {e}")
     for e in soft:
@@ -349,7 +484,23 @@ def main(argv):
     voice_expected = bool(
         os.environ.get("FREDERICK_ADMIN_TOKEN") or os.environ.get("FISH_AUDIO_API_KEY")
     )
+    # Пред-линт синхрона (статический, до рендера — падаем быстро на баге //lip).
     all_hard, all_soft = [], []
+    for prod in prods:
+        h, s = lint_sync(prod)
+        all_hard += h
+        all_soft += s
+        lh, ls = lint_location(prod)      # приёмщик локаций
+        all_hard += lh
+        all_soft += ls
+    for e in all_hard:
+        log(f"  [LINT-HARD] {e}")
+    for e in all_soft:
+        log(f"  [LINT-soft] {e}")
+    if all_hard and strict:
+        log("\nЛинт синхрона строгий → падаем ДО рендера (не жжём раннер на разъезде).")
+        return 1
+
     for prod in prods:
         h, s = build_one(prod, engine, videos_dir, voice_expected)
         all_hard += h

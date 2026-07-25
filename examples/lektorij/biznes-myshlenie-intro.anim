@@ -62,12 +62,14 @@ scene "street" (duration: 13s, set: street) {
     // СКЛЕЙКА → средний. VO-1: наивная вера.
     camera medium freeman
     freeman pose "talk"
+    //lip 1
     freeman speaks for 3.6s
     freeman pose "point"
     wait 0.4s
 
     // VO-2: «поэтому и не выходит» — жёстко, пауза.
     freeman pose "stern"
+    //lip 2
     freeman speaks for 2.6s
     wait 0.8s
 }
@@ -84,6 +86,7 @@ scene "pickup" (duration: 12s, set: street) {
     // Крупно: VO-3 «бизнес — это решённая чужая проблема».
     camera close-up freeman
     freeman pose "talk"
+    //lip 3
     freeman speaks for 3.8s
 
     // Поднимает «проблему» — она едет ему в руку; он выпрямляется с ней.
@@ -98,6 +101,7 @@ scene "pickup" (duration: 12s, set: street) {
         }
     }
     // VO-4: «то, мимо чего они прошли — для тебя куш».
+    //lip 4
     freeman speaks for 4.2s
     wait 0.6s
 }
@@ -114,6 +118,7 @@ scene "optics" (duration: 9s, set: street) {
     camera dutch 4
     freeman pose "talk"
     // VO-5: «разница не в удаче. В оптике. Ты смотришь не теми глазами».
+    //lip 5
     freeman speaks for 4.4s
     freeman pose "stern"
     // Пауза-давление: смотрит в тебя.
@@ -129,6 +134,7 @@ scene "punch" (duration: 8s, set: street) {
 
     // Сверхкруп, добивающая мысль в упор.
     camera extreme-close-up freeman
+    //lip 6
     freeman speaks for 4.0s
     wait 0.4s
 

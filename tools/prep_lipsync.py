@@ -49,11 +49,29 @@ def rhubarb_bin():
     return cand if cand and os.path.exists(cand) else None
 
 
+def gate_viseme(pose, prev_pose, dur, loud):
+    """Гейт виземы по РЕАЛЬНОЙ громкости (loud = local RMS / peak, 0..1).
+
+    Rhubarb метит рот по фонеме, без громкости → шёпот и крик дают один удар.
+    Здесь громкость рулит акцентом: тихий «широкий» слог оседает в скромный рот
+    (visB, без удара → жеста/сквоша нет — микро на шёпоте); громкий ударный слог
+    получает _acc (удар → жест+сквош по огибающей mp3 — размашисто на крике).
+    Средняя громкость оставляет базовый широкий рот (обычный акцент)."""
+    if pose in ("visC", "visD", "visE"):
+        if loud < 0.40:
+            return "visB"                      # тихо → скромный рот, БЕЗ удара
+        if (prev_pose in ("visA", "visB", "visF")
+                and dur >= 0.08 and loud >= 0.58):
+            return pose + "_acc"               # громкий ударный слог → удар
+    return pose
+
+
 def rhubarb_track(mp3):
     """mp3 → [(поза, длительность)] через фонемный Rhubarb (None при сбое).
 
     Rhubarb ест wav/ogg — конвертируем ffmpeg'ом; распознаватель phonetic
     языконезависим (наш текст — русский). Выход: JSON mouthCues (A..X).
+    Виземы гейтятся реальной огибающей громкости (gate_viseme).
     """
     rb = rhubarb_bin()
     if not rb or not shutil.which("ffmpeg"):
@@ -70,15 +88,26 @@ def rhubarb_track(mp3):
                 check=True, capture_output=True, text=True,
             )
         cues = json.loads(res.stdout).get("mouthCues", [])
+        # Огибающая громкости этой же реплики — гейт акцентов по силе голоса.
+        hop = 0.05
+        try:
+            env = extract_envelope(mp3, hop)
+            peak = max(env) or 1.0
+        except Exception:
+            env, peak = [], 1.0
+
+        def loud_at(t):
+            if not env:
+                return 1.0
+            return env[min(int(t / hop), len(env) - 1)] / peak
+
         track = []
         prev_pose = "visA"
         for c in cues:
-            dur = float(c["end"]) - float(c["start"])
+            start = float(c["start"])
+            dur = float(c["end"]) - start
             pose = RHUBARB_MAP.get(c["value"], "visA")
-            # Акцент: широкий рот (C/D/E) после тихой/закрытой виземы —
-            # атака ударного слога: рот + брови вверх + глаза шире (_acc).
-            if pose in ("visC", "visD", "visE") and prev_pose in ("visA", "visB", "visF") and dur >= 0.08:
-                pose = pose + "_acc"
+            pose = gate_viseme(pose, prev_pose, dur, loud_at(start + dur * 0.5))
             prev_pose = pose.replace("_acc", "")
             if track and track[-1][0] == pose:
                 track[-1] = (pose, track[-1][1] + dur)
