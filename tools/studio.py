@@ -280,6 +280,47 @@ def qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced):
     return hard, soft
 
 
+def lint_sync(prod):
+    """Статический линт синхрона голос↔рот. Возвращает (hard, soft).
+
+    Ловит класс бага «Бизнес-мышления»: у продакшена есть VO, но в сцене нет
+    машинных тегов //lip → синхрон завода не включается, голос кладётся по
+    рукописным таймкодам и разъезжается с движением рта. Проверка статическая
+    (без рендера/ключей), гоняется до сборки — падаем быстро.
+
+    Легитимно: //lip меньше, чем реплик VO (дикторские строки поверх
+    неговорящих планов — напр. титр). Нелегитимно: 0 тегов при говорящей сцене,
+    дубли, ссылка на несуществующую реплику."""
+    hard, soft = [], []
+    vo = prod.get("vo")
+    if not vo:
+        return hard, soft
+    anim = ROOT / prod.get("anim", "")
+    vo_path = ROOT / vo
+    if not anim.exists() or not vo_path.exists():
+        return hard, soft  # отсутствие файлов ловит step_render/step_voice
+    import re
+    text = anim.read_text(encoding="utf-8")
+    lips = [int(m.group(1)) for m in re.finditer(r"^\s*//lip\s+(\d+)\s*$", text, re.M)]
+    n_speaks = len(re.findall(r"^\s*\S+\s+speaks\s+for\s", text, re.M))
+    n_vo = len(re.findall(r"^\s*\|\s*VO-\d+\s*\|", vo_path.read_text(encoding="utf-8"), re.M))
+
+    if n_speaks > 0 and not lips:
+        hard.append(f"{prod['id']}: VO задан, но в сцене НЕТ ни одного //lip — "
+                    f"синхрон не включится (голос ляжет по таймкодам и разъедется)")
+    dups = {n for n in lips if lips.count(n) > 1}
+    if dups:
+        hard.append(f"{prod['id']}: дублируются //lip {sorted(dups)} — карта блоков сломается")
+    over = [n for n in lips if n_vo and n > n_vo]
+    if over:
+        hard.append(f"{prod['id']}: //lip {sorted(set(over))} ссылаются на реплики "
+                    f"сверх VO (в VO {n_vo} шт.)")
+    if lips and n_speaks > len(lips):
+        soft.append(f"{prod['id']}: {n_speaks - len(lips)} speaks-блок(ов) без //lip — "
+                    f"озвучатся флэпами без синхрона")
+    return hard, soft
+
+
 def run_planka(prod, engine, render_sec, final_mp4):
     """Гонит tools/qc_metrics.py на эталоне и переводит результат в (hard, soft).
 
@@ -398,7 +439,20 @@ def main(argv):
     voice_expected = bool(
         os.environ.get("FREDERICK_ADMIN_TOKEN") or os.environ.get("FISH_AUDIO_API_KEY")
     )
+    # Пред-линт синхрона (статический, до рендера — падаем быстро на баге //lip).
     all_hard, all_soft = [], []
+    for prod in prods:
+        h, s = lint_sync(prod)
+        all_hard += h
+        all_soft += s
+    for e in all_hard:
+        log(f"  [LINT-HARD] {e}")
+    for e in all_soft:
+        log(f"  [LINT-soft] {e}")
+    if all_hard and strict:
+        log("\nЛинт синхрона строгий → падаем ДО рендера (не жжём раннер на разъезде).")
+        return 1
+
     for prod in prods:
         h, s = build_one(prod, engine, videos_dir, voice_expected)
         all_hard += h
