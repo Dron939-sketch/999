@@ -1284,6 +1284,105 @@
           "part": "mouth_wide"
         }
       }
+    },
+    "visC_acc": {
+      "name": "visC_acc",
+      "transition_duration": 0.04,
+      "bones": {
+        "mouth": {
+          "part": "mouth_o"
+        },
+        "brow_left": {
+          "offset": [
+            -22,
+            -130
+          ]
+        },
+        "brow_right": {
+          "offset": [
+            22,
+            -130
+          ]
+        },
+        "eye_left": {
+          "scale": [
+            1.06,
+            1.1
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            1.06,
+            1.1
+          ]
+        }
+      }
+    },
+    "visD_acc": {
+      "name": "visD_acc",
+      "transition_duration": 0.04,
+      "bones": {
+        "mouth": {
+          "part": "mouth_wide"
+        },
+        "brow_left": {
+          "offset": [
+            -22,
+            -130
+          ]
+        },
+        "brow_right": {
+          "offset": [
+            22,
+            -130
+          ]
+        },
+        "eye_left": {
+          "scale": [
+            1.06,
+            1.1
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            1.06,
+            1.1
+          ]
+        }
+      }
+    },
+    "visE_acc": {
+      "name": "visE_acc",
+      "transition_duration": 0.04,
+      "bones": {
+        "mouth": {
+          "part": "mouth_e"
+        },
+        "brow_left": {
+          "offset": [
+            -22,
+            -130
+          ]
+        },
+        "brow_right": {
+          "offset": [
+            22,
+            -130
+          ]
+        },
+        "eye_left": {
+          "scale": [
+            1.06,
+            1.1
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            1.06,
+            1.1
+          ]
+        }
+      }
     }
   }
 }

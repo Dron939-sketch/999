@@ -455,8 +455,9 @@ fn render_rigged_character(
     // + gentle hand beat on top. This is the biggest step away from "a puppet
     // with a flapping mouth" toward Freeman's living delivery.
     let speak = speaking_intensity(&events, pose_time);
-    if speak > 0.001 {
-        apply_speaking_motion(&mut bone_states, t, speak);
+    let accent = speech_accent(&events, pose_time);
+    if speak > 0.001 || accent > 0.001 {
+        apply_speaking_motion(&mut bone_states, t, speak, accent);
     }
 
     // Follow-through: the head and hands ride an under-damped spring behind
@@ -475,8 +476,9 @@ fn render_rigged_character(
     }
     apply_squash_stretch(&mut bone_states_prev, velocity.0, velocity.1);
     let speak_prev = speaking_intensity(&events, pose_time - 1.0 / 12.0);
-    if speak_prev > 0.001 {
-        apply_speaking_motion(&mut bone_states_prev, t_prev, speak_prev);
+    let accent_prev = speech_accent(&events, pose_time - 1.0 / 12.0);
+    if speak_prev > 0.001 || accent_prev > 0.001 {
+        apply_speaking_motion(&mut bone_states_prev, t_prev, speak_prev, accent_prev);
     }
 
     // Compute the character's screen position.
@@ -949,7 +951,8 @@ fn speaking_intensity(events: &[&PoseEvent], t: f64) -> f64 {
         // Amplitude-weighted: lips overlays come from the real voice envelope
         // (gab = loud peak, talk = mid, idle/closed = pause), so body emphasis
         // lands on the actual accents of the phrase, not on a generic sine.
-        let w = match e.pose.as_str() {
+        let base = e.pose.trim_end_matches("_acc");
+        let w = match base {
             "gab" | "wide" | "visD" => 1.0,
             "talk" | "visC" | "visE" => 0.55,
             "visF" => 0.45,
@@ -964,33 +967,66 @@ fn speaking_intensity(events: &[&PoseEvent], t: f64) -> f64 {
     (s * 0.6).clamp(0.0, 1.0)
 }
 
+/// Accent impulse: fires on the ATTACK of a loud syllable (the start of a
+/// wide-open viseme) and decays exponentially over ~0.25s — the hand "strikes"
+/// on stressed syllables like a live speaker, instead of waving on a sine.
+/// The previous event must be quieter (a real onset, not a held vowel).
+fn speech_accent(events: &[&PoseEvent], t: f64) -> f64 {
+    let loud = |p: &str| matches!(p.trim_end_matches("_acc"), "gab" | "wide" | "visD" | "visC");
+    let mut a: f64 = 0.0;
+    for (i, e) in events.iter().enumerate() {
+        if !e.overlay || !loud(&e.pose) {
+            continue;
+        }
+        // Rising edge: previous overlay (if any) was not loud.
+        let prev_loud = i
+            .checked_sub(1)
+            .and_then(|j| events.get(j))
+            .map(|p| p.overlay && loud(&p.pose))
+            .unwrap_or(false);
+        if prev_loud {
+            continue;
+        }
+        let dt = t - e.time;
+        if (0.0..0.6).contains(&dt) {
+            a = a.max((-dt * 9.0).exp()); // резкий удар, спад ~0.25с
+        }
+    }
+    a
+}
+
 /// Layer "talking body" motion onto the held pose while speaking: the head nods
 /// and turns, the torso gives a little emphasis, and the left hand does a gentle
 /// beat gesture. Additive and subtle — the pose still reads, but the delivery is
 /// alive. `amt` (0..1) scales the whole thing by how strongly we're speaking.
-fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64) {
+fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64, accent: f64) {
     let tau = std::f64::consts::TAU;
     let nod = (t * 2.3 * tau).sin();
     for state in states.iter_mut() {
         match state.name.as_str() {
             "head" => {
                 state.rotation += nod * 2.2 * amt;
-                state.offset.1 += nod * 1.6 * amt;
+                // Accent: the head dips INTO the stressed syllable (down-beat).
+                state.offset.1 += nod * 1.6 * amt - accent * 2.6;
                 state.offset.0 += (t * 0.9 * tau).sin() * 1.2 * amt; // slight turn
             }
             "torso" => {
                 state.rotation += nod * 0.5 * amt;
                 // Speech pushes a wave through the spine: shoulders lean into
                 // the phrase while the pelvis stays planted.
-                state.bend += nod * 0.035 * amt;
+                state.bend += nod * 0.035 * amt + accent * 0.03;
             }
             "upper_arm_left" => {
-                // amt² — the beat gesture strikes on the loud accents only,
-                // instead of waving uniformly through the whole line.
-                state.rotation += (t * 1.7 * tau).sin() * (3.5 * amt + 4.5 * amt * amt);
+                // Gentle float while talking + a sharp STRIKE on the attack of
+                // each stressed syllable (the orator's downbeat).
+                state.rotation += (t * 1.7 * tau).sin() * 3.0 * amt + accent * 9.0;
             }
             "forearm_left" => {
-                state.rotation += (t * 1.7 * tau + 0.6).sin() * (5.0 * amt + 6.0 * amt * amt);
+                state.rotation += (t * 1.7 * tau + 0.6).sin() * 4.2 * amt + accent * 12.0;
+            }
+            "brow_left" | "brow_right" => {
+                // Brows pop up on the accent — the face acts the stress.
+                state.offset.1 -= accent * 4.0;
             }
             _ => {}
         }

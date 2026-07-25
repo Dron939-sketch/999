@@ -71,9 +71,15 @@ def rhubarb_track(mp3):
             )
         cues = json.loads(res.stdout).get("mouthCues", [])
         track = []
+        prev_pose = "visA"
         for c in cues:
             dur = float(c["end"]) - float(c["start"])
             pose = RHUBARB_MAP.get(c["value"], "visA")
+            # Акцент: широкий рот (C/D/E) после тихой/закрытой виземы —
+            # атака ударного слога: рот + брови вверх + глаза шире (_acc).
+            if pose in ("visC", "visD", "visE") and prev_pose in ("visA", "visB", "visF") and dur >= 0.08:
+                pose = pose + "_acc"
+            prev_pose = pose.replace("_acc", "")
             if track and track[-1][0] == pose:
                 track[-1] = (pose, track[-1][1] + dur)
             elif dur > 0:

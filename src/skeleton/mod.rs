@@ -368,6 +368,21 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
             }
             _ => {}
         }
+
+        // Auto-blink: deterministic, ~every 3.4–4.6s the lids snap shut for
+        // ~0.12s. Cel-swapped eyes (part overrides) are unaffected only in
+        // scale, so the blink reads on any eye drawing. Instant life on every
+        // character with zero scripting.
+        if state.name.starts_with("eye") {
+            // Shared cycle for both eyes (hash of the common prefix), so the
+            // lids close together.
+            let cycle = 3.4 + hash_unit(name_hash("eye")).abs() * 1.2;
+            let ph = time % cycle as f64;
+            if ph < 0.12 {
+                let k = (ph / 0.12 * PI).sin(); // 0→1→0
+                state.scale.1 *= (1.0 - 0.92 * k).max(0.06);
+            }
+        }
     }
 }
 

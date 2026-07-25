@@ -54,11 +54,13 @@ def parse_vo_table(md_path):
                 continue
             start = int(m.group(1)) * 60 + float(m.group(2))
             cell = m.group(3).strip()
-            # Убираем ремарки *(...)* и кавычки-ёлочки.
+            # Ремарка *(...)* — режиссура реплики (темп/громкость/шёпот).
+            rm = re.search(r"\*\(([^)]*)\)\*", cell)
+            remark = rm.group(1).lower() if rm else ""
             text = re.sub(r"\*\([^)]*\)\*", "", cell).strip()
             text = text.strip("«»«» \t")
             if text:
-                rows.append((start, text))
+                rows.append((start, text, remark))
     return rows
 
 
@@ -102,6 +104,39 @@ def _mp3_duration(path):
         return float(out.stdout.strip())
     except Exception:
         return 0.0
+
+
+def direct_line(mp3_bytes, remark):
+    """Режиссура реплики по ремарке из VO-таблицы: темп/громкость/шёпот.
+
+    Обрабатываем готовый mp3 ffmpeg'ом — API не трогаем. Ключевые слова:
+    шёпот/тихо → тише и мягче; медленно/с расстановкой → темп вниз;
+    жёстко/в упор → чуть громче и плотнее; финал → медленно и весомо.
+    """
+    if not remark or not shutil.which("ffmpeg"):
+        return mp3_bytes
+    af = []
+    r = remark
+    if "шёпот" in r or "шепот" in r or "тихо" in r:
+        af += ["volume=0.72", "lowpass=f=7000"]
+    if "медленн" in r or "расстановк" in r or "финал" in r or "весом" in r:
+        af.append("atempo=0.93")
+    if "жёстко" in r or "жестко" in r or "в упор" in r or "оскал" in r:
+        af += ["volume=1.18", "acompressor=threshold=-18dB:ratio=3:attack=5:release=80"]
+    if "спокойно" in r or "диктор" in r:
+        af.append("atempo=0.97")
+    if not af:
+        return mp3_bytes
+    with tempfile.TemporaryDirectory() as td:
+        src = os.path.join(td, "in.mp3"); dst = os.path.join(td, "out.mp3")
+        open(src, "wb").write(mp3_bytes)
+        try:
+            subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", src,
+                            "-af", ",".join(af), "-c:a", "libmp3lame", "-q:a", "3", dst],
+                           check=True)
+            return open(dst, "rb").read()
+        except subprocess.CalledProcessError:
+            return mp3_bytes
 
 
 def assemble_track(replicas, out_path, gap=0.15):
@@ -163,9 +198,11 @@ def main(argv):
     if args.parts_dir:
         os.makedirs(args.parts_dir, exist_ok=True)
     replicas = []
-    for i, (start, text) in enumerate(rows, start=1):
-        print(f"  {start:6.1f}s  {text[:60]}")
+    for i, (start, text, remark) in enumerate(rows, start=1):
+        tag = f" [{remark}]" if remark else ""
+        print(f"  {start:6.1f}s  {text[:56]}{tag}")
         audio = tts_via_frederick(text) if use_frederick else tts_fish_audio(text, api_key, voice_id)
+        audio = direct_line(audio, remark)
         replicas.append((start, audio))
         # Сохранить реплику отдельным файлом для липсинка (prep_lipsync).
         if args.parts_dir:
