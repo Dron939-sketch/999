@@ -38,8 +38,8 @@
                 14
               ],
               "scale": [
-                1.18,
-                1.22
+                1.30,
+                1.15
               ],
               "z_order": 5,
               "children": [
@@ -51,7 +51,7 @@
                     30
                   ],
                   "offset": [
-                    -24,
+                    -20,
                     -92
                   ],
                   "z_order": 6
@@ -64,7 +64,7 @@
                     30
                   ],
                   "offset": [
-                    24,
+                    20,
                     -92
                   ],
                   "z_order": 6
@@ -302,16 +302,16 @@
           "rotation": -6
         },
         "upper_arm_left": {
-          "rotation": 14
+          "rotation": 74
         },
         "forearm_left": {
-          "rotation": -8
+          "rotation": 16
         },
         "upper_arm_right": {
-          "rotation": -8
+          "rotation": -70
         },
         "forearm_right": {
-          "rotation": 6
+          "rotation": -14
         },
         "mouth": {
           "part": "mouth_smile"
