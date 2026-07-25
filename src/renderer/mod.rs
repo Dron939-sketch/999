@@ -1313,10 +1313,19 @@ fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64, accent: f64
                 // Accent: the head dips INTO the stressed syllable (down-beat).
                 state.offset.1 += nod * 0.8 * amt - accent * 2.6;
                 state.offset.0 += (t * 0.9 * tau).sin() * 0.6 * amt; // slight turn
+                // Squash-удар: яйцо-маска СЖИМАЕТСЯ на акценте и отпускает по мере
+                // спада импульса (accent 1→0 за ~0.25с) — вес рисованной подачи,
+                // а не жёсткая табличка. Объём ~сохранён (сжатие по Y ↔ ширина X).
+                state.scale.1 *= 1.0 - accent * 0.045;
+                state.scale.0 *= 1.0 + accent * 0.030;
             }
             "torso" => {
                 state.rotation += nod * 0.25 * amt;
                 state.bend += nod * 0.018 * amt + accent * 0.03;
+                // Корпус «оседает» под ударом акцента (приземление downbeat'а):
+                // squash по Y + разбег по X, восстанавливается со спадом импульса.
+                state.scale.1 *= 1.0 - accent * 0.060;
+                state.scale.0 *= 1.0 + accent * 0.040;
             }
             "upper_arm_left" => {
                 // Whisper float while talking + a sharp STRIKE on the stressed
