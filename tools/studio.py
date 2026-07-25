@@ -321,6 +321,51 @@ def lint_sync(prod):
     return hard, soft
 
 
+def lint_location(prod):
+    """Приёмщик локаций: проверяет сеты продакшена на «готовность». (hard, soft).
+
+    Пропускает локацию к съёмке, только если надписи в порядке:
+    - ЯЗЫК: текст на стенах — русский по умолчанию (кириллица). Латинские слова
+      (2+ буквы подряд) выносятся как замечание, если в манифесте не задан
+      "allow_latin": true (напр. бренд/аббревиатура). SOFT — на утверждение.
+    - ЧИТАЕМОСТЬ: оценка ширины строки не должна вылезать за кадр (обрезка
+      текста = нечитаемо). SOFT.
+    Геометрию берём из <text ...>content</text> сета."""
+    import re
+    hard, soft = [], []
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return hard, soft
+    allow_latin = bool(prod.get("allow_latin"))
+    text = anim.read_text(encoding="utf-8")
+    sets = re.findall(r'import\s+set\s+\w+\s+from\s+"([^"]+)"', text)
+    for rel in sets:
+        svg_path = (anim.parent / rel).resolve()
+        if not svg_path.exists():
+            continue
+        svg = svg_path.read_text(encoding="utf-8")
+        W = 1280
+        mv = re.search(r'viewBox="0 0 (\d+)', svg)
+        if mv:
+            W = int(mv.group(1))
+        for m in re.finditer(r'<text\b([^>]*)>(.*?)</text>', svg, re.S):
+            attrs, content = m.group(1), re.sub(r"\s+", " ", m.group(2)).strip()
+            if not content:
+                continue
+            # язык: латинское СЛОВО (2+ подряд) при default-русском
+            if not allow_latin and re.search(r"[A-Za-z]{2,}", content):
+                soft.append(f"{prod['id']}: {svg_path.name}: нерусский текст "
+                            f"«{content}» (русский по умолчанию; задай allow_latin)")
+            # читаемость: грубая ширина строки не должна вылезать за кадр
+            fs = float((re.search(r'font-size="([\d.]+)"', attrs) or [0, 12])[1])
+            x = float((re.search(r'\bx="([\d.]+)"', attrs) or [0, 0])[1])
+            approx_w = len(content) * fs * 0.6
+            if x + approx_w > W + 8:
+                soft.append(f"{prod['id']}: {svg_path.name}: строка «{content}» "
+                            f"вылезает за кадр (обрезка → нечитаемо)")
+    return hard, soft
+
+
 def run_planka(prod, engine, render_sec, final_mp4):
     """Гонит tools/qc_metrics.py на эталоне и переводит результат в (hard, soft).
 
@@ -445,6 +490,9 @@ def main(argv):
         h, s = lint_sync(prod)
         all_hard += h
         all_soft += s
+        lh, ls = lint_location(prod)      # приёмщик локаций
+        all_hard += lh
+        all_soft += ls
     for e in all_hard:
         log(f"  [LINT-HARD] {e}")
     for e in all_soft:

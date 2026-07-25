@@ -27,11 +27,17 @@ config {
 scene "cell" (duration: 16s, set: cell) {
     place freeman at (0.5, 0.80) facing front
     freeman scales 1.5
+    // ФОНОВЫЙ АКТЁР (кастинг): крыса пробегает по полу справа налево —
+    // заземлена (y на линии пола), двигается ТОЛЬКО по сценарию. Координаты —
+    // из prison-cell.surfaces.json. (Полная несуразная одиссея крысы
+    // пол→стена→окно+вейв — в плане улучшений: чиню семантику пути пропа.)
+    let rat = prop("rat", "../assets/props/rat.svg") at (1.15, 0.90)
+    rat scales 1.5
 
     // --- общий: клетка целиком, фигура в центре ---
     camera wide
     freeman pose "calm"
-    wait 1.4s
+    rat moves-to (-0.15, 0.90) over 1.7s
     freeman pose "think"
     wait 1.2s
 
