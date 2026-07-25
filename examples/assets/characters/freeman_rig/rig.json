@@ -38,8 +38,8 @@
                 14
               ],
               "scale": [
-                0.72,
-                0.88
+                1.08,
+                1.32
               ],
               "z_order": 5,
               "children": [
@@ -236,7 +236,7 @@
                 6
               ],
               "offset": [
-                -26,
+                -34,
                 190
               ],
               "z_order": 0,
@@ -264,7 +264,7 @@
                 6
               ],
               "offset": [
-                26,
+                34,
                 190
               ],
               "z_order": 0,
@@ -296,25 +296,25 @@
       "bones": {
         "head": {
           "offset": [
-            -9,
-            32
+            -4,
+            10
           ],
-          "rotation": -12
+          "rotation": -6
         },
         "upper_arm_left": {
-          "rotation": 108
+          "rotation": 14
         },
         "forearm_left": {
-          "rotation": -14
+          "rotation": -8
         },
         "upper_arm_right": {
-          "rotation": -46
+          "rotation": -8
         },
         "forearm_right": {
-          "rotation": 26
+          "rotation": 6
         },
         "mouth": {
-          "part": "mouth_closed"
+          "part": "mouth_smile"
         }
       }
     },
