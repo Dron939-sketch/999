@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" width="120" height="140">
+  <defs>
+    <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="1" seed="6" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- Крыса АНФАС: сидит столбиком, повернулась к камере, машет лапой и
+       подмигивает. Цел-подмена бегущей крысы у окна (несуразица). Точка привязки
+       — лапки у низа viewBox. Чёрный силуэт + светлые блики глаз/подмиг. -->
+  <g filter="url(#ink)" fill="#141410">
+    <!-- хвост колечком у основания -->
+    <path d="M60 120 Q92 122 96 104 Q98 96 92 96 Q90 110 60 112 Z"/>
+    <!-- тело столбиком -->
+    <path d="M40 128 Q34 78 60 74 Q86 78 80 128 Q60 134 40 128 Z"/>
+    <!-- голова -->
+    <circle cx="60" cy="52" r="30"/>
+    <!-- уши -->
+    <circle cx="38" cy="28" r="13"/>
+    <circle cx="82" cy="28" r="13"/>
+    <!-- поднятая ЛАПА (машет) — рука вверх-вправо + кисть -->
+    <path d="M78 86 Q104 70 108 44 Q109 38 104 40 Q100 64 74 78 Z"/>
+    <circle cx="106" cy="40" r="8"/>
+    <!-- вторая лапка у живота -->
+    <path d="M44 92 Q30 96 30 108 Q36 108 48 100 Z"/>
+    <!-- лапки-ножки у пола -->
+    <g stroke="#141410" stroke-width="6" stroke-linecap="round">
+      <line x1="50" y1="126" x2="47" y2="138"/>
+      <line x1="70" y1="126" x2="73" y2="138"/>
+    </g>
+  </g>
+  <!-- глаза: левый ОТКРЫТ (блик), правый ПОДМИГИВАЕТ (светлая дужка ^) -->
+  <circle cx="49" cy="50" r="4.5" fill="#d4d7cf"/>
+  <path d="M64 52 Q71 46 78 52" fill="none" stroke="#d4d7cf" stroke-width="3.2" stroke-linecap="round"/>
+  <!-- нос -->
+  <circle cx="60" cy="64" r="3" fill="#d4d7cf" opacity="0.5"/>
+</svg>
