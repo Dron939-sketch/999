@@ -1,2 +1,2 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 66" width="38" height="66"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="None" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
-<g filter="url(#ink)"><path d="M15 4 Q15 28 16 60 L23 60 Q25 28 23 4 Z" fill="#0e0e0e"/></g></svg>
+<g filter="url(#ink)"><path d="M13 4 Q13 28 14 60 L24 60 Q26 28 25 4 Z" fill="#0e0e0e"/></g></svg>
