@@ -20,6 +20,12 @@ pub struct RenderConfig {
     /// Contrast strength for the monochrome post-process. ~1.1 keeps gradient
     /// shading; crank it (2–4) for a stark 2-tone silhouette ("ink" Freeman).
     pub mono_contrast: f64,
+    /// Дуотон: 0 — чистое ч/б, 1 — полный перевод в двухцветную шкалу
+    /// (холодная тень ↔ тёплая бумага). Промежуточное между ч/б и цветом.
+    pub duotone: f64,
+    /// Мягкий объём: подсветка массы силуэта изнутри, 0 — плоская тушь.
+    /// Промежуточное между 2D-заливкой и 3D-формой.
+    pub volume: f64,
     /// Film-grain intensity (0 = off, ~0.3–0.7 = aged-film look).
     pub film_grain: f64,
     /// Vignette intensity (0 = off, ~0.3–0.6 = darkened edges).
@@ -79,6 +85,8 @@ impl Default for RenderConfig {
             background: Color::rgb(0, 0, 0),
             monochrome: false,
             mono_contrast: 1.12,
+            duotone: 0.0,
+            volume: 0.0,
             // Фримен-пресет по умолчанию: ни один ролик не стартует «стерильным»
             // (гладкий 24fps, чистая линия). Сцена может переопределить любой ключ.
             film_grain: 0.08,
@@ -133,6 +141,16 @@ impl RenderConfig {
                 "mono-contrast" => {
                     if let Value::Number(n) = &entry.value {
                         cfg.mono_contrast = *n;
+                    }
+                }
+                "duotone" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.duotone = n.clamp(0.0, 1.0);
+                    }
+                }
+                "volume" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.volume = n.clamp(0.0, 1.0);
                     }
                 }
                 "film-grain" => {

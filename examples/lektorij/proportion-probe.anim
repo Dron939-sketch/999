@@ -9,7 +9,7 @@ config {
     width: 1000
     height: 1000
     fps: 24
-    background: #ffffff
+    background: #e9eae4
     film-grain: 0.0
     vignette: 0.0
     line-boil: 0.0
