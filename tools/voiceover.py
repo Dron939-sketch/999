@@ -53,7 +53,11 @@ def parse_vo_table(md_path):
             if not m:
                 continue
             start = int(m.group(1)) * 60 + float(m.group(2))
-            cell = m.group(3).strip()
+            # Реплика — ВСЕГДА ПОСЛЕДНЯЯ колонка строки. Раньше бралось всё
+            # после таймкода, и служебные колонки («Бит формулы»: ХУК, ПУЛЕМЁТ,
+            # РАЗВОРОТ…) уезжали в синтез — их слышно в ролике. Режем по «|».
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            cell = cells[-1] if cells else m.group(3)
             # Ремарка *(...)* — режиссура реплики (темп/громкость/шёпот).
             rm = re.search(r"\*\(([^)]*)\)\*", cell)
             remark = rm.group(1).lower() if rm else ""
@@ -333,13 +337,13 @@ def main(argv):
         print(f"OK: {args.output}")
         return 0
 
-    # ПРЯМОЙ Fish — основной путь (решение студии): ключ в секретах CI, между
-    # заводом и синтезом нет посредника. Frederick остаётся ЗАПАСНЫМ путём —
-    # только если ключа Fish нет вовсе.
+    # ОСНОВНОЙ путь — Frederick (голос Фреди): решение студии, вернули после
+    # сравнения на слух. Прямой Fish (модель s2 + автопоиск голоса Фримена в
+    # аккаунте) остаётся ЗАПАСНЫМ — включается, если токена Frederick нет.
     api_key = os.environ.get("FISH_AUDIO_API_KEY")
-    use_frederick = (not api_key) and bool(FREDERICK_TOKEN)
-    if not api_key and not use_frederick:
-        sys.exit("Нет FISH_AUDIO_API_KEY (и нет запасного FREDERICK_ADMIN_TOKEN) — пропускаю озвучку.")
+    use_frederick = bool(FREDERICK_TOKEN)
+    if not use_frederick and not api_key:
+        sys.exit("Нет FREDERICK_ADMIN_TOKEN (и нет запасного FISH_AUDIO_API_KEY) — пропускаю озвучку.")
     voice_id = os.environ.get("FISH_AUDIO_VOICE_ID")
     voice_src = "запасной путь Frederick"
     if not use_frederick:
@@ -353,8 +357,8 @@ def main(argv):
         print("!!! ВНИМАНИЕ: голос Фримена не найден в аккаунте Fish — озвучка "
               "пойдёт СТОКОВЫМ голосом. Проверь `--list-voices`; если модель "
               "названа иначе, задай FISH_VOICE_NAME или FISH_AUDIO_VOICE_ID.")
-    src = (f"Frederick ({FREDERICK_BASE}) [запасной путь]" if use_frederick
-           else f"Fish НАПРЯМУЮ, модель {fish_model}, голос: {voice_src}")
+    src = (f"Frederick ({FREDERICK_BASE}) — голос Фреди" if use_frederick
+           else f"Fish [запасной], модель {fish_model}, голос: {voice_src}")
     print(f"Реплик: {len(rows)}; озвучка: {src}")
 
     if args.parts_dir:
