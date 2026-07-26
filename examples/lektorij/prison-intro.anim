@@ -33,10 +33,10 @@ scene "cell" (duration: 16s, set: cell) {
     // prison-cell.surfaces.json. Масштаб задаём ОДИН РАЗ при размещении (scale
     // как action в середине пути ломает трек пропа — проверено).
     let rat = prop("rat", "../assets/props/rat.svg") at (0.80, 0.66)
-    rat scales 1.3
+    rat scales 0.6
     // анфас-цел крысы для «машет+подмиг» у окна (подмена бегущей). Скрыт до реплики.
     let ratw = prop("rat_wave", "../assets/props/rat-wave.svg") at (0.42, 0.30)
-    ratw scales 1.3
+    ratw scales 0.55
     ratw hides
 
     // --- общий: клетка целиком, фигура в центре ---
