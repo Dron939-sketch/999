@@ -350,6 +350,21 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
     // head leads/counters it — reads as a living body holding its weight, not a
     // frozen puppet. Low frequency, so it's life, not the tremor we calmed.
     let shift = (time * 0.12 * tau).sin();
+    // АСИММЕТРИЯ ПОКОЯ (SIMILARITY.md §5): у оригинала фигура «развинченная» —
+    // маска всегда чуть наклонена, плечи не на одной высоте. Идеально ровная
+    // симметричная стойка читается как кукла, а не как рисунок. Постоянные
+    // (не колеблющиеся) смещения — характер позы, а не движение.
+    const HEAD_TILT: f64 = 0.055;      // ~3° наклон маски
+    const SHOULDER_SKEW: f64 = 0.035;  // одно плечо выше другого
+    for state in states.iter_mut() {
+        match state.name.as_str() {
+            "head" => state.rotation += HEAD_TILT,
+            "upper_arm_left" => state.rotation -= SHOULDER_SKEW,
+            "upper_arm_right" => state.rotation += SHOULDER_SKEW * 0.6,
+            _ => {}
+        }
+    }
+
     // "Animation boil": the jitter target updates ~5x/sec (held on fours), so a
     // static pose is never perfectly still — but calm, not a tremor.
     for state in states.iter_mut() {

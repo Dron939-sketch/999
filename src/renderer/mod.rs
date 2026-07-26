@@ -601,7 +601,14 @@ fn render_rigged_character(
     // turbulence filter.
     // Ink re-inks ONCE per held drawing, in lockstep with the pose snap: the
     // line looks "redrawn" each new drawing, and is pixel-stable across the hold.
-    let boil_seed = ((t / step_dt).round() as i64).rem_euclid(4096) as u32 + 1;
+    // ПЕРФ: seed входит в ключ кэша растра, а apply_boil меняет SVG — при 4096
+    // вариантах КАЖДЫЙ шаг рисунка растеризовал все части заново (на ECU это
+    // ~1с/кадр). Ограничиваем набор боил-вариантов: линия по-прежнему «пере-
+    // рисовывается» каждый held-кадр, но раскладка повторяется с периодом
+    // BOIL_VARIANTS шагов (~0.7с) — на глаз это шум, а кэш начинает попадать.
+    // Чёткость не страдает: растеризуем в полном разрешении, как и раньше.
+    const BOIL_VARIANTS: i64 = 8;
+    let boil_seed = ((t / step_dt).round() as i64).rem_euclid(BOIL_VARIANTS) as u32 + 1;
 
     // Two-phase draw. First walk the bone tree to compute each part's world
     // transform (parent transforms propagate to children), collecting drawables;
@@ -1534,6 +1541,28 @@ fn strip_ink_filter(svg: &[u8]) -> Vec<u8> {
     }
 }
 
+/// Убирает применение SVG-фильтров (`filter="url(#…)"`) из разметки части.
+/// Используется на крупных планах: фильтр `ink` там стоит дороже всего, а его
+/// работу (дрожь контура) всё равно делает пост-процесс кадра `apply_line_boil`.
+fn strip_svg_filters(svg: &[u8]) -> Vec<u8> {
+    let s = match std::str::from_utf8(svg) {
+        Ok(s) if s.contains("filter=\"url(") => s,
+        _ => return svg.to_vec(),
+    };
+    let mut out = String::with_capacity(s.len());
+    let mut rest = s;
+    while let Some(pos) = rest.find("filter=\"url(") {
+        out.push_str(&rest[..pos]);
+        let after = &rest[pos + "filter=\"url(".len()..];
+        match after.find('"') {
+            Some(q) => rest = &after[q + 1..],
+            None => { rest = ""; break; }
+        }
+    }
+    out.push_str(rest);
+    out.into_bytes()
+}
+
 fn apply_boil(svg: &[u8], seed: u32) -> Vec<u8> {
     let s = match std::str::from_utf8(svg) {
         Ok(s) if s.contains("seed=\"") => s,
@@ -1595,7 +1624,20 @@ fn render_bone_part(
         {
             p
         } else {
-            let svg_data = apply_boil(&part.svg_data, boil_seed);
+            // ПЕРФ на крупных планах: SVG-фильтр `ink` (feTurbulence +
+            // displacement) считается по всей площади растра, а на ECU часть
+            // растеризуется в тысячи пикселей — замер показал ~26% времени
+            // кадра только на голове. При этом дрожание контура У НАС ЕСТЬ И
+            // БЕЗ него: apply_line_boil работает пост-процессом по кадру.
+            // Поэтому выше порога снимаем фильтр — чёткость не страдает
+            // (растеризация по-прежнему в полном разрешении), а крупные планы
+            // перестают стоить секунду на кадр.
+            const FILTER_MAX_PX: u32 = 900;
+            let svg_data = if render_w.max(render_h) > FILTER_MAX_PX {
+                strip_svg_filters(&part.svg_data)
+            } else {
+                apply_boil(&part.svg_data, boil_seed)
+            };
             let tree = parse_svg_cached(&svg_data)?;
             let mut pm = Pixmap::new(render_w, render_h)
                 .ok_or_else(|| AnimError::Render("failed to create part pixmap".into()))?;
