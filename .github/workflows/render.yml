@@ -29,6 +29,11 @@ jobs:
       - name: Install ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
+      # Питон-зависимости планки (qc_metrics: golden-diff по SSIM). Без них
+      # измеритель падал на `import numpy` — прогон писал «планка не измерена».
+      - name: Python deps (планка)
+        run: python3 -m pip install --quiet --upgrade numpy pillow
+
       # Rhubarb Lip Sync — фонемный липсинк (рот артикулирует слоги, не флэпы).
       # Бинарь кэшируется; при недоступности завод честно падает на RMS-огибающую.
       - name: Rhubarb cache
@@ -73,7 +78,7 @@ jobs:
           # переопределить выбор конкретным id.
           FISH_AUDIO_VOICE_ID: ${{ secrets.FISH_AUDIO_VOICE_ID }}
           FISH_VOICE_NAME: ${{ secrets.FISH_VOICE_NAME }}
-          # Модель Fish (s1 — флагман, живее интонация). Пусто = s1 с откатом.
+          # Модель Fish (s2 — новее и живее s1). Пусто = s2 с откатом.
           FISH_AUDIO_MODEL: ${{ secrets.FISH_AUDIO_MODEL }}
           # Запасной путь — Frederick (используется, ТОЛЬКО если ключа Fish нет).
           FREDERICK_ADMIN_TOKEN: ${{ secrets.FREDERICK_ADMIN_TOKEN != '' && secrets.FREDERICK_ADMIN_TOKEN || secrets.ADMIN_TOKEN }}

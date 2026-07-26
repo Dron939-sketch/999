@@ -148,7 +148,8 @@ def resolve_voice_id(api_key, explicit):
 def tts_fish_audio(text, api_key, voice_id=None, model=None):
     """Одна реплика → mp3-байты через Fish Audio (прямой путь завода).
 
-    `model` — заголовок выбора движка Fish (s1 — флагман, живее интонация).
+    `model` — заголовок выбора движка Fish (s2 — новее и живее s1; решение
+    студии). Если модель недоступна на аккаунте, откат на дефолтную.
     Если модель недоступна на аккаунте, запрос повторяется без заголовка,
     чтобы озвучка не падала целиком.
     """
@@ -347,7 +348,7 @@ def main(argv):
     rows = parse_vo_table(args.script)
     if not rows:
         sys.exit(f"В {args.script} не найдено реплик VO-таблицы.")
-    fish_model = os.environ.get("FISH_AUDIO_MODEL") or "s1"
+    fish_model = os.environ.get("FISH_AUDIO_MODEL") or "s2"
     if not use_frederick and not voice_id:
         print("!!! ВНИМАНИЕ: голос Фримена не найден в аккаунте Fish — озвучка "
               "пойдёт СТОКОВЫМ голосом. Проверь `--list-voices`; если модель "
