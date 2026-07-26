@@ -41,6 +41,12 @@
    "id": "lekciya-2-frejd",
    "desc": "Пилот лекции (Фрейд, курс «Теории личности»)",
    "anim": "examples/lektorij/lekciya-2-frejd-psihodinamika.anim"
+  },
+  {
+   "id": "snova-zhivoj-intro",
+   "desc": "Подводка к курсу «Снова живой»: выключенный человек — дышит, но не живёт. Пустое поле (канон), персонаж по SIMILARITY, режиссура по HOLLYWOOD.",
+   "anim": "examples/lektorij/snova-zhivoj-intro.anim",
+   "vo": "examples/lektorij/snova-zhivoj-intro-VO.md"
   }
  ]
 }
