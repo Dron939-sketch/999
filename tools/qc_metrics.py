@@ -64,6 +64,92 @@ FRAMING_RE = re.compile(
 )
 
 
+# --- гейт режиссуры (HOLLYWOOD.md, Волна 1) ---------------------------------
+# Ловит «слабую режиссуру» машинно: фронтальная статика по центру, отсутствие
+# флэшей и ракурсов, провал правил внимания 3–7–21.
+FLASH_RE = re.compile(r'pose\s+"flash_', re.IGNORECASE)
+ANGLE_RE = re.compile(r"^\s*camera\s+(angle\s+(high|low)|pitch|dutch)\b", re.IGNORECASE)
+MOVE_RE = re.compile(r"^\s*camera\s+(zoom-to|pan-to|shake)\b", re.IGNORECASE)
+COMPOSITION_RE = re.compile(r"moves-to\s*\(\s*([\d.]+)\s*,", re.IGNORECASE)
+HOOK_MAX_S = 7.0       # правило 7с: первый удар голосом
+TURN_WINDOW = (14.0, 28.0)  # правило 21с: перелом внутри окна
+FLASH_PER_30S_MIN = 1.0
+SHOT_KINDS_MIN = 3
+
+
+def directing_metrics(anim_path, engine, duration):
+    """Статический разбор сценария + фактические времена речи из движка.
+
+    Возвращает dict метрик режиссуры (kind=soft — предупреждения, не рушат
+    прогон; поднимаются до hard, когда все продакшены подтянуты).
+    """
+    text = Path(anim_path).read_text(encoding="utf-8")
+    code_lines = [ln.split("//", 1)[0] for ln in text.splitlines()]
+    # флэш-кадры (гротескная морда на 0.08с между битами)
+    flashes = len(FLASH_RE.findall(text))
+    per30 = flashes * 30.0 / duration if duration else 0.0
+    # разнообразие планов: размеры + вертикальные ракурсы + движения камеры
+    kinds = set()
+    for ln in code_lines:
+        m = FRAMING_RE.match(ln)
+        if m:
+            kinds.add(m.group(1).lower())
+        if ANGLE_RE.match(ln):
+            kinds.add("angle")
+        if MOVE_RE.match(ln):
+            kinds.add("motion")
+    # композиция: доля кадров, где фигура НЕ по центру (x вне 0.45..0.55)
+    xs = [float(x) for x in COMPOSITION_RE.findall(" ".join(code_lines))]
+    off_center = [x for x in xs if x < 0.45 or x > 0.55]
+    off_ratio = len(off_center) / len(xs) if xs else 0.0
+    # правила внимания по фактическому таймлайну движка
+    hook_s, turn_s = None, None
+    try:
+        out = subprocess.run([str(engine), "timing", str(anim_path)],
+                             capture_output=True, text=True, timeout=120)
+        blocks = json.loads(out.stdout).get("blocks", [])
+        if blocks:
+            hook_s = blocks[0]["start"]
+            turn_s = next((b["start"] for b in blocks
+                           if TURN_WINDOW[0] <= b["start"] <= TURN_WINDOW[1]), None)
+    except Exception:
+        pass
+
+    m = {}
+    m["flash_rate"] = {
+        "value": round(per30, 2), "target": f">= {FLASH_PER_30S_MIN}",
+        "unit": "флэш/30с", "count": flashes, "kind": "soft",
+        "pass": per30 >= FLASH_PER_30S_MIN - 1e-9,
+    }
+    m["shot_variety"] = {
+        "value": len(kinds), "target": f">= {SHOT_KINDS_MIN}",
+        "unit": "типов планов/ракурсов", "kinds": sorted(kinds), "kind": "soft",
+        "pass": len(kinds) >= SHOT_KINDS_MIN,
+    }
+    m["off_center"] = {
+        "value": round(off_ratio, 2), "target": ">= 0.4",
+        "unit": "доля смещённых композиций", "n": len(xs), "kind": "soft",
+        "pass": off_ratio >= 0.4 - 1e-9 if xs else False,
+    }
+    if hook_s is not None:
+        m["hook_7s"] = {
+            "value": round(hook_s, 2), "target": f"<= {HOOK_MAX_S}",
+            "unit": "с до первой реплики", "kind": "soft",
+            "pass": hook_s <= HOOK_MAX_S + 1e-9,
+        }
+        # правило 21с применимо только к роликам, длиннее окна перелома
+        short = duration < TURN_WINDOW[1]
+        m["turn_21s"] = {
+            "value": round(turn_s, 2) if turn_s else ("н/п" if short else "нет"),
+            "target": f"реплика в {TURN_WINDOW[0]:.0f}–{TURN_WINDOW[1]:.0f}с",
+            "unit": "перелом", "kind": "soft",
+            "pass": turn_s is not None or short,
+            **({"note": "ролик короче окна перелома — правило не применяется"}
+               if short and turn_s is None else {}),
+        }
+    return m
+
+
 def log(msg):
     print(msg, flush=True)
 
@@ -259,6 +345,9 @@ def evaluate(anim, engine, golden_dir, final=None, render_sec=None,
                 "value": "silent", "kind": "soft", "pass": True,
                 "note": "нет звука (TTS не подключён) — громкость не мерилась",
             }
+
+        # --- 5) режиссура (HOLLYWOOD.md, Волна 1) ---------------------------
+        results["metrics"].update(directing_metrics(anim, engine, duration))
 
     return results
 

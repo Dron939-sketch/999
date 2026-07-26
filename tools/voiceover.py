@@ -76,22 +76,40 @@ def tts_via_frederick(text):
         return resp.read()
 
 
-def tts_fish_audio(text, api_key, voice_id=None):
-    """Одна реплика → mp3-байты через Fish Audio."""
+def tts_fish_audio(text, api_key, voice_id=None, model=None):
+    """Одна реплика → mp3-байты через Fish Audio (прямой путь завода).
+
+    `model` — заголовок выбора движка Fish (s1 — флагман, живее интонация).
+    Если модель недоступна на аккаунте, запрос повторяется без заголовка,
+    чтобы озвучка не падала целиком.
+    """
     payload = {"text": text, "format": "mp3"}
     if voice_id:
         payload["reference_id"] = voice_id
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+    if model:
+        headers["model"] = model
     req = urllib.request.Request(
-        API_URL,
-        data=json.dumps(payload).encode("utf-8"),
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
-        method="POST",
+        API_URL, data=json.dumps(payload).encode("utf-8"),
+        headers=headers, method="POST",
     )
-    with urllib.request.urlopen(req, timeout=120) as resp:
-        return resp.read()
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            return resp.read()
+    except Exception as e:
+        if not model:
+            raise
+        print(f"    [fish] модель {model} не принята ({e}) — повтор на дефолтной")
+        headers.pop("model", None)
+        req = urllib.request.Request(
+            API_URL, data=json.dumps(payload).encode("utf-8"),
+            headers=headers, method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            return resp.read()
 
 
 def _mp3_duration(path):
@@ -234,16 +252,21 @@ def main(argv):
         print(f"OK: {args.output}")
         return 0
 
-    use_frederick = bool(FREDERICK_TOKEN)
+    # ПРЯМОЙ Fish — основной путь (решение студии): ключ в секретах CI, между
+    # заводом и синтезом нет посредника. Frederick остаётся ЗАПАСНЫМ путём —
+    # только если ключа Fish нет вовсе.
     api_key = os.environ.get("FISH_AUDIO_API_KEY")
-    if not use_frederick and not api_key:
-        sys.exit("Нет ни FREDERICK_ADMIN_TOKEN, ни FISH_AUDIO_API_KEY — пропускаю озвучку.")
+    use_frederick = (not api_key) and bool(FREDERICK_TOKEN)
+    if not api_key and not use_frederick:
+        sys.exit("Нет FISH_AUDIO_API_KEY (и нет запасного FREDERICK_ADMIN_TOKEN) — пропускаю озвучку.")
     voice_id = os.environ.get("FISH_AUDIO_VOICE_ID")
 
     rows = parse_vo_table(args.script)
     if not rows:
         sys.exit(f"В {args.script} не найдено реплик VO-таблицы.")
-    src = f"Frederick ({FREDERICK_BASE})" if use_frederick else f"Fish напрямую (голос {voice_id or 'по умолчанию'})"
+    fish_model = os.environ.get("FISH_AUDIO_MODEL") or "s1"
+    src = (f"Frederick ({FREDERICK_BASE}) [запасной путь]" if use_frederick
+           else f"Fish НАПРЯМУЮ, модель {fish_model}, голос {voice_id or 'по умолчанию'}")
     print(f"Реплик: {len(rows)}; озвучка: {src}")
 
     if args.parts_dir:
@@ -252,7 +275,8 @@ def main(argv):
     for i, (start, text, remark) in enumerate(rows, start=1):
         tag = f" [{remark}]" if remark else ""
         print(f"  {start:6.1f}s  {text[:56]}{tag}")
-        audio = tts_via_frederick(text) if use_frederick else tts_fish_audio(text, api_key, voice_id)
+        audio = (tts_via_frederick(text) if use_frederick
+                 else tts_fish_audio(text, api_key, voice_id, fish_model))
         audio = direct_line(audio, remark)
         replicas.append((start, audio))
         # Сохранить реплику отдельным файлом для липсинка (prep_lipsync).
