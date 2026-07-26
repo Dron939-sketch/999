@@ -20,7 +20,7 @@ config {
     background: #1a1c1a
     on-twos: 2
     line-boil: 0.6
-    film-grain: 0.30
+    film-grain: 0.16
     vignette: 0.55
     light-angle: 58
     form-shadow: 0.42

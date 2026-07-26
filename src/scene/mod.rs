@@ -53,6 +53,17 @@ pub struct RenderConfig {
     /// Собственная (form) тень на персонаже: сторона, обратная свету, темнеет
     /// жёсткой cel-гранью — объём на маске. 0 = выкл, ~0.35–0.5 — норма.
     pub form_shadow: f64,
+    /// Плёночные мелочи (MELOCHI.md, группа А) — «снято», а не «сгенерировано».
+    /// Мерцание экспозиции: яркость кадра плавает (0 = выкл, 0.02–0.06 норма).
+    pub film_flicker: f64,
+    /// Гуляние кадра в лентопротяжном тракте: микро-сдвиг всего кадра
+    /// (0 = выкл, 0.5–1.5 = доли пикселя … пара пикселей).
+    pub gate_weave: f64,
+    /// Царапины плёнки: вертикальные линии, живут несколько кадров
+    /// (0 = выкл, 0.15–0.4 — редкие, читаются подсознательно).
+    pub film_scratch: f64,
+    /// Пылинки/ворс на кадре, каждый кадр новые (0 = выкл, 0.3–1.0).
+    pub film_dust: f64,
     /// Rim/контровой свет: светлая тёплая кромка на освещённой стороне силуэта.
     /// Отделяет фигуру от фона (киношный бэклайт). 0 = выкл, ~0.4–0.7 — норма.
     /// Парой к form-shadow (свет+тень) даёт объём. Ключ сцены: `rim-light`.
@@ -80,6 +91,10 @@ impl Default for RenderConfig {
             light_angle: 35.0,
             form_shadow: 0.0,
             rim_light: 0.0,
+            film_flicker: 0.0,
+            gate_weave: 0.0,
+            film_scratch: 0.0,
+            film_dust: 0.0,
         }
     }
 }
@@ -164,6 +179,18 @@ impl RenderConfig {
                     if let Value::Number(n) = &entry.value {
                         cfg.form_shadow = *n;
                     }
+                }
+                "film-flicker" | "flicker" => {
+                    if let Value::Number(n) = &entry.value { cfg.film_flicker = *n; }
+                }
+                "gate-weave" | "weave" => {
+                    if let Value::Number(n) = &entry.value { cfg.gate_weave = *n; }
+                }
+                "film-scratch" | "scratch" => {
+                    if let Value::Number(n) = &entry.value { cfg.film_scratch = *n; }
+                }
+                "film-dust" | "dust" => {
+                    if let Value::Number(n) = &entry.value { cfg.film_dust = *n; }
                 }
                 "rim-light" | "rim" => {
                     if let Value::Number(n) = &entry.value {
