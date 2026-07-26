@@ -58,29 +58,37 @@
               "children": [
                 {
                   "name": "eye_left",
-                  "part": "blank",
+                  "part": "eye_left",
                   "pivot": [
                     24,
                     30
                   ],
                   "offset": [
-                    -18,
-                    -72
+                    -21,
+                    -96
                   ],
-                  "z_order": 6
+                  "z_order": 6,
+                  "scale": [
+                    0.62,
+                    0.62
+                  ]
                 },
                 {
                   "name": "eye_right",
-                  "part": "blank",
+                  "part": "eye_right",
                   "pivot": [
                     24,
                     30
                   ],
                   "offset": [
-                    25,
-                    -72
+                    21,
+                    -96
                   ],
-                  "z_order": 6
+                  "z_order": 6,
+                  "scale": [
+                    0.62,
+                    0.62
+                  ]
                 },
                 {
                   "name": "mouth",
@@ -870,9 +878,6 @@
       "name": "turn34",
       "transition_duration": 0.22,
       "bones": {
-        "head": {
-          "part": "head_34"
-        },
         "eye_left": {
           "offset": [
             -4,
@@ -1169,17 +1174,14 @@
       "name": "hero_rage",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_rage"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_angry_left"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_angry_right"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_teeth"
         }
       }
     },
@@ -1187,17 +1189,14 @@
       "name": "hero_shock",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_shock"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_o"
         }
       }
     },
@@ -1205,17 +1204,14 @@
       "name": "hero_laugh",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_laugh"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_arc"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_arc"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_bliss"
         }
       }
     },
@@ -1223,17 +1219,14 @@
       "name": "hero_sly",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_sly"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_angry_right"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_m"
         }
       }
     },
@@ -1241,17 +1234,14 @@
       "name": "hero_skeptic",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_skeptic"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_angry_left"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_frown"
         }
       }
     },
@@ -1259,17 +1249,14 @@
       "name": "hero_wow",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_wow"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_wide"
         }
       }
     },
@@ -1277,17 +1264,14 @@
       "name": "hero_scream",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_scream"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_bliss"
         }
       }
     },
@@ -1295,17 +1279,14 @@
       "name": "hero_dead",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_dead"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_closed"
         }
       }
     },
@@ -1352,17 +1333,14 @@
       "name": "flash_rage",
       "transition_duration": 0.0,
       "bones": {
-        "head": {
-          "part": "face_rage"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_angry_left"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_angry_right"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_teeth"
         }
       }
     },
@@ -1370,17 +1348,14 @@
       "name": "flash_scream",
       "transition_duration": 0.0,
       "bones": {
-        "head": {
-          "part": "face_scream"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_bliss"
         }
       }
     },
@@ -1388,17 +1363,14 @@
       "name": "flash_dead",
       "transition_duration": 0.0,
       "bones": {
-        "head": {
-          "part": "face_dead"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_closed"
         }
       }
     },
@@ -1406,17 +1378,14 @@
       "name": "flash_shock",
       "transition_duration": 0.0,
       "bones": {
-        "head": {
-          "part": "face_shock"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_o"
         }
       }
     },
@@ -1874,17 +1843,14 @@
       "name": "hero_grin",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_grin"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_teeth"
         }
       }
     },
@@ -1892,17 +1858,14 @@
       "name": "flash_grin",
       "transition_duration": 0.0,
       "bones": {
-        "head": {
-          "part": "face_grin"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_teeth"
         }
       }
     },
@@ -1910,17 +1873,14 @@
       "name": "hero_xeyes",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_xeyes"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_wave"
         }
       }
     },
@@ -1928,17 +1888,14 @@
       "name": "flash_xeyes",
       "transition_duration": 0.0,
       "bones": {
-        "head": {
-          "part": "face_xeyes"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_wave"
         }
       }
     },
@@ -1946,17 +1903,14 @@
       "name": "hero_pupils",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_pupils"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_gore"
         }
       }
     },
@@ -1964,17 +1918,14 @@
       "name": "flash_pupils",
       "transition_duration": 0.0,
       "bones": {
-        "head": {
-          "part": "face_pupils"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_gore"
         }
       }
     },
@@ -1982,17 +1933,14 @@
       "name": "hero_disgust",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_disgust"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_angry_left"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_angry_right"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_wave"
         }
       }
     },
@@ -2000,17 +1948,14 @@
       "name": "flash_disgust",
       "transition_duration": 0.0,
       "bones": {
-        "head": {
-          "part": "face_disgust"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_angry_left"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_angry_right"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_wave"
         }
       }
     },
@@ -2018,17 +1963,14 @@
       "name": "hero_manic",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_manic"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_teeth"
         }
       }
     },
@@ -2036,17 +1978,14 @@
       "name": "flash_manic",
       "transition_duration": 0.0,
       "bones": {
-        "head": {
-          "part": "face_manic"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_shock"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_squint"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_teeth"
         }
       }
     },
@@ -2054,17 +1993,14 @@
       "name": "hero_wink",
       "transition_duration": 0.1,
       "bones": {
-        "head": {
-          "part": "face_wink"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_arc"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_right"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_smile"
         }
       }
     },
@@ -2072,17 +2008,14 @@
       "name": "flash_wink",
       "transition_duration": 0.0,
       "bones": {
-        "head": {
-          "part": "face_wink"
-        },
         "eye_left": {
-          "part": "blank"
+          "part": "eye_arc"
         },
         "eye_right": {
-          "part": "blank"
+          "part": "eye_right"
         },
         "mouth": {
-          "part": "blank"
+          "part": "mouth_smile"
         }
       }
     },
