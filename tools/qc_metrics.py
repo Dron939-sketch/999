@@ -52,8 +52,14 @@ from PIL import Image
 SHOT_LEN_MAX = 3.5          # с, средняя длина плана
 RENDER_SEC_PER_15S_MAX = 180.0  # с рендера на 15с ролика
 SSIM_MIN = 0.985           # порог golden (детерминированный PNG → почти 1.0)
-LUFS_TARGET = -16.0        # веб-речь
-LUFS_TOL = 3.0             # ±окно (−19..−13)
+# Замер оригинала (_9 октября 2024.mp4): I = -12.6 LUFS, LRA = 6.6 LU,
+# истинный пик +0.1 dBFS. Наше первое сведение шло на -29.5 LUFS при LRA 26.4 —
+# на 17 дБ тише и вчетверо шире по разбросу. Цель ставим по оригиналу, но с
+# запасом под кодек: платформы всё равно нормализуют примерно к -14 LUFS.
+LUFS_TARGET = -14.0
+LUFS_TOL = 2.5             # окно -16.5..-11.5
+LRA_MAX = 9.0              # у оригинала 6.6 LU; шире — реплики то тонут, то бьют
+TRUE_PEAK_MAX = -0.2       # выше нуля — клиппинг, это брак, а не вкусовщина
 GOLDEN_SAMPLES = 6         # сколько ключевых кадров сравнивать
 
 # framing-камеры = каты (в отличие от pan/zoom/shake/dutch/pitch/angle — движения
@@ -238,18 +244,27 @@ def has_audio(path):
         return False
 
 
-def integrated_lufs(path):
-    """EBU R128 integrated loudness через ffmpeg ebur128. None если не вышло."""
+def loudness_stats(path):
+    """EBU R128: (I в LUFS, LRA в LU, истинный пик в dBFS). None, если не вышло.
+
+    Меряем три величины, а не одну: громкость говорит, слышно ли ролик вообще,
+    LRA — ровно ли он сведён (у оригинала 6.6 LU, у нас было 26.4 и половина
+    реплик тонула), пик — есть ли клиппинг.
+    """
     try:
         p = subprocess.run(
             ["ffmpeg", "-nostats", "-i", str(path), "-filter_complex",
-             "ebur128", "-f", "null", "-"],
+             "ebur128=peak=true", "-f", "null", "-"],
             capture_output=True, text=True)
-        # ffmpeg пишет сводку "Integrated loudness: I: -XX.X LUFS" в stderr
-        matches = re.findall(r"I:\s*(-?\d+(?:\.\d+)?)\s*LUFS", p.stderr)
-        return float(matches[-1]) if matches else None
+        tail = p.stderr[p.stderr.rfind("Summary"):] if "Summary" in p.stderr else p.stderr
+        i = re.findall(r"I:\s*(-?\d+(?:\.\d+)?)\s*LUFS", tail)
+        lra = re.findall(r"LRA:\s*(-?\d+(?:\.\d+)?)\s*LU", tail)
+        pk = re.findall(r"Peak:\s*(-?\d+(?:\.\d+)?)\s*dBFS", tail)
+        return (float(i[-1]) if i else None,
+                float(lra[-1]) if lra else None,
+                float(pk[-1]) if pk else None)
     except Exception:
-        return None
+        return (None, None, None)
 
 
 def evaluate(anim, engine, golden_dir, final=None, render_sec=None,
@@ -327,18 +342,29 @@ def evaluate(anim, engine, golden_dir, final=None, render_sec=None,
 
         # --- 4) loudness (мягкая) ------------------------------------------
         if final and Path(final).exists() and has_audio(final):
-            lufs = integrated_lufs(final)
+            lufs, lra, peak = loudness_stats(final)
             if lufs is None:
                 results["metrics"]["loudness"] = {
                     "value": "n/a", "kind": "soft", "pass": True,
                     "note": "ebur128 не дал результата",
                 }
             else:
-                ok = abs(lufs - LUFS_TARGET) <= LUFS_TOL
                 results["metrics"]["loudness"] = {
                     "value": round(lufs, 1),
                     "target": f"{LUFS_TARGET}±{LUFS_TOL} LUFS",
-                    "unit": "LUFS", "kind": "soft", "pass": ok,
+                    "unit": "LUFS", "kind": "soft",
+                    "pass": abs(lufs - LUFS_TARGET) <= LUFS_TOL,
+                }
+            if lra is not None:
+                results["metrics"]["loud_range"] = {
+                    "value": round(lra, 1), "target": f"<= {LRA_MAX} LU",
+                    "unit": "LU", "kind": "soft", "pass": lra <= LRA_MAX,
+                }
+            if peak is not None:
+                # клиппинг — не вкусовщина, поэтому HARD
+                results["metrics"]["true_peak"] = {
+                    "value": round(peak, 1), "target": f"<= {TRUE_PEAK_MAX} dBFS",
+                    "unit": "dBFS", "kind": "hard", "pass": peak <= TRUE_PEAK_MAX,
                 }
         else:
             results["metrics"]["loudness"] = {
