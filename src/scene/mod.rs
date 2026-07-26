@@ -53,6 +53,10 @@ pub struct RenderConfig {
     /// Собственная (form) тень на персонаже: сторона, обратная свету, темнеет
     /// жёсткой cel-гранью — объём на маске. 0 = выкл, ~0.35–0.5 — норма.
     pub form_shadow: f64,
+    /// Rim/контровой свет: светлая тёплая кромка на освещённой стороне силуэта.
+    /// Отделяет фигуру от фона (киношный бэклайт). 0 = выкл, ~0.4–0.7 — норма.
+    /// Парой к form-shadow (свет+тень) даёт объём. Ключ сцены: `rim-light`.
+    pub rim_light: f64,
 }
 
 impl Default for RenderConfig {
@@ -75,6 +79,7 @@ impl Default for RenderConfig {
             cast_shadow: 0.0,
             light_angle: 35.0,
             form_shadow: 0.0,
+            rim_light: 0.0,
         }
     }
 }
@@ -158,6 +163,11 @@ impl RenderConfig {
                 "form-shadow" => {
                     if let Value::Number(n) = &entry.value {
                         cfg.form_shadow = *n;
+                    }
+                }
+                "rim-light" | "rim" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.rim_light = *n;
                     }
                 }
                 _ => {}

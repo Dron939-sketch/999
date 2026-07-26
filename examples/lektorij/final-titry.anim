@@ -1,0 +1,49 @@
+// ФИНАЛЬНЫЕ ТИТРЫ ЛЕКТОРИЯ.
+// По брифу: без текста в начале — ТВ-помехи, и сразу врывается картинка;
+// затем ШТАМПУЕТСЯ прямоугольная печать «МАТЕРИАЛЫ ЛЕКЦИЙ ПОДГОТОВИЛ
+// МЕЙСТЕР А.Ю.» (красная штемпельная — в цвет фишки-луча постера). Холд, чёрное.
+// Постер — NanoBanana по промту студии (examples/assets/images/).
+
+import character freeman from "../assets/characters/freeman_rig"
+import set titry from "../assets/sets/lektorij-final.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #111110
+    film-grain: 0.22
+    vignette: 0.35
+}
+
+scene "titry" (duration: 7s, set: titry) {
+    // Фримен за кадром — сцена держится на постере (сам он нарисован на нём).
+    place freeman at (0.5, 3.0) facing front
+    // ТВ-помехи → врывается картинка (никакого текста/фейдов в начале).
+    // ПЕРВЫМ statement: hides/shows двигают курсор времени — транзишн после
+    // них уезжает с t=0 (проверено рендером).
+    transition static 0.45s
+
+    // печать: ЗА КАДРОМ до удара (hides в t=0 может лагнуть кадр — надёжнее
+    // держать её вне кадра и телепортировать перед штампом)
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 1.6s
+
+    // удар: телепорт в кадр, появляется большой (у самой камеры) и вжимается
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6
+    stamp rotates -7
+    stamp scales 0.94 over 0.22s ease-in
+    // отдача-сквош оттиска
+    stamp scales 1.0 over 0.1s ease-out
+    // микро-докрут как у ручного штампа
+    stamp rotates -4 over 0.12s
+
+    // холд на прочтение
+    wait 3.4s
+
+    // уход в чёрное — фирменная точка
+    transition fade-black 0.8s
+}

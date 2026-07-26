@@ -1,14 +1,16 @@
 // =============================================================================
-//  ТЮРЬМА УМА — интро (регистр «выйти из клетки»).
-//  Локация НАРИСОВАНА (prison-cell.svg, плоский тушевый стиль по LOCATION_STYLE.md),
-//  не фото — персонаж читается на графичном поле. Три речевых удара:
-//  завязка → поворот → добивание. //lip 1..3 → синхрон по конструкции с озвучкой
-//  (examples/lektorij/prison-intro-VO.md). Локально немой (флэпы).
-//  Рендер: cargo run --release -- render examples/lektorij/prison-intro.anim -o prison.mp4
+//  ТЮРЬМА УМА — продающее интро курса «Перепрошивка» (meysternlp.ru).
+//  Задача: зритель захотел пройти курс. Метафора: камера = прошивка, которую
+//  записали до того, как ты мог выбирать; выход = стать редактором своего кода.
+//  Локация НАРИСОВАНА (prison-cell.svg, LOCATION_STYLE.md). Старт БЕЗ текста:
+//  ТВ-помехи → врывается клетка. Четыре речевых удара: завязка → поворот
+//  (прошивка) → выход-мысль → CTA курса. //lip 1..4 → синхрон по конструкции
+//  (examples/lektorij/prison-intro-VO.md). Финал: титры-постер + печать Мейстера.
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
 import set cell from "../assets/sets/prison-cell.svg"
+import set titry from "../assets/sets/lektorij-final.svg"
 
 config {
     width: 1280
@@ -22,9 +24,14 @@ config {
     light-angle: 58
     form-shadow: 0.42
     cast-shadow: 0.30
+    rim-light: 0.5
 }
 
-scene "cell" (duration: 16s, set: cell) {
+scene "cell" (duration: 28s, set: cell) {
+    // БЕЗ текста в начале: ТВ-помехи, из них врывается клетка (первым
+    // statement — hides/shows двигают курсор времени, транзишн уедет).
+    transition static 0.4s
+
     place freeman at (0.5, 0.80) facing front
     freeman scales 1.5
     // ФОНОВЫЙ АКТЁР + НЕСУРАЗИЦА (фирменный приём): крыса вылезает из унитаза,
@@ -32,10 +39,10 @@ scene "cell" (duration: 16s, set: cell) {
     // prison-cell.surfaces.json. Масштаб задаём ОДИН РАЗ при размещении (scale
     // как action в середине пути ломает трек пропа — проверено).
     let rat = prop("rat", "../assets/props/rat.svg") at (0.80, 0.66)
-    rat scales 1.3
+    rat scales 0.42
     // анфас-цел крысы для «машет+подмиг» у окна (подмена бегущей). Скрыт до реплики.
     let ratw = prop("rat_wave", "../assets/props/rat-wave.svg") at (0.42, 0.30)
-    ratw scales 1.3
+    ratw scales 0.39
     ratw hides
 
     // --- общий: клетка целиком, фигура в центре ---
@@ -73,22 +80,58 @@ scene "cell" (duration: 16s, set: cell) {
     freeman pose "point"
     wait 0.4s
 
-    // --- крупно: поворот мысли (VO-2: «стен нет, дверь открыта») ---
+    // --- крупно: поворот-прошивка (VO-2: «камеру построили в твоей голове») ---
     camera close-up freeman
     freeman pose "talk"
     //lip 2
-    freeman speaks for 4.8s
+    freeman speaks for 6.2s
     freeman pose "stern"
     wait 0.5s
 
-    // --- сверхкруп: добивание в упор (VO-3: «выход — это мысль... выйди») ---
+    // --- сверхкруп: выход-мысль (VO-3: «выход — это мысль») ---
     camera extreme-close-up freeman
     freeman pose "talk"
     //lip 3
-    freeman speaks for 4.8s
+    freeman speaks for 4.2s
     freeman pose "grotesque"
-    wait 0.6s
+    wait 0.5s
+
+    // --- средний, руки раскрыты: CTA курса (VO-4: «Перепрошивка... или сиди») ---
+    camera medium freeman
+    freeman pose "talk"
+    //lip 4
+    freeman speaks for 7.6s
+    freeman pose "gesture_open"
+    wait 0.5s
     freeman pose "calm"
-    wait 0.6s
-    transition fade-black 1.3s
+    wait 0.5s
+}
+
+// ФИНАЛЬНЫЕ ТИТРЫ: шум-склейка на стыке → постер Лектория врывается →
+// штампуется печать «МАТЕРИАЛЫ ЛЕКЦИЙ ПОДГОТОВИЛ МЕЙСТЕР А.Ю.» → чёрное.
+scene "titry" (duration: 6.5s, set: titry) {
+    transition static 0.45s
+
+    place freeman at (0.5, 3.0) facing front
+    // печать за кадром до удара (hides в t=0 может лагнуть кадр)
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 1.4s
+
+    // удар: телепорт в кадр, влетает крупной и вжимается в бумагу
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6
+    stamp rotates -7
+    stamp scales 0.94 over 0.22s ease-in
+    // отдача-сквош оттиска
+    stamp scales 1.0 over 0.1s ease-out
+    // микро-докрут как у ручного штампа
+    stamp rotates -4 over 0.12s
+
+    // холд на прочтение
+    wait 3.2s
+
+    // уход в чёрное — фирменная точка
+    transition fade-black 0.8s
 }
