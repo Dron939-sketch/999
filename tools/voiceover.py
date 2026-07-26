@@ -101,6 +101,50 @@ def list_fish_voices(api_key):
           "Secrets and variables → Actions).")
 
 
+def fetch_fish_voices(api_key):
+    """Список моделей голоса аккаунта: [(id, название), ...] (пусто при сбое)."""
+    try:
+        req = urllib.request.Request(
+            "https://api.fish.audio/model?self=true&page_size=50",
+            headers={"Authorization": f"Bearer {api_key}"}, method="GET",
+        )
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except Exception as e:  # noqa: BLE001 — молча падать нельзя, но и рушить нечего
+        print(f"    [fish] список голосов недоступен ({e})")
+        return []
+    items = data.get("items", data if isinstance(data, list) else [])
+    out = []
+    for it in items:
+        vid = it.get("_id") or it.get("id")
+        title = it.get("title") or it.get("name") or ""
+        if vid:
+            out.append((vid, title))
+    return out
+
+
+def resolve_voice_id(api_key, explicit):
+    """Голос по умолчанию — ФРИМЕН, без всяких id в секретах.
+
+    Порядок: явный FISH_AUDIO_VOICE_ID → поиск в аккаунте модели, название
+    которой содержит «freeman»/«фримен» (регистр не важен; искомое имя можно
+    сменить через FISH_VOICE_NAME) → первая своя модель аккаунта → сток Fish.
+    """
+    if explicit:
+        return explicit, "секрет FISH_AUDIO_VOICE_ID"
+    wanted = (os.environ.get("FISH_VOICE_NAME") or "freeman").lower()
+    voices = fetch_fish_voices(api_key)
+    if not voices:
+        return None, "сток Fish (список голосов не получен)"
+    aliases = [wanted, "фримен", "фриман", "freeman"]
+    for vid, title in voices:
+        low = (title or "").lower()
+        if any(a in low for a in aliases):
+            return vid, f"свой голос «{title}» (найден по названию)"
+    vid, title = voices[0]
+    return vid, f"первый свой голос «{title}» (Фримена в аккаунте не нашлось)"
+
+
 def tts_fish_audio(text, api_key, voice_id=None, model=None):
     """Одна реплика → mp3-байты через Fish Audio (прямой путь завода).
 
@@ -296,18 +340,20 @@ def main(argv):
     if not api_key and not use_frederick:
         sys.exit("Нет FISH_AUDIO_API_KEY (и нет запасного FREDERICK_ADMIN_TOKEN) — пропускаю озвучку.")
     voice_id = os.environ.get("FISH_AUDIO_VOICE_ID")
+    voice_src = "запасной путь Frederick"
+    if not use_frederick:
+        voice_id, voice_src = resolve_voice_id(api_key, voice_id)
 
     rows = parse_vo_table(args.script)
     if not rows:
         sys.exit(f"В {args.script} не найдено реплик VO-таблицы.")
     fish_model = os.environ.get("FISH_AUDIO_MODEL") or "s1"
     if not use_frederick and not voice_id:
-        print("!!! ВНИМАНИЕ: FISH_AUDIO_VOICE_ID не задан — Fish озвучит "
-              "СТОКОВЫМ голосом, а не голосом Фримена. Найди id командой "
-              "`python3 tools/voiceover.py --list-voices` и положи его в секрет "
-              "FISH_AUDIO_VOICE_ID.")
+        print("!!! ВНИМАНИЕ: голос Фримена не найден в аккаунте Fish — озвучка "
+              "пойдёт СТОКОВЫМ голосом. Проверь `--list-voices`; если модель "
+              "названа иначе, задай FISH_VOICE_NAME или FISH_AUDIO_VOICE_ID.")
     src = (f"Frederick ({FREDERICK_BASE}) [запасной путь]" if use_frederick
-           else f"Fish НАПРЯМУЮ, модель {fish_model}, голос {voice_id or 'по умолчанию'}")
+           else f"Fish НАПРЯМУЮ, модель {fish_model}, голос: {voice_src}")
     print(f"Реплик: {len(rows)}; озвучка: {src}")
 
     if args.parts_dir:

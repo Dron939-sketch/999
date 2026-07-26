@@ -68,7 +68,11 @@ jobs:
           # ОСНОВНОЙ путь озвучки — Fish НАПРЯМУЮ (решение студии): ключ в
           # секретах репозитория, между заводом и синтезом нет посредника.
           FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
+          # Голос: по умолчанию завод САМ находит в аккаунте модель с
+          # «freeman»/«фримен» в названии. Секрет нужен, только чтобы
+          # переопределить выбор конкретным id.
           FISH_AUDIO_VOICE_ID: ${{ secrets.FISH_AUDIO_VOICE_ID }}
+          FISH_VOICE_NAME: ${{ secrets.FISH_VOICE_NAME }}
           # Модель Fish (s1 — флагман, живее интонация). Пусто = s1 с откатом.
           FISH_AUDIO_MODEL: ${{ secrets.FISH_AUDIO_MODEL }}
           # Запасной путь — Frederick (используется, ТОЛЬКО если ключа Fish нет).
