@@ -44,7 +44,7 @@ animdsl/
 │   │   │   └── *.svg        # legacy character SVGs
 │   │   └── sets/            # 5 SVG backgrounds
 │   ├── the-last-barista.anim # primary demo (508 lines, 15 custom poses)
-│   ├── the-signal-v3.anim   # secondary demo
+│   ├── lektorij/            # продакшены Лектория (см. tools/productions.json)
 │   └── *.mp4                 # rendered outputs
 └── frames/                   # temp frame output
 ```
