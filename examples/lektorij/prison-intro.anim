@@ -23,7 +23,7 @@ config {
     film-grain: 0.16
     vignette: 0.55
     light-angle: 58
-    form-shadow: 0.42
+    form-shadow: 0.0        // канон: лицо Фримена ПЛОСКОЕ, без объёма
     cast-shadow: 0.30
     rim-light: 0.5
 }

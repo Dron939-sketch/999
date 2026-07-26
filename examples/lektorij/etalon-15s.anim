@@ -34,7 +34,7 @@ config {
     // свет и тень: объём на маске (form) + силуэт на полу (cast), свет справа
     cast-shadow: 0.40
     light-angle: 34
-    form-shadow: 0.38
+    form-shadow: 0.0        // канон: лицо Фримена ПЛОСКОЕ, без объёма
     ground-shadow: 1
 }
 
