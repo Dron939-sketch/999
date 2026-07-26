@@ -244,6 +244,21 @@ def has_audio(path):
         return False
 
 
+def audio_format(path):
+    """Частота, каналы, кодек звуковой дорожки. (None, None, None) если нет."""
+    try:
+        p = subprocess.run(
+            ["ffprobe", "-v", "error", "-select_streams", "a",
+             "-show_entries", "stream=sample_rate,channels,codec_name",
+             "-of", "csv=p=0", str(path)], capture_output=True, text=True)
+        parts = p.stdout.strip().split("\n")[0].split(",")
+        if len(parts) < 3:
+            return (None, None, None)
+        return (parts[0], int(parts[1]), int(parts[2]))
+    except Exception:
+        return (None, None, None)
+
+
 def loudness_stats(path):
     """EBU R128: (I в LUFS, LRA в LU, истинный пик в dBFS). None, если не вышло.
 
@@ -359,6 +374,16 @@ def evaluate(anim, engine, golden_dir, final=None, render_sec=None,
                 results["metrics"]["loud_range"] = {
                     "value": round(lra, 1), "target": f"<= {LRA_MAX} LU",
                     "unit": "LU", "kind": "soft", "pass": lra <= LRA_MAX,
+                }
+            codec, rate, ch = audio_format(final)
+            if rate is not None:
+                # 96 кГц AAC ffmpeg читает, а плееры и браузеры — нет, и ролик
+                # выглядит НЕМЫМ при формально исправной дорожке. Так и вышло:
+                # loudnorm внутри работает на 192 кГц и без явного указания
+                # тянул частоту в выход. HARD — это молчащий ролик у зрителя.
+                results["metrics"]["audio_rate"] = {
+                    "value": f"{codec} {rate}Гц {ch}к", "target": "<= 48000 Гц",
+                    "kind": "hard", "pass": rate <= 48000,
                 }
             if peak is not None:
                 # клиппинг — не вкусовщина, поэтому HARD
