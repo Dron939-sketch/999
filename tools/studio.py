@@ -99,8 +99,8 @@ def step_voice(prod, out_voice, parts_dir):
         log("  [озвучка] VO-сценарий не задан — немой ролик.")
         return None
     if not (os.environ.get("FREDERICK_ADMIN_TOKEN") or os.environ.get("FISH_AUDIO_API_KEY")):
-        log("  [озвучка] нет FREDERICK_ADMIN_TOKEN и FISH_AUDIO_API_KEY — озвучка "
-            "пропущена (добавьте секрет в Settings → Secrets and variables → Actions).")
+        log("  [озвучка] нет FISH_AUDIO_API_KEY (и запасного FREDERICK_ADMIN_TOKEN) — "
+            "озвучка пропущена (секрет: Settings → Secrets and variables → Actions).")
         return None
     vo_path = ROOT / vo
     if not vo_path.exists():
@@ -113,7 +113,7 @@ def step_voice(prod, out_voice, parts_dir):
         return out_voice
     except subprocess.CalledProcessError as e:
         log(f"  [озвучка] не удалась ({e}) — оставляю немой ролик. "
-            "Проверь FREDERICK_ADMIN_TOKEN и /api/tts/video/health.")
+            "Проверь FISH_AUDIO_API_KEY / FISH_AUDIO_VOICE_ID (прямой путь Fish).")
         return None
 
 
