@@ -1,0 +1,28 @@
+// ЗАМЕРНАЯ ЛИНЕЙКА. Не ролик — измерительный стенд.
+// Персонаж целиком, фронт, поза покоя, белое поле, БЕЗ пост-эффектов
+// (зерно/виньетка/боил искажают порог «чернил» и ломают замер).
+// Кадр отсюда идёт в tools/proportions.py и сверяется со спекой NanoBanana.
+
+import character freeman from "../assets/characters/freeman_rig"
+
+config {
+    width: 1000
+    height: 1000
+    fps: 24
+    background: #ffffff
+    film-grain: 0.0
+    vignette: 0.0
+    line-boil: 0.0
+    on-twos: 1
+    form-shadow: 0.0
+    ground-shadow: 0.0
+    rim-light: 0.0
+}
+
+scene "probe" (duration: 1s) {
+    place freeman at (0.5, 0.20) facing front
+    freeman scales 0.90
+    freeman pose "calm"
+    camera wide
+    wait 1s
+}

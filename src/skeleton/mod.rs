@@ -354,8 +354,10 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
     // маска всегда чуть наклонена, плечи не на одной высоте. Идеально ровная
     // симметричная стойка читается как кукла, а не как рисунок. Постоянные
     // (не колеблющиеся) смещения — характер позы, а не движение.
-    const HEAD_TILT: f64 = 0.055;      // ~3° наклон маски
-    const SHOULDER_SKEW: f64 = 0.035;  // одно плечо выше другого
+    const HEAD_TILT: f64 = 2.5;        // градусы: наклон маски (было 0.055 —
+                                       // значение писали как радианы, а поле
+                                       // в ГРАДУСАХ, и наклона фактически не было)
+    const SHOULDER_SKEW: f64 = 1.2;    // градусы: одно плечо выше другого
     for state in states.iter_mut() {
         match state.name.as_str() {
             "head" => state.rotation += HEAD_TILT,

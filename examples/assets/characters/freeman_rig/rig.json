@@ -38,8 +38,8 @@
                 26
               ],
               "scale": [
-                1.42,
-                1.44
+                1.05,
+                1.06
               ],
               "z_order": 5,
               "children": [
@@ -51,8 +51,8 @@
                     30
                   ],
                   "offset": [
-                    -19,
-                    -86
+                    -18,
+                    -72
                   ],
                   "z_order": 6
                 },
@@ -64,8 +64,8 @@
                     30
                   ],
                   "offset": [
-                    19,
-                    -86
+                    25,
+                    -72
                   ],
                   "z_order": 6
                 },
@@ -77,8 +77,8 @@
                     8
                   ],
                   "offset": [
-                    0,
-                    -34
+                    10,
+                    -44
                   ],
                   "z_order": 6
                 },
@@ -131,10 +131,10 @@
                 12
               ],
               "offset": [
-                -70,
+                -40,
                 40
               ],
-              "rotation": 26,
+              "rotation": 18,
               "z_order": 4,
               "children": [
                 {
@@ -148,7 +148,7 @@
                     0,
                     78
                   ],
-                  "rotation": -12,
+                  "rotation": -8,
                   "z_order": 4,
                   "children": [
                     {
@@ -162,10 +162,22 @@
                         0,
                         102
                       ],
-                      "z_order": 4
+                      "z_order": 4,
+                      "scale": [
+                        1.25,
+                        1.25
+                      ]
                     }
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0
                   ]
                 }
+              ],
+              "scale": [
+                1.0,
+                1.0
               ]
             },
             {
@@ -176,10 +188,10 @@
                 12
               ],
               "offset": [
-                70,
+                40,
                 40
               ],
-              "rotation": -26,
+              "rotation": -17,
               "z_order": 4,
               "children": [
                 {
@@ -193,7 +205,7 @@
                     0,
                     78
                   ],
-                  "rotation": 12,
+                  "rotation": 8,
                   "z_order": 4,
                   "children": [
                     {
@@ -222,10 +234,22 @@
                           ],
                           "z_order": 3
                         }
+                      ],
+                      "scale": [
+                        1.25,
+                        1.25
                       ]
                     }
+                  ],
+                  "scale": [
+                    1.0,
+                    1.0
                   ]
                 }
+              ],
+              "scale": [
+                1.0,
+                1.0
               ]
             },
             {
@@ -237,7 +261,7 @@
               ],
               "offset": [
                 -34,
-                165
+                118
               ],
               "z_order": 0,
               "children": [
@@ -252,8 +276,16 @@
                     0,
                     104
                   ],
-                  "z_order": 0
+                  "z_order": 0,
+                  "scale": [
+                    0.9,
+                    1.8
+                  ]
                 }
+              ],
+              "scale": [
+                0.9,
+                1.8
               ]
             },
             {
@@ -265,7 +297,7 @@
               ],
               "offset": [
                 34,
-                165
+                118
               ],
               "z_order": 0,
               "children": [
@@ -280,14 +312,22 @@
                     0,
                     104
                   ],
-                  "z_order": 0
+                  "z_order": 0,
+                  "scale": [
+                    0.9,
+                    1.8
+                  ]
                 }
+              ],
+              "scale": [
+                0.9,
+                1.8
               ]
             }
           ],
           "scale": [
-            1.75,
-            1.15
+            1.33,
+            1.45
           ]
         }
       ]
@@ -306,25 +346,25 @@
           "rotation": -6
         },
         "upper_arm_left": {
-          "rotation": 40
+          "rotation": 18
         },
         "forearm_left": {
-          "rotation": 16
+          "rotation": 9
         },
         "hand_left": {
-          "rotation": -18
+          "rotation": -10
         },
         "upper_arm_right": {
-          "rotation": -38
+          "rotation": -17
         },
         "forearm_right": {
-          "rotation": -16
+          "rotation": -8
         },
         "mouth": {
-          "part": "mouth_smile",
+          "part": "mouth_closed",
           "scale": [
-            2.1,
-            1.7
+            1.0,
+            1.0
           ]
         }
       }
@@ -410,16 +450,16 @@
       "transition_duration": 0.4,
       "bones": {
         "upper_arm_left": {
-          "rotation": 26
+          "rotation": 16
         },
         "forearm_left": {
-          "rotation": -12
+          "rotation": -7
         },
         "upper_arm_right": {
-          "rotation": -26
+          "rotation": -15
         },
         "forearm_right": {
-          "rotation": 12
+          "rotation": 7
         },
         "mouth": {
           "part": "mouth_closed"
@@ -1743,35 +1783,35 @@
         "thigh_left": {
           "offset": [
             -44,
-            165
+            118
           ],
           "rotation": 7,
           "scale": [
-            1.22,
-            1.24
+            1.04,
+            2.07
           ]
         },
         "shin_left": {
           "scale": [
-            1.2,
-            1.24
+            1.04,
+            2.07
           ]
         },
         "thigh_right": {
           "offset": [
             44,
-            165
+            118
           ],
           "rotation": -7,
           "scale": [
-            1.22,
-            1.24
+            1.04,
+            2.07
           ]
         },
         "shin_right": {
           "scale": [
-            1.2,
-            1.24
+            1.04,
+            2.07
           ]
         }
       }
@@ -1796,14 +1836,14 @@
         },
         "upper_arm_left": {
           "offset": [
-            -84,
+            -58,
             40
           ],
           "rotation": 34
         },
         "upper_arm_right": {
           "offset": [
-            84,
+            58,
             40
           ],
           "rotation": -34
@@ -1811,35 +1851,35 @@
         "thigh_left": {
           "offset": [
             -22,
-            165
+            118
           ],
           "rotation": -5,
           "scale": [
-            0.8,
-            0.8
+            0.72,
+            1.44
           ]
         },
         "shin_left": {
           "scale": [
-            0.8,
-            0.8
+            0.72,
+            1.44
           ]
         },
         "thigh_right": {
           "offset": [
             22,
-            165
+            118
           ],
           "rotation": 5,
           "scale": [
-            0.8,
-            0.8
+            0.72,
+            1.44
           ]
         },
         "shin_right": {
           "scale": [
-            0.8,
-            0.8
+            0.72,
+            1.44
           ]
         }
       }
