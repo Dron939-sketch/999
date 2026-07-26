@@ -86,6 +86,37 @@ def synth(kind, path):
         _run(["-f", "lavfi", "-i", "anoisesrc=d=8:c=brown:a=0.5",
               "-af", "lowpass=f=300,volume=0.16,afade=t=in:d=0.6",
               path])
+    elif kind == "tvnoise":
+        # ТВ-ШУМ: белый шум с резким обрывом — фирменная склейка оригинала.
+        _run(["-f", "lavfi", "-i", "anoisesrc=d=0.4:c=white:a=0.9",
+              "-af", "highpass=f=600,volume=0.55,afade=t=out:st=0.3:d=0.1",
+              path])
+    elif kind == "thud":
+        # ГЛУХОЙ УДАР (дверь, засов, штамп по бумаге): низкий импульс + щелчок.
+        _run(["-f", "lavfi", "-i", "sine=frequency=58:duration=0.5",
+              "-f", "lavfi", "-i", "anoisesrc=d=0.06:c=brown:a=0.8",
+              "-filter_complex",
+              "[0]lowpass=f=180,afade=t=out:st=0.06:d=0.4[a];"
+              "[1]lowpass=f=900,volume=0.7[b];[a][b]amix=inputs=2:normalize=0,volume=0.8",
+              path])
+    elif kind == "chime":
+        # ЗВОН на слове-ударе: короткий металлический призвук.
+        _run(["-f", "lavfi", "-i", "sine=frequency=2200:duration=0.7",
+              "-af", "tremolo=f=7:d=0.3,volume=0.32,afade=t=out:st=0.1:d=0.6",
+              path])
+    elif kind == "breath":
+        # ВДОХ перед ударной репликой (MELOCHI гр.В): полоса розового шума,
+        # быстро набирающая и обрывающаяся — «набрал воздуха и сказал».
+        _run(["-f", "lavfi", "-i", "anoisesrc=d=0.42:c=pink:a=0.5",
+              "-af", "bandpass=f=900:width_type=h:w=700,"
+                     "volume=0.5,afade=t=in:d=0.28,afade=t=out:st=0.3:d=0.12",
+              path])
+    elif kind == "heart":
+        # СЕРДЦЕБИЕНИЕ под финальным ударом: два глухих толчка, пауза, повтор.
+        _run(["-f", "lavfi", "-i", "sine=frequency=48:duration=2.4",
+              "-af", "tremolo=f=1.2:d=0.9,lowpass=f=110,"
+                     "volume=0.5,afade=t=in:d=0.3,afade=t=out:st=2.0:d=0.4",
+              path])
     else:
         return False
     return True
@@ -97,6 +128,12 @@ KEYWORDS = [
     ("гул", "hum"), ("тикань", "tick"), ("шестер", "tick"),
     ("перелист", "page"), ("страниц", "page"), ("переворот", "page"),
     ("room tone", "room"), ("тишина камеры", "room"),
+    ("вдох", "breath"), ("дыхан", "breath"),
+    ("тв-шум", "tvnoise"), ("тв шум", "tvnoise"), ("белый шум", "tvnoise"),
+    ("шум", "tvnoise"), ("помех", "tvnoise"),
+    ("штамп", "thud"), ("удар", "thud"), ("засов", "thud"), ("хлопок", "thud"),
+    ("звон", "chime"), ("колокол", "chime"),
+    ("сердц", "heart"), ("пульс", "heart"),
 ]
 
 ROW = re.compile(r"\|\s*(\d+):(\d+(?:\.\d+)?)\s*\|([^|]+)\|")
@@ -126,9 +163,25 @@ def parse_sfx_table(md_path):
 
 
 def build_track(cues, out_path, duration):
-    """Собрать дорожку: каждый синтез на своём тайм-коде + room-постель."""
+    """Собрать дорожку: каждый синтез на своём тайм-коде + room-постель.
+
+    ПОСТЕЛЬ (MELOCHI.md гр.В): комнатный тон стелется под ВСЮ длину ролика, а
+    не ставится разовым звуком. Иначе в паузах — абсолютный цифровой ноль, и
+    зритель слышит «выключенный звук» вместо тишины комнаты. Уровень низкий
+    (едва на грани слышимости) — работает подсознательно, речь не глушит.
+    """
     with tempfile.TemporaryDirectory() as td:
         inputs, delays = [], []
+        bed = os.path.join(td, "roomtone.wav")
+        try:
+            _run(["-f", "lavfi", "-i", f"anoisesrc=d={max(duration, 1):.2f}:c=brown:a=0.5",
+                  "-af", "lowpass=f=260,highpass=f=40,volume=0.055,"
+                         "afade=t=in:d=0.8,afade=t=out:st="
+                         f"{max(duration - 0.8, 0.1):.2f}:d=0.8",
+                  bed])
+            inputs.append(bed); delays.append(0)
+        except subprocess.CalledProcessError:
+            pass  # без постели дорожка всё равно соберётся
         for i, (t, kind) in enumerate(cues):
             wav = os.path.join(td, f"cue{i}.wav")
             if not synth(kind, wav):
