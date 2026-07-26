@@ -126,7 +126,7 @@ scene "cell" (duration: 40s, set: cell) {
         }
     }
     camera shake 0.35s intensity 2
-    freeman pose "flash_rage"
+    freeman pose "flash_grin"
     wait 0.08s
     freeman pose "stern"
     wait 0.6s
@@ -170,6 +170,8 @@ scene "cell" (duration: 40s, set: cell) {
     camera shake 0.3s intensity 2
     wait 0.8s
     slovo moves-to (0.5, -2.0) over 0.22s ease-in
+    freeman pose "flash_pupils"
+    wait 0.08s
 
     // --- ЖАЛО-CTA (VO-8): средний, центр, наезд-удар на подколке ---
     freeman moves-to (0.5, 0.80) over 0.01s
@@ -186,7 +188,7 @@ scene "cell" (duration: 40s, set: cell) {
         }
     }
     camera zoom-to freeman over 0.18s ease-in
-    freeman pose "sly"
+    freeman pose "hero_wink"
     wait 0.55s
     // отъезд-одиночество: зритель остаётся с мыслью
     camera reset over 0.5s
