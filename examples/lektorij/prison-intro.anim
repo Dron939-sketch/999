@@ -33,16 +33,11 @@ scene "cell" (duration: 16s, set: cell) {
     // prison-cell.surfaces.json. Масштаб задаём ОДИН РАЗ при размещении (scale
     // как action в середине пути ломает трек пропа — проверено).
     let rat = prop("rat", "../assets/props/rat.svg") at (0.80, 0.66)
-    rat scales 0.6
+    rat scales 0.42
     // анфас-цел крысы для «машет+подмиг» у окна (подмена бегущей). Скрыт до реплики.
     let ratw = prop("rat_wave", "../assets/props/rat-wave.svg") at (0.42, 0.30)
-    ratw scales 0.55
+    ratw scales 0.39
     ratw hides
-    // ФОНОВЫЙ АКТЁР 2 (цех костюмера): заключённый в полосатой робе СТОИТ
-    // носом в задний-левый угол — как наказанный ребёнок (вид со спины).
-    // Угол back_wall×left_wall ≈ x0.266; стопы на полу (floor back y0.655).
-    let mate = prop("mate", "../assets/props/prisoner-striped.svg") at (0.33, 0.50)
-    mate scales 1.35
 
     // --- общий: клетка целиком, фигура в центре ---
     camera wide
