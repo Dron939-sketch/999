@@ -58,13 +58,18 @@ def parse_vo_table(md_path):
             # РАЗВОРОТ…) уезжали в синтез — их слышно в ролике. Режем по «|».
             cells = [c.strip() for c in line.strip().strip("|").split("|")]
             cell = cells[-1] if cells else m.group(3)
+            # Колонка «Бит формулы» (ХУК / ПУЛЕМЁТ / РАЗВОРОТ / ВЗЛЁТ / ЖАЛО),
+            # если она есть — подсказка для интонации: у оригинала подача
+            # меняется ПО БИТАМ, а не только по ремарке режиссёра.
+            beat = cells[-2] if len(cells) >= 4 else ""
             # Ремарка *(...)* — режиссура реплики (темп/громкость/шёпот).
             rm = re.search(r"\*\(([^)]*)\)\*", cell)
             remark = rm.group(1).lower() if rm else ""
             text = re.sub(r"\*\([^)]*\)\*", "", cell).strip()
             text = text.strip("«»«» \t")
             if text:
-                rows.append((start, text, remark))
+                # бит подмешиваем к ремарке — direct_line читает оба источника
+                rows.append((start, text, (remark + " " + beat.lower()).strip()))
     return rows
 
 
@@ -208,15 +213,42 @@ def direct_line(mp3_bytes, remark):
     if not remark or not shutil.which("ffmpeg"):
         return mp3_bytes
     af = []
+    tempo = 1.0          # копим ОДИН множитель темпа (см. ниже про кламп)
     r = remark
-    if "шёпот" in r or "шепот" in r or "тихо" in r:
-        af += ["volume=0.72", "lowpass=f=7000"]
-    if "медленн" in r or "расстановк" in r or "финал" in r or "весом" in r:
-        af.append("atempo=0.93")
-    if "жёстко" in r or "жестко" in r or "в упор" in r or "оскал" in r:
-        af += ["volume=1.18", "acompressor=threshold=-18dB:ratio=3:attack=5:release=80"]
-    if "спокойно" in r or "диктор" in r:
-        af.append("atempo=0.97")
+    # --- ШЁПОТ / ТИХО: тише, мягче, чуть ближе к уху -----------------------
+    if any(k in r for k in ("шёпот", "шепот", "тихо", "тише")):
+        af += ["volume=0.66", "lowpass=f=6500", "highpass=f=120"]
+    # --- КРИК / ЯРОСТЬ: громче, плотнее, чуть быстрее ----------------------
+    if any(k in r for k in ("крик", "кричи", "ярост", "зло", "злее", "рявк")):
+        af += ["volume=1.32",
+               "acompressor=threshold=-20dB:ratio=4:attack=3:release=60"]
+        tempo *= 1.05
+    # --- ЖЁСТКО / В УПОР: плотный нажим без крика --------------------------
+    if any(k in r for k in ("жёстко", "жестко", "в упор", "оскал")):
+        af += ["volume=1.18",
+               "acompressor=threshold=-18dB:ratio=3:attack=5:release=80"]
+    # --- РУБЛЕНО / МЕХАНИЧЕСКИ (пулемёт): суше и ровнее ---------------------
+    if any(k in r for k in ("рублен", "механич", "пулемёт", "пулемет")):
+        af.append("acompressor=threshold=-16dB:ratio=2.5")
+        tempo *= 1.04
+    # --- ПРЕЗРЕНИЕ / УХМЫЛКА: медленнее, вальяжно ---------------------------
+    if any(k in r for k in ("презрен", "ухмыл", "фамильярн", "дерзк")):
+        tempo *= 0.96
+    # --- ТЕПЛО / ДОСТОИНСТВО (взлёт): мягче и медленнее ---------------------
+    if any(k in r for k in ("тепл", "достоинств", "взлёт", "взлет")):
+        af += ["lowpass=f=11000", "volume=0.95"]
+        tempo *= 0.94
+    # --- МЕДЛЕННО / ФИНАЛ / ЖАЛО: весомо ------------------------------------
+    if any(k in r for k in ("медленн", "расстановк", "финал", "весом", "жало")):
+        tempo *= 0.93
+    # --- СПОКОЙНО / ДИКТОР --------------------------------------------------
+    if any(k in r for k in ("спокойно", "диктор")):
+        tempo *= 0.97
+    # Кламп: несколько подсказок не должны складываться в кисель. Диапазон
+    # ±12% — слышно как смена подачи, но дикция остаётся внятной.
+    tempo = min(1.12, max(0.88, tempo))
+    if abs(tempo - 1.0) > 0.005:
+        af.append(f"atempo={tempo:.3f}")
     if not af:
         return mp3_bytes
     with tempfile.TemporaryDirectory() as td:
