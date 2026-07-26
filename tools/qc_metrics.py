@@ -347,7 +347,15 @@ def evaluate(anim, engine, golden_dir, final=None, render_sec=None,
             }
 
         # --- 5) режиссура (HOLLYWOOD.md, Волна 1) ---------------------------
-        results["metrics"].update(directing_metrics(anim, engine, duration))
+        # Soft-метрики НИКОГДА не должны рушить измерение планки: если разбор
+        # сценария или `animdsl timing` споткнулись — пишем заметку и идём дальше.
+        try:
+            results["metrics"].update(directing_metrics(anim, engine, duration))
+        except Exception as e:  # noqa: BLE001 — гейт не важнее самой планки
+            results["metrics"]["directing"] = {
+                "value": "n/a", "kind": "soft", "pass": True,
+                "note": f"метрики режиссуры не посчитались: {e}",
+            }
 
     return results
 

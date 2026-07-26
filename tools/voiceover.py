@@ -76,6 +76,31 @@ def tts_via_frederick(text):
         return resp.read()
 
 
+def list_fish_voices(api_key):
+    """Печатает голоса аккаунта Fish: reference_id + название.
+
+    Нужен, чтобы найти FISH_AUDIO_VOICE_ID своего голоса (например, Фримена)
+    и положить его в секреты. Тот же id виден в URL модели: fish.audio/m/<id>/
+    """
+    req = urllib.request.Request(
+        "https://api.fish.audio/model?self=true&page_size=50",
+        headers={"Authorization": f"Bearer {api_key}"}, method="GET",
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    items = data.get("items", data if isinstance(data, list) else [])
+    if not items:
+        print("В аккаунте Fish не найдено собственных моделей голоса.")
+        return
+    print(f"Голоса аккаунта ({len(items)}):")
+    for it in items:
+        vid = it.get("_id") or it.get("id") or "?"
+        title = it.get("title") or it.get("name") or "(без названия)"
+        print(f"  {vid}  —  {title}")
+    print("\nПоложи нужный id в секрет FISH_AUDIO_VOICE_ID (Settings → "
+          "Secrets and variables → Actions).")
+
+
 def tts_fish_audio(text, api_key, voice_id=None, model=None):
     """Одна реплика → mp3-байты через Fish Audio (прямой путь завода).
 
@@ -232,8 +257,8 @@ def assemble_by_timing(script, parts_dir, times_json, map_json, out_path):
 
 def main(argv):
     ap = argparse.ArgumentParser(description="Озвучка VO-сценария через Fish Audio")
-    ap.add_argument("script", help="Путь к *-VO.md со сценарием")
-    ap.add_argument("-o", "--output", required=True, help="Куда писать mp3")
+    ap.add_argument("script", nargs="?", help="Путь к *-VO.md со сценарием")
+    ap.add_argument("-o", "--output", help="Куда писать mp3")
     ap.add_argument("--parts-dir", help="Куда сохранить mp3 по репликам (vo-<N>.mp3) для липсинка")
     ap.add_argument("--no-assemble", action="store_true",
                     help="только сгенерить части (сборка позже по временам движка)")
@@ -241,7 +266,18 @@ def main(argv):
                     help="только собрать из готовых частей по --times-json/--map-json")
     ap.add_argument("--times-json", help="JSON от `animdsl timing` (фактические времена)")
     ap.add_argument("--map-json", help="карта блоков от prep_lipsync (map.json)")
+    ap.add_argument("--list-voices", action="store_true",
+                    help="показать голоса аккаунта Fish (их id → FISH_AUDIO_VOICE_ID)")
     args = ap.parse_args(argv)
+
+    if args.list_voices:
+        key = os.environ.get("FISH_AUDIO_API_KEY")
+        if not key:
+            sys.exit("Нужен FISH_AUDIO_API_KEY в окружении.")
+        list_fish_voices(key)
+        return 0
+    if not args.script or not args.output:
+        sys.exit("Нужны script и -o (или --list-voices).")
 
     if args.assemble_only:
         if not (args.parts_dir and args.times_json and args.map_json):
@@ -265,6 +301,11 @@ def main(argv):
     if not rows:
         sys.exit(f"В {args.script} не найдено реплик VO-таблицы.")
     fish_model = os.environ.get("FISH_AUDIO_MODEL") or "s1"
+    if not use_frederick and not voice_id:
+        print("!!! ВНИМАНИЕ: FISH_AUDIO_VOICE_ID не задан — Fish озвучит "
+              "СТОКОВЫМ голосом, а не голосом Фримена. Найди id командой "
+              "`python3 tools/voiceover.py --list-voices` и положи его в секрет "
+              "FISH_AUDIO_VOICE_ID.")
     src = (f"Frederick ({FREDERICK_BASE}) [запасной путь]" if use_frederick
            else f"Fish НАПРЯМУЮ, модель {fish_model}, голос {voice_id or 'по умолчанию'}")
     print(f"Реплик: {len(rows)}; озвучка: {src}")
