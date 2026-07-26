@@ -63,7 +63,7 @@ scene "cell" (duration: 40s, set: cell) {
 
     // --- ХУК (VO-1): средний, фигура ВПРАВО-треть, ракурс СВЕРХУ ---
     freeman moves-to (0.63, 0.80) over 0.01s
-    freeman pose "talk"
+    freeman pose "smug"
     //lip 1
     together {
         freeman speaks for 1.8s
@@ -75,7 +75,7 @@ scene "cell" (duration: 40s, set: cell) {
     }
     // --- ХУК-добивка (VO-2): КАТ на крупный, фигура ВЛЕВО-треть ---
     freeman moves-to (0.37, 0.80) over 0.01s
-    freeman pose "talk"
+    freeman pose "weary"
     //lip 2
     together {
         freeman speaks for 1.6s
@@ -92,7 +92,7 @@ scene "cell" (duration: 40s, set: cell) {
 
     // --- ПУЛЕМЁТ 1 (VO-3): средний, центр, ракурс обычный ---
     freeman moves-to (0.5, 0.80) over 0.01s
-    freeman pose "talk"
+    freeman pose "puppet"
     //lip 3
     together {
         freeman speaks for 2.4s
@@ -104,7 +104,7 @@ scene "cell" (duration: 40s, set: cell) {
     }
     // --- ПУЛЕМЁТ 2 (VO-4): КАТ крупный, ВПРАВО-треть ---
     freeman moves-to (0.64, 0.80) over 0.01s
-    freeman pose "talk"
+    freeman pose "puppet_jerk"
     //lip 4
     together {
         freeman speaks for 2.0s
@@ -115,7 +115,7 @@ scene "cell" (duration: 40s, set: cell) {
         }
     }
     // --- ПУЛЕМЁТ финал (VO-5): КАТ ECU + тряска на «здравом смысле» ---
-    freeman pose "talk"
+    freeman pose "stern"
     //lip 5
     together {
         freeman speaks for 2.1s
@@ -133,7 +133,7 @@ scene "cell" (duration: 40s, set: cell) {
 
     // --- t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука-в-камеру ---
     freeman moves-to (0.42, 0.80) over 0.01s
-    freeman pose "talk"
+    freeman pose "v_upor"
     //lip 6
     together {
         freeman speaks for 4.0s
@@ -152,7 +152,7 @@ scene "cell" (duration: 40s, set: cell) {
     wait 0.5s
 
     // --- ВЗЛЁТ (VO-7): ECU, тепло; следом слово-удар ---
-    freeman pose "talk"
+    freeman pose "raskryl"
     //lip 7
     together {
         freeman speaks for 3.5s
@@ -175,7 +175,7 @@ scene "cell" (duration: 40s, set: cell) {
 
     // --- ЖАЛО-CTA (VO-8): средний, центр, наезд-удар на подколке ---
     freeman moves-to (0.5, 0.80) over 0.01s
-    freeman pose "talk"
+    freeman pose "lunge"
     //lip 8
     together {
         freeman speaks for 5.5s

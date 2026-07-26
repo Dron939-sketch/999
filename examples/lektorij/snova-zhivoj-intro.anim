@@ -57,7 +57,7 @@ scene "pustota" (duration: 42s, set: pole) {
 
     // ── ХУК (VO-1): фигура ВПРАВО-треть, ракурс СВЕРХУ (зритель мелкий) ────
     freeman moves-to (0.63, 0.62) over 0.01s
-    freeman pose "talk"
+    freeman pose "weary"
     //lip 1
     together {
         freeman speaks for 1.7s
@@ -69,7 +69,7 @@ scene "pustota" (duration: 42s, set: pole) {
     }
     // ── ХУК-добивка (VO-2): КАТ крупный, фигура ВЛЕВО-треть ───────────────
     freeman moves-to (0.37, 0.62) over 0.01s
-    freeman pose "talk"
+    freeman pose "smug"
     //lip 2
     together {
         freeman speaks for 1.8s
@@ -86,7 +86,7 @@ scene "pustota" (duration: 42s, set: pole) {
 
     // ── ПУЛЕМЁТ 1 (VO-3): «Утро. Работа. Лента. Сон.» ─────────────────────
     freeman moves-to (0.5, 0.62) over 0.01s
-    freeman pose "talk"
+    freeman pose "puppet"
     //lip 3
     together {
         freeman speaks for 2.2s
@@ -98,7 +98,7 @@ scene "pustota" (duration: 42s, set: pole) {
     }
     // ── ПУЛЕМЁТ 2 (VO-4): ТЕ ЖЕ слова — монотонность как приём ────────────
     freeman moves-to (0.5, 0.62) over 0.01s
-    freeman pose "talk"
+    freeman pose "puppet_jerk"
     //lip 4
     together {
         freeman speaks for 2.2s
@@ -109,7 +109,7 @@ scene "pustota" (duration: 42s, set: pole) {
         }
     }
     // ── ПУЛЕМЁТ финал (VO-5): ECU + тряска ────────────────────────────────
-    freeman pose "talk"
+    freeman pose "stern"
     //lip 5
     together {
         freeman speaks for 2.2s
@@ -127,7 +127,7 @@ scene "pustota" (duration: 42s, set: pole) {
 
     // ── t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука в камеру ───────
     freeman moves-to (0.44, 0.62) over 0.01s
-    freeman pose "talk"
+    freeman pose "v_upor"
     //lip 6
     together {
         freeman speaks for 4.5s
@@ -146,7 +146,7 @@ scene "pustota" (duration: 42s, set: pole) {
     wait 0.5s
 
     // ── ВЗЛЁТ (VO-7): ECU, тепло ──────────────────────────────────────────
-    freeman pose "talk"
+    freeman pose "raskryl"
     //lip 7
     together {
         freeman speaks for 3.5s
@@ -169,7 +169,7 @@ scene "pustota" (duration: 42s, set: pole) {
 
     // ── ЖАЛО-CTA (VO-8): наезд-удар, подмиг-издёвка ───────────────────────
     freeman moves-to (0.5, 0.62) over 0.01s
-    freeman pose "talk"
+    freeman pose "lunge"
     //lip 8
     together {
         freeman speaks for 5.5s
