@@ -62,7 +62,7 @@ scene "street" (duration: 13s, set: street) {
 
     // СКЛЕЙКА → средний. VO-1: наивная вера.
     camera medium freeman
-    freeman pose "talk"
+    freeman pose "smug"
     //lip 1
     freeman speaks for 3.6s
     freeman pose "point"
@@ -86,7 +86,7 @@ scene "pickup" (duration: 12s, set: street) {
 
     // Крупно: VO-3 «бизнес — это решённая чужая проблема».
     camera close-up freeman
-    freeman pose "talk"
+    freeman pose "v_upor"
     //lip 3
     freeman speaks for 3.8s
 
@@ -117,7 +117,7 @@ scene "optics" (duration: 9s, set: street) {
     // Крупно + лёгкий крен: пробитие 4-й стены.
     camera close-up freeman
     camera dutch 4
-    freeman pose "talk"
+    freeman pose "lunge"
     // VO-5: «разница не в удаче. В оптике. Ты смотришь не теми глазами».
     //lip 5
     freeman speaks for 4.4s

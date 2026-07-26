@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 24" width="44" height="24">
   <!-- визема F (Rhubarb): трубочка (У/В) — маленький сжатый овал -->
-  <ellipse cx="22" cy="12" rx="5" ry="5.5" fill="#0e0e0e"/>
-  <ellipse cx="22" cy="12" rx="2" ry="2.4" fill="#3a3a3a"/>
+  <ellipse cx="22" cy="12" rx="6.6" ry="5.5" fill="#0e0e0e"/>
+  <ellipse cx="22" cy="12" rx="2.6" ry="2.4" fill="#3a3a3a"/>
 </svg>
