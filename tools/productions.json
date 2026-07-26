@@ -1,49 +1,46 @@
 {
-  "_comment": "Манифест завода Лектория. Каждый продакшен → готовый ролик в videos/. Поля: id (имя файлов), anim (сценарий движка), vo (VO-сценарий для Fish Audio, опц.), title (титр, опц.), images (картинки для генерации Nano Banana, опц.), planka (эталон: гнать метрики Рубежа 2 через tools/qc_metrics.py, голдены в tests/golden/<id>). studio.py прогоняет: картинки → рендер → озвучка → сведение → (для planka) метрики.",
-  "productions": [
-    {
-      "id": "etalon-15s",
-      "desc": "Эталон планки Фримена: контрольный 15-сек кусок для машинных метрик Рубежа 2 (длина плана/скорость/golden-frame/громкость). Не витрина — измеритель.",
-      "anim": "examples/lektorij/etalon-15s.anim",
-      "planka": true
-    },
-    {
-      "id": "pereproshivka-intro",
-      "desc": "Подводка к курсу «Перепрошивка»: камера-хук, книга, оживающая картинка",
-      "anim": "examples/lektorij/pereproshivka-intro.anim",
-      "vo": "examples/lektorij/pereproshivka-intro-VO.md",
-      "title": "Перепрошивка",
-      "images": []
-    },
-    {
-      "id": "biznes-myshlenie-intro",
-      "desc": "Подводка к курсу «Бизнес-мышление»: толпа обходит красную «проблему», Фримен поднимает — это куш. Оптика. Свет/тень + ракурсы.",
-      "anim": "examples/lektorij/biznes-myshlenie-intro.anim",
-      "vo": "examples/lektorij/biznes-myshlenie-intro-VO.md",
-      "title": "Бизнес-мышление",
-      "images": []
-    },
-    {
-      "id": "freeman-monologue",
-      "desc": "Мистер Фримен: монолог в камеру (витрина стиля)",
-      "anim": "examples/freeman-monologue.anim"
-    },
-    {
-      "id": "prison-intro",
-      "desc": "Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото). Три речевых удара, синхрон по //lip.",
-      "anim": "examples/lektorij/prison-intro.anim",
-      "vo": "examples/lektorij/prison-intro-VO.md",
-      "title": "Тюрьма ума"
-    },
-    {
-      "id": "fredi-expressions",
-      "desc": "Фреди: библиотека мимики",
-      "anim": "examples/lektorij/fredi-expressions-demo.anim"
-    },
-    {
-      "id": "lekciya-2-frejd",
-      "desc": "Пилот лекции (Фрейд, курс «Теории личности»)",
-      "anim": "examples/lektorij/lekciya-2-frejd-psihodinamika.anim"
-    }
-  ]
+ "_comment": "Манифест завода Лектория. Каждый продакшен → готовый ролик в videos/. Поля: id (имя файлов), anim (сценарий движка), vo (VO-сценарий для Fish Audio, опц.), images (картинки для генерации Nano Banana, опц.), planka (эталон: гнать метрики Рубежа 2 через tools/qc_metrics.py, голдены в tests/golden/<id>). studio.py прогоняет: картинки → рендер → озвучка → сведение → (для planka) метрики.",
+ "productions": [
+  {
+   "id": "etalon-15s",
+   "desc": "Эталон планки Фримена: контрольный 15-сек кусок для машинных метрик Рубежа 2 (длина плана/скорость/golden-frame/громкость). Не витрина — измеритель.",
+   "anim": "examples/lektorij/etalon-15s.anim",
+   "planka": true
+  },
+  {
+   "id": "pereproshivka-intro",
+   "desc": "Подводка к курсу «Перепрошивка»: камера-хук, книга, оживающая картинка",
+   "anim": "examples/lektorij/pereproshivka-intro.anim",
+   "vo": "examples/lektorij/pereproshivka-intro-VO.md",
+   "images": []
+  },
+  {
+   "id": "biznes-myshlenie-intro",
+   "desc": "Подводка к курсу «Бизнес-мышление»: толпа обходит красную «проблему», Фримен поднимает — это куш. Оптика. Свет/тень + ракурсы.",
+   "anim": "examples/lektorij/biznes-myshlenie-intro.anim",
+   "vo": "examples/lektorij/biznes-myshlenie-intro-VO.md",
+   "images": []
+  },
+  {
+   "id": "freeman-monologue",
+   "desc": "Мистер Фримен: монолог в камеру (витрина стиля)",
+   "anim": "examples/freeman-monologue.anim"
+  },
+  {
+   "id": "prison-intro",
+   "desc": "Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото). Три речевых удара, синхрон по //lip.",
+   "anim": "examples/lektorij/prison-intro.anim",
+   "vo": "examples/lektorij/prison-intro-VO.md"
+  },
+  {
+   "id": "fredi-expressions",
+   "desc": "Фреди: библиотека мимики",
+   "anim": "examples/lektorij/fredi-expressions-demo.anim"
+  },
+  {
+   "id": "lekciya-2-frejd",
+   "desc": "Пилот лекции (Фрейд, курс «Теории личности»)",
+   "anim": "examples/lektorij/lekciya-2-frejd-psihodinamika.anim"
+  }
+ ]
 }
