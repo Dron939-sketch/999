@@ -578,6 +578,29 @@ let phone = prop("phone", "assets/props/phone.svg") at near detective
 The `<label>` is a human-readable name for the prop. The `<path>` is the file
 path to the SVG asset. The optional `at` clause sets the initial position.
 
+### Kinetic Typography (`text`)
+
+A `text` binding creates a word as an animatable entity — bold ink lettering
+(DejaVu Sans Bold with a rough displacement edge) synthesized into a prop, so
+every prop action works on it: `moves-to`, `scales`, `rotates`, `shows`,
+`hides`, `fades-to`.
+
+```
+let <name> = text("<слово>"[, <font-size-px>]) [at <position>] [layer <n>]
+```
+
+```
+let w = text("СВОБОДА?", 150) at (0.5, 0.3)
+w scales 1.0 over 0.2s ease-in     // впечатывается
+transition invert 0.16s             // негатив-вспышка на ударе
+```
+
+Word-hit pattern (проверенный): держите слово ЗА КАДРОМ в масштабе удара
+(`at (0.5, -2.0)` + `scales 2.6`), в момент удара телепортируйте
+(`moves-to ... over 0.01s`) и вжимайте `scales 1.0 over 0.2s ease-in` +
+`transition invert`. Не полагайтесь на `hides` в первый кадр сцены и помните:
+каждое действие двигает курсор времени.
+
 ---
 
 ## Positions

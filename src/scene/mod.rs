@@ -383,7 +383,10 @@ fn register_let_props(
     for stmt in stmts {
         match stmt {
             SceneStatement::Let(let_stmt) => {
-                let LetKind::Prop { position, layer, .. } = &let_stmt.kind;
+                let (position, layer) = match &let_stmt.kind {
+                    LetKind::Prop { position, layer, .. } => (position, layer),
+                    LetKind::Text { position, layer, .. } => (position, layer),
+                };
                 if entities.contains_key(&let_stmt.name) {
                     continue;
                 }
