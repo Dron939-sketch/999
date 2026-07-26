@@ -85,10 +85,17 @@ def find_face(g):
         if b[:, 0].min() > 0 and b[:, 1].min() > 0
         and b[:, 0].max() < h - 1 and b[:, 1].max() < w - 1
     ]
-    if not cands:
+    # Отсекаем заведомо не-маски по форме. Как только под персонажем появилась
+    # СВЕТЛАЯ земля, самым большим «белым пятном, не касающимся края» стала
+    # полоса пола: замер поймал блоб 499x69 (H/W 0.14) и записал его в маску,
+    # испортив медиану развёртки. Лицо — вертикальный овал, у оригинала
+    # H/W 1.45..1.65; всё, что площе 0.9 или уже 2.6, маской быть не может.
+    boxes = [(b[:, 0].min(), b[:, 0].max(), b[:, 1].min(), b[:, 1].max()) for b in cands]
+    sized = [(bx, (bx[1] - bx[0] + 1) / max(bx[3] - bx[2] + 1, 1)) for bx in boxes]
+    plausible = [(bx, len(c)) for (bx, hw), c in zip(sized, cands) if 0.9 <= hw <= 2.6]
+    if not plausible:
         return None
-    b = max(cands, key=len)
-    return b[:, 0].min(), b[:, 0].max(), b[:, 1].min(), b[:, 1].max()
+    return max(plausible, key=lambda t: t[1])[0]
 
 
 def ring_thickness(g, box):
