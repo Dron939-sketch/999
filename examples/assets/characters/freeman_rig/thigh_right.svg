@@ -1,2 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 66" width="38" height="66"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="None" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
-<g filter="url(#ink)"><path d="M12 4 Q12 28 13 60 L25 60 Q27 28 26 4 Z" fill="#0e0e0e"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 112" width="38" height="112"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="21" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<!-- Бедро удлинено до 112 (было 66): колено стыковалось с голенью впритык и
+     при любом наклоне между ними открывался просвет. Длинное бедро с округлым
+     концом прячет стык при любом сгибе. Нога у оригинала — простая сужающаяся
+     палка, поэтому форма проще некуда. -->
+<g filter="url(#ink)"><path d="M14 4 Q11 50 13 100 Q19 108 25 100 Q26 50 24 4 Z" fill="#0e0e0e"/></g></svg>
