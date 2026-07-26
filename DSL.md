@@ -514,6 +514,28 @@ camera two-shot
 camera over-shoulder informant
 ```
 
+#### Cutting inside a speech block
+
+Speech advances the scene cursor, so a plain `camera` statement can never cut
+mid-line — the shot lasts as long as the line. To cut *during* speech, run the
+camera chain in parallel with `together { ... do { ... } }`:
+
+```
+together {
+    freeman speaks for 4.0s
+    do {
+        camera angle low freeman
+        wait 1.4s
+        camera extreme-close-up freeman
+        wait 1.3s
+        camera medium freeman
+    }
+}
+```
+
+The line plays uninterrupted while shots change on their own timer. This is how
+the montage rhythm gets down to the reference median (~1.3–2s per shot).
+
 #### Motion Commands
 
 | Command   | Description                                          |

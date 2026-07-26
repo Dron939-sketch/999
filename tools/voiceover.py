@@ -53,7 +53,11 @@ def parse_vo_table(md_path):
             if not m:
                 continue
             start = int(m.group(1)) * 60 + float(m.group(2))
-            cell = m.group(3).strip()
+            # Реплика — ВСЕГДА ПОСЛЕДНЯЯ колонка строки. Раньше бралось всё
+            # после таймкода, и служебные колонки («Бит формулы»: ХУК, ПУЛЕМЁТ,
+            # РАЗВОРОТ…) уезжали в синтез — их слышно в ролике. Режем по «|».
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            cell = cells[-1] if cells else m.group(3)
             # Ремарка *(...)* — режиссура реплики (темп/громкость/шёпот).
             rm = re.search(r"\*\(([^)]*)\)\*", cell)
             remark = rm.group(1).lower() if rm else ""
@@ -76,10 +80,80 @@ def tts_via_frederick(text):
         return resp.read()
 
 
+def list_fish_voices(api_key):
+    """Печатает голоса аккаунта Fish: reference_id + название.
+
+    Нужен, чтобы найти FISH_AUDIO_VOICE_ID своего голоса (например, Фримена)
+    и положить его в секреты. Тот же id виден в URL модели: fish.audio/m/<id>/
+    """
+    req = urllib.request.Request(
+        "https://api.fish.audio/model?self=true&page_size=50",
+        headers={"Authorization": f"Bearer {api_key}"}, method="GET",
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    items = data.get("items", data if isinstance(data, list) else [])
+    if not items:
+        print("В аккаунте Fish не найдено собственных моделей голоса.")
+        return
+    print(f"Голоса аккаунта ({len(items)}):")
+    for it in items:
+        vid = it.get("_id") or it.get("id") or "?"
+        title = it.get("title") or it.get("name") or "(без названия)"
+        print(f"  {vid}  —  {title}")
+    print("\nПоложи нужный id в секрет FISH_AUDIO_VOICE_ID (Settings → "
+          "Secrets and variables → Actions).")
+
+
+def fetch_fish_voices(api_key):
+    """Список моделей голоса аккаунта: [(id, название), ...] (пусто при сбое)."""
+    try:
+        req = urllib.request.Request(
+            "https://api.fish.audio/model?self=true&page_size=50",
+            headers={"Authorization": f"Bearer {api_key}"}, method="GET",
+        )
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except Exception as e:  # noqa: BLE001 — молча падать нельзя, но и рушить нечего
+        print(f"    [fish] список голосов недоступен ({e})")
+        return []
+    items = data.get("items", data if isinstance(data, list) else [])
+    out = []
+    for it in items:
+        vid = it.get("_id") or it.get("id")
+        title = it.get("title") or it.get("name") or ""
+        if vid:
+            out.append((vid, title))
+    return out
+
+
+def resolve_voice_id(api_key, explicit):
+    """Голос по умолчанию — ФРИМЕН, без всяких id в секретах.
+
+    Порядок: явный FISH_AUDIO_VOICE_ID → поиск в аккаунте модели, название
+    которой содержит «freeman»/«фримен» (регистр не важен; искомое имя можно
+    сменить через FISH_VOICE_NAME) → первая своя модель аккаунта → сток Fish.
+    """
+    if explicit:
+        return explicit, "секрет FISH_AUDIO_VOICE_ID"
+    wanted = (os.environ.get("FISH_VOICE_NAME") or "freeman").lower()
+    voices = fetch_fish_voices(api_key)
+    if not voices:
+        return None, "сток Fish (список голосов не получен)"
+    aliases = [wanted, "фримен", "фриман", "freeman"]
+    for vid, title in voices:
+        low = (title or "").lower()
+        if any(a in low for a in aliases):
+            return vid, f"свой голос «{title}» (найден по названию)"
+    vid, title = voices[0]
+    return vid, f"первый свой голос «{title}» (Фримена в аккаунте не нашлось)"
+
+
 def tts_fish_audio(text, api_key, voice_id=None, model=None):
     """Одна реплика → mp3-байты через Fish Audio (прямой путь завода).
 
-    `model` — заголовок выбора движка Fish (s1 — флагман, живее интонация).
+    `model` — заголовок выбора движка Fish (s2 — новее и живее s1; решение
+    студии). Если модель недоступна на аккаунте, откат на дефолтную.
     Если модель недоступна на аккаунте, запрос повторяется без заголовка,
     чтобы озвучка не падала целиком.
     """
@@ -232,8 +306,8 @@ def assemble_by_timing(script, parts_dir, times_json, map_json, out_path):
 
 def main(argv):
     ap = argparse.ArgumentParser(description="Озвучка VO-сценария через Fish Audio")
-    ap.add_argument("script", help="Путь к *-VO.md со сценарием")
-    ap.add_argument("-o", "--output", required=True, help="Куда писать mp3")
+    ap.add_argument("script", nargs="?", help="Путь к *-VO.md со сценарием")
+    ap.add_argument("-o", "--output", help="Куда писать mp3")
     ap.add_argument("--parts-dir", help="Куда сохранить mp3 по репликам (vo-<N>.mp3) для липсинка")
     ap.add_argument("--no-assemble", action="store_true",
                     help="только сгенерить части (сборка позже по временам движка)")
@@ -241,7 +315,18 @@ def main(argv):
                     help="только собрать из готовых частей по --times-json/--map-json")
     ap.add_argument("--times-json", help="JSON от `animdsl timing` (фактические времена)")
     ap.add_argument("--map-json", help="карта блоков от prep_lipsync (map.json)")
+    ap.add_argument("--list-voices", action="store_true",
+                    help="показать голоса аккаунта Fish (их id → FISH_AUDIO_VOICE_ID)")
     args = ap.parse_args(argv)
+
+    if args.list_voices:
+        key = os.environ.get("FISH_AUDIO_API_KEY")
+        if not key:
+            sys.exit("Нужен FISH_AUDIO_API_KEY в окружении.")
+        list_fish_voices(key)
+        return 0
+    if not args.script or not args.output:
+        sys.exit("Нужны script и -o (или --list-voices).")
 
     if args.assemble_only:
         if not (args.parts_dir and args.times_json and args.map_json):
@@ -252,21 +337,28 @@ def main(argv):
         print(f"OK: {args.output}")
         return 0
 
-    # ПРЯМОЙ Fish — основной путь (решение студии): ключ в секретах CI, между
-    # заводом и синтезом нет посредника. Frederick остаётся ЗАПАСНЫМ путём —
-    # только если ключа Fish нет вовсе.
+    # ОСНОВНОЙ путь — Frederick (голос Фреди): решение студии, вернули после
+    # сравнения на слух. Прямой Fish (модель s2 + автопоиск голоса Фримена в
+    # аккаунте) остаётся ЗАПАСНЫМ — включается, если токена Frederick нет.
     api_key = os.environ.get("FISH_AUDIO_API_KEY")
-    use_frederick = (not api_key) and bool(FREDERICK_TOKEN)
-    if not api_key and not use_frederick:
-        sys.exit("Нет FISH_AUDIO_API_KEY (и нет запасного FREDERICK_ADMIN_TOKEN) — пропускаю озвучку.")
+    use_frederick = bool(FREDERICK_TOKEN)
+    if not use_frederick and not api_key:
+        sys.exit("Нет FREDERICK_ADMIN_TOKEN (и нет запасного FISH_AUDIO_API_KEY) — пропускаю озвучку.")
     voice_id = os.environ.get("FISH_AUDIO_VOICE_ID")
+    voice_src = "запасной путь Frederick"
+    if not use_frederick:
+        voice_id, voice_src = resolve_voice_id(api_key, voice_id)
 
     rows = parse_vo_table(args.script)
     if not rows:
         sys.exit(f"В {args.script} не найдено реплик VO-таблицы.")
-    fish_model = os.environ.get("FISH_AUDIO_MODEL") or "s1"
-    src = (f"Frederick ({FREDERICK_BASE}) [запасной путь]" if use_frederick
-           else f"Fish НАПРЯМУЮ, модель {fish_model}, голос {voice_id or 'по умолчанию'}")
+    fish_model = os.environ.get("FISH_AUDIO_MODEL") or "s2"
+    if not use_frederick and not voice_id:
+        print("!!! ВНИМАНИЕ: голос Фримена не найден в аккаунте Fish — озвучка "
+              "пойдёт СТОКОВЫМ голосом. Проверь `--list-voices`; если модель "
+              "названа иначе, задай FISH_VOICE_NAME или FISH_AUDIO_VOICE_ID.")
+    src = (f"Frederick ({FREDERICK_BASE}) — голос Фреди" if use_frederick
+           else f"Fish [запасной], модель {fish_model}, голос: {voice_src}")
     print(f"Реплик: {len(rows)}; озвучка: {src}")
 
     if args.parts_dir:

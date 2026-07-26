@@ -1,20 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 30" width="44" height="30">
-  <defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="3" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="1.2" xChannelSelector="R" yChannelSelector="G"/>
-  </filter></defs>
-  <g filter="url(#ink)">
-    <!-- эталон: мягкая улыбка-дуга -->
-    <path d="M8 11 Q12 15 15 16 Q22 21 29 16 Q32 15 36 11"
-          fill="none" stroke="#0e0e0e" stroke-width="3" stroke-linecap="round"/>
-    <!-- засечки в углах рта ПЕРПЕНДИКУЛЯРНО линии улыбки: концы улыбки идут
-         по диагонали вверх, значит штрих — диагональ под 90° к ней, идущая
-         и выше, и ниже края губы (короткая). -->
-    <!-- левая засечка — как есть (прямая) -->
-    <path d="M6.4 12.6 L9.6 9.4" fill="none" stroke="#0e0e0e"
-          stroke-width="2.9" stroke-linecap="round"/>
-    <!-- правая засечка — слегка тоньше и ПОЛУКРУГЛАЯ (дуга) -->
-    <path d="M34.4 9.4 Q39.4 11 37.6 12.6" fill="none" stroke="#0e0e0e"
-          stroke-width="2.3" stroke-linecap="round"/>
-  </g>
+  <!-- КАНОН: рот — широкая ДУГА тонкой линией, шире и ниже, чем овал «о». -->
+  <path d="M4 10 Q22 28 40 10" fill="none" stroke="#0e0e0e"
+        stroke-width="4.5" stroke-linecap="round"/>
 </svg>

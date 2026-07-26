@@ -35,11 +35,11 @@
               ],
               "offset": [
                 0,
-                14
+                26
               ],
               "scale": [
-                1.1,
-                1.115
+                1.42,
+                1.44
               ],
               "z_order": 5,
               "children": [
@@ -284,6 +284,10 @@
                 }
               ]
             }
+          ],
+          "scale": [
+            1.75,
+            1.15
           ]
         }
       ]
@@ -1837,6 +1841,222 @@
             0.8,
             0.8
           ]
+        }
+      }
+    },
+    "hero_grin": {
+      "name": "hero_grin",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_grin"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "flash_grin": {
+      "name": "flash_grin",
+      "transition_duration": 0.0,
+      "bones": {
+        "head": {
+          "part": "face_grin"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_xeyes": {
+      "name": "hero_xeyes",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_xeyes"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "flash_xeyes": {
+      "name": "flash_xeyes",
+      "transition_duration": 0.0,
+      "bones": {
+        "head": {
+          "part": "face_xeyes"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_pupils": {
+      "name": "hero_pupils",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_pupils"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "flash_pupils": {
+      "name": "flash_pupils",
+      "transition_duration": 0.0,
+      "bones": {
+        "head": {
+          "part": "face_pupils"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_disgust": {
+      "name": "hero_disgust",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_disgust"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "flash_disgust": {
+      "name": "flash_disgust",
+      "transition_duration": 0.0,
+      "bones": {
+        "head": {
+          "part": "face_disgust"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_manic": {
+      "name": "hero_manic",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_manic"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "flash_manic": {
+      "name": "flash_manic",
+      "transition_duration": 0.0,
+      "bones": {
+        "head": {
+          "part": "face_manic"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "hero_wink": {
+      "name": "hero_wink",
+      "transition_duration": 0.1,
+      "bones": {
+        "head": {
+          "part": "face_wink"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
+        }
+      }
+    },
+    "flash_wink": {
+      "name": "flash_wink",
+      "transition_duration": 0.0,
+      "bones": {
+        "head": {
+          "part": "face_wink"
+        },
+        "eye_left": {
+          "part": "blank"
+        },
+        "eye_right": {
+          "part": "blank"
+        },
+        "mouth": {
+          "part": "blank"
         }
       }
     }

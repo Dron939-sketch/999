@@ -29,6 +29,11 @@ jobs:
       - name: Install ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
+      # Питон-зависимости планки (qc_metrics: golden-diff по SSIM). Без них
+      # измеритель падал на `import numpy` — прогон писал «планка не измерена».
+      - name: Python deps (планка)
+        run: python3 -m pip install --quiet --upgrade numpy pillow
+
       # Rhubarb Lip Sync — фонемный липсинк (рот артикулирует слоги, не флэпы).
       # Бинарь кэшируется; при недоступности завод честно падает на RMS-огибающую.
       - name: Rhubarb cache
@@ -65,13 +70,17 @@ jobs:
       # Один завод: картинки → рендер → озвучка → сведение → videos/*.mp4(+mp3)
       - name: Studio (render + voice + mux)
         env:
-          # ОСНОВНОЙ путь озвучки — Fish НАПРЯМУЮ (решение студии): ключ в
-          # секретах репозитория, между заводом и синтезом нет посредника.
+          # ОСНОВНОЙ путь озвучки — Frederick (голос Фреди). Прямой Fish
+          # (модель s2 + автопоиск голоса Фримена) — запасной путь.
           FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
+          # Голос: по умолчанию завод САМ находит в аккаунте модель с
+          # «freeman»/«фримен» в названии. Секрет нужен, только чтобы
+          # переопределить выбор конкретным id.
           FISH_AUDIO_VOICE_ID: ${{ secrets.FISH_AUDIO_VOICE_ID }}
-          # Модель Fish (s1 — флагман, живее интонация). Пусто = s1 с откатом.
+          FISH_VOICE_NAME: ${{ secrets.FISH_VOICE_NAME }}
+          # Модель Fish (s2 — новее и живее s1). Пусто = s2 с откатом.
           FISH_AUDIO_MODEL: ${{ secrets.FISH_AUDIO_MODEL }}
-          # Запасной путь — Frederick (используется, ТОЛЬКО если ключа Fish нет).
+          # Основной путь (см. выше).
           FREDERICK_ADMIN_TOKEN: ${{ secrets.FREDERICK_ADMIN_TOKEN != '' && secrets.FREDERICK_ADMIN_TOKEN || secrets.ADMIN_TOKEN }}
           FREDERICK_TTS_URL: ${{ secrets.FREDERICK_TTS_URL }}
           IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}

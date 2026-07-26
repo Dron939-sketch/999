@@ -256,9 +256,34 @@ fn cmd_render(
                 &mut frame.data,
                 frame.width,
                 frame.height,
-                i as u32,
+                // Зерно ДЕРЖИТСЯ вместе с рисунком (on-twos), а не пересчитывается
+                // каждый кадр: иначе шум «кипит» на 24fps поверх анимации на 12
+                // и читается как дёрганье персонажа. Замер: film-grain 0.30 даёт
+                // покадровую разницу 4.39 против 1.98 без зерна — больше половины
+                // всей дрожи кадра приходило именно отсюда.
+                (i as u32) / config.on_twos.max(1),
                 config.film_grain as f32,
                 config.vignette as f32,
+            );
+        }
+    }
+
+    // ПЛЁНОЧНЫЕ МЕЛОЧИ (MELOCHI.md, группа А): мерцание экспозиции, гуляние
+    // кадра в тракте, царапины, пылинки. Дают ощущение «снято», а не
+    // «сгенерировано». Всё детерминировано от номера кадра — golden воспроизводим.
+    if config.film_flicker > 0.0 || config.gate_weave > 0.0
+        || config.film_scratch > 0.0 || config.film_dust > 0.0
+    {
+        for (i, frame) in all_frames.iter_mut().enumerate() {
+            apply_filmstock(
+                &mut frame.data,
+                frame.width,
+                frame.height,
+                i as u32,
+                config.film_flicker as f32,
+                config.gate_weave as f32,
+                config.film_scratch as f32,
+                config.film_dust as f32,
             );
         }
     }
@@ -484,6 +509,106 @@ fn apply_line_boil(data: &mut [u8], width: u32, height: u32, frame: u32, on_twos
             data[idx + 1] = src[sidx + 1];
             data[idx + 2] = src[sidx + 2];
             data[idx + 3] = src[sidx + 3];
+        }
+    }
+}
+
+/// Плёночные мелочи: то, из-за чего кадр выглядит снятым на плёнку, а не
+/// отрендеренным. Четыре независимых эффекта, каждый opt-in:
+///   * `flicker`  — экспозиция плавает покадрово (главный признак плёнки);
+///   * `weave`    — весь кадр гуляет на доли пикселя (лентопротяжный тракт);
+///   * `scratch`  — редкие вертикальные царапины, живут несколько кадров;
+///   * `dust`     — точки-пылинки и ворсинки, каждый кадр новые.
+/// Всё детерминировано от номера кадра (без RNG) — рендер воспроизводим,
+/// golden-diff не ломается.
+fn apply_filmstock(
+    data: &mut [u8], width: u32, height: u32, frame: u32,
+    flicker: f32, weave: f32, scratch: f32, dust: f32,
+) {
+    let w = width as i64;
+    let h = height as i64;
+    // дешёвый детерминированный хэш
+    let hash = |a: i64, b: i64| -> u32 {
+        let mut x = (a.wrapping_mul(73_856_093) ^ b.wrapping_mul(19_349_663)) as u32;
+        x ^= x >> 13; x = x.wrapping_mul(0x85eb_ca6b); x ^= x >> 16; x
+    };
+    let f = frame as i64;
+
+    // --- мерцание экспозиции: две несинхронные волны + шум кадра ----------
+    if flicker > 0.0 {
+        let t = frame as f32;
+        let wave = (t * 0.9).sin() * 0.6 + (t * 2.7).sin() * 0.4;
+        let jit = (hash(f, 7) % 1000) as f32 / 1000.0 - 0.5;
+        let k = 1.0 + flicker * (wave * 0.5 + jit * 0.5);
+        for px in data.chunks_exact_mut(4) {
+            for c in 0..3 {
+                px[c] = ((px[c] as f32 * k).clamp(0.0, 255.0)) as u8;
+            }
+        }
+    }
+
+    // --- гуляние кадра: сдвиг на 0..~2px, низкая частота -------------------
+    if weave > 0.0 {
+        let t = frame as f32;
+        let dx = ((t * 0.37).sin() * 1.6 + (t * 1.13).sin() * 0.5) * weave;
+        let dy = ((t * 0.29).cos() * 1.2 + (t * 0.91).cos() * 0.4) * weave;
+        let (dx, dy) = (dx.round() as i64, dy.round() as i64);
+        if dx != 0 || dy != 0 {
+            let src = data.to_vec();
+            for y in 0..h {
+                let sy = (y + dy).clamp(0, h - 1);
+                for x in 0..w {
+                    let sx = (x + dx).clamp(0, w - 1);
+                    let di = ((y * w + x) * 4) as usize;
+                    let si = ((sy * w + sx) * 4) as usize;
+                    data[di..di + 4].copy_from_slice(&src[si..si + 4]);
+                }
+            }
+        }
+    }
+
+    // --- царапины: вертикальные линии, живут 3..15 кадров ------------------
+    if scratch > 0.0 {
+        let life = 9i64;
+        let era = f / life;                 // «эпоха» — набор царапин
+        let n = (scratch * 2.5).ceil() as i64;
+        for s in 0..n {
+            let hs = hash(era, s * 31 + 5);
+            if (hs % 100) as f32 > scratch * 100.0 { continue; }  // редкость
+            let sx = (hs / 100) as i64 % w;
+            let bright = (hs % 2) == 0;      // светлая или тёмная царапина
+            let y0 = (hash(era, s * 17) as i64) % h;
+            let len = h / 2 + (hash(era, s * 41) as i64) % (h / 2);
+            for y in y0..(y0 + len).min(h) {
+                let i = ((y * w + sx) * 4) as usize;
+                for c in 0..3 {
+                    let v = data[i + c] as i32;
+                    data[i + c] = if bright { (v + 60).min(255) as u8 }
+                                  else { (v - 55).max(0) as u8 };
+                }
+            }
+        }
+    }
+
+    // --- пылинки/ворс: точки, каждый кадр новые ---------------------------
+    if dust > 0.0 {
+        let n = (dust * 6.0).ceil() as i64;
+        for d in 0..n {
+            let hd = hash(f, d * 97 + 11);
+            let px = (hd as i64) % w;
+            let py = ((hd / 7) as i64) % h;
+            let dark = (hd % 3) != 0;
+            let r = 1 + ((hd / 13) % 2) as i64;   // 1..2 px
+            for yy in (py - r).max(0)..(py + r).min(h - 1) {
+                for xx in (px - r).max(0)..(px + r).min(w - 1) {
+                    let i = ((yy * w + xx) * 4) as usize;
+                    for c in 0..3 {
+                        let v = data[i + c] as i32;
+                        data[i + c] = if dark { (v - 90).max(0) as u8 }
+                                      else { (v + 70).min(255) as u8 };
+                    }
+                }
+            }
         }
     }
 }
