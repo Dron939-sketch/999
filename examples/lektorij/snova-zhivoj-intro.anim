@@ -14,14 +14,16 @@
 
 import character freeman from "../assets/characters/freeman_rig"
 import set titry from "../assets/sets/lektorij-final.svg"
+import set pole from "../assets/sets/field-empty.svg"
 
 config {
     width: 1280
     height: 720
     fps: 24
-    background: #e4e2d8        // пустое светлое поле — канон
+    background: #b0b3ab        // тон земли: поле задаёт сет field-empty
     monochrome: true
-    mono-contrast: 5.0         // жёсткий двухтон, без полутонов
+    mono-contrast: 2.2         // тональные блоки неба и земли должны выжить
+    snow: 0.35                 // частицы есть в 100% кадров оригинала
     on-twos: 2
     line-boil: 1.25
     film-grain: 0.05           // после замера дёрганья: фактура без шипения
@@ -36,11 +38,11 @@ config {
 }
 
 // ============================ СЦЕНА 1: ПУСТОТА ==============================
-scene "pustota" (duration: 42s) {
+scene "pustota" (duration: 42s, set: pole) {
     transition static 0.35s
 
-    place freeman at (0.5, 0.98) facing front
-    freeman scales 1.1
+    place freeman at (0.5, 0.62) facing front
+    freeman scales 0.72
     let hand = prop("hand", "../assets/props/hand-point.svg") at (-1.5, 1.5) layer 5
     let slovo = text("ЖИВОЙ?", 160) at (0.5, -2.0) layer 6
     slovo scales 2.6
@@ -54,7 +56,7 @@ scene "pustota" (duration: 42s) {
     wait 0.6s
 
     // ── ХУК (VO-1): фигура ВПРАВО-треть, ракурс СВЕРХУ (зритель мелкий) ────
-    freeman moves-to (0.63, 0.98) over 0.01s
+    freeman moves-to (0.63, 0.62) over 0.01s
     freeman pose "talk"
     //lip 1
     together {
@@ -66,7 +68,7 @@ scene "pustota" (duration: 42s) {
         }
     }
     // ── ХУК-добивка (VO-2): КАТ крупный, фигура ВЛЕВО-треть ───────────────
-    freeman moves-to (0.37, 0.98) over 0.01s
+    freeman moves-to (0.37, 0.62) over 0.01s
     freeman pose "talk"
     //lip 2
     together {
@@ -83,7 +85,7 @@ scene "pustota" (duration: 42s) {
     wait 0.5s
 
     // ── ПУЛЕМЁТ 1 (VO-3): «Утро. Работа. Лента. Сон.» ─────────────────────
-    freeman moves-to (0.5, 0.98) over 0.01s
+    freeman moves-to (0.5, 0.62) over 0.01s
     freeman pose "talk"
     //lip 3
     together {
@@ -95,7 +97,7 @@ scene "pustota" (duration: 42s) {
         }
     }
     // ── ПУЛЕМЁТ 2 (VO-4): ТЕ ЖЕ слова — монотонность как приём ────────────
-    freeman moves-to (0.5, 0.98) over 0.01s
+    freeman moves-to (0.5, 0.62) over 0.01s
     freeman pose "talk"
     //lip 4
     together {
@@ -124,7 +126,7 @@ scene "pustota" (duration: 42s) {
     wait 0.7s
 
     // ── t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука в камеру ───────
-    freeman moves-to (0.44, 0.98) over 0.01s
+    freeman moves-to (0.44, 0.62) over 0.01s
     freeman pose "talk"
     //lip 6
     together {
@@ -166,7 +168,7 @@ scene "pustota" (duration: 42s) {
     wait 0.08s
 
     // ── ЖАЛО-CTA (VO-8): наезд-удар, подмиг-издёвка ───────────────────────
-    freeman moves-to (0.5, 0.98) over 0.01s
+    freeman moves-to (0.5, 0.62) over 0.01s
     freeman pose "talk"
     //lip 8
     together {
