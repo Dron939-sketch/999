@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 60" width="48" height="60"><defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
-<!-- Сердитый/усталый глаз оригинала (кадры 12–15с) — не большой овал с
-     вырезанным клином, а ТОНКАЯ КОСАЯ ЛИНЗА: широкая, низкая, внутренний
-     край опущен. Именно она даёт «тяжёлый взгляд» в покое. -->
-<g filter="url(#ink)"><path d="M4 30 Q24 20 44 28 Q24 40 4 30 Z" fill="#0e0e0e"
+<!-- Прищур — НИЖНИЙ край разброса, а не норма: по развёртке h/w опускается
+     до 0.42 лишь на отдельных кадрах. Держим ~0.65: узкая косая линза,
+     но ещё глаз, а не щель. -->
+<g filter="url(#ink)"><path d="M5 30 Q24 15 43 27 Q24 43 5 30 Z" fill="#0e0e0e"
    transform="rotate(-14 24 30)"/></g></svg>

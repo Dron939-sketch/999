@@ -147,6 +147,72 @@ def crop_face(g, box, margin=0.22):
     return Image.fromarray(g[max(y0 - m, 0):y1 + m, max(x0 - m, 0):x1 + m])
 
 
+def sweep(path, t0, t1, step):
+    """Развёртка по МНОГИМ кадрам: медиана и разброс каждой величины.
+
+    Один кадр — не факт, а гипотеза. Дважды подряд одиночный кадр увёл
+    рисунок не туда: размытый план дал «круглые фестоны» вместо витка
+    пружины, а тень под глазом — «брови», которых у оригинала нет вовсе.
+    Поэтому любая величина принимается только по разбросу на десятках
+    кадров: медиана — норма, размах — допуск.
+    """
+    rows = []
+    t = t0
+    while t <= t1:
+        try:
+            g = load_gray(path, t)
+        except Exception:
+            t += step
+            continue
+        box = find_face(g)
+        if box is not None:
+            y0, y1, x0, x1 = box
+            W, H = x1 - x0 + 1, y1 - y0 + 1
+            # маска должна занимать разумную долю кадра — иначе это блик
+            if 0.02 < W / g.shape[1] < 0.6:
+                feats = features(g, box)
+                eyes = [f for f in feats if f["cy"] < 75 and f["w"] > 8]
+                mouths = [f for f in feats if f["cy"] >= 75]
+                rows.append({
+                    "t": t, "mask_hw": H / W,
+                    "eyes": len(eyes),
+                    "eye_w": np.median([f["w"] for f in eyes]) if eyes else None,
+                    "eye_h": np.median([f["h"] for f in eyes]) if eyes else None,
+                    "eye_hw": np.median([f["hw"] for f in eyes]) if eyes else None,
+                    "eye_cy": np.median([f["cy"] for f in eyes]) if eyes else None,
+                    "mouth": len(mouths),
+                    "mouth_w": np.median([f["w"] for f in mouths]) if mouths else None,
+                    "mouth_cy": np.median([f["cy"] for f in mouths]) if mouths else None,
+                })
+        t += step
+    return rows
+
+
+def report_sweep(rows, title):
+    print(f"\n  {title}: кадров с найденной маской — {len(rows)}")
+    if not rows:
+        return {}
+    out = {}
+    for key, name in (("mask_hw", "маска H/W"), ("eye_w", "глаз, % ширины маски"),
+                      ("eye_h", "глаз, % высоты маски"), ("eye_hw", "глаз h/w"),
+                      ("eye_cy", "глаза, % высоты маски"),
+                      ("mouth_w", "рот, % ширины маски"),
+                      ("mouth_cy", "рот, % высоты маски")):
+        vals = [r[key] for r in rows if r.get(key) is not None]
+        if not vals:
+            print(f"    {name:<26} — не найдено ни на одном кадре")
+            continue
+        v = np.array(vals, dtype=float)
+        out[key] = float(np.median(v))
+        print(f"    {name:<26} медиана {np.median(v):>6.2f}   "
+              f"разброс {np.percentile(v,10):>6.2f}..{np.percentile(v,90):<6.2f} "
+              f"(n={len(v)})")
+    with_mouth = sum(1 for r in rows if r["mouth"])
+    print(f"    рот виден на {with_mouth} из {len(rows)} кадров "
+          f"({100*with_mouth/len(rows):.0f}%)")
+    return out
+
+
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("target")
@@ -154,7 +220,17 @@ def main(argv):
     ap.add_argument("--at", type=float)
     ap.add_argument("--at-ref", type=float)
     ap.add_argument("--side-by-side", help="куда положить картинку «оригинал | наш»")
+    ap.add_argument("--sweep", nargs=3, type=float, metavar=("T0", "T1", "STEP"),
+                    help="развёртка по многим кадрам: медиана и разброс")
     a = ap.parse_args(argv)
+
+    if a.sweep:
+        t0, t1, st = a.sweep
+        report_sweep(sweep(a.target, t0, t1, st), f"НАШ  {Path(a.target).name}")
+        if a.ref:
+            report_sweep(sweep(a.ref, t0, t1, st), f"ОРИГИНАЛ  {Path(a.ref).name}")
+        print()
+        return 0
 
     ours = load_gray(a.target, a.at)
     box_o = report(ours, f"НАШ  {Path(a.target).name}")
