@@ -45,7 +45,9 @@ scene "cell-hook" (duration: 22s, set: cell) {
 
     // 0–2.2с: тишина, капля (SFX), общий план. Пауза — это тоже удар.
     camera wide
-    wait 2.2s
+    wait 1.1s
+    camera medium freeman
+    wait 1.1s
 
     // СКЛЕЙКА → средний. VO-1: «Ты когда-нибудь просыпался с чувством...»
     camera medium freeman
@@ -129,10 +131,14 @@ scene "book" (duration: 11s, set: book) {
     wait 2s
     // СКЛЕЙКА → титул. VO-5: «Курс "Перепрошивка". Десять лекций...»
     camera close-up
-    wait 3.4s
+    wait 1.6s
+    camera medium
+    wait 1.8s
     // подъезд к картинке. VO-6: «Лекция первая. Ты — не с нуля.»
     camera pan-to (0.72, 0.62) over 3s
-    wait 2.6s
+    wait 1.2s
+    camera close-up
+    wait 1.4s
     transition dissolve 1s
 }
 
