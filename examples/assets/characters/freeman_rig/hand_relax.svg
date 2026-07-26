@@ -8,10 +8,10 @@
          (23,1) — мостик к концу предплечья, стыковка без разрыва. -->
     <path d="M17 2 Q23 -1 28 3 Q30 9 27 13 L19 13 Q14 8 17 2 Z" fill="#0e0e0e"/>
     <!-- палец-набор радиально из запястья (23,6) -->
-    <path d="M23 6 L18.9 20.4 L18.3 36.9" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L21.1 23.9 L22.5 43.7" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L24.7 24.9 L29.4 45.3" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M23 6 L27.1 21.5 L35.1 37.1" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L17.2 20.4 L14.3 36.9" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L20.3 23.9 L22.1 43.7" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L25.4 24.9 L34.8 45.3" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M23 6 L28.8 21.5 L45.4 37.1" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M23 7 Q19 12 16 19" fill="none" stroke="#0e0e0e" stroke-width="4.6" stroke-linecap="round"/>
   </g>
 </svg>
