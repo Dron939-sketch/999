@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 30" width="44" height="30">
+  <!-- Отвращение: рот ВОЛНИСТОЙ скобкой. По кадру оригинала (Фрииман, 47.5с)
+       это не дуга и не овал, а зигзаг — губа ходит волной. -->
+  <path d="M6 12 q5 8 10 0 q5 8 10 0 q5 8 10 0 q3 12 -14 13 q-17 -1 -16 -13 Z"
+        fill="none" stroke="#0e0e0e" stroke-width="4.2" stroke-linejoin="round"/>
+</svg>

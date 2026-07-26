@@ -42,6 +42,9 @@ scene "cell" (duration: 40s, set: cell) {
     let hand = prop("hand", "../assets/props/hand-point.svg") at (-1.5, 1.5) layer 5
     let slovo = text("СВОБОДА?", 150) at (0.5, -2.0) layer 6
     slovo scales 2.6
+    let cig = prop("cig", "../assets/props/cigarette.svg") at (0.5, 2.5) layer 9
+    cig scales 0.6
+    cig hides
 
     // --- t=0..3.5 БЕЗ СЛОВ: крыса-одиссея (крючок 3с — уже лезет по стене) ---
     camera wide
@@ -60,6 +63,42 @@ scene "cell" (duration: 40s, set: cell) {
         ratw moves-to (0.42, 0.20) over 0.35s ease-in
         ratw fades-to 0 over 0.3s
     }
+
+    // --- ХОДИТ ПО КАМЕРЕ ВЗАД-ВПЕРЁД И НЕРВНО КУРИТ ---
+    // Действие до первого слова: камера показана не планом, а поведением.
+    camera medium freeman
+    freeman pose "shag_levoj"
+    freeman moves-to (0.68, 0.80) over 1.3s
+    wait 0.3s
+    freeman pose "shag_pravoj"
+    wait 0.3s
+    freeman pose "shag_levoj"
+    freeman moves-to (0.34, 0.80) over 1.3s
+    wait 0.4s
+    // затяжка — выдох — затяжка
+    cig moves-to (0.37, 0.74) over 0.01s
+    cig shows
+    freeman pose "kurit_zatyazhka"
+    wait 0.6s
+    freeman pose "kurit_vydoh"
+    cig moves-to (0.40, 0.79) over 0.35s
+    wait 0.7s
+    freeman pose "kurit_zatyazhka"
+    cig moves-to (0.37, 0.74) over 0.3s
+    wait 0.5s
+    // швыряет окурок и тушит носком
+    freeman pose "brosaet_bychok"
+    together {
+        cig moves-to (0.38, 0.99) over 0.3s ease-in
+        cig scales 0.34
+    }
+    wait 0.35s
+    freeman pose "tushit_nogoj"
+    camera shake 0.2s intensity 1
+    wait 0.5s
+    cig hides
+    freeman pose "ugryumo"
+    wait 0.5s
 
     // --- ХУК (VO-1): средний, фигура ВПРАВО-треть, ракурс СВЕРХУ ---
     freeman moves-to (0.63, 0.80) over 0.01s
