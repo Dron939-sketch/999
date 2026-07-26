@@ -328,17 +328,21 @@ fn apply_monochrome(data: &mut [u8], contrast: f32) {
     let contrast = if contrast > 0.0 { contrast } else { 1.12 };
     for px in data.chunks_exact_mut(4) {
         let (r, g, b) = (px[0] as f32, px[1] as f32, px[2] as f32);
-        // Spot-colour accent (Freeman device): a strongly-red pixel survives the
-        // monochrome pass as blood-red, so any asset drawn in red reads as the
-        // single shock colour on the black-and-white frame. Everything else is
-        // desaturated to ink.
-        let redness = r - g.max(b);
-        if redness > 55.0 && r > 90.0 {
-            // Keep a punchy, slightly darkened blood red; carry a little shading.
-            let k = (r / 255.0).clamp(0.5, 1.0);
-            px[0] = (200.0 * k + 30.0).min(255.0) as u8;
-            px[1] = (18.0 * k) as u8;
-            px[2] = (22.0 * k) as u8;
+        // Цветное пятно (фишка студии): насыщенный пиксель ПЕРЕЖИВАЕТ
+        // монохромный проход и остаётся единственным цветом в ч/б кадре.
+        // Раньше правило пропускало только КРАСНОЕ, и цветной плакат на стене —
+        // ровно та деталь, ради которой приём и заводился, — уходил в серое.
+        // Теперь спасается любой достаточно насыщенный цвет, а не один оттенок.
+        let mx = r.max(g).max(b);
+        let mn = r.min(g).min(b);
+        if mx - mn > 55.0 && mx > 90.0 {
+            // Подтягиваем насыщенность и слегка притемняем: цвет должен
+            // БИТЬ на фоне туши, а не выглядеть выцветшей фотографией.
+            let mid = (r + g + b) / 3.0;
+            let boost = |c: f32| ((mid + (c - mid) * 1.35) * 0.92).clamp(0.0, 255.0);
+            px[0] = boost(r) as u8;
+            px[1] = boost(g) as u8;
+            px[2] = boost(b) as u8;
             continue;
         }
         // Rec. 601 luma.

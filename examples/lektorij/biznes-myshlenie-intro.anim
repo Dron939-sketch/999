@@ -22,7 +22,8 @@ config {
     fps: 24
     background: #d4d7cf
     monochrome: true
-    mono-contrast: 5.0
+    mono-contrast: 1.8         // 5.0 схлопывал серые плоскости в чёрный —
+                               // локация и персонаж сливались в одну массу
     vignette: 0.12
     film-grain: 0.05
     on-twos: 2

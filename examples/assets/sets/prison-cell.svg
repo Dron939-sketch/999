@@ -87,6 +87,20 @@
 
   <!-- ===== официальная казённая маркировка (трафарет-стиль: жирный моно,
        заглавные, разрядка — читается как трафарет-штамп) ===== -->
+
+  <!-- ЦВЕТНОЙ ПЛАКАТ — фишка студии: единственное цветное пятно в ч/б кадре.
+       Пережидает монохромный проход рендера (см. apply_monochrome: спасается
+       любой насыщенный цвет). Прибит криво, угол отогнут — камера, не музей. -->
+  <g filter="url(#ink)" transform="rotate(-2.2 700 200)">
+    <rect x="628" y="140" width="150" height="200" fill="#c8442f" stroke="#141410" stroke-width="6"/>
+    <rect x="640" y="152" width="126" height="120" fill="#e8c341" stroke="#141410" stroke-width="4"/>
+    <circle cx="703" cy="206" r="40" fill="#2f6fa8" stroke="#141410" stroke-width="5"/>
+    <path d="M703 178 l10 22 24 3 -18 17 5 24 -21 -12 -21 12 5 -24 -18 -17 24 -3 Z" fill="#e8c341"/>
+    <rect x="640" y="286" width="126" height="12" fill="#141410" opacity="0.75"/>
+    <rect x="640" y="306" width="92" height="10" fill="#141410" opacity="0.6"/>
+    <!-- отогнутый нижний угол: за ним видна стена -->
+    <path d="M778 316 l-30 24 30 0 Z" fill="#70726d" stroke="#141410" stroke-width="4"/>
+  </g>
   <g filter="url(#ink)" fill="#141410" font-family="DejaVu Sans Mono"
      font-weight="bold" letter-spacing="3">
     <text x="352" y="172" font-size="23" opacity="0.9">БЛОК 7</text>
