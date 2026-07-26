@@ -71,14 +71,14 @@
                 },
                 {
                   "name": "mouth",
-                  "part": "blank",
+                  "part": "mouth_smile",
                   "pivot": [
                     22,
                     8
                   ],
                   "offset": [
-                    10,
-                    -44
+                    2,
+                    -56
                   ],
                   "z_order": 6
                 },
@@ -131,8 +131,8 @@
                 8
               ],
               "offset": [
-                -96,
-                44
+                -92,
+                20
               ],
               "rotation": 18,
               "z_order": 4,
@@ -188,8 +188,8 @@
                 8
               ],
               "offset": [
-                96,
-                44
+                86,
+                20
               ],
               "rotation": -17,
               "z_order": 4,
@@ -260,8 +260,8 @@
                 6
               ],
               "offset": [
-                -26,
-                214
+                -24,
+                172
               ],
               "z_order": 0,
               "children": [
@@ -296,8 +296,8 @@
                 6
               ],
               "offset": [
-                26,
-                214
+                24,
+                172
               ],
               "z_order": 0,
               "children": [
