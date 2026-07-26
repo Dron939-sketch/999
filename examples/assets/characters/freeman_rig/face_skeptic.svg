@@ -2,22 +2,22 @@
   <defs>
     <filter id="ink" x="-20%" y="-20%" width="140%" height="140%">
       <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="1" seed="15" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>
   <g filter="url(#ink)">
     <path d="M66 158 L64 190 L96 190 L94 158 Z" fill="#0e0e0e"/>
     <path d="M80 6 Q128 12 130 84 Q130 146 100 172 Q88 182 80 182 Q72 182 60 172 Q30 146 30 84 Q32 12 80 6 Z"
-          fill="#eef1ec" stroke="#0e0e0e" stroke-width="3"/>
+          fill="#eef1ec" stroke="#0e0e0e" stroke-width="7.2"/>
     <path d="M31 96 Q34 150 62 174 Q73 182 80 182 Q88 182 99 174 Q126 152 129 98"
-          fill="none" stroke="#0e0e0e" stroke-width="7.5" stroke-linecap="round"/>
-    <path d="M30 78 Q31 60 36 44" fill="none" stroke="#0e0e0e" stroke-width="5.5" stroke-linecap="round"/>
+          fill="none" stroke="#0e0e0e" stroke-width="18.0" stroke-linecap="round"/>
+    <path d="M30 78 Q31 60 36 44" fill="none" stroke="#0e0e0e" stroke-width="13.2" stroke-linecap="round"/>
 
     <path d="M38 82 Q54 76 72 82 L70 94 Q52 98 40 92 Z" fill="#0e0e0e"/>
-    <path d="M36 72 L74 70" stroke="#0e0e0e" stroke-width="5" stroke-linecap="round"/>
-    <circle cx="104" cy="88" r="15" fill="#eef1ec" stroke="#0e0e0e" stroke-width="4"/>
+    <path d="M36 72 L74 70" stroke="#0e0e0e" stroke-width="12.0" stroke-linecap="round"/>
+    <circle cx="104" cy="88" r="15" fill="#eef1ec" stroke="#0e0e0e" stroke-width="9.6"/>
     <path d="M89 84 Q104 74 119 84 L119 88 L89 88 Z" fill="#0e0e0e"/>
-    <path d="M88 62 Q104 52 120 60" fill="none" stroke="#0e0e0e" stroke-width="5" stroke-linecap="round"/>
-    <path d="M64 134 Q82 138 98 132" fill="none" stroke="#0e0e0e" stroke-width="4" stroke-linecap="round"/>
+    <path d="M88 62 Q104 52 120 60" fill="none" stroke="#0e0e0e" stroke-width="12.0" stroke-linecap="round"/>
+    <path d="M64 134 Q82 138 98 132" fill="none" stroke="#0e0e0e" stroke-width="9.6" stroke-linecap="round"/>
   </g>
 </svg>

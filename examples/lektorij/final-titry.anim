@@ -12,8 +12,8 @@ config {
     height: 720
     fps: 24
     background: #111110
-    film-grain: 0.22
-    vignette: 0.35
+    film-grain: 0.05
+    vignette: 0.12
 }
 
 scene "titry" (duration: 7s, set: titry) {

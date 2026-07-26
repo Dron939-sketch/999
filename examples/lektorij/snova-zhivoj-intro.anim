@@ -21,11 +21,11 @@ config {
     fps: 24
     background: #e4e2d8        // пустое светлое поле — канон
     monochrome: true
-    mono-contrast: 1.8         // жёсткий двухтон, без полутонов
+    mono-contrast: 5.0         // жёсткий двухтон, без полутонов
     on-twos: 2
-    line-boil: 0.6
-    film-grain: 0.16           // после замера дёрганья: фактура без шипения
-    vignette: 0.4
+    line-boil: 1.25
+    film-grain: 0.05           // после замера дёрганья: фактура без шипения
+    vignette: 0.12
     film-flicker: 0.04
     gate-weave: 0.8
     film-scratch: 0.25

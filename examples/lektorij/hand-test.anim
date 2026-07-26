@@ -6,7 +6,7 @@ config {
     fps: 24
     background: #c8cbc5
     monochrome: true
-    mono-contrast: 1.15
+    mono-contrast: 5.0
 }
 
 scene "test" (duration: 1.0s) {

@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 102" width="40" height="102"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="8" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 102" width="40" height="102"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="8" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
 <!-- эталон-разбор: тонкая чёрная сужающаяся линия, изгиб зеркален левой -->
 <g filter="url(#ink)"><path d="M15 6 Q14 30 16 55 Q16 75 17 92 L24 92 Q26 75 27 55 Q29 30 25 6 Z" fill="#0e0e0e"/>
 <!-- РУКАВ-ПРУЖИНА на стыке рука↔тело (зеркало левого): вертикальный виток -->
 <path d="M21 1 c13 0 13 8 0 8 c-13 0 -13 8 0 8 c13 0 13 8 0 8 c-13 0 -13 8 0 8 c13 0 13 8 0 8 c-13 0 -13 7 -2 8"
-      fill="none" stroke="#0e0e0e" stroke-width="6" stroke-linecap="round"/></g></svg>
+      fill="none" stroke="#0e0e0e" stroke-width="14.4" stroke-linecap="round"/></g></svg>

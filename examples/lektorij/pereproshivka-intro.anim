@@ -25,14 +25,14 @@ config {
     fps: 24
     background: #3a3d38
     monochrome: true
-    mono-contrast: 1.25
-    vignette: 0.45
-    film-grain: 0.14
+    mono-contrast: 5.0
+    vignette: 0.12
+    film-grain: 0.05
     // Фримен-аутентика: рисунок держится «на двойках» (рукотворная дёрганость)
     // + лёгкая атмосферная крошка. Красное (spot-color) выживает акцентом.
     on-twos: 2
     snow: 0.3
-    line-boil: 0.8
+    line-boil: 1.25
 }
 
 // === СЦЕНА 1: ХУК В КАМЕРЕ (22 с) ===

@@ -17,7 +17,7 @@ config {
     fps: 24
     background: #0a0d0b
     monochrome: true
-    mono-contrast: 1.8
+    mono-contrast: 5.0
 }
 
 scene "freeman" (duration: 13s, set: moon) {

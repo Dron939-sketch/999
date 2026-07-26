@@ -5,7 +5,7 @@
 import character freeman from "../assets/characters/freeman_rig"
 import set shock from "../assets/sets/lektorij-final.svg"
 
-config { width: 1280 height: 720 fps: 24 background: #14140f film-grain: 0.3 vignette: 0.5 }
+config { width: 1280 height: 720 fps: 24 background: #14140f film-grain: 0.05 vignette: 0.12 }
 
 scene "before" (duration: 2s) {
     place freeman at (0.5, 0.86) facing front

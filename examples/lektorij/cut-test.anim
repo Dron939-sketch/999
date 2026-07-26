@@ -7,7 +7,7 @@ config {
     fps: 24
     background: #54584f
     monochrome: true
-    mono-contrast: 1.2
+    mono-contrast: 5.0
     on-twos: 2
 }
 

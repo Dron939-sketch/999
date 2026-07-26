@@ -22,11 +22,11 @@ config {
     fps: 24
     background: #d4d7cf
     monochrome: true
-    mono-contrast: 1.2
-    vignette: 0.35
-    film-grain: 0.12
+    mono-contrast: 5.0
+    vignette: 0.12
+    film-grain: 0.05
     on-twos: 2
-    line-boil: 0.8
+    line-boil: 1.25
     // Свет и тень: отбрасываемая тень на тротуар + собственная (form) тень на
     // персонаже (объём на маске), свет справа.
     cast-shadow: 0.42
