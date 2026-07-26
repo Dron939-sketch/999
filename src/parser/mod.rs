@@ -593,6 +593,30 @@ fn parse_let(pair: Pair) -> Result<LetStmt, AnimError> {
                 },
             })
         }
+        Rule::let_text => {
+            let mut parts = prop_pair.into_inner();
+            let content = parse_string_literal(parts.next().unwrap());
+            let mut size = None;
+            let mut position = None;
+            let mut layer = None;
+            for p in parts {
+                match p.as_rule() {
+                    Rule::number => size = p.as_str().parse::<f64>().ok(),
+                    Rule::position => position = Some(parse_position(p)?),
+                    Rule::integer => layer = p.as_str().parse::<i32>().ok(),
+                    _ => {}
+                }
+            }
+            Ok(LetStmt {
+                name,
+                kind: LetKind::Text {
+                    content,
+                    size,
+                    position,
+                    layer,
+                },
+            })
+        }
         r => Err(AnimError::Parse(format!("unexpected let kind: {r:?}"))),
     }
 }

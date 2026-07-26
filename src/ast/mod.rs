@@ -151,6 +151,14 @@ pub enum LetKind {
         position: Option<Position>,
         layer: Option<i32>,
     },
+    /// Кинетическая типографика: `let w = text("СВОБОДА", 140) at (0.5, 0.4)`.
+    /// Слово синтезируется в SVG-проп (жирная тушь) — анимируется как проп.
+    Text {
+        content: String,
+        size: Option<f64>,
+        position: Option<Position>,
+        layer: Option<i32>,
+    },
 }
 
 // ---------------------------------------------------------------------------

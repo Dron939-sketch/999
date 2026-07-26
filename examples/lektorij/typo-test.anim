@@ -1,0 +1,23 @@
+// Демо цеха кинетической типографики: слово-удар + инверсия-панч (Фримен).
+// ПАТТЕРН СЛОВА-УДАРА (надёжный): слово живёт ЗА КАДРОМ в масштабе удара
+// (hides/shows лагают и двигают курсор — проверено); удар = телепорт в кадр
+// (moves-to over 0.01s) + вжатие scales + transition invert.
+import character freeman from "../assets/characters/freeman_rig"
+config { width: 1280 height: 720 fps: 24 background: #e8e6dc monochrome: true film-grain: 0.25 vignette: 0.4 }
+scene "typo" (duration: 5s) {
+    place freeman at (0.5, 0.86) facing front
+    freeman scales 1.2
+    freeman pose "talk"
+    let w = text("СВОБОДА?", 150) at (0.5, -2.0)
+    w scales 2.6
+    camera wide
+    wait 0.8s
+    // УДАР: телепорт в кадр огромным, вжатие + негатив-вспышка
+    w moves-to (0.5, 0.30) over 0.01s
+    w scales 1.0 over 0.2s ease-in
+    transition invert 0.16s
+    wait 1.6s
+    // уходит рывком вверх
+    w moves-to (0.5, -2.0) over 0.3s ease-in
+    wait 0.8s
+}

@@ -95,6 +95,63 @@ impl AssetRegistry {
         Ok(())
     }
 
+    /// Register a kinetic-typography word as a synthesized SVG prop.
+    /// Жирная тушь DejaVu Sans Bold + рваная кромка (turbulence) — слово-удар
+    /// в стиле Фримена. Все действия пропов работают из коробки.
+    pub fn register_text_prop(
+        &mut self,
+        name: &str,
+        content: &str,
+        size: f64,
+    ) -> Result<(), AnimError> {
+        let size = if size > 0.0 { size } else { 120.0 };
+        // Ширина по количеству char'ов (кириллица моноширинно-широкая в Bold —
+        // множитель 0.72 подобран по DejaVu), запас на displacement-фильтр.
+        let chars = content.chars().count().max(1) as f64;
+        let w = (chars * size * 0.72 + size * 0.8).ceil();
+        let h = (size * 1.7).ceil();
+        let svg = format!(
+            r##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}">
+  <defs>
+    <filter id="ink" x="-8%" y="-15%" width="116%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="{disp}" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <text x="{cx}" y="{by}" filter="url(#ink)" fill="#16160f"
+        font-family="DejaVu Sans, sans-serif" font-weight="bold"
+        font-size="{size}" text-anchor="middle" letter-spacing="{ls}">{esc}</text>
+</svg>"##,
+            w = w,
+            h = h,
+            cx = w / 2.0,
+            by = size * 1.18,
+            disp = (size * 0.022).clamp(2.0, 4.5),
+            ls = size * 0.02,
+            esc = content
+                .replace('&', "&amp;")
+                .replace('<', "&lt;")
+                .replace('>', "&gt;"),
+        );
+        let svg_data = svg.into_bytes();
+        let opts = crate::svg_options();
+        let tree = usvg::Tree::from_data(&svg_data, &opts).map_err(|e| {
+            AnimError::Asset(format!("failed to build text prop '{name}': {e}"))
+        })?;
+        let tsize = tree.size();
+        self.props.insert(
+            name.to_string(),
+            PropAsset {
+                name: name.to_string(),
+                path: std::path::PathBuf::from(format!("<text:{content}>")),
+                svg_data,
+                width: tsize.width() as f64,
+                height: tsize.height() as f64,
+            },
+        );
+        Ok(())
+    }
+
     /// Load a prop dynamically (from a let binding).
     pub fn load_dynamic_prop(
         &mut self,

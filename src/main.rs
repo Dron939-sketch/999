@@ -337,12 +337,22 @@ fn load_let_props(
 ) -> Result<()> {
     for stmt in stmts {
         match stmt {
-            SceneStatement::Let(let_stmt) => {
-                let LetKind::Prop { label, path, .. } = &let_stmt.kind;
-                if !assets.props.contains_key(&let_stmt.name) {
-                    assets.load_dynamic_prop(&let_stmt.name, label, path, base_dir)?;
+            SceneStatement::Let(let_stmt) => match &let_stmt.kind {
+                LetKind::Prop { label, path, .. } => {
+                    if !assets.props.contains_key(&let_stmt.name) {
+                        assets.load_dynamic_prop(&let_stmt.name, label, path, base_dir)?;
+                    }
                 }
-            }
+                LetKind::Text { content, size, .. } => {
+                    if !assets.props.contains_key(&let_stmt.name) {
+                        assets.register_text_prop(
+                            &let_stmt.name,
+                            content,
+                            size.unwrap_or(120.0),
+                        )?;
+                    }
+                }
+            },
             SceneStatement::Together(inner) | SceneStatement::Do(inner) => {
                 load_let_props(inner, assets, base_dir)?;
             }

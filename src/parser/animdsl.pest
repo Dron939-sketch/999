@@ -120,10 +120,18 @@ let_stmt = {
 
 let_kind = {
     let_prop
+  | let_text
 }
 
 let_prop = {
     "prop" ~ "(" ~ string_literal ~ "," ~ string_literal ~ ")" ~ ("at" ~ position)? ~ ("layer" ~ integer)?
+}
+
+// Кинетическая типографика: слово как анимируемая сущность (все действия
+// пропов — moves-to/scales/rotates/shows/hides/fades-to — работают).
+// `let w = text("СВОБОДА") at (0.5, 0.4)`; опц. второй аргумент — кегль (px).
+let_text = {
+    "text" ~ "(" ~ string_literal ~ ("," ~ number)? ~ ")" ~ ("at" ~ position)? ~ ("layer" ~ integer)?
 }
 
 // ---------------------------------------------------------------------------
