@@ -1,10 +1,11 @@
 // =============================================================================
-//  ТЮРЬМА УМА v3 — продающее интро курса «Перепрошивка», РЕЖИССУРА ПО HOLLYWOOD.md
-//  Волна 1: раскадровка по битам (бит VO = 2-4 плана), флэш-морды, поле-ритм
-//  (павильон ↔ чёрное ECU ↔ белое слово), наезд-удар, смещённые композиции.
-//  Волна 2: ракурсы pitch/angle (low = власть, high = унижение), рука-в-камеру.
-//  VO v2 по SCRIPT-FREEMAN.md: хук-подколка → триада-пулемёт → разворот →
-//  взлёт (слово-удар «СВОБОДА?» + инверсия) → жало-CTA. //lip 1..5.
+//  ТЮРЬМА УМА v4 — продающее интро курса «Перепрошивка».
+//  РЕЖИССУРА ПО HOLLYWOOD.md: раскадровка по битам, медиана плана к ритму
+//  оригинала (~1.3-2с), флэш-морды, поле-ритм, наезды, ракурсы high/low,
+//  рука-в-камеру. VO v3 (SCRIPT-FREEMAN §5): реплики раздроблены на короткие
+//  удары ≤7 слов. v5: КАТЫ ВНУТРИ РЕПЛИК — together{speaks + do{камеры}} —
+//  речь непрерывна, планы рубятся (ритм оригинала). //lip 1..8.
+//  Тайм-якоря 3-7-21: t=3 крыса лезет, t=7 хук отыгран, t=21 разворот+рука.
 //  Паттерны: телепорт moves-to over 0.01s; пропы ждут за кадром.
 // =============================================================================
 
@@ -29,121 +30,178 @@ config {
 
 // ============================== СЦЕНА 1: КЛЕТКА ==============================
 scene "cell" (duration: 40s, set: cell) {
-    // старт БЕЗ текста: ТВ-помехи, из них врывается клетка
     transition static 0.4s
 
     place freeman at (0.5, 0.80) facing front
     freeman scales 1.5
-    // крыса-несуразица (фирменный приём) — открытие без слов
     let rat = prop("rat", "../assets/props/rat.svg") at (0.80, 0.66)
     rat scales 0.42
     let ratw = prop("rat_wave", "../assets/props/rat-wave.svg") at (0.42, 0.30)
     ratw scales 0.39
     ratw hides
-    // рука-в-камеру и слово-удар ждут ЗА КАДРОМ
     let hand = prop("hand", "../assets/props/hand-point.svg") at (-1.5, 1.5) layer 5
     let slovo = text("СВОБОДА?", 150) at (0.5, -2.0) layer 6
     slovo scales 2.6
 
-    // --- БИТ 0 (тишина, ~5.5с): клетка, крыса-одиссея ---
+    // --- t=0..3.5 БЕЗ СЛОВ: крыса-одиссея (крючок 3с — уже лезет по стене) ---
     camera wide
     freeman pose "calm"
-    rat moves-to (0.70, 0.93) over 0.7s ease-out
-    rat moves-to (0.45, 0.66) over 1.0s
+    rat moves-to (0.70, 0.93) over 0.5s ease-out
+    rat moves-to (0.45, 0.66) over 0.7s
     together {
-        rat moves-to (0.42, 0.34) over 1.0s
-        rat rotates -80 over 0.6s
+        rat moves-to (0.42, 0.34) over 0.7s
+        rat rotates -80 over 0.45s
     }
-    rat hides over 0.12s
-    ratw shows over 0.12s
-    ratw rotates 10 over 0.15s
-    ratw rotates -12 over 0.2s
+    rat hides over 0.1s
+    ratw shows over 0.1s
+    ratw rotates 10 over 0.12s
+    ratw rotates -12 over 0.15s
     together {
-        ratw moves-to (0.42, 0.20) over 0.45s ease-in
-        ratw fades-to 0 over 0.4s
+        ratw moves-to (0.42, 0.20) over 0.35s ease-in
+        ratw fades-to 0 over 0.3s
     }
-    freeman pose "think"
 
-    // --- БИТ 1 ХУК (VO-1 «Удобно сидишь?..», 3 плана) ---
-    // план 1: средний, фигура смещена ВПРАВО (треть), взгляд сверху = «ты мелкий»
+    // --- ХУК (VO-1): средний, фигура ВПРАВО-треть, ракурс СВЕРХУ ---
     freeman moves-to (0.63, 0.80) over 0.01s
-    camera angle high freeman
     freeman pose "talk"
     //lip 1
-    freeman speaks for 3.5s
-    // флэш-морда: ухмылка-подколка
+    together {
+        freeman speaks for 1.8s
+        do {
+            camera angle high freeman
+            wait 0.9s
+            camera medium freeman
+        }
+    }
+    // --- ХУК-добивка (VO-2): КАТ на крупный, фигура ВЛЕВО-треть ---
+    freeman moves-to (0.37, 0.80) over 0.01s
+    freeman pose "talk"
+    //lip 2
+    together {
+        freeman speaks for 1.6s
+        do {
+            camera close-up freeman
+            wait 0.8s
+            camera extreme-close-up freeman
+        }
+    }
     freeman pose "flash_grotesque"
     wait 0.08s
     freeman pose "skeptic"
-    wait 0.9s
+    wait 0.45s
 
-    // --- БИТ 2 ТРИАДА-ПУЛЕМЁТ (VO-2, 4 плана: кат на каждый удар) ---
-    // план: крупно, фигура слева-треть
-    freeman moves-to (0.37, 0.80) over 0.01s
-    camera close-up freeman
-    freeman pose "talk"
-    //lip 2
-    freeman speaks for 7.0s
-    // конец пулемёта: удар + тряска
-    camera shake 0.4s intensity 2
-    freeman pose "stern"
-    wait 1.0s
-
-    // --- БИТ 3 РАЗВОРОТ (VO-3 «про кого-то другого?», ракурс СНИЗУ = власть) ---
+    // --- ПУЛЕМЁТ 1 (VO-3): средний, центр, ракурс обычный ---
     freeman moves-to (0.5, 0.80) over 0.01s
-    camera angle low freeman
     freeman pose "talk"
     //lip 3
-    freeman speaks for 5.5s
-    // рука-В-КАМЕРУ на «поправь меня»: гигантский палец в зрителя
-    hand moves-to (0.72, 0.72) over 0.01s
-    camera shake 0.3s intensity 2
-    wait 0.7s
-    hand moves-to (-1.5, 1.5) over 0.01s
-    // флэш-морда: ярость на миг
+    together {
+        freeman speaks for 2.4s
+        do {
+            camera medium freeman
+            wait 1.2s
+            camera close-up freeman
+        }
+    }
+    // --- ПУЛЕМЁТ 2 (VO-4): КАТ крупный, ВПРАВО-треть ---
+    freeman moves-to (0.64, 0.80) over 0.01s
+    freeman pose "talk"
+    //lip 4
+    together {
+        freeman speaks for 2.0s
+        do {
+            camera close-up freeman
+            wait 1.0s
+            camera wide
+        }
+    }
+    // --- ПУЛЕМЁТ финал (VO-5): КАТ ECU + тряска на «здравом смысле» ---
+    freeman pose "talk"
+    //lip 5
+    together {
+        freeman speaks for 2.1s
+        do {
+            camera extreme-close-up freeman
+            wait 1.0s
+            camera medium freeman
+        }
+    }
+    camera shake 0.35s intensity 2
     freeman pose "flash_rage"
     wait 0.08s
     freeman pose "stern"
+    wait 0.6s
+
+    // --- t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука-в-камеру ---
+    freeman moves-to (0.42, 0.80) over 0.01s
+    freeman pose "talk"
+    //lip 6
+    together {
+        freeman speaks for 4.0s
+        do {
+            camera angle low freeman
+            wait 1.4s
+            camera extreme-close-up freeman
+            wait 1.3s
+            camera medium freeman
+        }
+    }
+    hand moves-to (0.72, 0.72) over 0.01s
+    camera shake 0.3s intensity 2
+    wait 0.6s
+    hand moves-to (-1.5, 1.5) over 0.01s
     wait 0.5s
 
-    // --- БИТ 4 ВЗЛЁТ (VO-4 «Выход — это мысль», ECU + слово-удар) ---
-    camera extreme-close-up freeman
+    // --- ВЗЛЁТ (VO-7): ECU, тепло; следом слово-удар ---
     freeman pose "talk"
-    //lip 4
-    freeman speaks for 5.0s
-    // СЛОВО-УДАР: «СВОБОДА?» впечатывается + негатив-вспышка
+    //lip 7
+    together {
+        freeman speaks for 3.5s
+        do {
+            camera extreme-close-up freeman
+            wait 1.8s
+            camera wide
+        }
+    }
+    // СЛОВО-УДАР + негатив-вспышка (поле-ритм: уход из павильона в графику)
     camera wide
     slovo moves-to (0.5, 0.30) over 0.01s
-    slovo scales 1.0 over 0.2s ease-in
+    slovo scales 1.0 over 0.18s ease-in
     transition invert 0.16s
     camera shake 0.3s intensity 2
-    wait 1.0s
-    slovo moves-to (0.5, -2.0) over 0.25s ease-in
+    wait 0.8s
+    slovo moves-to (0.5, -2.0) over 0.22s ease-in
 
-    // --- БИТ 5 ЖАЛО-CTA (VO-5, наезд-удар на финал) ---
+    // --- ЖАЛО-CTA (VO-8): средний, центр, наезд-удар на подколке ---
     freeman moves-to (0.5, 0.80) over 0.01s
-    camera medium freeman
     freeman pose "talk"
-    //lip 5
-    freeman speaks for 7.6s
-    // наезд-удар в упор на подколке
+    //lip 8
+    together {
+        freeman speaks for 5.5s
+        do {
+            camera medium freeman
+            wait 1.8s
+            camera close-up freeman
+            wait 1.7s
+            camera wide
+        }
+    }
     camera zoom-to freeman over 0.18s ease-in
     freeman pose "sly"
-    wait 0.8s
-    // отъезд-одиночество: мелкая фигура в клетке, зритель остаётся с мыслью
-    camera reset over 0.6s
+    wait 0.55s
+    // отъезд-одиночество: зритель остаётся с мыслью
+    camera reset over 0.5s
     freeman pose "calm"
-    wait 1.0s
+    wait 0.6s
 }
 
 // ============================== СЦЕНА 2: ТИТРЫ ==============================
-scene "titry" (duration: 6.5s, set: titry) {
+scene "titry" (duration: 6s, set: titry) {
     transition static 0.45s
 
     place freeman at (0.5, 3.0) facing front
     let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
     stamp hides
-    wait 1.4s
+    wait 1.2s
 
     stamp moves-to (0.5, 0.80) over 0.01s
     stamp shows
@@ -153,6 +211,6 @@ scene "titry" (duration: 6.5s, set: titry) {
     stamp scales 1.0 over 0.1s ease-out
     stamp rotates -4 over 0.12s
 
-    wait 3.2s
+    wait 2.5s
     transition fade-black 0.8s
 }
