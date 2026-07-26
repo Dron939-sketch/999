@@ -1,0 +1,33 @@
+// ФОТО-ШОК (HOLLYWOOD.md Волна 2 п.10) — приём тревоги из оригинала:
+// рисованный кадр → ТВ-шум → документальный/растровый кадр на 0.3-0.5с →
+// шум → назад в рисунок. Зритель не успевает осознать, но получает укол.
+// Растр в сете уже поддержан (jpeg data-URI; PNG >1МБ ломает usvg).
+import character freeman from "../assets/characters/freeman_rig"
+import set shock from "../assets/sets/lektorij-final.svg"
+
+config { width: 1280 height: 720 fps: 24 background: #14140f film-grain: 0.3 vignette: 0.5 }
+
+scene "before" (duration: 2s) {
+    place freeman at (0.5, 0.86) facing front
+    camera medium freeman
+    freeman pose "talk"
+    freeman speaks for 1.4s
+}
+
+// ВСПЫШКА: шум → растровый кадр (0.4с) → шум. Сцена короткая = удар.
+scene "shock" (duration: 0.9s, set: shock) {
+    transition static 0.25s
+    place freeman at (0.5, 3.0) facing front
+    wait 0.4s
+    transition static 0.25s
+}
+
+scene "after" (duration: 2.2s) {
+    place freeman at (0.5, 0.86) facing front
+    camera extreme-close-up freeman
+    freeman pose "flash_pupils"
+    wait 0.08s
+    freeman pose "stern"
+    wait 1.4s
+    transition fade-black 0.6s
+}
