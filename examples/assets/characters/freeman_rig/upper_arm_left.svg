@@ -1,9 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 102" width="40" height="102"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 102" width="120" height="102"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
 <!-- эталон-разбор: рука — тонкая чёрная сужающаяся линия с лёгким изгибом,
      без серой окантовки (на пересечении с рясой сливается — так и у оригинала) -->
-<g filter="url(#ink)"><path d="M15 6 Q11 30 13 55 Q14 75 16 92 L23 92 Q24 75 24 55 Q26 30 25 6 Z" fill="#0e0e0e"/>
-<!-- РУКАВ-ПРУЖИНА на стыке рука↔тело: вертикальный виток-спираль (как
-     сжатая пружина сбоку) — плотный скомканный манжет-шарик у плеча,
-     виден на фоне где рука выходит из тела -->
-<path d="M21 1 c-13 0 -13 8 0 8 c13 0 13 8 0 8 c-13 0 -13 8 0 8 c13 0 13 8 0 8 c-13 0 -13 8 0 8 c13 0 13 7 2 8"
-      fill="none" stroke="#0e0e0e" stroke-width="14.4" stroke-linecap="round"/></g></svg>
+<!-- РЮШ НА ПЛЕЧЕ. По кадру оригинала (_9 октября 2024, 30с, крупно) это не
+     «виток пружины», а плотная ГРОЗДЬ круглых фестонов на уровне рта маски,
+     выходящая за силуэт тела. Прежний виток рисовался чёрным ВНУТРИ чёрной
+     массы плаща и не читался ни в одном кадре: чёрное на чёрном.
+     Гроздь именно ПЛЕЧЕВАЯ — компактная и приплюснутая (высота примерно
+     вдвое меньше ширины). Раздутая до рукава-фонарика она топит руку.
+     viewBox расширен под гроздь, ось руки поэтому на x=60 (см. pivot). -->
+<g filter="url(#ink)">
+    <ellipse cx="60" cy="22" rx="28" ry="14" fill="#0e0e0e"/>
+    <circle cx="33" cy="25" r="10" fill="#0e0e0e"/>
+    <circle cx="36" cy="39" r="9" fill="#0e0e0e"/>
+    <circle cx="44" cy="49" r="8" fill="#0e0e0e"/>
+    <circle cx="56" cy="53" r="9" fill="#0e0e0e"/>
+    <circle cx="69" cy="51" r="8" fill="#0e0e0e"/>
+    <circle cx="80" cy="45" r="9" fill="#0e0e0e"/>
+    <circle cx="87" cy="34" r="10" fill="#0e0e0e"/>
+    <circle cx="84" cy="22" r="8" fill="#0e0e0e"/>
+    <circle cx="74" cy="15" r="9" fill="#0e0e0e"/>
+    <circle cx="60" cy="12" r="10" fill="#0e0e0e"/>
+    <circle cx="47" cy="15" r="8" fill="#0e0e0e"/>
+    <circle cx="37" cy="18" r="7" fill="#0e0e0e"/>
+    <circle cx="50" cy="34" r="11" fill="#0e0e0e"/>
+    <circle cx="66" cy="37" r="11" fill="#0e0e0e"/>
+    <circle cx="76" cy="29" r="9" fill="#0e0e0e"/>
+    <path d="M55 16 Q51 40 53 60 Q54 78 56 92 L63 92 Q64 78 64 60 Q66 40 65 16 Z" fill="#0e0e0e"/>
+</g></svg>

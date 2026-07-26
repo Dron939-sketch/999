@@ -1,3 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 60" width="48" height="60"><defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
-<g filter="url(#ink)"><ellipse cx="24" cy="32" rx="19" ry="25" fill="#0e0e0e"/>
-<path d="M44 6 L2 22 L2 2 L44 2 Z" fill="#eef1ec"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 60" width="48" height="60"><defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="6" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<!-- Сердитый/усталый глаз оригинала (кадры 12–15с) — не большой овал с
+     вырезанным клином, а ТОНКАЯ КОСАЯ ЛИНЗА: широкая, низкая, внутренний
+     край опущен. Именно она даёт «тяжёлый взгляд» в покое. -->
+<g filter="url(#ink)"><path d="M4 30 Q24 20 44 28 Q24 40 4 30 Z" fill="#0e0e0e"
+   transform="rotate(14 24 30)"/></g></svg>
