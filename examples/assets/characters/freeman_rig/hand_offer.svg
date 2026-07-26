@@ -1,19 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 52" width="46" height="52">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 84" width="120" height="84">
   <defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="43" result="n"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="41" result="n"/>
     <feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/>
   </filter></defs>
+  <!-- ладонь предлагает: пальцы собраны и подогнуты.
+       Кадр оригинала (_9 октября 2024, 30с, кисть крупно): ладони как таковой
+       нет — ДЛИННЫЕ пальцы расходятся прямо из запястья веером и сходят на
+       нет к кончику. У нас была компактная варежка с толстыми култышками.
+       Веер держим НИЖЕ горизонтали (до ±60° от оси руки): разведённый шире
+       он читается не кистью, а звёздочкой-фейерверком.
+       Все hand_*.svg делят один viewBox и одну точку запястья (60,10) —
+       иначе при смене жеста кисть прыгает мимо конца предплечья. -->
   <g filter="url(#ink)">
-    <path d="M19 2 L28.1 2.0 L27.7 8.0 L17.4 8.0Z" fill="#0e0e0e"/>
-    
-    <path d="M23 6 L18.6 20.7 L20.4 37.1" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/>
-    
-    <path d="M23 6 L21.3 23.0 L26.9 41.4" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/>
-    
-    <path d="M23 6 L24.7 23.0 L34.7 40.9" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/>
-    
-    <path d="M23 6 L27.4 20.7 L43.2 35.2" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/>
-    
-    <path d="M23 6 Q16.9 9.5 11.7 12.5" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round"/>
+    <path d="M50 1 Q60 -4 70 1 Q72 15 60 19 Q48 15 50 1 Z" fill="#0e0e0e"/>
+    <path d="M66.1 16.3 L46.0 32.0 L34.4 47.2 L28.5 43.8 L37.6 23.2 L53.9 3.7 Z" fill="#0e0e0e"/>
+    <path d="M68.0 13.6 L53.9 38.6 L48.5 59.8 L41.7 58.8 L42.8 33.6 L52.0 6.4 Z" fill="#0e0e0e"/>
+    <path d="M68.8 10.3 L65.0 40.4 L68.2 63.4 L61.6 65.1 L52.8 40.0 L51.2 9.7 Z" fill="#0e0e0e"/>
+    <path d="M68.4 7.3 L74.5 34.8 L84.3 53.8 L78.7 57.6 L62.9 38.6 L51.6 12.7 Z" fill="#0e0e0e"/>
+    <path d="M66.9 4.6 L79.7 25.3 L92.9 38.0 L88.9 43.5 L70.1 32.8 L53.1 15.4 Z" fill="#0e0e0e"/>
   </g>
 </svg>

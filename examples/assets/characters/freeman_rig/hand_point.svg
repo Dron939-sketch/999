@@ -1,13 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 52" width="46" height="52">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 84" width="120" height="84">
   <defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="44" result="n"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="41" result="n"/>
     <feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/>
   </filter></defs>
+  <!-- указующий: средний палец вытянут, остальные поджаты.
+       Кадр оригинала (_9 октября 2024, 30с, кисть крупно): ладони как таковой
+       нет — ДЛИННЫЕ пальцы расходятся прямо из запястья веером и сходят на
+       нет к кончику. У нас была компактная варежка с толстыми култышками.
+       Веер держим НИЖЕ горизонтали (до ±60° от оси руки): разведённый шире
+       он читается не кистью, а звёздочкой-фейерверком.
+       Все hand_*.svg делят один viewBox и одну точку запястья (60,10) —
+       иначе при смене жеста кисть прыгает мимо конца предплечья. -->
   <g filter="url(#ink)">
-    <path d="M19 2 L28.1 2.0 L27.7 8.0 L17.4 8.0Z" fill="#0e0e0e"/>
-    
-    <path d="M23 6 L24.0 27.0 L22.8 50.1" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/>
-    
-    <path d="M23 6 Q17.6 10.5 14.6 13.1" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round"/>
+    <path d="M50 1 Q60 -4 70 1 Q72 15 60 19 Q48 15 50 1 Z" fill="#0e0e0e"/>
+    <path d="M65.5 17.1 L53.4 23.0 L43.2 27.5 L39.0 22.1 L45.8 13.2 L54.5 2.9 Z" fill="#0e0e0e"/>
+    <path d="M67.9 14.2 L59.8 23.6 L52.7 31.0 L46.7 27.8 L48.8 17.8 L52.1 5.8 Z" fill="#0e0e0e"/>
+    <path d="M69.0 10.6 L63.3 51.0 L58.2 84.1 L51.4 83.6 L51.0 50.2 L51.0 9.4 Z" fill="#0e0e0e"/>
+    <path d="M68.5 6.9 L70.0 19.2 L70.7 29.5 L64.3 31.8 L58.3 23.5 L51.5 13.1 Z" fill="#0e0e0e"/>
+    <path d="M66.5 3.7 L72.9 14.4 L77.7 23.5 L72.8 28.2 L63.9 23.0 L53.5 16.3 Z" fill="#0e0e0e"/>
   </g>
 </svg>

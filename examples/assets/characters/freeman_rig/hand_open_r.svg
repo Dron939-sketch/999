@@ -1,19 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 52" width="46" height="52">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 84" width="120" height="84">
   <defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="42" result="n"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="41" result="n"/>
     <feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/>
   </filter></defs>
-  <g filter="url(#ink)" transform="translate(46,0) scale(-1,1)">
-    <path d="M19 2 L28.1 2.0 L27.7 8.0 L17.4 8.0Z" fill="#0e0e0e"/>
-    
-    <path d="M23 6 L12.6 16.8 L-1.4 25.5" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/>
-    
-    <path d="M23 6 L15.7 23.8 L-1.8 42.4" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/>
-    
-    <path d="M23 6 L27.7 24.7 L39.8 44.8" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/>
-    
-    <path d="M23 6 L36.5 18.2 L65.6 28.7" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round" stroke-linejoin="round"/>
-    
-    <path d="M23 6 Q16.5 8.6 9.1 11.6" fill="none" stroke="#0e0e0e" stroke-width="11.0" stroke-linecap="round"/>
+  <!-- раскрытая ладонь: пальцы веером, почти прямые.
+       Кадр оригинала (_9 октября 2024, 30с, кисть крупно): ладони как таковой
+       нет — ДЛИННЫЕ пальцы расходятся прямо из запястья веером и сходят на
+       нет к кончику. У нас была компактная варежка с толстыми култышками.
+       Веер держим НИЖЕ горизонтали (до ±60° от оси руки): разведённый шире
+       он читается не кистью, а звёздочкой-фейерверком.
+       Все hand_*.svg делят один viewBox и одну точку запястья (60,10) —
+       иначе при смене жеста кисть прыгает мимо конца предплечья. -->
+  <g filter="url(#ink)">
+    <path d="M50 1 Q60 -4 70 1 Q72 15 60 19 Q48 15 50 1 Z" fill="#0e0e0e"/>
+    <path d="M64.0 2.5 L88.0 18.3 L108.0 29.8 L105.6 35.3 L82.6 28.5 L56.0 17.5 Z" fill="#0e0e0e"/>
+    <path d="M67.0 5.2 L83.2 34.1 L97.8 56.5 L93.1 60.2 L73.7 40.6 L53.0 14.8 Z" fill="#0e0e0e"/>
+    <path d="M68.4 8.8 L70.6 44.1 L74.3 72.2 L68.5 73.6 L59.2 45.7 L51.6 11.2 Z" fill="#0e0e0e"/>
+    <path d="M68.1 12.6 L55.3 43.2 L46.7 68.4 L40.8 67.0 L44.3 39.6 L51.9 7.4 Z" fill="#0e0e0e"/>
+    <path d="M66.1 15.9 L45.0 33.8 L29.1 49.2 L24.4 45.4 L36.8 25.8 L53.9 4.1 Z" fill="#0e0e0e"/>
   </g>
 </svg>
