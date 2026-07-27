@@ -354,8 +354,10 @@ detective moves-to (0.6, 0.5) over 1s linear
 
 #### pose
 
-Changes the entity's pose. The transition between the current pose and the new
-pose is interpolated smoothly.
+Changes the entity's pose ENTIRELY — every bone goes to what this pose says, or
+to the rig default if the pose is silent about it. Для движения второй частью
+тела параллельно первой есть `overlays` (ниже). The transition between the
+current pose and the new pose is interpolated smoothly.
 
 ```
 <entity> pose "<pose-name>"
@@ -365,6 +367,29 @@ pose is interpolated smoothly.
 detective pose "thinking"
 informant pose "drinking"
 ```
+
+#### overlays
+
+Layers a pose ON TOP of the held one instead of replacing it. Only the bones
+named in the overlay pose change; everything else keeps doing what it was doing.
+
+```
+<entity> overlays "<pose-name>"
+```
+
+```
+freeman pose     "shag_levoj"        // база: ноги, корпус
+freeman overlays "kurit_zatyazhka"   // слой: рука, кисть, рот
+freeman speaks for 2.4s              // слой поверх: рот идёт по звуку
+```
+
+Зачем. `pose` задаёт тело ЦЕЛИКОМ, поэтому «идёт и курит» распадалось на
+«идёт», потом «курит»: шаг замирал на время затяжки. Человек так не двигается —
+разные части тела работают одновременно. Слои НАКАПЛИВАЮТСЯ: на последнюю
+полную позу ложатся по порядку все слои после неё.
+
+Слой держится до следующей полной позы. После `pose` слой нужно поставить
+заново — это осознанно: иначе вернуться к чистой базе было бы нечем.
 
 #### speaks
 
@@ -599,6 +624,20 @@ let phone = prop("phone", "assets/props/phone.svg") at near detective
 
 The `<label>` is a human-readable name for the prop. The `<path>` is the file
 path to the SVG asset. The optional `at` clause sets the initial position.
+
+#### `on floor` — предмет СТОИТ на полу локации
+
+```
+let rat = prop("rat", "../assets/props/rat.svg") at (0.7, 0.93) on floor
+```
+
+Без этой пометки точка привязки пропа — ЦЕНТР его рисунка, поэтому предмет,
+поставленный на линию пола, наполовину в него утоплен, а на дальнем плане
+остаётся того же размера, что на переднем. С `on floor` привязка переезжает в
+низ рисунка (опора), а размер считается по глубине: у дальней кромки пола
+предмет мельче, у передней крупнее. Глубина берётся из карты поверхностей
+локации `<локация>.surfaces.json` (поле `floor`); без карты пометка не делает
+ничего.
 
 ### Kinetic Typography (`text`)
 
