@@ -19,6 +19,7 @@ sfx.py — процедурный звукорежиссёр завода: SFX-�
 """
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -175,6 +176,76 @@ def parse_sfx_table(md_path):
     return cues
 
 
+def sfx_table_span(md_path):
+    """Самый поздний тайм-код SFX-таблицы — плановая длина ролика.
+
+    Берутся ВСЕ строки, включая те, для которых синтеза нет: последняя строка
+    таблицы («резкий обрыв в тишину») звука не даёт, но именно она отмечает
+    конец ролика. Без неё хвост тянулся до последнего ЗВУЧАЩЕГО кия, и склейка
+    на титры уезжала на самый конец видео.
+    """
+    last, in_sfx = 0.0, False
+    for line in open(md_path, encoding="utf-8"):
+        if line.startswith("##"):
+            in_sfx = "SFX" in line or "звук" in line.lower()
+            continue
+        if not in_sfx:
+            continue
+        m = ROW.match(line.strip())
+        if m:
+            last = max(last, int(m.group(1)) * 60 + float(m.group(2)))
+    return last
+
+
+def parse_vo_times(md_path):
+    """Плановые времена реплик из VO-таблицы: [(старт, конец)] по порядку VO-n."""
+    rows = []
+    for line in open(md_path, encoding="utf-8"):
+        m = re.match(r"\|\s*VO-(\d+)\s*\|\s*(\d+):(\d+(?:\.\d+)?)\s*[–-]\s*"
+                     r"(\d+):(\d+(?:\.\d+)?)\s*\|", line.strip())
+        if m:
+            rows.append((int(m.group(1)),
+                         int(m.group(2)) * 60 + float(m.group(3)),
+                         int(m.group(4)) * 60 + float(m.group(5))))
+    rows.sort()
+    return [(a, b) for _, a, b in rows]
+
+
+def remap_cues(cues, planned, real, plan_total, real_total):
+    """Перевести тайм-коды звука с ПЛАНОВОГО монтажа на фактический.
+
+    Тайм-коды в таблице проставлены по сценарию, а диктор говорит не ровно
+    столько, сколько заявлено: ролик растягивается, и звук, поставленный на
+    абсолютную секунду, отъезжает от того, что он озвучивает. В «Теориях
+    личности» звон битого стекла так звучал, когда очки ещё сидели на маске,
+    а ТВ-шум склейки — за четыре секунды до самой склейки.
+
+    Опорные точки — начала и концы реплик: они известны и в плане (VO-таблица),
+    и в факте (`animdsl timing` по подготовленному сценарию). Между опорами
+    время тянется линейно, до первой и после последней — пропорционально
+    остатку. Звук остаётся привязан к РЕЧИ, а не к секунде.
+    """
+    if not planned or not real or len(planned) != len(real):
+        return cues
+    src = [0.0] + [t for p in planned for t in p] + [max(plan_total, planned[-1][1])]
+    dst = [0.0] + [t for p in real for t in p] + [max(real_total, real[-1][1])]
+    # Опоры обязаны монотонно расти, иначе интерполяция даёт отрицательный шаг.
+    for i in range(1, len(src)):
+        src[i] = max(src[i], src[i - 1] + 1e-3)
+        dst[i] = max(dst[i], dst[i - 1] + 1e-3)
+
+    def at(t):
+        if t <= src[0]:
+            return dst[0]
+        for i in range(1, len(src)):
+            if t <= src[i]:
+                k = (t - src[i - 1]) / (src[i] - src[i - 1])
+                return dst[i - 1] + k * (dst[i] - dst[i - 1])
+        return dst[-1] + (t - src[-1])
+
+    return [(round(at(t), 2), kind) for t, kind in cues]
+
+
 def build_track(cues, out_path, duration):
     """Собрать дорожку: каждый синтез на своём тайм-коде + room-постель.
 
@@ -224,12 +295,38 @@ def main(argv):
     ap.add_argument("vo_md")
     ap.add_argument("-o", "--output", required=True)
     ap.add_argument("--duration", type=float, default=55.0)
+    ap.add_argument("--times-json", help="`animdsl timing` подготовленного сценария: "
+                                         "фактические времена реплик. Есть — тайм-коды "
+                                         "звука переводятся с плана на факт.")
     args = ap.parse_args(argv)
 
     cues = parse_sfx_table(args.vo_md)
     if not cues:
         print("SFX-таблица пуста или не найдена — дорожка не создана.")
         return 1
+    if args.times_json and os.path.isfile(args.times_json):
+        try:
+            with open(args.times_json, encoding="utf-8") as f:
+                blocks = json.load(f)
+            real = [(b["start"], b["end"]) for b in blocks.get("blocks", [])]
+            planned = parse_vo_times(args.vo_md)
+            if real and len(real) == len(planned):
+                before = list(cues)
+                # Хвост после последней реплики (титры, точка) тянется по
+                # ОБЩЕЙ длине, а не по концу речи: иначе звук склейки уезжает
+                # за конец ролика. План хвоста — самый поздний тайм-код таблицы,
+                # факт — реальная длина видео.
+                cues = remap_cues(cues, planned, real,
+                                  sfx_table_span(args.vo_md) or max(t for t, _ in cues),
+                                  args.duration)
+                moved = max((abs(a[0] - b[0]) for a, b in zip(before, cues)), default=0.0)
+                print(f"  тайм-коды звука переведены на фактический монтаж "
+                      f"(максимальный сдвиг {moved:.1f}с)")
+            else:
+                print(f"  [sfx] реплик в плане {len(planned)}, в факте {len(real)} — "
+                      "перевод тайм-кодов пропущен, звук встанет по плану.")
+        except Exception as e:                       # noqa: BLE001
+            print(f"  [sfx] тайминг не прочитан ({e}) — звук встанет по плану.")
     ok = build_track(cues, args.output, args.duration)
     print(f"OK: {args.output} — {len(cues)} звуков" if ok else "СБОЙ синтеза")
     return 0 if ok else 1

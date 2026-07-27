@@ -178,8 +178,15 @@ def step_prep_lipsync(prod, parts_dir):
         return src
 
 
-def step_sfx(prod, video_mp4, out_sfx):
-    """Синтезировать SFX-дорожку по таблице из VO.md (длина = длине видео)."""
+def step_sfx(prod, video_mp4, out_sfx, prepped_anim=None):
+    """Синтезировать SFX-дорожку по таблице из VO.md (длина = длине видео).
+
+    Тайм-коды в таблице проставлены по СЦЕНАРИЮ, а готовый ролик длиннее:
+    диктор говорит не ровно столько, сколько заявлено. Поэтому кии переводятся
+    на фактический монтаж по временам реплик из `animdsl timing` — тот же файл,
+    по которому собирается голос. Без этого звук отъезжает от того, что он
+    озвучивает: звон битого стекла звучал, когда очки ещё сидели на маске.
+    """
     vo = prod.get("vo")
     if not vo or not (ROOT / vo).exists() or not have_ffmpeg():
         return None
@@ -188,8 +195,12 @@ def step_sfx(prod, video_mp4, out_sfx):
             ["ffprobe", "-v", "error", "-show_entries", "format=duration",
              "-of", "csv=p=0", str(video_mp4)],
             check=True, capture_output=True, text=True).stdout.strip()
-        run([sys.executable, str(TOOLS / "sfx.py"), str(ROOT / vo),
-             "-o", str(out_sfx), "--duration", dur])
+        cmd = [sys.executable, str(TOOLS / "sfx.py"), str(ROOT / vo),
+               "-o", str(out_sfx), "--duration", dur]
+        times = Path(str(prepped_anim) + ".times.json") if prepped_anim else None
+        if times and times.exists():
+            cmd += ["--times-json", str(times)]
+        run(cmd)
         return out_sfx if Path(out_sfx).exists() else None
     except subprocess.CalledProcessError as e:
         log(f"  [sfx] синтез не удался ({e}) — без звуковых эффектов.")
@@ -450,7 +461,7 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
     _t0 = _time.monotonic()
     step_render(src_anim, engine, video_mp4)
     render_sec = _time.monotonic() - _t0
-    sfx = step_sfx(prod, video_mp4, videos_dir / f"{pid}-sfx.mp3")
+    sfx = step_sfx(prod, video_mp4, videos_dir / f"{pid}-sfx.mp3", src_anim)
     step_mux(prod, video_mp4, voice, sfx, final_mp4)
 
     made = []
