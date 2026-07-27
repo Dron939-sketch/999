@@ -214,8 +214,13 @@ def main(argv):
             e = edges_at(pts, y_draw)
             if not e:
                 continue                       # выше или ниже рисунка — не про плащ
-            left = (e[0] - cloak_pivot[0]) * abs(sx)
-            right = (e[1] - cloak_pivot[0]) * abs(sx)
+            # ЗНАК МАСШТАБА УЧИТЫВАЕТСЯ: у зеркального плаща (sx<0) кромки
+            # меняются местами. Раньше стоял abs(), и проверка мерила
+            # незеркальный силуэт — на полуспине это давало ложный провал.
+            left = (e[0] - cloak_pivot[0]) * sx
+            right = (e[1] - cloak_pivot[0]) * sx
+            if left > right:
+                left, right = right, left
             half = (right - left) / 2
             mid = (right + left) / 2
             if half < 1e-6:

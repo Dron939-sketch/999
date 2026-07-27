@@ -4235,8 +4235,8 @@
           ],
           "z_order": 5,
           "offset": [
-            22,
-            50
+            23,
+            46
           ]
         },
         "eye_left": {
@@ -4274,7 +4274,7 @@
         },
         "upper_arm_right": {
           "offset": [
-            45,
+            52,
             4
           ],
           "scale": [
@@ -4285,7 +4285,7 @@
         },
         "upper_arm_left": {
           "offset": [
-            -71,
+            -40,
             22
           ],
           "scale": [
@@ -4346,8 +4346,8 @@
           ],
           "z_order": 5,
           "offset": [
-            22,
-            50
+            23,
+            46
           ]
         },
         "eye_left": {
@@ -4385,7 +4385,7 @@
         },
         "upper_arm_right": {
           "offset": [
-            45,
+            52,
             4
           ],
           "scale": [
@@ -4396,7 +4396,7 @@
         },
         "upper_arm_left": {
           "offset": [
-            -71,
+            -40,
             22
           ],
           "scale": [
@@ -4480,7 +4480,7 @@
             0.84
           ],
           "offset": [
-            54,
+            53,
             58
           ],
           "rotation": 5,
@@ -4489,16 +4489,16 @@
         "upper_arm_left": {
           "rotation": 26,
           "offset": [
-            -80.0,
-            17
+            -62,
+            22
           ],
           "z_order": 1
         },
         "upper_arm_right": {
           "rotation": -18,
           "offset": [
-            51.2,
-            17
+            29,
+            4
           ],
           "z_order": 1
         },
@@ -5164,7 +5164,7 @@
         },
         "upper_arm_right": {
           "offset": [
-            58,
+            57,
             9
           ],
           "scale": [
@@ -5175,7 +5175,7 @@
         },
         "upper_arm_left": {
           "offset": [
-            -92,
+            -94,
             17
           ],
           "scale": [
@@ -5274,7 +5274,7 @@
         },
         "upper_arm_right": {
           "offset": [
-            58,
+            57,
             9
           ],
           "scale": [
@@ -5285,7 +5285,7 @@
         },
         "upper_arm_left": {
           "offset": [
-            -92,
+            -94,
             17
           ],
           "scale": [

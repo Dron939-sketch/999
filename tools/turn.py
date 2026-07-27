@@ -162,6 +162,40 @@ def arc_drop(part, sx, x_bone):
     return 0 if a is None or b is None else round(a - b)
 
 
+# Насколько глубоко внутри силуэта сидят плечи В АНФАСЕ: гнездо рига делённое
+# на полуширину плаща на своей высоте. Снято с рига, чтобы развороты не
+# «раздвигали» плечи шире анфасных: посадка плеча — черта персонажа, а не
+# следствие ракурса. Меняется ракурсом только КРОМКА, а доля остаётся.
+INSET_NEAR = 0.74
+INSET_FAR = 0.86
+
+
+def socket_x(part, sx, y_bone, side, inset=None):
+    """Гнездо руки на кромке плаща НА СВОЕЙ ВЫСОТЕ.
+
+    Гнездо считалось от проекции точки тела (x₀·cos θ) — верно для круглого
+    тела, но плащ у нас не цилиндр: у полуоборотного рисунка верх сужен, и
+    спроецированное гнездо дальней руки оказывалось за кромкой на 16 единиц.
+    Рука росла из воздуха. Плечо сидит ТАМ, ГДЕ КРОМКА, поэтому берём её из
+    рисунка на высоте гнезда и отступаем внутрь на 6%.
+    """
+    pts = outline(part)
+    yd = y_bone + 16                              # в систему рисунка
+    xs = []
+    for (x1, y1), (x2, y2) in zip(pts, pts[1:]):
+        if (y1 - yd) * (y2 - yd) <= 0 and y1 != y2:
+            xs.append(x1 + (yd - y1) / (y2 - y1) * (x2 - x1))
+    if not xs:
+        return 0
+    lo, hi = (min(xs) - 110) * sx, (max(xs) - 110) * sx
+    if lo > hi:
+        lo, hi = hi, lo
+    if inset is None:
+        inset = INSET_NEAR if side > 0 else INSET_FAR
+    mid = (lo + hi) / 2
+    return round(mid + (hi - mid) * inset if side > 0 else mid + (lo - mid) * inset)
+
+
 def mirror(pose, name):
     """Левый разворот: тот же набор костей, зеркальный torso."""
     q = json.loads(json.dumps(pose))
@@ -302,11 +336,11 @@ def quarter():
         # дальнюю руку делает не смещение, а ТОРС, который её закрывает.
         # Отсюда z_order 1 против z_order 2 у плаща — и разворот наконец
         # читается силуэтом, а не только лицом.
-        "upper_arm_right": {"offset": [round(63 * c), 4],
+        "upper_arm_right": {"offset": [socket_x("torso_34", sc, 4, +1), 4],
                             "scale": [1.11, 1.11], "z_order": 4},
         # дальняя рука УХОДИТ ЗА КОРПУС: z_order 1 против z_order 2 у плаща —
         # закон перекрытия, корпус срезает её у подмышки
-        "upper_arm_left": {"offset": [round(-100 * c), 22],
+        "upper_arm_left": {"offset": [socket_x("torso_34", sc, 22, -1), 22],
                            "scale": [0.89, 0.89], "z_order": 1},
         "thigh_left": {"offset": [round(-61.6 * c * 0.61), 172], "scale": [0.9, 0.89]},
         "shin_left": {"scale": [0.9, 0.89]},
@@ -356,9 +390,9 @@ def small_turn():
         "mouth": {"offset": [-14, -56], "scale": [round(0.92, 3), 1.0]},
         # гнёзда по косинусу; дальняя рука уже за корпусом — на 22.5° из-за
         # плаща выходит только её нижняя треть, и это и есть признак поворота
-        "upper_arm_right": {"offset": [round(63 * c), 9],
+        "upper_arm_right": {"offset": [socket_x("torso", sc, 9, +1), 9],
                             "scale": [1.06, 1.06], "z_order": 4},
-        "upper_arm_left": {"offset": [round(-100 * c), 17],
+        "upper_arm_left": {"offset": [socket_x("torso", sc, 17, -1), 17],
                            "scale": [0.94, 0.94], "z_order": 1},
         "thigh_left": {"offset": [round(-61.6 * c * 0.80), 172], "scale": [0.9, 0.94]},
         "shin_left": {"scale": [0.9, 0.94]},
