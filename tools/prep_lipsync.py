@@ -34,6 +34,9 @@ from lipsync import extract_envelope, envelope_to_mouths  # noqa: E402
 
 LIP = re.compile(r"^\s*//lip\s+(\d+)\s*$")
 SPEAK = re.compile(r"^(\s*)(\S+)\s+speaks\s+for\s+([\d.]+)s\s*$")
+# Строительные строки между маркером и речью: открытие блока, закрытие,
+# комментарий, пустая. Через них маркер обязан ПЕРЕЖИТЬ до `speaks for`.
+SCAFFOLD = re.compile(r"^\s*(together\s*\{|do\s*\{|\{|\}|//.*)?\s*$")
 
 # Виземы Rhubarb → позы рига (rig.json: visA..visF). Расширенные G/H/X
 # сводим к ближайшим базовым.
@@ -133,12 +136,12 @@ def lips_track_lines(entity, mp3, indent, fps=11.0):
 
 
 def process(text, parts_dir):
-    out, pending, subbed, fell = [], None, 0, 0
+    out, pending, subbed, fell, skipped = [], None, 0, 0, 0
     order = []  # номера vo-N в порядке появления речевых блоков в файле
     for line in text.splitlines():
         m = LIP.match(line)
         if m:
-            pending = int(m.group(1))  # запомнить номер реплики, сам маркер убрать
+            pending, skipped = int(m.group(1)), 0  # запомнить номер, маркер убрать
             continue
         s = SPEAK.match(line)
         if s and pending is not None:
@@ -151,9 +154,30 @@ def process(text, parts_dir):
                 out.append(line)  # запасной путь: обычные флэпы
                 fell += 1
             order.append(pending)
-            pending = None
+            pending, skipped = None, 0
             continue
-        pending = None  # маркер без следующей за ним речи — просто игнор
+        # МАРКЕР ПЕРЕЖИВАЕТ СТРОИТЕЛЬНЫЕ СТРОКИ.
+        #
+        # Раньше `pending` сбрасывался ЛЮБОЙ строкой, которая не `speaks for`.
+        # А каты внутри реплики мы пишем так:
+        #
+        #     //lip 1
+        #     together {
+        #         freeman speaks for 3.0s
+        #
+        # — следом за маркером идёт `together {`, маркер обнулялся, и речь
+        # уходила на обобщённые флэпы. Молча: в логе стояло честное
+        # «карта блоков: []», но никто не читал. В итоге липсинк по звуку
+        # не работал в ТРЁХ роликах из пяти озвученных — во всех, где есть
+        # каты внутри реплик, то есть в самых проработанных.
+        #
+        # Пропускаем только строительные строки и не больше шести подряд,
+        # чтобы забытый маркер не прилип к речи через полсцены.
+        if pending is not None and SCAFFOLD.match(line) and skipped < 6:
+            skipped += 1
+            out.append(line)
+            continue
+        pending, skipped = None, 0
         out.append(line)
     return "\n".join(out) + "\n", subbed, fell, order
 
@@ -167,6 +191,21 @@ def main(argv):
 
     text = open(args.anim, encoding="utf-8").read()
     result, subbed, fell, order = process(text, args.parts)
+
+    # СВЕРКА: все ли синтезированные реплики нашли себе речевой блок в сцене.
+    # Голос собирается по VO-таблице целиком, а рот открывается только там, где
+    # в сцене стоит `speaks`. Если реплика озвучена, но в сцене её никто не
+    # произносит, зритель слышит голос при закрытом рте — и никакая метрика
+    # этого не ловила. В «Перепрошивке» так молча висели две реплики из десяти.
+    if args.parts and os.path.isdir(args.parts):
+        have = sorted(int(m.group(1)) for f in os.listdir(args.parts)
+                      if (m := re.match(r"vo-(\d+)\.mp3$", f)))
+        lost = [n for n in have if n not in order]
+        if lost:
+            print(f"  ⚠ озвучены, но в сцене не произносятся: "
+                  f"{', '.join('VO-' + str(n) for n in lost)} — "
+                  f"голос будет звучать при закрытом рте. "
+                  f"Добавь `//lip N` + `speaks` или убери реплику из VO.")
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(result)
     # Карта «речевой блок № → номер vo-N» для сборки голоса по фактическим
