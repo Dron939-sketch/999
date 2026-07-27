@@ -47,6 +47,19 @@ SOCKETS = {
     "thigh_right": "бедро R",
 }
 
+# ПРОВЕРЯЕТСЯ ПЕРЕКРЫТИЕ РИСУНКА, А НЕ ТОЧКА ПИВОТА. Гнездо — это точка, а
+# стык держит НАРИСОВАННОЕ: щетинистый пучок плеча расходится от пивота на
+# десятки единиц и перекрывает кромку, даже когда сам пивот лёг чуть снаружи.
+# Пока проверялась точка, включение обрезки плеч по clipPath разом «провалило»
+# 105 креплений, которые на кадре держатся. Берём вылет рисунка ВНУТРЬ тела:
+# сколько от пивота идёт в сторону силуэта.
+REACH = {
+    "upper_arm_left": 38.0,
+    "upper_arm_right": 38.0,
+    "thigh_left": 12.0,
+    "thigh_right": 12.0,
+}
+
 
 # --- плоский разбор svg-контура ---------------------------------------------
 def _tokens(d):
@@ -135,8 +148,23 @@ def outline(part):
     """
     if part in _CACHE:
         return _CACHE[part]
-    txt = (RIG_DIR / f"{part}.svg").read_text(encoding="utf-8")
-    txt = re.sub(r"<clipPath.*?</clipPath>", "", txt, flags=re.S)
+    raw = (RIG_DIR / f"{part}.svg").read_text(encoding="utf-8")
+
+    # ОБРЕЗКА ПО clipPath УЧИТЫВАЕТСЯ. У torso.svg плечи сделаны ВЫЧИТАНИЕМ:
+    # чёрное умеет только добавлять, поэтому покатые плечи получаются клипом,
+    # который срезает верхние углы прямоугольника. Пока клип отбрасывался,
+    # завод мерил силуэт по НЕОБРЕЗАННОМУ прямоугольнику — верхняя кромка шла
+    # ровной полкой, а гребень плечевой дуги «находился» на случайной щетинке
+    # в углу: замер давал смещение гребня −0.38 ширины там, где на самом деле
+    # 0.00. От этого голова на четверти оборота садилась по несуществующей
+    # дуге и падала на 18 единиц вниз.
+    clip = None
+    m = re.search(r"<clipPath[^>]*>(.*?)</clipPath>", raw, flags=re.S)
+    if m:
+        cp = re.search(r'<path[^>]*\sd="([^"]+)"', m.group(1))
+        if cp:
+            clip = flatten(cp.group(1))
+    txt = re.sub(r"<clipPath.*?</clipPath>", "", raw, flags=re.S)
     txt = re.sub(r"<defs>.*?</defs>", "", txt, flags=re.S)
 
     pts = []
@@ -157,8 +185,29 @@ def outline(part):
         else:
             sx, sy, tx, ty = stack[-1] if stack else (1.0, 1.0, 0.0, 0.0)
             pts += [(x * sx + tx, y * sy + ty) for x, y in flatten(m.group(2))]
+    if clip:
+        pts = _intersect(pts, clip)
     _CACHE[part] = pts
     return pts
+
+
+def _intersect(shape, clip):
+    """Силуэт, обрезанный клипом: построчное пересечение кромок."""
+    ys = [p[1] for p in shape]
+    lo, hi = min(ys), max(ys)
+    left, right = [], []
+    y = lo
+    while y <= hi:
+        a = edges_at(shape, y)
+        b = edges_at(clip, y)
+        if a:
+            l, r = a
+            if b:
+                l, r = max(l, b[0]), min(r, b[1])
+            if r > l:
+                left.append((l, y)); right.append((r, y))
+        y += 2.0
+    return left + right[::-1] + left[:1]
 
 
 def edges_at(pts, y):
@@ -225,8 +274,10 @@ def main(argv):
             mid = (right + left) / 2
             if half < 1e-6:
                 continue                       # контур на этой высоте вырожден
-            # запас = насколько гнездо не доходит до кромки, в долях полуширины
-            slack = 1.0 - abs(ox - mid) / half
+            # запас = насколько КРАЙ РИСУНКА не доходит до кромки
+            reach = REACH.get(bone, 0.0)
+            edge = abs(ox - mid) - reach          # ближайшая к телу точка рисунка
+            slack = 1.0 - max(edge, 0.0) / half
             rows.append((name, label, part, round(ox, 1), round(slack, 3)))
             if slack < FAIL:
                 bad += 1
