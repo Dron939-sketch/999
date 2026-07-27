@@ -4274,7 +4274,7 @@
         },
         "upper_arm_right": {
           "offset": [
-            50,
+            45,
             4
           ],
           "scale": [
@@ -4285,7 +4285,7 @@
         },
         "upper_arm_left": {
           "offset": [
-            -31,
+            -71,
             22
           ],
           "scale": [
@@ -4385,7 +4385,7 @@
         },
         "upper_arm_right": {
           "offset": [
-            50,
+            45,
             4
           ],
           "scale": [
@@ -4396,7 +4396,7 @@
         },
         "upper_arm_left": {
           "offset": [
-            -31,
+            -71,
             22
           ],
           "scale": [
@@ -5164,7 +5164,7 @@
         },
         "upper_arm_right": {
           "offset": [
-            61,
+            58,
             9
           ],
           "scale": [
@@ -5175,14 +5175,14 @@
         },
         "upper_arm_left": {
           "offset": [
-            -49,
+            -92,
             17
           ],
           "scale": [
             0.94,
             0.94
           ],
-          "z_order": 4
+          "z_order": 1
         },
         "thigh_left": {
           "offset": [
@@ -5274,7 +5274,7 @@
         },
         "upper_arm_right": {
           "offset": [
-            61,
+            58,
             9
           ],
           "scale": [
@@ -5285,14 +5285,14 @@
         },
         "upper_arm_left": {
           "offset": [
-            -49,
+            -92,
             17
           ],
           "scale": [
             0.94,
             0.94
           ],
-          "z_order": 4
+          "z_order": 1
         },
         "thigh_left": {
           "offset": [
