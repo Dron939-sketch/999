@@ -4242,7 +4242,7 @@
         "eye_left": {
           "part": "eye_left",
           "offset": [
-            -33,
+            -44,
             -125
           ],
           "scale": [
@@ -4253,7 +4253,7 @@
         "eye_right": {
           "part": "eye_right",
           "offset": [
-            20,
+            9,
             -117
           ],
           "scale": [
@@ -4353,7 +4353,7 @@
         "eye_left": {
           "part": "eye_left",
           "offset": [
-            -33,
+            -44,
             -125
           ],
           "scale": [
@@ -4364,7 +4364,7 @@
         "eye_right": {
           "part": "eye_right",
           "offset": [
-            20,
+            9,
             -117
           ],
           "scale": [
@@ -5133,7 +5133,7 @@
         "eye_left": {
           "part": "eye_left",
           "offset": [
-            -34,
+            -39,
             -123
           ],
           "scale": [
@@ -5144,11 +5144,11 @@
         "eye_right": {
           "part": "eye_right",
           "offset": [
-            21,
+            15,
             -119
           ],
           "scale": [
-            0.9,
+            0.85,
             0.98
           ]
         },
@@ -5243,7 +5243,7 @@
         "eye_left": {
           "part": "eye_left",
           "offset": [
-            -34,
+            -39,
             -123
           ],
           "scale": [
@@ -5254,11 +5254,11 @@
         "eye_right": {
           "part": "eye_right",
           "offset": [
-            21,
+            15,
             -119
           ],
           "scale": [
-            0.9,
+            0.85,
             0.98
           ]
         },
