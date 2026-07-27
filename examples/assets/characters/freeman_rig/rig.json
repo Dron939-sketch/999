@@ -4024,7 +4024,7 @@
           "z_order": 1
         },
         "forearm_left": {
-          "rotation": 22
+          "rotation": -10
         },
         "upper_arm_right": {
           "rotation": -6,
@@ -4036,7 +4036,7 @@
           "part": "arm_out_upper_r"
         },
         "forearm_right": {
-          "rotation": 40,
+          "rotation": -18,
           "part": "arm_out_fore_r"
         },
         "thigh_left": {
@@ -4122,7 +4122,7 @@
           "part": "arm_out_upper_l"
         },
         "forearm_left": {
-          "rotation": -40,
+          "rotation": 18,
           "part": "arm_out_fore_l"
         },
         "upper_arm_right": {
@@ -4134,7 +4134,7 @@
           "z_order": 1
         },
         "forearm_right": {
-          "rotation": -22
+          "rotation": 10
         },
         "thigh_left": {
           "offset": [
@@ -4504,7 +4504,7 @@
           "z_order": 1
         },
         "forearm_left": {
-          "rotation": 22
+          "rotation": -10
         },
         "upper_arm_right": {
           "rotation": -6,
@@ -4516,7 +4516,7 @@
           "part": "arm_out_upper_r"
         },
         "forearm_right": {
-          "rotation": 40,
+          "rotation": -18,
           "part": "arm_out_fore_r"
         },
         "thigh_left": {
@@ -4609,7 +4609,7 @@
           "z_order": 1
         },
         "forearm_left": {
-          "rotation": 22
+          "rotation": -10
         },
         "upper_arm_right": {
           "rotation": -6,
@@ -4621,7 +4621,7 @@
           "part": "arm_out_upper_r"
         },
         "forearm_right": {
-          "rotation": 40,
+          "rotation": -18,
           "part": "arm_out_fore_r"
         },
         "thigh_left": {
@@ -4715,7 +4715,7 @@
           "part": "arm_out_upper_l"
         },
         "forearm_left": {
-          "rotation": -40,
+          "rotation": 18,
           "part": "arm_out_fore_l"
         },
         "upper_arm_right": {
@@ -4727,7 +4727,7 @@
           "z_order": 1
         },
         "forearm_right": {
-          "rotation": -22
+          "rotation": 10
         },
         "thigh_left": {
           "rotation": -40,
@@ -4820,7 +4820,7 @@
           "part": "arm_out_upper_l"
         },
         "forearm_left": {
-          "rotation": -40,
+          "rotation": 18,
           "part": "arm_out_fore_l"
         },
         "upper_arm_right": {
@@ -4832,7 +4832,7 @@
           "z_order": 1
         },
         "forearm_right": {
-          "rotation": -22
+          "rotation": 10
         },
         "thigh_left": {
           "rotation": 30,
