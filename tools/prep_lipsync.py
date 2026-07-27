@@ -184,7 +184,21 @@ def lips_track_lines(entity, mp3, indent, fps=11.0):
         hop = 1.0 / fps
         track = envelope_to_mouths(extract_envelope(mp3, hop), hop)
     track = fit_to_audio(track, mp3)
-    out = [f"{indent}// липсинк {os.path.basename(mp3)} ({len(track)} ртов, {src})"]
+    # ДОРОЖКА ОБЁРНУТА В `do { }` — иначе она схлопывается.
+    #
+    # Речь с катами внутри мы пишем как `together { speaks; do { камеры } }`.
+    # Препроцессор подменял строку `speaks` СПИСКОМ строк `lips`, и каждая из
+    # них становилась ОТДЕЛЬНОЙ ветвью together — а ветви стартуют
+    # ОДНОВРЕМЕННО. Сто ртов реплики играли в один и тот же миг: речевой блок
+    # выходил длиной в один рот, губы дёргались и замирали, а сборщик голоса,
+    # который ставит реплику на время блока, честно сдвигал каждую следующую —
+    # так набегали те самые 24 секунды звука поверх последнего кадра.
+    #
+    # `do { }` делает список ОДНОЙ последовательной ветвью: рты идут друг за
+    # другом, длина блока равна длине звука, каты в соседней ветви идут
+    # параллельно, как и задумано.
+    out = [f"{indent}// липсинк {os.path.basename(mp3)} ({len(track)} ртов, {src})",
+           f"{indent}do {{"]
     # Округляем НАКОПИТЕЛЬНО: каждый рот дотягивается до общей сетки, поэтому
     # сумма выведенных длительностей равна длине звука с точностью до 0.01с, а
     # не уползает на 0.005 за каждый рот.
@@ -195,7 +209,8 @@ def lips_track_lines(entity, mp3, indent, fps=11.0):
         if step <= 0:
             continue
         printed += step
-        out.append(f'{indent}{entity} lips "{pose}" for {step}s')
+        out.append(f'{indent}    {entity} lips "{pose}" for {step}s')
+    out.append(f"{indent}}}")
     return out
 
 
@@ -275,7 +290,7 @@ def main(argv):
             for i, line in enumerate(
                     l for l in open(args.vo, encoding="utf-8")
                     if re.match(r"\s*\|\s*VO-?\d", l)):
-                if re.search(r"голос\s+диктора|за\s+кадром|закадр", line, re.I):
+                if re.search(r"голос[\s-]*диктор|диктор\w*\s+голос|за\s+кадром|закадр", line, re.I):
                     narrator.add(i + 1)
         lost = [n for n in have if n not in order and n not in narrator]
         if lost:
