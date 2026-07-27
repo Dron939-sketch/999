@@ -132,6 +132,10 @@ pub struct PlaceStmt {
     pub entity: String,
     pub position: Position,
     pub facing: Option<Direction>,
+    /// `on floor`: заданная точка — СТУПНИ на плоскости пола, а не якорь
+    /// фигуры. Масштаб при этом идёт по глубине: дальше — мельче.
+    #[serde(default)]
+    pub grounded: bool,
     pub layer: Option<i32>,
 }
 

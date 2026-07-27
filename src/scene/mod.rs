@@ -394,6 +394,7 @@ pub fn resolve_scene(
             let (x, y) = resolve_position(&place.position, &entities)?;
             state.x = x;
             state.y = y;
+            state.grounded = place.grounded;
 
             if let Some(facing) = place.facing {
                 state.facing = facing;

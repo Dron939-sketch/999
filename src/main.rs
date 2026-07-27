@@ -203,7 +203,16 @@ fn cmd_render(
         log::info!("Processing scene: {}", scene_decl.name);
 
         let resolved = resolve_scene(scene_decl, &assets)?;
-        let compiled_timeline = timeline::compile_with_kartas(&resolved, &assets.kartas())?;
+        let compiled_timeline = timeline::compile_full(
+            &resolved,
+            &assets.kartas(),
+            resolved
+                .set_name
+                .as_deref()
+                .and_then(|n| assets.sets.get(n))
+                .and_then(|s| s.surfaces.as_ref())
+                .map(|s| s.floor),
+        )?;
 
         // Check for character overlaps before rendering.
         let character_names: Vec<String> = resolved
@@ -724,7 +733,16 @@ fn cmd_check(input: &Path) -> Result<()> {
 
     for scene_decl in &scenes {
         let resolved = resolve_scene(scene_decl, &assets)?;
-        let compiled_timeline = timeline::compile_with_kartas(&resolved, &assets.kartas())?;
+        let compiled_timeline = timeline::compile_full(
+            &resolved,
+            &assets.kartas(),
+            resolved
+                .set_name
+                .as_deref()
+                .and_then(|n| assets.sets.get(n))
+                .and_then(|s| s.surfaces.as_ref())
+                .map(|s| s.floor),
+        )?;
 
         let character_names: Vec<String> = resolved
             .entities
@@ -789,7 +807,16 @@ fn cmd_timing(input: &Path) -> Result<()> {
     for item in &program.items {
         if let TopLevelItem::Scene(scene_decl) = item {
             let resolved = resolve_scene(scene_decl, &assets)?;
-            let tl = timeline::compile_with_kartas(&resolved, &assets.kartas())?;
+            let tl = timeline::compile_full(
+            &resolved,
+            &assets.kartas(),
+            resolved
+                .set_name
+                .as_deref()
+                .and_then(|n| assets.sets.get(n))
+                .and_then(|s| s.surfaces.as_ref())
+                .map(|s| s.floor),
+        )?;
             for (s0, e0) in &tl.speech_blocks {
                 blocks.push((offset + s0, offset + e0));
             }

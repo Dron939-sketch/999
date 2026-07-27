@@ -192,9 +192,11 @@ fn parse_place(pair: Pair) -> Result<PlaceStmt, AnimError> {
     let mut position = Position::Named(NamedPosition::Center);
     let mut facing = None;
     let mut layer = None;
+    let mut grounded = false;
 
     for part in inner {
         match part.as_rule() {
+            Rule::grounded_clause => grounded = true,
             Rule::position => {
                 position = parse_position(part)?;
             }
@@ -221,6 +223,7 @@ fn parse_place(pair: Pair) -> Result<PlaceStmt, AnimError> {
         position,
         facing,
         layer,
+        grounded,
     })
 }
 

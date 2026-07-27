@@ -113,6 +113,15 @@ pub fn compile_with_kartas(
     scene: &ResolvedScene,
     kartas: &HashMap<String, crate::skeleton::Karta>,
 ) -> Result<Timeline, AnimError> {
+    compile_full(scene, kartas, None)
+}
+
+/// То же, но с полом локации: нужен, чтобы КАДРИРОВАНИЕ знало про `on floor`.
+pub fn compile_full(
+    scene: &ResolvedScene,
+    kartas: &HashMap<String, crate::skeleton::Karta>,
+    floor: Option<crate::assets::Floor>,
+) -> Result<Timeline, AnimError> {
     let mut compiler = TimelineCompiler {
         time: 0.0,
         tracks: HashMap::new(),
@@ -132,6 +141,7 @@ pub fn compile_with_kartas(
         transitions: Vec::new(),
         entities: scene.entities.clone(),
         kartas: kartas.clone(),
+        floor,
     };
 
     compiler.compile_statements(&scene.statements)?;
@@ -177,6 +187,8 @@ struct TimelineCompiler {
     entities: HashMap<String, EntityState>,
     /// Карты фигур: имя сущности -> замеренная карта персонажа.
     kartas: HashMap<String, crate::skeleton::Karta>,
+    /// Пол текущей локации — для сущностей, объявленных `on floor`.
+    floor: Option<crate::assets::Floor>,
 }
 
 impl TimelineCompiler {
@@ -558,7 +570,17 @@ impl TimelineCompiler {
             .entities
             .get(name)
             .ok_or_else(|| AnimError::Timeline(format!("unknown entity: {name}")))?;
-        let s = e.scale_y.abs().max(0.05);
+        // `on floor`: e.y — это СТУПНИ, а план считается от якоря и от
+        // масштаба, уже уменьшенного глубиной. Без этого камера наводилась на
+        // точку пола и зумила по негрунтованному размеру: на среднем плане
+        // фигура вылезала за кадр.
+        let (ey, s) = match (self.floor, self.kartas.get(name)) {
+            (Some(f), Some(k)) if e.grounded => {
+                let (anchor, d) = f.ground(e.y, e.scale_y, k.feet);
+                (anchor, (e.scale_y * d).abs().max(0.05))
+            }
+            _ => (e.y, e.scale_y.abs().max(0.05)),
+        };
 
         // Есть карта — план считается ГЕОМЕТРИЕЙ этого персонажа: берём
         // верхнюю и нижнюю границы того, что план обязан показать, и подбираем
@@ -582,12 +604,12 @@ impl TimelineCompiler {
             let span = (bottom - top).abs().max(1e-6);
             return Ok((
                 e.x,
-                e.y + (top + bottom) / 2.0 * s,
+                ey + (top + bottom) / 2.0 * s,
                 fill / (span * s),
             ));
         }
 
-        Ok((e.x, e.y + dy * s, zoom / s))
+        Ok((e.x, ey + dy * s, zoom / s))
     }
 
     fn compile_camera(&mut self, cam: &CameraStmt) -> Result<(), AnimError> {

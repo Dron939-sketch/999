@@ -217,6 +217,8 @@ pub fn render_frame(
         .and_then(|n| assets.sets.get(n))
         .and_then(|s| s.surfaces.as_ref())
         .map(|s| s.floor);
+    // Карты фигур — чтобы `on floor` у персонажа переводил ступни в якорь.
+    let kartas = assets.kartas();
 
     // Render set (background).
     if let Some(name) = set_name {
@@ -272,6 +274,33 @@ pub fn render_frame(
         match state.kind {
             EntityKind::Character => {
                 if let Some(char_asset) = assets.characters.get(name) {
+                    // `place ... on floor` У ПЕРСОНАЖА: заданная точка — СТУПНИ
+                    // на плоскости пола, а не якорь фигуры. Пока это умели
+                    // только предметы, персонаж, идущий из глубины, приходилось
+                    // вести двумя независимыми дорожками — позицией и
+                    // масштабом, — и он неизбежно ехал по воздуху: стоило
+                    // сменить масштаб, ступни отрывались от пола.
+                    // Здесь обе величины выводятся из ОДНОЙ: глубина даёт
+                    // масштаб (дальше — мельче), а карта фигуры (`Karta.feet`)
+                    // переводит ступни в якорь.
+                    let grounded_state;
+                    let state = if state.grounded {
+                        match (set_floor, kartas.get(name)) {
+                            (Some(f), Some(k)) => {
+                                let (anchor, depth) =
+                                    f.ground(state.y, state.scale_y, k.feet);
+                                let mut st = state.clone();
+                                st.scale_x *= depth;
+                                st.scale_y *= depth;
+                                st.y = anchor;
+                                grounded_state = st;
+                                &grounded_state
+                            }
+                            _ => state,
+                        }
+                    } else {
+                        state
+                    };
                     render_character(
                         char_asset,
                         state,

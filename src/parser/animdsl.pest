@@ -93,7 +93,7 @@ scene_statement = {
 
 // Place
 place_stmt = {
-    "place" ~ identifier ~ "at" ~ position ~ (facing_clause)? ~ (layer_clause)?
+    "place" ~ identifier ~ "at" ~ position ~ (facing_clause)? ~ (layer_clause)? ~ (grounded_clause)?
 }
 
 facing_clause = { "facing" ~ direction }
