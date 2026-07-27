@@ -4,7 +4,7 @@
 //  оригинала (~1.3-2с), флэш-морды, поле-ритм, наезды, ракурсы high/low,
 //  рука-в-камеру. VO v3 (SCRIPT-FREEMAN §5): реплики раздроблены на короткие
 //  удары ≤7 слов. v5: КАТЫ ВНУТРИ РЕПЛИК — together{speaks + do{камеры}} —
-//  речь непрерывна, планы рубятся (ритм оригинала). //lip 1..8.
+//  речь непрерывна, планы рубятся (ритм оригинала). //lip 1..9.
 //  Тайм-якоря 3-7-21: t=3 крыса лезет, t=7 хук отыгран, t=21 разворот+рука.
 //  Паттерны: телепорт moves-to over 0.01s; пропы ждут за кадром.
 // =============================================================================
@@ -119,10 +119,36 @@ scene "cell" (duration: 40s, set: cell) {
     freeman pose "ugryumo"
     wait 0.5s
 
-    // --- ХУК (VO-1): средний, фигура ВПРАВО-треть, ракурс СВЕРХУ ---
-    freeman moves-to (0.63, 0.45) over 0.01s
+    // --- ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1) ---
+    // «Ну-у-у... здравствуйте. Дорогие мои. Сидите? Ну сидите, сидите.»
+    // Сквозное приветствие Лектория плюс каламбур ИМЕННО этого ролика:
+    // зритель сидит в кресле, герой — в камере, а курс про то, что сидят оба.
+    // Глаза по контексту реплики: подача снисходительная, поэтому прищур и
+    // ухмылка (`smug`), а не клин злости — тот приберегается для приговоров.
+    freeman moves-to (0.5, 0.45) over 0.01s
     freeman pose "smug"
     //lip 1
+    together {
+        freeman speaks for 4.6s
+        do {
+            camera medium freeman
+            wait 1.6s
+            camera close-up freeman
+            wait 1.4s
+            // «сидите? ну сидите, сидите» — ленивый отмах ладонью СЛОЕМ,
+            // поза лица держится
+            freeman overlays "wave"
+            wait 0.9s
+            camera medium freeman
+        }
+    }
+    freeman pose "ugryumo"
+    wait 0.5s
+
+    // --- ХУК (VO-2): средний, фигура ВПРАВО-треть, ракурс СВЕРХУ ---
+    freeman moves-to (0.63, 0.45) over 0.01s
+    freeman pose "smug"
+    //lip 2
     together {
         freeman speaks for 1.8s
         do {
@@ -131,10 +157,10 @@ scene "cell" (duration: 40s, set: cell) {
             camera medium freeman
         }
     }
-    // --- ХУК-добивка (VO-2): КАТ на крупный, фигура ВЛЕВО-треть ---
+    // --- ХУК-добивка (VO-3): КАТ на крупный, фигура ВЛЕВО-треть ---
     freeman moves-to (0.37, 0.45) over 0.01s
     freeman pose "weary"
-    //lip 2
+    //lip 3
     together {
         freeman speaks for 1.6s
         do {
@@ -151,7 +177,7 @@ scene "cell" (duration: 40s, set: cell) {
     // --- ПУЛЕМЁТ 1 (VO-3): средний, центр, ракурс обычный ---
     freeman moves-to (0.5, 0.45) over 0.01s
     freeman pose "puppet"
-    //lip 3
+    //lip 4
     together {
         freeman speaks for 2.4s
         do {
@@ -163,7 +189,7 @@ scene "cell" (duration: 40s, set: cell) {
     // --- ПУЛЕМЁТ 2 (VO-4): КАТ крупный, ВПРАВО-треть ---
     freeman moves-to (0.64, 0.45) over 0.01s
     freeman pose "puppet_jerk"
-    //lip 4
+    //lip 5
     together {
         freeman speaks for 2.0s
         do {
@@ -174,7 +200,7 @@ scene "cell" (duration: 40s, set: cell) {
     }
     // --- ПУЛЕМЁТ финал (VO-5): КАТ ECU + тряска на «здравом смысле» ---
     freeman pose "stern"
-    //lip 5
+    //lip 6
     together {
         freeman speaks for 2.1s
         do {
@@ -192,7 +218,7 @@ scene "cell" (duration: 40s, set: cell) {
     // --- t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука-в-камеру ---
     freeman moves-to (0.42, 0.45) over 0.01s
     freeman pose "v_upor"
-    //lip 6
+    //lip 7
     together {
         freeman speaks for 4.0s
         do {
@@ -211,7 +237,7 @@ scene "cell" (duration: 40s, set: cell) {
 
     // --- ВЗЛЁТ (VO-7): ECU, тепло; следом слово-удар ---
     freeman pose "raskryl"
-    //lip 7
+    //lip 8
     together {
         freeman speaks for 3.5s
         do {
@@ -234,7 +260,7 @@ scene "cell" (duration: 40s, set: cell) {
     // --- ЖАЛО-CTA (VO-8): средний, центр, наезд-удар на подколке ---
     freeman moves-to (0.5, 0.45) over 0.01s
     freeman pose "lunge"
-    //lip 8
+    //lip 9
     together {
         freeman speaks for 5.5s
         do {
