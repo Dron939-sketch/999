@@ -105,15 +105,19 @@ scene "cell-hook" (duration: 24s, set: cell) {
     together {
         rat shows
         do {
-            rat moves-to (0.46, 0.655) over 2.0s
+            rat moves-to (0.46, 0.655) over 2.8s
             rat hides
         }
-        freeman speaks for 3.2s
+        freeman speaks for 6.4s
         do {
-            freeman moves-to (0.57, 0.78) over 1.1s
-            wait 0.15s
-            freeman moves-to (0.56, 0.86) over 1.1s
-            wait 0.6s
+            freeman moves-to (0.57, 0.78) over 1.6s
+            wait 0.3s
+            freeman moves-to (0.56, 0.86) over 1.6s
+            wait 0.4s
+            camera medium freeman
+            wait 1.4s
+            camera wide
+            wait 1.1s
         }
     }
     // Дошёл — и ОСТАНОВИЛСЯ. Остановка после хода читается как точка в
@@ -127,10 +131,20 @@ scene "cell-hook" (duration: 24s, set: cell) {
     // разыгрывается над ней и вне кадра. Крупный тут работал против сцены.
     camera medium freeman
     together {
-        strings moves-to (0.55, 0.44) over 1.4s
+        strings moves-to (0.55, 0.44) over 1.9s
         do {
             //lip 2
-            freeman speaks for 4s
+            freeman speaks for 5.5s
+        }
+        do {
+            // Кат ВНУТРИ реплики: нити спускаются на общем (их видно целиком),
+            // на «тебе это выдали» — врез на средний. Без него сцена стояла
+            // одним планом 9.8 секунды при среднем по ролику 2.1.
+            camera wide
+            wait 2.4s
+            camera medium freeman
+            wait 1.8s
+            camera close-up freeman
         }
     }
     // нити ПОДКЛЮЧИЛИСЬ: рывок — его вздёргивает как куклу, ступни отрываются
@@ -162,14 +176,19 @@ scene "cell-hook" (duration: 24s, set: cell) {
     // все 59 секунд стоял анфас — библиотека была, а кадр её не видел.
     //lip 3
     together {
-        freeman speaks for 3.4s
+        freeman speaks for 8.9s
         do {
             freeman pose "chetvert_pravo"
-            wait 1.0s
+            wait 2.2s
             camera angle low freeman
             freeman pose "povorot_pravo"
-            wait 0.9s
+            wait 2.0s
+            camera medium freeman
+            freeman pose "chetvert_pravo"
+            wait 2.2s
+            camera close-up freeman
             freeman pose "calm"
+            wait 1.6s
         }
     }
 
@@ -188,9 +207,9 @@ scene "cell-hook" (duration: 24s, set: cell) {
     camera dutch 2
     //lip 4
     together {
-        freeman speaks for 2.8s
+        freeman speaks for 3.4s
         do {
-            wait 1.3s
+            wait 1.7s
             camera extreme-close-up freeman
         }
     }
@@ -204,20 +223,37 @@ scene "cell-hook" (duration: 24s, set: cell) {
 }
 
 // === СЦЕНА 2: КНИГА НА СТОЛЕ (11 с) ===
-scene "book" (duration: 11s, set: book) {
+// СЦЕНА ДЕРЖИТ ДВЕ ДИКТОРСКИЕ РЕПЛИКИ, И ЕЁ ДЛИНА СЧИТАЕТСЯ ПО НИМ.
+// VO-5 («Перепрошивка», десять лекций) и VO-6 («Лекция первая») — те две из
+// десяти, которые звучат ЗА КАДРОМ: Фримена в сцене нет, рот открывать
+// некому, поэтому речевого блока у них нет и движок про них не знает.
+// Раньше сцена длилась 11 секунд, а реплики под неё — 8.9: название курса
+// договаривалось уже под следующей сценой. Здесь каждой отведён свой кусок
+// монтажа: титул под первую, наезд на картинку под вторую.
+scene "book" (duration: 14s, set: book) {
     // Тишина после жёсткой фразы: книга, комната. Дай зрителю выдохнуть.
     camera wide
     wait 2s
-    // СКЛЕЙКА → титул. VO-5: «Курс "Перепрошивка". Десять лекций...»
-    camera close-up
-    wait 1.6s
+    // СКЛЕЙКА → ТИТУЛ. VO-5: «"Перепрошивка". Десять лекций...» (5.1с)
+    //
+    // НАЗВАНИЕ КУРСА ОБЯЗАНО ПОМЕЩАТЬСЯ В КАДР ЦЕЛИКОМ. Здесь стоял голый
+    // `camera close-up` — без цели он берёт исторические постоянные (зум 3.4
+    // по центру кадра), и слово «ПЕРЕПРОШИВКА» обрезалось с обоих концов все
+    // двенадцать секунд сцены: продающий ролик ни разу не показывал того, что
+    // продаёт. Читаемым оно было ровно две секунды на общем плане в начале.
+    // Теперь наезд адресный: средний план, наведённый НА ТИТУЛ, и медленный
+    // ход вниз по нему — слово в кадре целиком от первого кадра до последнего.
     camera medium
-    wait 1.8s
-    // подъезд к картинке. VO-6: «Лекция первая. Ты — не с нуля.»
-    camera pan-to (0.72, 0.62) over 3s
-    wait 1.2s
-    camera close-up
+    camera pan-to (0.665, 0.40) over 0.01s
+    wait 2.2s
+    camera pan-to (0.67, 0.47) over 2.6s
+    // подъезд к картинке. VO-6: «Лекция первая. Ты — не с нуля.» (3.8с)
+    camera wide
+    wait 0.5s
+    camera medium
+    camera pan-to (0.72, 0.62) over 2.6s
     wait 1.4s
+    camera pan-to (0.72, 0.70) over 1.6s
     transition dissolve 1s
 }
 
@@ -245,7 +281,17 @@ scene "alive" (duration: 14s, set: mind) {
             freeman pose "point"
             wait 0.8s
             //lip 7
-            freeman speaks for 3s
+            freeman speaks for 3.8s
+        }
+        do {
+            // Врез на середине оживающей картинки: шестерни и кабель едут
+            // девять секунд, и без ката это один неподвижный план при среднем
+            // по ролику 1.7. На врезе виден кабель, ползущий к голове-схеме, —
+            // то самое «прошивка работает», о чём идёт реплика.
+            wait 4.2s
+            camera medium freeman
+            wait 2.6s
+            camera wide
         }
     }
 
@@ -255,9 +301,9 @@ scene "alive" (duration: 14s, set: mind) {
     wait 0.4s
     //lip 8
     together {
-        freeman speaks for 3.4s
+        freeman speaks for 4.7s
         do {
-            wait 1.6s
+            wait 2.3s
             camera close-up freeman
         }
     }
@@ -274,9 +320,9 @@ scene "alive" (duration: 14s, set: mind) {
     freeman pose "stern"
     //lip 9
     together {
-        freeman speaks for 2.6s
+        freeman speaks for 2.9s
         do {
-            wait 1.2s
+            wait 1.4s
             camera extreme-close-up freeman
         }
     }
@@ -326,9 +372,9 @@ scene "void-punch" (duration: 10s, set: void) {
     freeman pose "grotesque"
     //lip 10
     together {
-        freeman speaks for 2.8s
+        freeman speaks for 3.4s
         do {
-            wait 1.3s
+            wait 1.7s
             camera close-up freeman
         }
     }
