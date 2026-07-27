@@ -1,7 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 102" width="120" height="102"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="8" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
 
 
-<!-- РУКА В ПРОФИЛЬ — ЗАЛИВКА БЕЛЫМ ПО ЧЁРНОМУ.
+<!-- СТЫКИ ПРИВЯЗАНЫ К КОСТИ. Ствол идёт от пивота [60,8] до y=86 — ровно
+     туда, где сидит пивот предплечья (смещение 78 от плеча). Раньше он
+     доходил до 92 и обоими концами уезжал вбок от пивота (верх на 60, низ на
+     59.5): на толстой руке это пряталось под перекрытием, а после утоньшения
+     до 0.48 хвост вылезал за локоть, и рука читалась разорванной.
+     Оба конца ствола центрированы на x=60 — на пивоте.
+     РУКА В ПРОФИЛЬ — ЗАЛИВКА БЕЛЫМ ПО ЧЁРНОМУ.
      С листа разворотов: сбоку рука не чёрная фигура рядом с телом, а СВЕТЛАЯ
      ЛИНИЯ ПОВЕРХ чёрного балахона — контур, не заливка. Этим снимается затык,
      об который я бился: чёрная рука на чёрном плаще пропадает, и чтобы её
@@ -24,5 +30,5 @@
     <path d="M54.4 22.4 L32.8 31.3" stroke="#eef1ec" stroke-width="3.4" stroke-linecap="round"/>
     <path d="M53.6 21.6 L35.3 26.1" stroke="#eef1ec" stroke-width="3.4" stroke-linecap="round"/>
     <ellipse cx="60.0" cy="20.0" rx="17" ry="12" fill="#eef1ec" stroke="#eef1ec" stroke-width="3.6"/>
-    <path d="M55 10 Q51 38 53 58 Q54 78 56 92 L63 92 Q64 78 64 58 Q66 38 65 10 Z" fill="#eef1ec" stroke="#eef1ec" stroke-width="3.6"/>
+    <path d="M55 6 Q53 30 55 56 Q56 72 57 86 L63 86 Q64 72 65 56 Q67 30 65 6 Z" fill="#eef1ec" stroke="#eef1ec" stroke-width="3.6"/>
 </g></svg>

@@ -4008,7 +4008,7 @@
         "mouth": {
           "part": "mouth_side",
           "offset": [
-            17,
+            10,
             -56
           ],
           "scale": [
@@ -4022,21 +4022,21 @@
             21,
             23
           ],
-          "rotation": -6,
+          "rotation": 13,
           "z_order": 4,
           "scale": [
-            0.6,
+            0.48,
             1.0
           ]
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -18
+          "rotation": -7
         },
         "hand_right": {
           "part": "arm_out_hand_r",
           "scale": [
-            0.75,
+            0.95,
             0.75
           ]
         },
@@ -4131,7 +4131,7 @@
         "mouth": {
           "part": "mouth_side",
           "offset": [
-            17,
+            10,
             -56
           ],
           "scale": [
@@ -4145,21 +4145,21 @@
             21,
             23
           ],
-          "rotation": -6,
+          "rotation": 13,
           "z_order": 4,
           "scale": [
-            0.6,
+            0.48,
             1.0
           ]
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -18
+          "rotation": -7
         },
         "hand_right": {
           "part": "arm_out_hand_r",
           "scale": [
-            0.75,
+            0.95,
             0.75
           ]
         },
@@ -4559,7 +4559,7 @@
         "mouth": {
           "part": "mouth_side",
           "offset": [
-            17,
+            10,
             -56
           ],
           "scale": [
@@ -4573,21 +4573,21 @@
             21,
             23
           ],
-          "rotation": -6,
+          "rotation": 13,
           "z_order": 4,
           "scale": [
-            0.6,
+            0.48,
             1.0
           ]
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -18
+          "rotation": -7
         },
         "hand_right": {
           "part": "arm_out_hand_r",
           "scale": [
-            0.75,
+            0.95,
             0.75
           ]
         },
@@ -4685,7 +4685,7 @@
         "mouth": {
           "part": "mouth_side",
           "offset": [
-            17,
+            10,
             -56
           ],
           "scale": [
@@ -4699,21 +4699,21 @@
             21,
             23
           ],
-          "rotation": -6,
+          "rotation": 13,
           "z_order": 4,
           "scale": [
-            0.6,
+            0.48,
             1.0
           ]
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -18
+          "rotation": -7
         },
         "hand_right": {
           "part": "arm_out_hand_r",
           "scale": [
-            0.75,
+            0.95,
             0.75
           ]
         },
@@ -4811,7 +4811,7 @@
         "mouth": {
           "part": "mouth_side",
           "offset": [
-            17,
+            10,
             -56
           ],
           "scale": [
@@ -4825,21 +4825,21 @@
             21,
             23
           ],
-          "rotation": -6,
+          "rotation": 13,
           "z_order": 4,
           "scale": [
-            0.6,
+            0.48,
             1.0
           ]
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -18
+          "rotation": -7
         },
         "hand_right": {
           "part": "arm_out_hand_r",
           "scale": [
-            0.75,
+            0.95,
             0.75
           ]
         },
@@ -4943,7 +4943,7 @@
         "mouth": {
           "part": "mouth_side",
           "offset": [
-            17,
+            10,
             -56
           ],
           "scale": [
@@ -4957,21 +4957,21 @@
             21,
             23
           ],
-          "rotation": -6,
+          "rotation": 13,
           "z_order": 4,
           "scale": [
-            0.6,
+            0.48,
             1.0
           ]
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -18
+          "rotation": -7
         },
         "hand_right": {
           "part": "arm_out_hand_r",
           "scale": [
-            0.75,
+            0.95,
             0.75
           ]
         },

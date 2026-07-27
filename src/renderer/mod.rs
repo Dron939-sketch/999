@@ -1140,12 +1140,24 @@ fn collect_bone_drawables<'a>(
     // зеркальной позе оставалась с той же стороны от предплечья, рука
     // расползалась на куски. Разворачиваем угол обратно в НЕзеркальную систему,
     // считаем смещение там, а зеркалит его один-единственный множитель ниже.
+    // МАСШТАБ ПРИМЕНЯЕТСЯ ДО ПОВОРОТА, КАК И К РИСУНКУ. Раньше смещение
+    // сначала поворачивалось, а потом умножалось на накопленный масштаб —
+    // отдельно по x и по y. Пока масштаб равномерный, порядок не важен, но
+    // стоит ему стать разным по осям (сплющенная голова, утоньшённая рука,
+    // суженный плащ), два порядка расходятся: РИСУНОК растеризуется в
+    // масштабе и лишь затем поворачивается, а ТОЧКА КРЕПЛЕНИЯ ребёнка
+    // поворачивалась до масштабирования. Замер на профиле: рука сжата по x до
+    // 0.48 и повёрнута на 13° — конец плеча в рисунке приходил на −27, а
+    // пивот предплечья на −13, и локоть расходился на 14 единиц. То же самое
+    // ждало кисть и любую кость под неравномерно сжатым родителем.
     let rot_rad = (parent_rot * entity_scale_x.signum()).to_radians();
-    let rx = offset_x * rot_rad.cos() - offset_y * rot_rad.sin();
-    let ry = offset_x * rot_rad.sin() + offset_y * rot_rad.cos();
+    let ox = offset_x * entity_scale_x.abs();
+    let oy = offset_y * entity_scale_y;
+    let rx = ox * rot_rad.cos() - oy * rot_rad.sin();
+    let ry = ox * rot_rad.sin() + oy * rot_rad.cos();
 
-    let mut world_x = parent_x + rx * scale * flip * entity_scale_x;
-    let mut world_y = parent_y + ry * scale * entity_scale_y;
+    let mut world_x = parent_x + rx * scale * flip * entity_scale_x.signum();
+    let mut world_y = parent_y + ry * scale;
     // В отзеркаленной ветке поворот тоже зеркалится: знак накопленного
     // entity_scale_x и есть признак зеркала (произведение масштабов предков).
     let world_rot = parent_rot + (rotation + arc_rot) * flip * entity_scale_x.signum();
