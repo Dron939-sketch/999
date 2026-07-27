@@ -37,6 +37,9 @@ SPEAK = re.compile(r"^(\s*)(\S+)\s+speaks\s+for\s+([\d.]+)s\s*$")
 # Строительные строки между маркером и речью: открытие блока, закрытие,
 # комментарий, пустая. Через них маркер обязан ПЕРЕЖИТЬ до `speaks for`.
 SCAFFOLD = re.compile(r"^\s*(together\s*\{|do\s*\{|\{|\}|//.*)?\s*$")
+# Всё, что задаёт время внутри блока катов: `wait 1.0s`, `... over 0.55s`,
+# `camera shake 0.3s`, `... for 0.2s`. Растягивается вместе с репликой.
+TIMED = re.compile(r"\b(wait\s+|over\s+|shake\s+|for\s+)([\d.]+)s")
 
 # Виземы Rhubarb → позы рига (rig.json: visA..visF). Расширенные G/H/X
 # сводим к ближайшим базовым.
@@ -217,7 +220,42 @@ def lips_track_lines(entity, mp3, indent, fps=11.0):
 def process(text, parts_dir):
     out, pending, subbed, fell, skipped = [], None, 0, 0, 0
     order = []  # номера vo-N в порядке появления речевых блоков в файле
+    stretch = None   # (коэффициент, отступ блока `do`) для соседних катов
+    depth = None     # глубина скобок внутри растягиваемого `do`
     for line in text.splitlines():
+        # РАСТЯЖКА СОСЕДНЕГО БЛОКА КАТОВ. Реплика пишется так:
+        #
+        #     together {
+        #         freeman speaks for 6.5s     ← заявленная длительность
+        #         do { camera ...; wait 2.2s; camera ...; wait 2.0s; camera ... }
+        #     }
+        #
+        # `speaks for` заменяется дорожкой рта РЕАЛЬНОЙ длины, а соседний `do`
+        # остаётся прежним. Когда диктор говорит дольше заявленного, каты
+        # заканчиваются на середине реплики и камера СТОИТ до её конца: в
+        # «Теориях личности» так вышел неподвижный план на 12.2 секунды при
+        # среднем плане 1.7. Поэтому паузы соседнего блока умножаются на то
+        # же отношение, на какое разъехалась речь, — каты остаются там же по
+        # ДОЛЕ реплики, где их поставил режиссёр.
+        if stretch is not None:
+            k, blk_indent = stretch
+            if depth is None:
+                if re.match(rf"^{blk_indent}do\s*\{{\s*$", line):
+                    depth = 1
+                    out.append(line)
+                    continue
+                if line.strip() and not line.strip().startswith("//"):
+                    stretch = None      # соседнего блока катов нет
+            else:
+                depth += line.count("{") - line.count("}")
+                if depth <= 0:
+                    stretch, depth = None, None
+                else:
+                    line = TIMED.sub(
+                        lambda mm: f"{mm.group(1)}{round(float(mm.group(2)) * k, 2)}s",
+                        line)
+                    out.append(line)
+                    continue
         m = LIP.match(line)
         if m:
             pending, skipped = int(m.group(1)), 0  # запомнить номер, маркер убрать
@@ -229,6 +267,11 @@ def process(text, parts_dir):
             if parts_dir and os.path.isfile(mp3) and os.path.getsize(mp3) > 0:
                 out.extend(lips_track_lines(entity, mp3, indent))
                 subbed += 1
+                real, declared = mp3_duration(mp3), float(dur)
+                if real > 0 and declared > 0.05:
+                    k = round(real / declared, 4)
+                    if abs(k - 1.0) > 0.02:
+                        stretch, depth = (k, indent), None
             else:
                 out.append(line)  # запасной путь: обычные флэпы
                 fell += 1
