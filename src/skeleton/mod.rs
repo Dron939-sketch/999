@@ -22,6 +22,35 @@ use serde::{Deserialize, Serialize};
 
 use crate::errors::AnimError;
 
+/// КАРТА ФИГУРЫ: где у персонажа что находится относительно его якоря.
+///
+/// Все величины — доли ВЫСОТЫ кадра на единицу `scales` (кроме `mask_dx`,
+/// который в долях ШИРИНЫ), отсчёт от точки, куда ставит `place`. Снимаются
+/// замером с рендера: `python3 tools/karta.py --rig <папка> --write`.
+///
+/// Зачем в риге, а не в движке. Кадрирование планов раньше держалось на
+/// постоянных, подобранных на глаз для ОДНОГО персонажа ростом 1.0. Стоило
+/// фигуре подрасти — крупный план срезал макушку; появись второй персонаж с
+/// другими пропорциями — те же числа врали бы уже на нём. Карта принадлежит
+/// персонажу, поэтому и лежит рядом с его скелетом.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+pub struct Karta {
+    /// Макушка (отрицательное — выше якоря).
+    pub crown: f64,
+    /// Центр глаз.
+    pub eyes: f64,
+    /// Низ головы/маски (подбородок).
+    pub chin: f64,
+    /// Ступни.
+    pub feet: f64,
+    /// Смещение центра головы по X, в долях ШИРИНЫ кадра.
+    #[serde(default)]
+    pub mask_dx: f64,
+    /// Ширина головы, в долях ВЫСОТЫ кадра.
+    #[serde(default)]
+    pub mask_w: f64,
+}
+
 /// A complete character rig: skeleton + part assets + poses.
 #[derive(Debug, Clone)]
 pub struct CharacterRig {
@@ -31,6 +60,9 @@ pub struct CharacterRig {
     pub poses: HashMap<String, Pose>,
     /// Total bounding height (used for scaling to scene).
     pub height: f64,
+    /// Замеренная карта фигуры (см. `Karta`). Нет — планы считаются по
+    /// историческим постоянным, как до появления карты.
+    pub karta: Option<Karta>,
 }
 
 /// The skeleton: a tree of bones.
@@ -121,6 +153,10 @@ pub struct RigDefinition {
     pub height: f64,
     pub skeleton: Skeleton,
     pub poses: HashMap<String, Pose>,
+    /// Замеренная карта фигуры. Необязательна: риг без неё работает, просто
+    /// планы считаются по историческим постоянным.
+    #[serde(default)]
+    pub karta: Option<Karta>,
 }
 
 /// Load a character rig from a directory.
@@ -156,6 +192,7 @@ pub fn load_rig(name: &str, dir: &Path) -> Result<CharacterRig, AnimError> {
         parts,
         poses: rig_def.poses,
         height: rig_def.height,
+        karta: rig_def.karta,
     })
 }
 

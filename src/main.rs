@@ -203,7 +203,7 @@ fn cmd_render(
         log::info!("Processing scene: {}", scene_decl.name);
 
         let resolved = resolve_scene(scene_decl, &assets)?;
-        let compiled_timeline = timeline::compile(&resolved)?;
+        let compiled_timeline = timeline::compile_with_kartas(&resolved, &assets.kartas())?;
 
         // Check for character overlaps before rendering.
         let character_names: Vec<String> = resolved
@@ -724,7 +724,7 @@ fn cmd_check(input: &Path) -> Result<()> {
 
     for scene_decl in &scenes {
         let resolved = resolve_scene(scene_decl, &assets)?;
-        let compiled_timeline = timeline::compile(&resolved)?;
+        let compiled_timeline = timeline::compile_with_kartas(&resolved, &assets.kartas())?;
 
         let character_names: Vec<String> = resolved
             .entities
@@ -789,7 +789,7 @@ fn cmd_timing(input: &Path) -> Result<()> {
     for item in &program.items {
         if let TopLevelItem::Scene(scene_decl) = item {
             let resolved = resolve_scene(scene_decl, &assets)?;
-            let tl = timeline::compile(&resolved)?;
+            let tl = timeline::compile_with_kartas(&resolved, &assets.kartas())?;
             for (s0, e0) in &tl.speech_blocks {
                 blocks.push((offset + s0, offset + e0));
             }

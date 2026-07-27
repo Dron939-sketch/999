@@ -104,6 +104,15 @@ pub enum TransitionKind {
 
 /// Compile a resolved scene into a timeline.
 pub fn compile(scene: &ResolvedScene) -> Result<Timeline, AnimError> {
+    compile_with_kartas(scene, &HashMap::new())
+}
+
+/// То же, но с картами фигур персонажей (см. `skeleton::Karta`): по ним
+/// считается кадрирование планов. Без карт поведение прежнее.
+pub fn compile_with_kartas(
+    scene: &ResolvedScene,
+    kartas: &HashMap<String, crate::skeleton::Karta>,
+) -> Result<Timeline, AnimError> {
     let mut compiler = TimelineCompiler {
         time: 0.0,
         tracks: HashMap::new(),
@@ -122,6 +131,7 @@ pub fn compile(scene: &ResolvedScene) -> Result<Timeline, AnimError> {
         }],
         transitions: Vec::new(),
         entities: scene.entities.clone(),
+        kartas: kartas.clone(),
     };
 
     compiler.compile_statements(&scene.statements)?;
@@ -165,6 +175,8 @@ struct TimelineCompiler {
     camera_keyframes: Vec<CameraKeyframe>,
     transitions: Vec<TransitionEvent>,
     entities: HashMap<String, EntityState>,
+    /// Карты фигур: имя сущности -> замеренная карта персонажа.
+    kartas: HashMap<String, crate::skeleton::Karta>,
 }
 
 impl TimelineCompiler {
@@ -509,7 +521,8 @@ impl TimelineCompiler {
         shot: ShotType,
         target: Option<&str>,
     ) -> Result<(f64, f64, f64), AnimError> {
-        // (смещение центра от якоря, зум) — при scales 1.0
+        // (смещение центра от якоря, зум) — при scales 1.0, для персонажа без
+        // замеренной карты. Числа исторические, подобранные на глаз.
         let (dy, zoom) = match shot {
             ShotType::Wide => return Ok((0.5, 0.5, 1.0)),
             ShotType::Medium => (0.05, 2.2),
@@ -527,6 +540,34 @@ impl TimelineCompiler {
             .get(name)
             .ok_or_else(|| AnimError::Timeline(format!("unknown entity: {name}")))?;
         let s = e.scale_y.abs().max(0.05);
+
+        // Есть карта — план считается ГЕОМЕТРИЕЙ этого персонажа: берём
+        // верхнюю и нижнюю границы того, что план обязан показать, и подбираем
+        // зум так, чтобы они уложились в кадр с полем. Так одна и та же
+        // команда `camera close-up` одинаково правильно кадрирует и Фримена, и
+        // любого следующего персонажа с другими пропорциями — без единой новой
+        // постоянной в движке.
+        if let Some(k) = self.kartas.get(name) {
+            let head_h = (k.chin - k.crown).abs().max(1e-6);
+            let (top, bottom, fill) = match shot {
+                // пояс-вверх: от макушки до середины бедра
+                ShotType::Medium => (k.crown, k.feet * 0.55, 0.92),
+                // голова и плечи: макушка плюс немного корпуса под подбородком
+                ShotType::CloseUp => (k.crown, k.chin + (k.feet - k.chin) * 0.18, 0.96),
+                // морда на весь кадр: врез внутрь головы
+                ShotType::ExtremeCloseUp => {
+                    (k.crown + head_h * 0.18, k.chin - head_h * 0.10, 0.94)
+                }
+                _ => (k.crown, k.feet, 0.90),
+            };
+            let span = (bottom - top).abs().max(1e-6);
+            return Ok((
+                e.x,
+                e.y + (top + bottom) / 2.0 * s,
+                fill / (span * s),
+            ));
+        }
+
         Ok((e.x, e.y + dy * s, zoom / s))
     }
 

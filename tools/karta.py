@@ -26,14 +26,21 @@ karta.py — КАРТА ФИГУРЫ: где на экране оказывае�
 Числа НЕ зашиты: поза, плащ и рост менялись десяток раз, и всякая зашитая
 константа протухала молча. Меряем заново — и сверяем с KARTA.md.
 
+Карта принадлежит ПЕРСОНАЖУ, а не движку: она лежит в его `rig.json` в поле
+`karta`, и по ней компилятор таймлайна кадрирует планы. Поэтому правило
+работает для любого персонажа в кадре, а не только для Фримена — новому ригу
+достаточно один раз снять карту с ключом `--write`.
+
 Использование:
-    python3 tools/karta.py                       # замерить и напечатать карту
-    python3 tools/karta.py --pose lunge          # карта в конкретной позе
-    python3 tools/karta.py --check               # сверить с эталоном KARTA.md
+    python3 tools/karta.py                              # Фримен: замер + печать
+    python3 tools/karta.py --rig examples/assets/characters/fredi_rig
+    python3 tools/karta.py --rig <папка> --pose idle --write   # записать в rig.json
+    python3 tools/karta.py --all --check                # сверить все риги
 """
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -46,22 +53,13 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parent.parent
 ENGINE = ROOT / "target" / "release" / "animdsl"
 
-# Эталон карты (доли кадра на единицу `scales`, якорь = 0). Держится здесь и в
-# KARTA.md; --check сверяет замер с этими числами.
-# Замер позы «idle» — она и есть отсчётная. Другие позы двигают голову и ноги
-# на сотые доли: это НОРМА, а не расхождение, поэтому предметы, обязанные
-# держаться тела, делаются костью (см. KARTA.md), а не подгонкой по числу.
-KARTA = {
-    "crown": -0.1733,     # макушка
-    "eyes": -0.0630,      # центр глаз
-    "chin": 0.0433,       # низ белого ядра
-    "feet": 0.4144,       # ступни
-    "mask_dx": -0.0239,   # центр белого ядра левее якоря (в долях ШИРИНЫ)
-    "mask_w": 0.1422,     # ширина белого ядра (в долях ВЫСОТЫ кадра)
-}
+# Эталон берётся из САМОГО РИГА (поле `karta` в rig.json) — не из этого файла.
+# Так карта не может разойтись с тем, чем пользуется движок: `--check` меряет
+# заново и сверяет с тем, что записано у персонажа.
 TOL = 0.012
+RIGS = "examples/assets/characters"
 
-STAND = """import character freeman from "../assets/characters/freeman_rig"
+STAND = """import character hero from "{rig}"
 config {{
     width: 1000
     height: 1000
@@ -76,9 +74,9 @@ config {{
     rim-light: 0.0
 }}
 scene "karta" (duration: 1s) {{
-    place freeman at (0.5, {y}) facing front
-    freeman scales {s}
-    freeman pose "{pose}"
+    place hero at (0.5, {y}) facing front
+    hero scales {s}
+    hero pose "{pose}"
     camera wide
     wait 1s
 }}
@@ -120,10 +118,11 @@ def label(mask):
     return remap[lab]
 
 
-def render(pose, y, s, w=1000):
+def render(rig_dir, pose, y, s):
     d = Path(tempfile.mkdtemp())
     src = ROOT / "examples" / "lektorij" / "_karta_stand.anim"
-    src.write_text(STAND.format(pose=pose, y=y, s=s), encoding="utf-8")
+    rel = os.path.relpath(Path(rig_dir).resolve(), src.parent)
+    src.write_text(STAND.format(rig=rel, pose=pose, y=y, s=s), encoding="utf-8")
     try:
         subprocess.run([str(ENGINE), "render", str(src), "--png-dir", str(d)],
                        check=True, capture_output=True)
@@ -209,42 +208,101 @@ NAMES = {
 }
 
 
-def main(argv):
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--pose", default="idle")
-    ap.add_argument("--scale", type=float, default=0.90)
-    ap.add_argument("--check", action="store_true")
-    a = ap.parse_args(argv)
-
+def one_rig(rig_dir, pose, scale, do_check, do_write):
     y = 0.20
-    m = measure(render(a.pose, y, a.scale), y, a.scale)
+    m = measure(render(rig_dir, pose, y, scale), y, scale)
 
-    print(f"\n  КАРТА ФИГУРЫ — поза «{a.pose}», scales {a.scale}")
+    # ВТОРОЙ ЗАХОД С ПОДБОРОМ РОСТА. `scales` НЕ сопоставим между персонажами:
+    # движок делит на `height` из рига, и при одном и том же `scales 0.9`
+    # Фримен занимает 0.58 кадра, а Фреди — 0.28. У мелкой фигуры голова
+    # выходит в 19 пикселей, и глаза меряются как пятна 1x2 — мусор. Поэтому
+    # первый замер нужен только чтобы узнать рост, а настоящий делается на
+    # масштабе, при котором фигура заполняет кадр.
+    full = abs(m["crown"]) + m["feet"]
+    if full > 1e-6:
+        want = 0.70 / full
+        if abs(want - scale) / scale > 0.15:
+            scale = round(want, 3)
+            m = measure(render(rig_dir, pose, y, scale), y, scale)
+    rig_json = Path(rig_dir) / "rig.json"
+    stored = json.loads(rig_json.read_text(encoding="utf-8")).get("karta")
+
+    print(f"\n  КАРТА ФИГУРЫ — {Path(rig_dir).name}, поза «{pose}», scales {scale}")
     print("  (доли кадра НА ЕДИНИЦУ `scales`, отсчёт от якоря сущности)\n")
     bad = 0
     for k, name in NAMES.items():
         v = m[k]
         line = f"    {name:<34}{v:+8.4f}"
-        if k in KARTA:
-            d = abs(v - KARTA[k])
-            line += f"   эталон {KARTA[k]:+.4f}"
-            if a.check and d > TOL:
+        if stored and k in stored:
+            d = abs(v - stored[k])
+            line += f"   в риге {stored[k]:+.4f}"
+            if do_check and d > TOL:
                 line += f"   ← РАСХОЖДЕНИЕ {d:.4f}"
                 bad += 1
+        elif not stored:
+            line += "   карты в риге НЕТ"
         print(line)
     print("\n    глаза (ширина×высота в px стенда, смещение от якоря):")
     for w, h, dx, dy in m["_eyes"]:
         print(f"      {w:>3}×{h:<3}  h/w {h/w:.2f}   dx {dx:+.4f}  dy {dy:+.4f}")
-    print(f"\n  Перевод в сцену: элемент на уровне глаз ставится в "
+    print(f"\n  Перевод в сцену: элемент на уровне глаз — "
           f"y = якорь {m['eyes']:+.4f}·scales,\n"
-          f"  предмет на полу — в y = якорь {m['feet']:+.4f}·scales.\n"
-          f"  Промах, замеренный по КАДРУ крупного плана, делить на зум плана —\n"
-          f"  иначе правка перелетает во столько же раз.\n")
-    if a.check and bad:
-        print(f"  РАСХОЖДЕНИЙ С ЭТАЛОНОМ: {bad}. Либо правка фигуры не занесена\n"
-              f"  в KARTA.md и frame_shot, либо что-то поехало.\n")
+          f"  предмет на полу — y = якорь {m['feet']:+.4f}·scales,\n"
+          f"  полный рост {abs(m['crown']) + m['feet']:.3f}·scales "
+          f"(в общий план целиком влезает при scales ≤ "
+          f"{0.86 / (abs(m['crown']) + m['feet']):.2f}).\n"
+          f"  Промах, замеренный по КАДРУ крупного плана, делить на зум плана.\n")
+
+    if do_write:
+        doc = json.loads(rig_json.read_text(encoding="utf-8"))
+        vals = {}
+        for k in NAMES:
+            v = m[k]
+            if v != v:      # NaN: замер не нашёл величину (у Фреди глаза не
+                            # тёмные пятна на белой маске, а часть рисунка).
+                v = m["crown"] + (m["chin"] - m["crown"]) * 0.5
+                print(f"  ! {NAMES[k]}: замером не взято, пишу середину головы "
+                      f"{v:+.4f} — планы от этого не зависят, но предметы "
+                      f"«на уровне глаз» для этого персонажа ставить нельзя.")
+            vals[k] = round(v, 4)
+        doc["karta"] = vals
+        rig_json.write_text(json.dumps(doc, ensure_ascii=False, indent=2),
+                            encoding="utf-8")
+        print(f"  Карта записана в {rig_json}\n")
+    if do_check and not stored:
+        print("  У рига НЕТ карты: планы для него считаются по историческим\n"
+              "  постоянным, подобранным под другого персонажа. Снять картой:\n"
+              f"  python3 tools/karta.py --rig {rig_dir} --write\n")
+        return 1
+    if do_check and bad:
+        print(f"  РАСХОЖДЕНИЙ: {bad}. Фигуру правили, а карту в риге не обновили —\n"
+              f"  движок кадрирует планы по устаревшим числам.\n")
         return 1
     return 0
+
+
+def main(argv):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--rig", default=str(ROOT / RIGS / "freeman_rig"))
+    ap.add_argument("--all", action="store_true",
+                    help="все риги в examples/assets/characters")
+    ap.add_argument("--pose", default="idle")
+    ap.add_argument("--scale", type=float, default=0.90)
+    ap.add_argument("--check", action="store_true")
+    ap.add_argument("--write", action="store_true",
+                    help="записать замеренную карту в rig.json персонажа")
+    a = ap.parse_args(argv)
+
+    if a.all:
+        dirs = sorted(d for d in (ROOT / RIGS).iterdir()
+                      if (d / "rig.json").exists())
+    else:
+        dirs = [Path(a.rig)]
+
+    bad = 0
+    for d in dirs:
+        bad += one_rig(d, a.pose, a.scale, a.check, a.write)
+    return 1 if bad else 0
 
 
 if __name__ == "__main__":

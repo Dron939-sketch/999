@@ -65,6 +65,21 @@ pub struct AssetRegistry {
 }
 
 impl AssetRegistry {
+    /// Карты фигур всех загруженных персонажей (см. `skeleton::Karta`).
+    /// По ним компилятор таймлайна кадрирует планы — у КАЖДОГО персонажа по
+    /// его собственным пропорциям, а не по числам, подобранным для одного.
+    pub fn kartas(&self) -> HashMap<String, crate::skeleton::Karta> {
+        self.characters
+            .iter()
+            .filter_map(|(name, a)| match a {
+                CharacterAsset::Rigged(rig) => rig.karta.map(|k| (name.clone(), k)),
+                _ => None,
+            })
+            .collect()
+    }
+}
+
+impl AssetRegistry {
     pub fn new() -> Self {
         Self::default()
     }
