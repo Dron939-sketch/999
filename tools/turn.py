@@ -98,7 +98,10 @@ CLOAK_34_INK = 161.0 # ink torso_34
 HEAD_FRONT_OFF = -13.8   # центр ink head.svg относительно пивота
 DEEP = 82.0          # вынос головы вперёд (сутулость)
 DEEP_34 = 34.0       # то же на 45° — по замеру листа, а не по d·sin45
+# Рост +20% (правка студии): torso растянут по y, ширина не тронута. Зеркало
+# должно ставить ТУ ЖЕ пару, иначе левый разворот выйдет ниже правого.
 TORSO_SCALE = 1.55
+TORSO_SCALE_Y = 1.86
 
 
 def half(deg):
@@ -110,7 +113,7 @@ def mirror(pose, name):
     """Левый разворот: тот же набор костей, зеркальный torso."""
     q = json.loads(json.dumps(pose))
     q["name"] = name
-    q["bones"]["torso"] = {"scale": [-TORSO_SCALE, TORSO_SCALE]}
+    q["bones"]["torso"] = {"scale": [-TORSO_SCALE, TORSO_SCALE_Y]}
     return q
 
 
