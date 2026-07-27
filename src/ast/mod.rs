@@ -177,6 +177,13 @@ pub enum ActionStmt {
         entity: String,
         pose: String,
     },
+    /// `freeman overlays "kurit_zatyazhka"` — кости названной позы кладутся
+    /// ПОВЕРХ удерживаемой, а не заменяют её. Так одна часть тела продолжает
+    /// прежнее движение, пока другая делает своё.
+    Overlay {
+        entity: String,
+        pose: String,
+    },
     /// `freeman speaks for 3s` — auto-cycles phoneme mouth poses for the
     /// duration (advances scene time, like a wait that talks).
     Speak {

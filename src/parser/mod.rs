@@ -233,6 +233,7 @@ fn parse_action(pair: Pair) -> Result<ActionStmt, AnimError> {
     match inner.as_rule() {
         Rule::move_action => parse_move_action(inner),
         Rule::pose_action => parse_pose_action(inner),
+        Rule::overlay_action => parse_overlay_action(inner),
         Rule::speak_action => parse_speak_action(inner),
         Rule::lips_action => parse_lips_action(inner),
         Rule::show_action => parse_show_action(inner),
@@ -269,6 +270,14 @@ fn parse_pose_action(pair: Pair) -> Result<ActionStmt, AnimError> {
     let pose = parse_string_literal(inner.next().unwrap());
 
     Ok(ActionStmt::Pose { entity, pose })
+}
+
+fn parse_overlay_action(pair: Pair) -> Result<ActionStmt, AnimError> {
+    let mut inner = pair.into_inner();
+    let entity = inner.next().unwrap().as_str().to_string();
+    let pose = parse_string_literal(inner.next().unwrap());
+
+    Ok(ActionStmt::Overlay { entity, pose })
 }
 
 fn parse_speak_action(pair: Pair) -> Result<ActionStmt, AnimError> {

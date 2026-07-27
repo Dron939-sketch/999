@@ -143,6 +143,7 @@ action_stmt = {
     | exit_action
     | move_action
     | pose_action
+    | overlay_action
     | speak_action
     | lips_action
     | show_action
@@ -171,6 +172,15 @@ move_action = {
 
 pose_action = {
     identifier ~ "pose" ~ string_literal
+}
+
+// Слой поверх удерживаемой позы: движение ВТОРОЙ частью тела, параллельно
+// первой. Тело у нас держит ОДНУ позу целиком, поэтому «идёт и курит»
+// распадалось на «идёт», потом «курит» — шаг замирал на время затяжки.
+// `overlays` кладёт кости названной позы поверх текущей: ноги продолжают
+// шагать, рука подносит сигарету.
+overlay_action = {
+    identifier ~ "overlays" ~ string_literal
 }
 
 show_action = {

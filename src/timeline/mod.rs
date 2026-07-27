@@ -265,6 +265,19 @@ impl TimelineCompiler {
                     e.pose = pose.clone();
                 }
             }
+            ActionStmt::Overlay { entity, pose } => {
+                // Слой: событие помечается overlay, и рендер сливает кости этой
+                // позы поверх последней ПОЛНОЙ позы. Состояние сущности при
+                // этом не меняется — база остаётся прежней, иначе следующий
+                // слой лёг бы уже на слой, и вернуться к базовой позе было бы
+                // нечем.
+                self.pose_events.push(PoseEvent {
+                    time: self.time,
+                    entity: entity.clone(),
+                    pose: pose.clone(),
+                    overlay: true,
+                });
+            }
             ActionStmt::Speak { entity, duration } => {
                 // Auto-speech: cycle phoneme mouth poses for the duration and
                 // advance time (a wait that talks). The pattern is deterministic
@@ -273,7 +286,13 @@ impl TimelineCompiler {
                 let dur = duration.as_secs();
                 let end = self.time + dur;
                 self.speech_blocks.push((self.time, end));
-                const FLAPS: [&str; 6] = ["talk", "gab", "talk", "idle", "gab", "talk"];
+                // Закрытый рот — `visA` (ТОЛЬКО кость рта), а не `idle`.
+                // `idle` задаёт ещё руки, кисть и голову: каждый четвёртый флэп
+                // сбрасывал жест говорящего в покой на один рисунок. На речи в
+                // позе `lunge` это читалось дёрганьем рук примерно раз в
+                // полсекунды — тем более заметным, что мы держим 12 рисунков в
+                // секунду.
+                const FLAPS: [&str; 6] = ["talk", "gab", "talk", "visA", "gab", "talk"];
                 let mut t = self.time;
                 let mut i: usize = 0;
                 while t < end - 0.05 {
@@ -287,11 +306,11 @@ impl TimelineCompiler {
                     t += 0.14 + 0.05 * ((i * 7 + 3) % 3) as f64;
                     i += 1;
                 }
-                // Close the mouth at the end of the line.
+                // Закрыть рот в конце реплики — тоже мимо тела: `visA`.
                 self.pose_events.push(PoseEvent {
                     time: end,
                     entity: entity.clone(),
-                    pose: "idle".to_string(),
+                    pose: "visA".to_string(),
                     overlay: true,
                 });
                 self.time = end;

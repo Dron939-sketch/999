@@ -1249,17 +1249,32 @@ fn resolve_effective_pose(
     if !ev.overlay {
         return Some(pose.clone());
     }
-    // Find the base: the most recent non-overlay event at or before this one.
-    let base = events[..idx]
-        .iter()
-        .rev()
-        .find(|e| !e.overlay)
-        .and_then(|e| rig.poses.get(&e.pose))
+    // База — последняя ПОЛНАЯ поза; на неё кладутся ВСЕ слои после неё, по
+    // порядку, и только потом текущий.
+    //
+    // Раньше сливался ровно один слой — текущий, — и слои затирали друг друга.
+    // Из-за этого движение второй частью тела не жило дольше одного события:
+    // стоило заговорить, как первый же флэп рта сбрасывал наложенный жест
+    // руки. Тело у нас и так держит одну позу целиком, а человек делает
+    // несколько движений разными частями тела ОДНОВРЕМЕННО — накопление слоёв
+    // это и даёт: ноги шагают (база), рука несёт сигарету (слой), рот говорит
+    // (слой поверх).
+    let base_idx = events[..idx].iter().rposition(|e| !e.overlay);
+    let base = base_idx
+        .and_then(|i| rig.poses.get(&events[i].pose))
         .or_else(|| rig.poses.get("idle"));
     match base {
         Some(base) => {
             let mut merged = base.clone();
             merged.transition_duration = pose.transition_duration;
+            let from = base_idx.map(|i| i + 1).unwrap_or(0);
+            for e in &events[from..idx] {
+                if let Some(layer) = rig.poses.get(&e.pose) {
+                    for (bone, bt) in &layer.bones {
+                        merged.bones.insert(bone.clone(), bt.clone());
+                    }
+                }
+            }
             for (bone, bt) in &pose.bones {
                 merged.bones.insert(bone.clone(), bt.clone());
             }
