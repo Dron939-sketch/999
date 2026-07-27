@@ -122,6 +122,60 @@ def rhubarb_track(mp3):
         return None
 
 
+def mp3_duration(path):
+    """Длина файла в секундах (None, если ffprobe недоступен)."""
+    try:
+        out = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "csv=p=0", path],
+            check=True, capture_output=True, text=True).stdout.strip()
+        return float(out)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def fit_to_audio(track, mp3):
+    """ГЛАВНЫЙ ИНВАРИАНТ: дорожка рта длится РОВНО столько же, сколько её звук.
+
+    На нём держится весь синхрон завода. Движок откладывает речевой блок по
+    сумме `lips ... for`, а сборщик голоса ставит реплику на время этого блока.
+    Если дорожка короче своего mp3, блок в движке короче звука — и КАЖДАЯ
+    следующая реплика уезжает на разницу. Ошибка накапливается: в тюрьме за
+    девять реплик набежало 24 секунды, картинка кончалась на 47-й, а голос шёл
+    до 71-й.
+
+    Ловилось это только человеком, потому что по отдельности всё «работало»:
+    Rhubarb отдавал разметку, движок её честно откладывал, сборщик честно
+    сдвигал реплики и честно предупреждал «предыдущая длиннее зазора».
+
+    Недобор добиваем закрытым ртом в конец — начало реплики остаётся точным,
+    вся погрешность уходит в хвост. Перебор подрезаем с конца.
+    """
+    dur = mp3_duration(mp3)
+    if not dur or not track:
+        return track
+    total = sum(d for _, d in track)
+    delta = dur - total
+    if abs(delta) < 0.02:
+        return track
+    if delta > 0:
+        track = track + [("visA", delta)]
+    else:
+        left = -delta
+        while track and left > 1e-6:
+            pose, d = track[-1]
+            if d > left + 1e-6:
+                track[-1] = (pose, d - left)
+                left = 0.0
+            else:
+                left -= d
+                track.pop()
+    if abs(delta) > dur * 0.05:
+        print(f"  ⚠ {os.path.basename(mp3)}: разметка рта разошлась со звуком на "
+              f"{delta:+.2f}s из {dur:.2f}s — выровнял, но стоит проверить.")
+    return track
+
+
 def lips_track_lines(entity, mp3, indent, fps=11.0):
     # Сначала фонемы (Rhubarb): рот артикулирует слоги. Фолбэк — RMS-огибающая.
     track = rhubarb_track(mp3)
@@ -129,9 +183,19 @@ def lips_track_lines(entity, mp3, indent, fps=11.0):
     if not track:
         hop = 1.0 / fps
         track = envelope_to_mouths(extract_envelope(mp3, hop), hop)
+    track = fit_to_audio(track, mp3)
     out = [f"{indent}// липсинк {os.path.basename(mp3)} ({len(track)} ртов, {src})"]
+    # Округляем НАКОПИТЕЛЬНО: каждый рот дотягивается до общей сетки, поэтому
+    # сумма выведенных длительностей равна длине звука с точностью до 0.01с, а
+    # не уползает на 0.005 за каждый рот.
+    acc, printed = 0.0, 0.0
     for pose, dur in track:
-        out.append(f'{indent}{entity} lips "{pose}" for {round(dur, 2)}s')
+        acc += dur
+        step = round(acc - printed, 2)
+        if step <= 0:
+            continue
+        printed += step
+        out.append(f'{indent}{entity} lips "{pose}" for {step}s')
     return out
 
 
@@ -186,6 +250,8 @@ def main(argv):
     ap = argparse.ArgumentParser(description="Впаять липсинк в .anim перед рендером")
     ap.add_argument("anim")
     ap.add_argument("--parts", help="каталог с vo-<N>.mp3 (нет → везде флэпы)")
+    ap.add_argument("--vo", help="VO-сценарий: по нему отличаем дикторские реплики "
+                                 "от забытых при разметке")
     ap.add_argument("-o", "--output", required=True)
     args = ap.parse_args(argv)
 
@@ -200,12 +266,24 @@ def main(argv):
     if args.parts and os.path.isdir(args.parts):
         have = sorted(int(m.group(1)) for f in os.listdir(args.parts)
                       if (m := re.match(r"vo-(\d+)\.mp3$", f)))
-        lost = [n for n in have if n not in order]
+        # ДИКТОРСКИЕ реплики звучат за кадром НАМЕРЕННО — герой в этот момент
+        # может вообще отсутствовать в кадре (в «Перепрошивке» VO-5 и VO-6 идут
+        # над сценой с книгой, где его нет). Отличаем их по ремарке: «голос
+        # диктора», «за кадром», «закадр». Всё остальное без `//lip` — забыто.
+        narrator = set()
+        if args.vo and os.path.isfile(args.vo):
+            for i, line in enumerate(
+                    l for l in open(args.vo, encoding="utf-8")
+                    if re.match(r"\s*\|\s*VO-?\d", l)):
+                if re.search(r"голос\s+диктора|за\s+кадром|закадр", line, re.I):
+                    narrator.add(i + 1)
+        lost = [n for n in have if n not in order and n not in narrator]
         if lost:
             print(f"  ⚠ озвучены, но в сцене не произносятся: "
                   f"{', '.join('VO-' + str(n) for n in lost)} — "
-                  f"голос будет звучать при закрытом рте. "
-                  f"Добавь `//lip N` + `speaks` или убери реплику из VO.")
+                  f"голос будет звучать при закрытом рте. Добавь `//lip N` + "
+                  f"`speaks`, убери реплику из VO или пометь её ремаркой "
+                  f"«голос диктора», если она задумана закадровой.")
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(result)
     # Карта «речевой блок № → номер vo-N» для сборки голоса по фактическим

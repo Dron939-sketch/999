@@ -167,8 +167,11 @@ def step_prep_lipsync(prod, parts_dir):
     src = ROOT / prod["anim"]
     prepped = src.with_name(f".{src.stem}.lipsynced.anim")
     try:
-        run([sys.executable, str(TOOLS / "prep_lipsync.py"), str(src),
-             "--parts", str(parts_dir), "-o", str(prepped)])
+        cmd = [sys.executable, str(TOOLS / "prep_lipsync.py"), str(src),
+               "--parts", str(parts_dir), "-o", str(prepped)]
+        if prod.get("vo"):
+            cmd += ["--vo", str(ROOT / prod["vo"])]
+        run(cmd)
         return prepped
     except subprocess.CalledProcessError as e:
         log(f"  [липсинк] препроцессор не сработал ({e}) — рендерю исходный сценарий.")
