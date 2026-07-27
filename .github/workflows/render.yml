@@ -33,6 +33,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Какой продакшен гнать. Два входа, потому что ручной запуск доступен не
+      # всем токенам: у ассистента `workflow_dispatch` отдаёт 403, а починить
+      # один ролик надо, не переозвучивая остальные восемь. Поэтому тот же
+      # выбор читается из сообщения последнего коммита: маркер `[only: <id>]`.
+      # Пусто в обоих входах — гоним весь манифест, как и раньше.
+      - name: Какой продакшен рендерим
+        env:
+          INPUT_ONLY: ${{ inputs.production }}
+        run: |
+          ONLY="$INPUT_ONLY"
+          if [ -z "$ONLY" ]; then
+            ONLY=$(git log -1 --pretty=%B \
+              | sed -n 's/.*\[only:[[:space:]]*\([A-Za-z0-9_-]*\)[[:space:]]*\].*/\1/p' \
+              | head -1)
+          fi
+          echo "RENDER_ONLY=$ONLY" >> "$GITHUB_ENV"
+          echo "Продакшен: ${ONLY:-ВСЕ}"
+
       - name: Install ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
@@ -93,8 +111,8 @@ jobs:
           FREDERICK_TTS_URL: ${{ secrets.FREDERICK_TTS_URL }}
           IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
           IMAGE_API_PROVIDER: ${{ secrets.IMAGE_API_PROVIDER }}
-          ONLY: ${{ inputs.production }}
         run: |
+          ONLY="$RENDER_ONLY"
           # По умолчанию рендерим ВСЕ продакшены из манифеста — регрессии в
           # любом ролике видны в CI, а не только вручную. Ручной запуск с
           # заполненным полем `production` гонит ОДИН ролик: правка одного
@@ -120,8 +138,8 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ONLY: ${{ inputs.production }}
         run: |
+          ONLY="$RENDER_ONLY"
           shopt -s nullglob
           assets=(videos/*.mp4 videos/*.mp3)
           if [ ${#assets[@]} -eq 0 ]; then
