@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 145" width="46" height="145"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
 
-<!-- РУКА В ПРОФИЛЬ — СВЕТЛЫМ КОНТУРОМ ПО ЧЁРНОМУ.
+<!-- РУКА В ПРОФИЛЬ — ЗАЛИВКА БЕЛЫМ ПО ЧЁРНОМУ.
      С листа разворотов: сбоку рука не чёрная фигура рядом с телом, а СВЕТЛАЯ
      ЛИНИЯ ПОВЕРХ чёрного балахона — контур, не заливка. Этим снимается затык,
      об который я бился: чёрная рука на чёрном плаще пропадает, и чтобы её
@@ -8,4 +8,4 @@
      Контуром рука остаётся ВНУТРИ силуэта и при этом читается.
      Геометрия — ровно та же, что у чёрной версии: файл сделан из неё заменой
      заливки на обводку, поэтому крепление и длина совпадают до единицы. -->
-<g filter="url(#ink)"><path d="M14 6 Q12 25 15 60 Q17 95 20 131 L25 131 Q27 95 29 60 Q32 25 31 6 Z" fill="none" stroke="#eef1ec" stroke-width="1.9"/></g></svg>
+<g filter="url(#ink)"><path d="M14 6 Q12 25 15 60 Q17 95 20 131 L25 131 Q27 95 29 60 Q32 25 31 6 Z" fill="#eef1ec" stroke="#eef1ec" stroke-width="3.6"/></g></svg>
