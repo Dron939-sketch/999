@@ -351,19 +351,44 @@ def lint_location(prod):
         mv = re.search(r'viewBox="0 0 (\d+)', svg)
         if mv:
             W = int(mv.group(1))
-        for m in re.finditer(r'<text\b([^>]*)>(.*?)</text>', svg, re.S):
-            attrs, content = m.group(1), re.sub(r"\s+", " ", m.group(2)).strip()
+        # НАСЛЕДОВАНИЕ ОТ ГРУППЫ. text-anchor, font-size и font-family в SVG
+        # наследуются: у нас заголовки карточек лежат в <g text-anchor="middle">
+        # с голыми <text> внутри. Проверка читала только атрибуты самого <text>,
+        # считала якорь «start» и объявляла вылет на строках, которые стоят по
+        # центру с запасом в двести пикселей. Держим стек групп и разрешаем
+        # атрибуты как SVG: своё перебивает унаследованное.
+        stack = [{}]
+        for m in re.finditer(r'<g\b([^>]*)>|</g>|<text\b([^>]*)>(.*?)</text>',
+                             svg, re.S):
+            tok = m.group(0)
+            if tok.startswith("<g"):
+                inh = dict(stack[-1])
+                inh.update(dict(re.findall(r'([\w-]+)="([^"]*)"', m.group(1) or "")))
+                stack.append(inh)
+                continue
+            if tok == "</g>":
+                if len(stack) > 1:
+                    stack.pop()
+                continue
+            attrs = dict(stack[-1])
+            attrs.update(dict(re.findall(r'([\w-]+)="([^"]*)"', m.group(2) or "")))
+            content = re.sub(r"\s+", " ", m.group(3)).strip()
             if not content:
                 continue
-            # язык: латинское СЛОВО (2+ подряд) при default-русском
             if not allow_latin and re.search(r"[A-Za-z]{2,}", content):
                 soft.append(f"{prod['id']}: {svg_path.name}: нерусский текст "
                             f"«{content}» (русский по умолчанию; задай allow_latin)")
-            # читаемость: грубая ширина строки не должна вылезать за кадр
-            fs = float((re.search(r'font-size="([\d.]+)"', attrs) or [0, 12])[1])
-            x = float((re.search(r'\bx="([\d.]+)"', attrs) or [0, 0])[1])
+            fs = float(attrs.get("font-size", 12))
+            x = float(attrs.get("x", 0))
             approx_w = len(content) * fs * 0.6
-            if x + approx_w > W + 8:
+            # `x` — ЯКОРЬ, а не левый край: при "middle" строка растёт в обе
+            # стороны, при "end" — влево. Ложные тревоги приёмщика опаснее
+            # молчания: они приучают пролистывать список, и настоящий вылет
+            # уедет вместе с ними.
+            anchor = attrs.get("text-anchor", "start")
+            left = (x - approx_w / 2 if anchor == "middle"
+                    else x - approx_w if anchor == "end" else x)
+            if left < -8 or left + approx_w > W + 8:
                 soft.append(f"{prod['id']}: {svg_path.name}: строка «{content}» "
                             f"вылезает за кадр (обрезка → нечитаемо)")
     return hard, soft
