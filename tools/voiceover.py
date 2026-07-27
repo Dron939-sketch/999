@@ -37,6 +37,20 @@ API_URL = "https://api.fish.audio/v1/tts"
 FREDERICK_BASE = (os.environ.get("FREDERICK_TTS_URL") or "https://ffred-ddd989.amvera.io").rstrip("/")
 FREDERICK_TOKEN = os.environ.get("FREDERICK_ADMIN_TOKEN") or ""
 
+# Ударения в VO-сценариях размечены знаком U+0301 сразу после ударной гласной
+# («уже́», «три сло́ва»). По умолчанию они уходят в синтез КАК ЕСТЬ: без них
+# движок ставит ударение по своей модели и путает омографы, а контекста
+# реплики у него нет. Аварийный тумблер на случай, если движок начнёт читать
+# знак вслух: VO_NO_ACCENTS=1 срезает разметку перед отправкой, а сценарий
+# при этом остаётся источником правды и править его не надо.
+ACCENT = "́"
+STRIP_ACCENTS = (os.environ.get("VO_NO_ACCENTS") or "").strip() not in ("", "0")
+
+
+def for_synthesis(text):
+    """Текст реплики в том виде, в каком он уходит в синтез."""
+    return text.replace(ACCENT, "") if STRIP_ACCENTS else text
+
 
 def parse_vo_table(md_path):
     """Достаёт из VO-таблицы (| VO-n | 0:02.5–0:05.7 | «текст» |) реплики.
@@ -407,8 +421,9 @@ def main(argv):
     for i, (start, text, remark) in enumerate(rows, start=1):
         tag = f" [{remark}]" if remark else ""
         print(f"  {start:6.1f}s  {text[:56]}{tag}")
-        audio = (tts_via_frederick(text) if use_frederick
-                 else tts_fish_audio(text, api_key, voice_id, fish_model))
+        spoken = for_synthesis(text)
+        audio = (tts_via_frederick(spoken) if use_frederick
+                 else tts_fish_audio(spoken, api_key, voice_id, fish_model))
         audio = direct_line(audio, remark)
         replicas.append((start, audio))
         # Сохранить реплику отдельным файлом для липсинка (prep_lipsync).

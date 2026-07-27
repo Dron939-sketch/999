@@ -26,6 +26,7 @@ import statistics
 import sys
 from pathlib import Path
 
+ACCENT = "́"          # U+0301 — знак ударения в VO-сценариях
 GATE = 70
 
 # --- словари правил ---------------------------------------------------------
@@ -76,6 +77,12 @@ def parse(path):
         remark = " ".join(re.findall(r"\*\((.*?)\)\*", text))
         spoken = re.sub(r"\*\(.*?\)\*", "", text).strip()
         spoken = spoken.strip("«»\"").strip()
+        # Ударения (U+0301 после ударной гласной) — разметка для синтеза, а не
+        # часть слова. Гейт ищет слова по списку («ты», «вы», бытовое/высокое),
+        # и размеченный текст мимо этих списков проходил: у ролика с honest
+        # разметкой падало «обращение к зрителю» и «столкновение регистров»
+        # при неизменном тексте. Снимаем знак ПЕРЕД любыми проверками.
+        spoken = spoken.replace(ACCENT, "")
         rows.append({"n": cells[0], "time": cells[1], "beat": beat,
                      "text": spoken, "remark": remark})
     return rows

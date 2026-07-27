@@ -8,6 +8,13 @@ on:
       - 'claude/**'      # пуши рабочей ветки тоже запускают завод
   # Ручной запуск на любой ветке: Actions → Render Videos → Run workflow
   workflow_dispatch:
+    inputs:
+      production:
+        description: >-
+          id одного продакшена из tools/productions.json (например
+          teorii-lichnosti-intro). Пусто — рендерить всё.
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -86,13 +93,21 @@ jobs:
           FREDERICK_TTS_URL: ${{ secrets.FREDERICK_TTS_URL }}
           IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
           IMAGE_API_PROVIDER: ${{ secrets.IMAGE_API_PROVIDER }}
+          ONLY: ${{ inputs.production }}
         run: |
-          # Рендерим ВСЕ продакшены из манифеста (без аргумента) — регрессии в
-          # любом ролике видны в CI, а не только вручную. Для быстрой итерации
-          # над одним роликом можно временно передать его id.
+          # По умолчанию рендерим ВСЕ продакшены из манифеста — регрессии в
+          # любом ролике видны в CI, а не только вручную. Ручной запуск с
+          # заполненным полем `production` гонит ОДИН ролик: правка одного
+          # интро не должна стоить сорока минут раннера и переозвучки всех
+          # остальных.
           # --strict: QC-гейт роняет прогон на немом/рассинхронном ролике, если
           # ключи озвучки заданы (иначе черновой режим — только предупреждения).
-          python3 tools/studio.py --strict
+          if [ -n "$ONLY" ]; then
+            echo "Один продакшен: $ONLY"
+            python3 tools/studio.py --strict "$ONLY"
+          else
+            python3 tools/studio.py --strict
+          fi
           echo "=== videos/ ==="
           ls -la videos/
 
@@ -105,6 +120,7 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ONLY: ${{ inputs.production }}
         run: |
           shopt -s nullglob
           assets=(videos/*.mp4 videos/*.mp3)
@@ -113,11 +129,22 @@ jobs:
             exit 0
           fi
           TAG="renders-${GITHUB_REF_NAME//\//-}"
+          NOTES="Автосборка роликов и озвучки для ветки \`$GITHUB_REF_NAME\` (commit \`$GITHUB_SHA\`). Обновляется на каждый прогон CI. Немой = рендер без голоса (TTS был недоступен)."
           echo "Заливаю ${#assets[@]} файл(ов) в Release '$TAG' (commit $GITHUB_SHA)"
-          # Пересоздаём rolling-релиз на текущий SHA (assets заменяются целиком).
-          gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
-          gh release create "$TAG" "${assets[@]}" \
-            --target "$GITHUB_SHA" \
-            --title "Renders — $GITHUB_REF_NAME" \
-            --notes "Автосборка роликов и озвучки для ветки \`$GITHUB_REF_NAME\` (commit \`$GITHUB_SHA\`). Обновляется на каждый прогон CI. Немой = рендер без голоса (TTS был недоступен)."
+          if [ -n "$ONLY" ]; then
+            # Прогон одного ролика ДОЗАЛИВАЕТ, а не пересоздаёт релиз: videos/
+            # не лежит в git, поэтому в таком прогоне собран ровно один ролик,
+            # и пересоздание стёрло бы ссылки на все остальные.
+            gh release view "$TAG" >/dev/null 2>&1 || \
+              gh release create "$TAG" --target "$GITHUB_SHA" \
+                --title "Renders — $GITHUB_REF_NAME" --notes "$NOTES"
+            gh release upload "$TAG" "${assets[@]}" --clobber
+          else
+            # Полный прогон — пересоздаём rolling-релиз на текущий SHA.
+            gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
+            gh release create "$TAG" "${assets[@]}" \
+              --target "$GITHUB_SHA" \
+              --title "Renders — $GITHUB_REF_NAME" \
+              --notes "$NOTES"
+          fi
           echo "Готово: $(gh release view "$TAG" --json url -q .url)"

@@ -154,7 +154,7 @@
                 },
                 {
                   "name": "glasses",
-                  "part": "glasses",
+                  "part": "blank",
                   "pivot": [
                     80,
                     190
@@ -164,8 +164,8 @@
                     0
                   ],
                   "scale": [
-                    0,
-                    0
+                    1.0,
+                    1.0
                   ],
                   "z_order": 7,
                   "children": []
@@ -3343,10 +3343,7 @@
           "part": "hand_offer_r"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3361,10 +3358,7 @@
           "part": "mouth_frown"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3385,10 +3379,7 @@
           ]
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3416,10 +3407,7 @@
           ]
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3437,10 +3425,7 @@
           "part": "mouth_m"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3494,10 +3479,7 @@
           "part": "mouth_o"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3515,10 +3497,7 @@
           "part": "mouth_gore"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3536,10 +3515,7 @@
           "part": "mouth_frown"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3578,10 +3554,7 @@
           "part": "mouth_closed"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3644,10 +3617,7 @@
           "rotation": -14
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3692,10 +3662,7 @@
           "part": "mouth_wave"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3713,10 +3680,7 @@
           "part": "mouth_wave"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3737,10 +3701,7 @@
           "rotation": -2
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3772,10 +3733,7 @@
           "part": "eye_angry_right"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
@@ -3819,10 +3777,7 @@
           "part": "mouth_wide"
         },
         "glasses": {
-          "scale": [
-            1,
-            1
-          ]
+          "part": "glasses"
         }
       }
     },
