@@ -1,0 +1,254 @@
+// =============================================================================
+//  «ТЕОРИИ ЛИЧНОСТИ» — продающее интро курса
+//  (meysternlp.ru/blog/lektorij/teorii-lichnosti — 13 лекций, 20 теорий).
+//
+//  Сквозная метафора — ЧУЖИЕ ОЧКИ. Зритель уже пользуется теорией личности:
+//  он объясняет людей. Просто объяснения не его — донашивает чужую оптику.
+//  Очки садятся на маску в первые три секунды (крючок без слов), живут на ней
+//  весь ролик и слетают на взлёте: их смысл зритель понимает только на 29-й
+//  секунде. Курс продаётся не «пониманием себя», а сменой линзы.
+//
+//    · персонаж — канон (SIMILARITY.md);
+//    · поле — ПУСТОЕ светлое (дефолт оригинала), без павильона;
+//    · режиссура (HOLLYWOOD.md): каты ВНУТРИ реплик, ракурсы high/low,
+//      флэш-морды, наезд-удар, слово-удар + инверсия, отъезд-одиночество;
+//    · сценарий (SCRIPT-FREEMAN.md) — teorii-lichnosti-intro-VO.md, //lip 1..8,
+//      гейт tools/script_lint.py: 100/100.
+//
+//  ОЧКИ — КОСТЬ, НЕ ПРОП. Проп стоит в мировых координатах, а голова ездит
+//  от позы к позе: очки-пропом то съезжали на рот, то висели над бровью, и
+//  подгонка под один кадр ломала все остальные. Теперь это кость `glasses`
+//  под `head` в тех же координатах, что и маска, — оправы едут с головой в
+//  любой позе и на любом плане сами. Включают её позы с суффиксом `_ochki`
+//  (по умолчанию кость выключена масштабом [0,0]). Проп остался только на
+//  два движения — прилёт и срыв, — где точность посадки не нужна.
+//  Правило целиком: KARTA.md, «кость или проп».
+//
+//  ПОСАДКА ФИГУРЫ. Якорь сущности сидит на уровне плеч; макушка на 0.19,
+//  ступни на 0.45 высоты кадра от него — НА ЕДИНИЦУ `scales` (см. frame_shot
+//  в src/timeline и KARTA.md). Отсюда: scales 0.80 при y 0.585 ставит ступни
+//  на 0.946 (линия земли поля) и макушку на 0.433 — фигура целиком в общем
+//  плане.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set titry from "../assets/sets/lektorij-final.svg"
+import set pole from "../assets/sets/field-empty.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab        // тон земли: поле задаёт сет field-empty
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.35
+    on-twos: 2
+    line-boil: 1.25
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.04
+    gate-weave: 0.8
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0           // канон: лицо плоское
+    rim-light: 0.0
+}
+
+// ============================ СЦЕНА 1: ЛИНЗА ================================
+scene "linza" (duration: 44s, set: pole) {
+    transition static 0.35s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80
+    let ochki = prop("ochki", "../assets/props/glasses-alien.svg") at (0.5, -1.0) layer 7
+    ochki scales 0.205
+    let hand = prop("hand", "../assets/props/hand-point.svg") at (-1.5, 1.5) layer 5
+    let slovo = text("ЧЬИ?", 170) at (0.5, -2.0) layer 6
+    slovo scales 2.6
+
+    // ── t=0..3.5 БЕЗ СЛОВ: очки сами садятся на маску ──────────────────────
+    camera wide
+    freeman pose "open"
+    wait 1.4s
+    camera medium freeman
+    freeman pose "doubt"
+    wait 0.5s
+    // наезжают сверху, промахиваются, садятся — тайм-якорь t=3
+    // Проп ЛЕТИТ, кость НАДЕТА. В момент касания проп прячется, а поза
+    // меняется на «_ochki»: дальше оправы едут с головой сами, потому что
+    // они — кость под `head`, а не предмет в мировых координатах.
+    ochki moves-to (0.4925, 0.511) over 0.55s ease-out
+    ochki rotates -6 over 0.3s
+    ochki hides
+    freeman pose "blink_ochki"
+    wait 0.25s
+    freeman pose "calm_ochki"
+    wait 0.5s
+
+    // ── ХУК (VO-1): фигура ВПРАВО-треть, ракурс СВЕРХУ (зритель мелкий) ────
+    freeman moves-to (0.63, 0.585) over 0.01s
+    freeman pose "smug_ochki"
+    //lip 1
+    together {
+        freeman speaks for 1.9s
+        do {
+            camera angle high freeman
+            wait 0.95s
+            camera medium freeman
+        }
+    }
+    // ── ХУК-добивка (VO-2): КАТ крупный, фигура ВЛЕВО-треть ───────────────
+    freeman moves-to (0.37, 0.585) over 0.01s
+    freeman pose "v_upor_ochki"
+    //lip 2
+    together {
+        freeman speaks for 2.0s
+        do {
+            camera medium freeman
+            wait 1.0s
+            camera close-up freeman
+        }
+    }
+    freeman pose "flash_pupils_ochki"
+    wait 0.08s
+    freeman pose "hero_skeptic_ochki"
+    wait 0.5s
+
+    // ── ПУЛЕМЁТ 1 (VO-3): три приговора — марионетка чужих слов ───────────
+    freeman moves-to (0.5, 0.585) over 0.01s
+    freeman pose "puppet_ochki"
+    //lip 3
+    together {
+        freeman speaks for 2.0s
+        do {
+            camera medium freeman
+            wait 1.0s
+            camera close-up freeman
+        }
+    }
+    // ── ПУЛЕМЁТ 2 (VO-4): тот же рывок марионетки — приём монотонности ────
+    freeman pose "puppet_jerk_ochki"
+    //lip 4
+    together {
+        freeman speaks for 2.0s
+        do {
+            camera medium freeman
+            wait 1.0s
+            camera close-up freeman
+        }
+    }
+    // ── ПУЛЕМЁТ финал (VO-5): презрение, тряска ───────────────────────────
+    freeman pose "otvraschenie_ochki"
+    //lip 5
+    together {
+        freeman speaks for 2.2s
+        do {
+            camera close-up freeman
+            wait 1.1s
+            camera medium freeman
+        }
+    }
+    camera shake 0.35s intensity 2
+    freeman pose "flash_disgust_ochki"
+    wait 0.08s
+    freeman pose "stern_ochki"
+    wait 0.7s
+
+    // ── t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука в камеру ───────
+    freeman moves-to (0.44, 0.585) over 0.01s
+    freeman pose "v_upor_ochki"
+    //lip 6
+    together {
+        freeman speaks for 4.6s
+        do {
+            camera angle low freeman
+            wait 1.6s
+            camera close-up freeman
+            wait 1.5s
+            camera medium freeman
+        }
+    }
+    hand moves-to (0.72, 0.72) over 0.01s
+    camera shake 0.3s intensity 2
+    wait 0.7s
+    hand moves-to (-1.5, 1.5) over 0.01s
+    freeman pose "think_ochki"
+    wait 0.6s
+
+    // ── ВЗЛЁТ (VO-7): очки слетают, фигура раскрывается ───────────────────
+    freeman moves-to (0.5, 0.585) over 0.01s
+    freeman pose "raskryl_ochki"
+    //lip 7
+    together {
+        freeman speaks for 3.6s
+        do {
+            camera medium freeman
+            wait 1.0s
+            // Срыв: кость гаснет (поза без суффикса), а проп подхватывает
+            // движение с того же места и уносит очки из кадра.
+            freeman pose "raskryl"
+            ochki moves-to (0.4925, 0.511) over 0.01s
+            ochki shows
+            together {
+                ochki moves-to (0.16, 1.25) over 0.45s ease-in
+                ochki rotates -140 over 0.45s
+            }
+            wait 0.9s
+            camera wide
+        }
+    }
+    // ── СЛОВО-УДАР «ЧЬИ?» + негатив-панч ──────────────────────────────────
+    camera wide
+    slovo moves-to (0.5, 0.30) over 0.01s
+    slovo scales 1.0 over 0.18s ease-in
+    transition invert 0.16s
+    camera shake 0.3s intensity 3
+    wait 0.9s
+    slovo moves-to (0.5, -2.0) over 0.22s ease-in
+    freeman pose "flash_grin"
+    wait 0.08s
+
+    // ── ЖАЛО-CTA (VO-8): наезд-удар, подмиг-издёвка ───────────────────────
+    freeman pose "lunge"
+    //lip 8
+    together {
+        freeman speaks for 6.5s
+        do {
+            camera medium freeman
+            wait 2.2s
+            camera close-up freeman
+            wait 2.0s
+            camera wide
+        }
+    }
+    camera zoom-to freeman over 0.18s ease-in
+    freeman pose "hero_wink"
+    wait 0.6s
+    // отъезд-одиночество: снова маленькая фигура в пустом поле
+    camera reset over 0.5s
+    freeman pose "calm"
+    wait 0.8s
+}
+
+// ============================ СЦЕНА 2: ТИТРЫ ================================
+scene "titry" (duration: 6s, set: titry) {
+    transition static 0.45s
+
+    place freeman at (0.5, 3.0) facing front
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 1.2s
+
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6
+    stamp rotates -7
+    stamp scales 0.94 over 0.22s ease-in
+    stamp scales 1.0 over 0.1s ease-out
+    stamp rotates -4 over 0.12s
+
+    wait 2.5s
+    transition fade-black 0.8s
+}

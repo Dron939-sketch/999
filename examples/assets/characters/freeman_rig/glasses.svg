@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 214" width="160" height="214">
+  <defs>
+    <filter id="ink" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="23" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- ЧУЖИЕ ОЧКИ — деталь РИГА, а не проп.
+       Пропом они не держались: проп стоит в мировых координатах, а голова
+       ездит от позы к позе, и очки то съезжали на рот, то висели над бровью.
+       Здесь это кость под `head` в ТЕХ ЖЕ координатах, что и маска (viewBox
+       и пивот совпадают с head.svg), поэтому оправы едут с головой в любой
+       позе, наклоне и на любом плане — сами собой.
+       По умолчанию кость выключена масштабом [0,0]; включают её позы с
+       суффиксом `_ochki`.
+       Линзы ВЫТЯНУТЫЕ — повторяют форму головы и глаз, как круглые не могли:
+       глаз 43x64, в круг такой не влезает. Центры (47,94) и (100,94) —
+       ровно центры костей глаз. -->
+  <g filter="url(#ink)" fill="none" stroke="#0e0e0e" stroke-linecap="round">
+    <!-- дужки к вискам -->
+    <path d="M22 92 C14 90 8 88 3 85" stroke-width="5"/>
+    <path d="M125 91 C134 89 141 87 147 84" stroke-width="4.6"/>
+    <!-- перемычка -->
+    <path d="M72 84 C74 79 77 79 79 84" stroke-width="5"/>
+    <!-- линзы: левая чуть крупнее правой — та же асимметрия, что у глаз -->
+    <ellipse cx="47" cy="94" rx="25" ry="33" stroke-width="6.5"/>
+    <ellipse cx="100" cy="94" rx="23" ry="31" stroke-width="6"/>
+  </g>
+</svg>

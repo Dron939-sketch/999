@@ -47,6 +47,13 @@
    "desc": "Подводка к курсу «Снова живой»: выключенный человек — дышит, но не живёт. Пустое поле (канон), персонаж по SIMILARITY, режиссура по HOLLYWOOD.",
    "anim": "examples/lektorij/snova-zhivoj-intro.anim",
    "vo": "examples/lektorij/snova-zhivoj-intro-VO.md"
+  },
+  {
+   "id": "teorii-lichnosti-intro",
+   "desc": "Подводка к курсу «Теории личности»: чужие очки садятся на маску в первые 3 секунды и слетают на взлёте. 13 лекций — 20 линз.",
+   "anim": "examples/lektorij/teorii-lichnosti-intro.anim",
+   "vo": "examples/lektorij/teorii-lichnosti-intro-VO.md",
+   "images": []
   }
  ]
 }

@@ -32,8 +32,8 @@ config {
 scene "cell" (duration: 40s, set: cell) {
     transition static 0.4s
 
-    place freeman at (0.5, 0.80) facing front
-    freeman scales 1.5
+    place freeman at (0.5, 0.45) facing front
+    freeman scales 1.15
     let rat = prop("rat", "../assets/props/rat.svg") at (0.80, 0.66)
     rat scales 0.42
     let ratw = prop("rat_wave", "../assets/props/rat-wave.svg") at (0.42, 0.30)
@@ -68,28 +68,28 @@ scene "cell" (duration: 40s, set: cell) {
     // Действие до первого слова: камера показана не планом, а поведением.
     camera medium freeman
     freeman pose "shag_levoj"
-    freeman moves-to (0.68, 0.80) over 1.3s
+    freeman moves-to (0.68, 0.45) over 1.3s
     wait 0.3s
     freeman pose "shag_pravoj"
     wait 0.3s
     freeman pose "shag_levoj"
-    freeman moves-to (0.34, 0.80) over 1.3s
+    freeman moves-to (0.34, 0.45) over 1.3s
     wait 0.4s
     // затяжка — выдох — затяжка
-    cig moves-to (0.37, 0.74) over 0.01s
+    cig moves-to (0.37, 0.437) over 0.01s
     cig shows
     freeman pose "kurit_zatyazhka"
     wait 0.6s
     freeman pose "kurit_vydoh"
-    cig moves-to (0.40, 0.79) over 0.35s
+    cig moves-to (0.40, 0.472) over 0.35s
     wait 0.7s
     freeman pose "kurit_zatyazhka"
-    cig moves-to (0.37, 0.74) over 0.3s
+    cig moves-to (0.37, 0.437) over 0.3s
     wait 0.5s
     // швыряет окурок и тушит носком
     freeman pose "brosaet_bychok"
     together {
-        cig moves-to (0.38, 0.99) over 0.3s ease-in
+        cig moves-to (0.38, 0.926) over 0.3s ease-in
         cig scales 0.34
     }
     wait 0.35s
@@ -101,7 +101,7 @@ scene "cell" (duration: 40s, set: cell) {
     wait 0.5s
 
     // --- ХУК (VO-1): средний, фигура ВПРАВО-треть, ракурс СВЕРХУ ---
-    freeman moves-to (0.63, 0.80) over 0.01s
+    freeman moves-to (0.63, 0.45) over 0.01s
     freeman pose "smug"
     //lip 1
     together {
@@ -113,7 +113,7 @@ scene "cell" (duration: 40s, set: cell) {
         }
     }
     // --- ХУК-добивка (VO-2): КАТ на крупный, фигура ВЛЕВО-треть ---
-    freeman moves-to (0.37, 0.80) over 0.01s
+    freeman moves-to (0.37, 0.45) over 0.01s
     freeman pose "weary"
     //lip 2
     together {
@@ -130,7 +130,7 @@ scene "cell" (duration: 40s, set: cell) {
     wait 0.45s
 
     // --- ПУЛЕМЁТ 1 (VO-3): средний, центр, ракурс обычный ---
-    freeman moves-to (0.5, 0.80) over 0.01s
+    freeman moves-to (0.5, 0.45) over 0.01s
     freeman pose "puppet"
     //lip 3
     together {
@@ -142,7 +142,7 @@ scene "cell" (duration: 40s, set: cell) {
         }
     }
     // --- ПУЛЕМЁТ 2 (VO-4): КАТ крупный, ВПРАВО-треть ---
-    freeman moves-to (0.64, 0.80) over 0.01s
+    freeman moves-to (0.64, 0.45) over 0.01s
     freeman pose "puppet_jerk"
     //lip 4
     together {
@@ -171,7 +171,7 @@ scene "cell" (duration: 40s, set: cell) {
     wait 0.6s
 
     // --- t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука-в-камеру ---
-    freeman moves-to (0.42, 0.80) over 0.01s
+    freeman moves-to (0.42, 0.45) over 0.01s
     freeman pose "v_upor"
     //lip 6
     together {
@@ -213,7 +213,7 @@ scene "cell" (duration: 40s, set: cell) {
     wait 0.08s
 
     // --- ЖАЛО-CTA (VO-8): средний, центр, наезд-удар на подколке ---
-    freeman moves-to (0.5, 0.80) over 0.01s
+    freeman moves-to (0.5, 0.45) over 0.01s
     freeman pose "lunge"
     //lip 8
     together {

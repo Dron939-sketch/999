@@ -489,52 +489,54 @@ impl TimelineCompiler {
         Ok(())
     }
 
+    /// Кадрирование плана по РАЗМЕРУ фигуры, а не по постоянной.
+    ///
+    /// Прежние зумы (medium 2.2, close-up 3.4, ecu 6.0) были подобраны на глаз
+    /// для персонажа в натуральную величину — `scales 1.0`. Как только фигура
+    /// подросла (в тюрьме `scales 1.5`), те же числа стали резать макушку: на
+    /// крупном плане голова уезжала за верхний край, потому что зум не знал,
+    /// какого роста то, что он приближает.
+    ///
+    /// Здесь план задан ГЕОМЕТРИЕЙ. Замеры сняты с рендера стенда и выражены в
+    /// долях высоты кадра НА ЕДИНИЦУ `scales` (доля от кадра не зависит от
+    /// разрешения, потому что рост фигуры сам считается от высоты холста):
+    /// якорь сущности сидит на уровне плеч, макушка на 0.19 выше, подбородок
+    /// на 0.05 ниже, ступни на 0.45 ниже. Зум делится на масштаб, вертикальный
+    /// центр на него умножается — при `scales 1.0` выходят ровно прежние числа,
+    /// при любом другом росте план держится тот же.
+    fn frame_shot(
+        &self,
+        shot: ShotType,
+        target: Option<&str>,
+    ) -> Result<(f64, f64, f64), AnimError> {
+        // (смещение центра от якоря, зум) — при scales 1.0
+        let (dy, zoom) = match shot {
+            ShotType::Wide => return Ok((0.5, 0.5, 1.0)),
+            ShotType::Medium => (0.05, 2.2),
+            ShotType::CloseUp => (-0.045, 3.4),
+            ShotType::ExtremeCloseUp => (-0.06, 6.0),
+            ShotType::TwoShot => return Ok((0.5, 0.5, 1.2)),
+            ShotType::OverShoulder => return Ok((0.5, 0.45, 1.8)),
+        };
+        let Some(name) = target else {
+            // Без цели роста не знаем — остаются исторические постоянные.
+            return Ok((0.5, 0.5 + dy, zoom));
+        };
+        let e = self
+            .entities
+            .get(name)
+            .ok_or_else(|| AnimError::Timeline(format!("unknown entity: {name}")))?;
+        let s = e.scale_y.abs().max(0.05);
+        Ok((e.x, e.y + dy * s, zoom / s))
+    }
+
     fn compile_camera(&mut self, cam: &CameraStmt) -> Result<(), AnimError> {
         // Ракурс (pitch) держится ПОПЕРЁК склеек: смена размера плана не сбивает
         // «снизу/сверху». Захватываем текущий наклон на входе в команду.
         let carry_pitch = self.camera_keyframes.last().map(|k| k.pitch).unwrap_or(0.0);
         match cam {
             CameraStmt::ShotType { shot, target } => {
-                let (x, y, zoom) = match shot {
-                    ShotType::Wide => (0.5, 0.5, 1.0),
-                    // Кадрирование эталона: фигура ЗАПОЛНЯЕТ кадр. Якорь
-                    // сущности — в ногах, поэтому центр смещаем на корпус.
-                    ShotType::Medium => {
-                        // пояс-вверх крупно
-                        if let Some(name) = target {
-                            let e = self.entities.get(name).ok_or_else(|| {
-                                AnimError::Timeline(format!("unknown entity: {name}"))
-                            })?;
-                            (e.x, e.y + 0.05, 2.2)
-                        } else {
-                            (0.5, 0.55, 2.2)
-                        }
-                    }
-                    ShotType::CloseUp => {
-                        // голова и плечи
-                        if let Some(name) = target {
-                            let e = self.entities.get(name).ok_or_else(|| {
-                                AnimError::Timeline(format!("unknown entity: {name}"))
-                            })?;
-                            (e.x, e.y - 0.045, 3.4)
-                        } else {
-                            (0.5, 0.45, 3.4)
-                        }
-                    }
-                    ShotType::ExtremeCloseUp => {
-                        // морда на весь кадр
-                        if let Some(name) = target {
-                            let e = self.entities.get(name).ok_or_else(|| {
-                                AnimError::Timeline(format!("unknown entity: {name}"))
-                            })?;
-                            (e.x, e.y - 0.06, 6.0)
-                        } else {
-                            (0.5, 0.42, 6.0)
-                        }
-                    }
-                    ShotType::TwoShot => (0.5, 0.5, 1.2),
-                    ShotType::OverShoulder => (0.5, 0.45, 1.8),
-                };
+                let (x, y, zoom) = self.frame_shot(*shot, target.as_deref())?;
 
                 // Hard cut: `evaluate_camera` tweens smoothly across the ENTIRE
                 // gap since the last keyframe. That gap can be many seconds —

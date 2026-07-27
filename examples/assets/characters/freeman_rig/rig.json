@@ -64,13 +64,13 @@
                     30
                   ],
                   "offset": [
-                    -21,
-                    -96
+                    -33.0,
+                    -96.0
                   ],
                   "z_order": 6,
                   "scale": [
-                    0.62,
-                    0.62
+                    0.9,
+                    1.07
                   ]
                 },
                 {
@@ -81,13 +81,13 @@
                     30
                   ],
                   "offset": [
-                    21,
-                    -96
+                    20.0,
+                    -96.0
                   ],
                   "z_order": 6,
                   "scale": [
-                    0.62,
-                    0.62
+                    0.85,
+                    1.0
                   ]
                 },
                 {
@@ -141,6 +141,24 @@
                     -150
                   ],
                   "z_order": 7
+                },
+                {
+                  "name": "glasses",
+                  "part": "glasses",
+                  "pivot": [
+                    80,
+                    190
+                  ],
+                  "offset": [
+                    0,
+                    0
+                  ],
+                  "scale": [
+                    0,
+                    0
+                  ],
+                  "z_order": 7,
+                  "children": []
                 }
               ]
             },
@@ -489,13 +507,13 @@
       "bones": {
         "eye_left": {
           "scale": [
-            1,
-            0.1
+            0.9,
+            0.107
           ]
         },
         "eye_right": {
           "scale": [
-            1,
+            0.85,
             0.1
           ]
         }
@@ -525,13 +543,13 @@
       "bones": {
         "eye_left": {
           "scale": [
-            1,
-            1.15
+            0.9,
+            1.23
           ]
         },
         "eye_right": {
           "scale": [
-            1,
+            0.85,
             1.15
           ]
         },
@@ -794,14 +812,14 @@
         "eye_left": {
           "part": "eye_shock",
           "scale": [
-            1.1,
-            1.1
+            0.99,
+            1.177
           ]
         },
         "eye_right": {
           "part": "eye_shock",
           "scale": [
-            1.1,
+            0.935,
             1.1
           ]
         },
@@ -884,8 +902,8 @@
             -92
           ],
           "scale": [
-            0.58,
-            0.96
+            0.522,
+            1.027
           ]
         },
         "eye_right": {
@@ -1006,14 +1024,14 @@
         "eye_left": {
           "part": "eye_shock",
           "scale": [
-            1.15,
-            1.15
+            1.035,
+            1.23
           ]
         },
         "eye_right": {
           "part": "eye_shock",
           "scale": [
-            1.15,
+            0.977,
             1.15
           ]
         },
@@ -1040,13 +1058,13 @@
         },
         "eye_left": {
           "scale": [
-            1,
-            0.18
+            0.9,
+            0.193
           ]
         },
         "eye_right": {
           "scale": [
-            1,
+            0.85,
             0.18
           ]
         },
@@ -1396,14 +1414,14 @@
         "eye_left": {
           "part": "eye_shock",
           "scale": [
-            1.1,
-            1.1
+            0.99,
+            1.177
           ]
         },
         "eye_right": {
           "part": "eye_shock",
           "scale": [
-            1.1,
+            0.935,
             1.1
           ]
         },
@@ -1466,13 +1484,13 @@
         },
         "eye_left": {
           "scale": [
-            1.06,
-            1.1
+            0.954,
+            1.177
           ]
         },
         "eye_right": {
           "scale": [
-            1.06,
+            0.901,
             1.1
           ]
         }
@@ -1487,13 +1505,13 @@
         },
         "eye_left": {
           "scale": [
-            1.06,
-            1.1
+            0.954,
+            1.177
           ]
         },
         "eye_right": {
           "scale": [
-            1.06,
+            0.901,
             1.1
           ]
         }
@@ -1508,13 +1526,13 @@
         },
         "eye_left": {
           "scale": [
-            1.06,
-            1.1
+            0.954,
+            1.177
           ]
         },
         "eye_right": {
           "scale": [
-            1.06,
+            0.901,
             1.1
           ]
         }
@@ -1689,14 +1707,14 @@
         "eye_left": {
           "part": "eye_shock",
           "scale": [
-            1.1,
-            1.1
+            0.99,
+            1.177
           ]
         },
         "eye_right": {
           "part": "eye_shock",
           "scale": [
-            1.1,
+            0.935,
             1.1
           ]
         },
@@ -3274,6 +3292,522 @@
           "scale": [
             1.25,
             1.3
+          ]
+        }
+      }
+    },
+    "open_ochki": {
+      "name": "open_ochki",
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 70,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": 16,
+          "z_order": 4
+        },
+        "upper_arm_right": {
+          "rotation": -70,
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": -16,
+          "z_order": 4
+        },
+        "head": {
+          "rotation": 1
+        },
+        "mouth": {
+          "part": "mouth_o"
+        },
+        "hand_left": {
+          "part": "hand_offer"
+        },
+        "hand_right": {
+          "part": "hand_offer_r"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "doubt_ochki": {
+      "name": "doubt_ochki",
+      "transition_duration": 0.22,
+      "bones": {
+        "eye_left": {
+          "part": "eye_squint"
+        },
+        "mouth": {
+          "part": "mouth_frown"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "blink_ochki": {
+      "name": "blink_ochki",
+      "transition_duration": 0.1,
+      "bones": {
+        "eye_left": {
+          "scale": [
+            0.9,
+            0.107
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            0.85,
+            0.1
+          ]
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "calm_ochki": {
+      "name": "calm_ochki",
+      "transition_duration": 0.4,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 30
+        },
+        "forearm_left": {
+          "rotation": -14
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        },
+        "mouth": {
+          "part": "mouth_smile",
+          "scale": [
+            1.15,
+            1.15
+          ]
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "smug_ochki": {
+      "name": "smug_ochki",
+      "transition_duration": 0.25,
+      "bones": {
+        "eye_left": {
+          "part": "eye_squint"
+        },
+        "eye_right": {
+          "part": "eye_squint"
+        },
+        "mouth": {
+          "part": "mouth_m"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "v_upor_ochki": {
+      "name": "v_upor_ochki",
+      "transition_duration": 0.28,
+      "bones": {
+        "torso": {
+          "rotation": 15
+        },
+        "head": {
+          "rotation": -14,
+          "offset": [
+            4,
+            16
+          ],
+          "scale": [
+            1.16,
+            1.16
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": 92,
+          "z_order": 9
+        },
+        "forearm_left": {
+          "rotation": -52,
+          "z_order": 9
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 10,
+          "scale": [
+            1.5,
+            1.5
+          ]
+        },
+        "upper_arm_right": {
+          "rotation": -22
+        },
+        "forearm_right": {
+          "rotation": 34
+        },
+        "eye_left": {
+          "part": "eye_angry_left"
+        },
+        "eye_right": {
+          "part": "eye_angry_right"
+        },
+        "mouth": {
+          "part": "mouth_o"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "flash_pupils_ochki": {
+      "name": "flash_pupils_ochki",
+      "transition_duration": 0.0,
+      "bones": {
+        "eye_left": {
+          "part": "eye_shock"
+        },
+        "eye_right": {
+          "part": "eye_shock"
+        },
+        "mouth": {
+          "part": "mouth_gore"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "hero_skeptic_ochki": {
+      "name": "hero_skeptic_ochki",
+      "transition_duration": 0.1,
+      "bones": {
+        "eye_left": {
+          "part": "eye_angry_left"
+        },
+        "eye_right": {
+          "part": "eye_squint"
+        },
+        "mouth": {
+          "part": "mouth_frown"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "puppet_ochki": {
+      "name": "puppet_ochki",
+      "transition_duration": 0.3,
+      "bones": {
+        "head": {
+          "rotation": 9
+        },
+        "upper_arm_left": {
+          "rotation": 30
+        },
+        "forearm_left": {
+          "rotation": 24
+        },
+        "upper_arm_right": {
+          "rotation": -26
+        },
+        "forearm_right": {
+          "rotation": -20
+        },
+        "hand_left": {
+          "part": "hand_relax"
+        },
+        "hand_right": {
+          "part": "hand_relax_r"
+        },
+        "eye_left": {
+          "part": "eye_squint"
+        },
+        "eye_right": {
+          "part": "eye_squint"
+        },
+        "mouth": {
+          "part": "mouth_closed"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "puppet_jerk_ochki": {
+      "name": "puppet_jerk_ochki",
+      "transition_duration": 0.08,
+      "bones": {
+        "head": {
+          "rotation": -11
+        },
+        "upper_arm_left": {
+          "rotation": 118,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": -30,
+          "z_order": 4
+        },
+        "upper_arm_right": {
+          "rotation": -118,
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": 30,
+          "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_relax"
+        },
+        "hand_right": {
+          "part": "hand_relax_r"
+        },
+        "eye_left": {
+          "part": "eye_shock",
+          "scale": [
+            0.99,
+            1.177
+          ]
+        },
+        "eye_right": {
+          "part": "eye_shock",
+          "scale": [
+            0.935,
+            1.1
+          ]
+        },
+        "mouth": {
+          "part": "mouth_o"
+        },
+        "thigh_left": {
+          "rotation": -8
+        },
+        "shin_left": {
+          "rotation": 16
+        },
+        "thigh_right": {
+          "rotation": 10
+        },
+        "shin_right": {
+          "rotation": -14
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "otvraschenie_ochki": {
+      "name": "otvraschenie_ochki",
+      "transition_duration": 0.2,
+      "bones": {
+        "torso": {
+          "rotation": -12
+        },
+        "head": {
+          "rotation": 16,
+          "offset": [
+            -6,
+            12
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": 52,
+          "z_order": 8
+        },
+        "forearm_left": {
+          "rotation": -40,
+          "z_order": 8
+        },
+        "hand_left": {
+          "part": "hand_open"
+        },
+        "upper_arm_right": {
+          "rotation": -20
+        },
+        "forearm_right": {
+          "rotation": 16
+        },
+        "eye_left": {
+          "part": "eye_angry_left"
+        },
+        "eye_right": {
+          "part": "eye_angry_right"
+        },
+        "mouth": {
+          "part": "mouth_wave"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "flash_disgust_ochki": {
+      "name": "flash_disgust_ochki",
+      "transition_duration": 0.0,
+      "bones": {
+        "eye_left": {
+          "part": "eye_angry_left"
+        },
+        "eye_right": {
+          "part": "eye_angry_right"
+        },
+        "mouth": {
+          "part": "mouth_wave"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "stern_ochki": {
+      "name": "stern_ochki",
+      "transition_duration": 0.28,
+      "bones": {
+        "eye_left": {
+          "part": "eye_angry_left"
+        },
+        "eye_right": {
+          "part": "eye_angry_right"
+        },
+        "mouth": {
+          "part": "mouth_m"
+        },
+        "head": {
+          "rotation": -2
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "think_ochki": {
+      "name": "think_ochki",
+      "transition_duration": 0.45,
+      "bones": {
+        "head": {
+          "rotation": -6
+        },
+        "mouth": {
+          "part": "mouth_closed"
+        },
+        "upper_arm_left": {
+          "rotation": 55,
+          "z_order": 7
+        },
+        "forearm_left": {
+          "rotation": 132,
+          "z_order": 7
+        },
+        "hand_left": {
+          "part": "hand_relax"
+        },
+        "eye_left": {
+          "part": "eye_angry_left"
+        },
+        "eye_right": {
+          "part": "eye_angry_right"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
+          ]
+        }
+      }
+    },
+    "raskryl_ochki": {
+      "name": "raskryl_ochki",
+      "transition_duration": 0.32,
+      "bones": {
+        "torso": {
+          "rotation": -4
+        },
+        "head": {
+          "rotation": 9,
+          "offset": [
+            0,
+            -6
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": 100,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": -12,
+          "z_order": 4
+        },
+        "upper_arm_right": {
+          "rotation": -106,
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": 16,
+          "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_open"
+        },
+        "hand_right": {
+          "part": "hand_open_r"
+        },
+        "mouth": {
+          "part": "mouth_wide"
+        },
+        "glasses": {
+          "scale": [
+            1,
+            1
           ]
         }
       }
