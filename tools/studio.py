@@ -29,10 +29,13 @@ studio.py — «завод» Лектория: одна команда → го�
 """
 
 import argparse
+import io
 import json
 import os
+import re
 import subprocess
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -335,6 +338,41 @@ def lint_sync(prod):
     return hard, soft
 
 
+def lint_turnaround(prods):
+    """Приёмщик РАЗВОРОТА: одна ли это фигура на всех ракурсах. (hard, soft).
+
+    Развороты жили в риге непроверенными, пока ролики шли анфасом: профиль
+    схлопнулся вдвое против замера листа, на профиле и полуспине фигура
+    проседала, глаза со стороны затылка исчезали не там, где надо. Ни одна
+    метрика этого не ловила — смотрели глазом на контрольную картинку.
+
+    Гейт меряет замером и делит нарушения по ответственности: ракурс, который
+    хоть один ролик манифеста РЕАЛЬНО играет, роняет прогон; ракурс, лежащий
+    на полке, идёт предупреждением. Иначе выбор был бы между «всё или ничего»:
+    сломанный профиль запрещал бы выпуск ролика, снятого анфасом.
+    """
+    used = set()
+    for prod in prods:
+        anim = ROOT / prod.get("anim", "")
+        if anim.exists():
+            used |= set(re.findall(r'pose\s+"([a-z_0-9]+)"',
+                                   anim.read_text(encoding="utf-8")))
+    try:
+        sys.path.insert(0, str(TOOLS))
+        import turnaround
+    except Exception as e:                                   # noqa: BLE001
+        return [], [f"гейт разворота не запустился ({e})"]
+    out = io.StringIO()
+    with redirect_stdout(out):
+        code = turnaround.report(str(ROOT / "examples/assets/characters/freeman_rig"),
+                                 True, turnaround.angles_of(sorted(used)))
+    for line in out.getvalue().splitlines():
+        if line.strip():
+            log("  " + line.rstrip())
+    return ([] if code == 0 else ["разворот: нарушения на ракурсах, которые "
+                                  "играют ролики — см. таблицу выше"]), []
+
+
 def lint_location(prod):
     """Приёмщик локаций: проверяет сеты продакшена на «готовность». (hard, soft).
 
@@ -532,6 +570,9 @@ def main(argv):
         lh, ls = lint_location(prod)      # приёмщик локаций
         all_hard += lh
         all_soft += ls
+    th, ts = lint_turnaround(prods)       # приёмщик разворота (один на риг)
+    all_hard += th
+    all_soft += ts
     for e in all_hard:
         log(f"  [LINT-HARD] {e}")
     for e in all_soft:
