@@ -71,7 +71,8 @@
                   "scale": [
                     0.9,
                     1.07
-                  ]
+                  ],
+                  "children": []
                 },
                 {
                   "name": "eye_right",
@@ -88,7 +89,8 @@
                   "scale": [
                     0.85,
                     1.0
-                  ]
+                  ],
+                  "children": []
                 },
                 {
                   "name": "mouth",
@@ -101,7 +103,8 @@
                     2,
                     -56
                   ],
-                  "z_order": 6
+                  "z_order": 6,
+                  "children": []
                 },
                 {
                   "name": "brow_left",
@@ -114,7 +117,8 @@
                     -22,
                     -124
                   ],
-                  "z_order": 6
+                  "z_order": 6,
+                  "children": []
                 },
                 {
                   "name": "brow_right",
@@ -127,7 +131,8 @@
                     22,
                     -124
                   ],
-                  "z_order": 6
+                  "z_order": 6,
+                  "children": []
                 },
                 {
                   "name": "hat",
@@ -140,7 +145,8 @@
                     0,
                     -150
                   ],
-                  "z_order": 7
+                  "z_order": 7,
+                  "children": []
                 },
                 {
                   "name": "glasses",
@@ -205,7 +211,8 @@
                       "scale": [
                         0.75,
                         0.75
-                      ]
+                      ],
+                      "children": []
                     }
                   ],
                   "scale": [
@@ -271,7 +278,8 @@
                             10,
                             10
                           ],
-                          "z_order": 3
+                          "z_order": 3,
+                          "children": []
                         }
                       ],
                       "scale": [
@@ -319,7 +327,8 @@
                   "scale": [
                     0.9,
                     1.0
-                  ]
+                  ],
+                  "children": []
                 }
               ],
               "scale": [
@@ -355,7 +364,8 @@
                   "scale": [
                     0.9,
                     1.0
-                  ]
+                  ],
+                  "children": []
                 }
               ],
               "scale": [
@@ -3837,19 +3847,20 @@
         "head": {
           "offset": [
             -5,
-            46
+            72
           ],
           "rotation": 6,
           "scale": [
             1.03,
             0.88
-          ]
+          ],
+          "z_order": 1
         },
         "upper_arm_left": {
           "rotation": 22,
           "offset": [
-            -82,
-            -8
+            -96,
+            8
           ],
           "z_order": 1
         },
@@ -3859,8 +3870,8 @@
         "upper_arm_right": {
           "rotation": -21,
           "offset": [
-            49,
-            -4
+            61,
+            8
           ],
           "z_order": 1
         },
@@ -3888,13 +3899,14 @@
         "head": {
           "offset": [
             3,
-            30
+            44
           ],
           "scale": [
             0.8,
             1.05
           ],
-          "rotation": -6
+          "rotation": -6,
+          "z_order": 1
         },
         "eye_left": {
           "scale": [
@@ -3922,16 +3934,16 @@
         "upper_arm_left": {
           "rotation": 16,
           "offset": [
-            -88,
-            2
+            -96,
+            8
           ],
           "z_order": 1
         },
         "upper_arm_right": {
           "rotation": -15,
           "offset": [
-            55,
-            6
+            61,
+            8
           ],
           "z_order": 1
         },
@@ -3966,8 +3978,9 @@
           ],
           "offset": [
             -2,
-            26
-          ]
+            46
+          ],
+          "z_order": 1
         },
         "eye_left": {
           "scale": [
@@ -3989,7 +4002,7 @@
         "mouth": {
           "offset": [
             16,
-            -56
+            -78
           ],
           "scale": [
             0.75,
@@ -3997,26 +4010,26 @@
           ]
         },
         "upper_arm_left": {
-          "rotation": -10,
+          "rotation": 10,
           "offset": [
-            -10,
-            8
+            -12,
+            18
           ],
           "z_order": 1
         },
         "forearm_left": {
-          "rotation": 16
+          "rotation": -18
         },
         "upper_arm_right": {
-          "rotation": 24,
+          "rotation": -8,
           "offset": [
-            -58,
-            4
+            24,
+            16
           ],
           "z_order": 4
         },
         "forearm_right": {
-          "rotation": -34
+          "rotation": 46
         },
         "thigh_left": {
           "offset": [
@@ -4051,8 +4064,9 @@
           ],
           "offset": [
             -2,
-            26
-          ]
+            46
+          ],
+          "z_order": 1
         },
         "eye_left": {
           "part": "eye_left",
@@ -4074,7 +4088,7 @@
         "mouth": {
           "offset": [
             -16,
-            -56
+            -78
           ],
           "scale": [
             0.75,
@@ -4082,26 +4096,26 @@
           ]
         },
         "upper_arm_left": {
-          "rotation": -24,
+          "rotation": 8,
           "offset": [
-            40,
-            4
+            -24,
+            16
           ],
           "z_order": 4
         },
         "forearm_left": {
-          "rotation": 34
+          "rotation": -46
         },
         "upper_arm_right": {
-          "rotation": 10,
+          "rotation": -10,
           "offset": [
-            10,
-            8
+            12,
+            18
           ],
           "z_order": 1
         },
         "forearm_right": {
-          "rotation": -16
+          "rotation": 18
         },
         "thigh_left": {
           "offset": [
@@ -4136,8 +4150,9 @@
           ],
           "offset": [
             0,
-            26
-          ]
+            36
+          ],
+          "z_order": 1
         },
         "eye_left": {
           "part": "eye_left",
@@ -4170,16 +4185,16 @@
         "upper_arm_left": {
           "rotation": 18,
           "offset": [
-            -78,
-            -6
+            -54,
+            8
           ],
           "z_order": 1
         },
         "upper_arm_right": {
           "rotation": -41,
           "offset": [
-            79,
-            4
+            29,
+            11
           ],
           "z_order": 4
         },
@@ -4214,8 +4229,9 @@
           ],
           "offset": [
             -8,
-            26
-          ]
+            36
+          ],
+          "z_order": 1
         },
         "eye_left": {
           "part": "eye_left",
@@ -4248,16 +4264,16 @@
         "upper_arm_left": {
           "rotation": 42,
           "offset": [
-            -114,
-            -6
+            -54,
+            8
           ],
           "z_order": 4
         },
         "upper_arm_right": {
           "rotation": -17,
           "offset": [
-            43,
-            4
+            29,
+            11
           ],
           "z_order": 1
         },
@@ -4310,23 +4326,24 @@
           ],
           "offset": [
             -4,
-            41
+            71
           ],
-          "rotation": 5
+          "rotation": 5,
+          "z_order": 1
         },
         "upper_arm_left": {
           "rotation": 26,
           "offset": [
-            -64,
-            -10
+            -77,
+            8
           ],
           "z_order": 1
         },
         "upper_arm_right": {
           "rotation": -18,
           "offset": [
-            36,
-            -4
+            49,
+            8
           ],
           "z_order": 1
         },
@@ -4361,8 +4378,9 @@
           ],
           "offset": [
             -2,
-            26
-          ]
+            46
+          ],
+          "z_order": 1
         },
         "eye_left": {
           "scale": [
@@ -4384,7 +4402,7 @@
         "mouth": {
           "offset": [
             16,
-            -56
+            -78
           ],
           "scale": [
             0.75,
@@ -4392,26 +4410,26 @@
           ]
         },
         "upper_arm_left": {
-          "rotation": -10,
+          "rotation": 10,
           "offset": [
-            -10,
-            8
+            -12,
+            18
           ],
           "z_order": 1
         },
         "forearm_left": {
-          "rotation": 16
+          "rotation": -18
         },
         "upper_arm_right": {
-          "rotation": 24,
+          "rotation": -8,
           "offset": [
-            -58,
-            4
+            24,
+            16
           ],
           "z_order": 4
         },
         "forearm_right": {
-          "rotation": -34
+          "rotation": 46
         },
         "thigh_left": {
           "rotation": -40,
@@ -4454,8 +4472,9 @@
           ],
           "offset": [
             -2,
-            26
-          ]
+            46
+          ],
+          "z_order": 1
         },
         "eye_left": {
           "scale": [
@@ -4477,7 +4496,7 @@
         "mouth": {
           "offset": [
             16,
-            -56
+            -78
           ],
           "scale": [
             0.75,
@@ -4485,26 +4504,26 @@
           ]
         },
         "upper_arm_left": {
-          "rotation": -10,
+          "rotation": 10,
           "offset": [
-            -10,
-            8
+            -12,
+            18
           ],
           "z_order": 1
         },
         "forearm_left": {
-          "rotation": 16
+          "rotation": -18
         },
         "upper_arm_right": {
-          "rotation": 24,
+          "rotation": -8,
           "offset": [
-            -58,
-            4
+            24,
+            16
           ],
           "z_order": 4
         },
         "forearm_right": {
-          "rotation": -34
+          "rotation": 46
         },
         "thigh_left": {
           "rotation": 30,
@@ -4547,8 +4566,9 @@
           ],
           "offset": [
             -2,
-            26
-          ]
+            46
+          ],
+          "z_order": 1
         },
         "eye_left": {
           "part": "eye_left",
@@ -4570,7 +4590,7 @@
         "mouth": {
           "offset": [
             -16,
-            -56
+            -78
           ],
           "scale": [
             0.75,
@@ -4578,26 +4598,26 @@
           ]
         },
         "upper_arm_left": {
-          "rotation": -24,
+          "rotation": 8,
           "offset": [
-            40,
-            4
+            -24,
+            16
           ],
           "z_order": 4
         },
         "forearm_left": {
-          "rotation": 34
+          "rotation": -46
         },
         "upper_arm_right": {
-          "rotation": 10,
+          "rotation": -10,
           "offset": [
-            10,
-            8
+            12,
+            18
           ],
           "z_order": 1
         },
         "forearm_right": {
-          "rotation": -16
+          "rotation": 18
         },
         "thigh_left": {
           "rotation": -40,
@@ -4640,8 +4660,9 @@
           ],
           "offset": [
             -2,
-            26
-          ]
+            46
+          ],
+          "z_order": 1
         },
         "eye_left": {
           "part": "eye_left",
@@ -4663,7 +4684,7 @@
         "mouth": {
           "offset": [
             -16,
-            -56
+            -78
           ],
           "scale": [
             0.75,
@@ -4671,26 +4692,26 @@
           ]
         },
         "upper_arm_left": {
-          "rotation": -24,
+          "rotation": 8,
           "offset": [
-            40,
-            4
+            -24,
+            16
           ],
           "z_order": 4
         },
         "forearm_left": {
-          "rotation": 34
+          "rotation": -46
         },
         "upper_arm_right": {
-          "rotation": 10,
+          "rotation": -10,
           "offset": [
-            10,
-            8
+            12,
+            18
           ],
           "z_order": 1
         },
         "forearm_right": {
-          "rotation": -16
+          "rotation": 18
         },
         "thigh_left": {
           "rotation": 30,
@@ -4741,19 +4762,20 @@
         "head": {
           "offset": [
             -5,
-            56
+            96
           ],
           "rotation": 9,
           "scale": [
             1.05,
             0.776
-          ]
+          ],
+          "z_order": 1
         },
         "upper_arm_left": {
           "rotation": 30,
           "offset": [
-            -77,
-            -16
+            -100,
+            8
           ],
           "z_order": 1
         },
@@ -4763,8 +4785,8 @@
         "upper_arm_right": {
           "rotation": -29,
           "offset": [
-            44,
-            -12
+            63,
+            8
           ],
           "z_order": 1
         },
