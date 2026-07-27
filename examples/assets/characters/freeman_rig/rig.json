@@ -3966,8 +3966,9 @@
       "transition_duration": 0.3,
       "bones": {
         "cloak": {
+          "part": "torso_side",
           "scale": [
-            0.62,
+            1.0,
             1.0
           ]
         },
@@ -3978,7 +3979,7 @@
           ],
           "offset": [
             -2,
-            46
+            56
           ],
           "z_order": 1,
           "rotation": 9
@@ -4062,8 +4063,9 @@
       "transition_duration": 0.3,
       "bones": {
         "cloak": {
+          "part": "torso_side",
           "scale": [
-            0.62,
+            -1.0,
             1.0
           ]
         },
@@ -4074,7 +4076,7 @@
           ],
           "offset": [
             -2,
-            46
+            56
           ],
           "z_order": 1,
           "rotation": -9
@@ -4386,8 +4388,9 @@
       "transition_duration": 0.3,
       "bones": {
         "cloak": {
+          "part": "torso_side",
           "scale": [
-            0.62,
+            1.0,
             1.0
           ]
         },
@@ -4398,7 +4401,7 @@
           ],
           "offset": [
             -2,
-            46
+            56
           ],
           "z_order": 1,
           "rotation": 9
@@ -4490,8 +4493,9 @@
       "transition_duration": 0.3,
       "bones": {
         "cloak": {
+          "part": "torso_side",
           "scale": [
-            0.62,
+            1.0,
             1.0
           ]
         },
@@ -4502,7 +4506,7 @@
           ],
           "offset": [
             -2,
-            46
+            56
           ],
           "z_order": 1,
           "rotation": 9
@@ -4594,8 +4598,9 @@
       "transition_duration": 0.3,
       "bones": {
         "cloak": {
+          "part": "torso_side",
           "scale": [
-            0.62,
+            -1.0,
             1.0
           ]
         },
@@ -4606,7 +4611,7 @@
           ],
           "offset": [
             -2,
-            46
+            56
           ],
           "z_order": 1,
           "rotation": -9
@@ -4698,8 +4703,9 @@
       "transition_duration": 0.3,
       "bones": {
         "cloak": {
+          "part": "torso_side",
           "scale": [
-            0.62,
+            -1.0,
             1.0
           ]
         },
@@ -4710,7 +4716,7 @@
           ],
           "offset": [
             -2,
-            46
+            56
           ],
           "z_order": 1,
           "rotation": -9
