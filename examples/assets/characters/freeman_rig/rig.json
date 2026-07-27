@@ -4040,24 +4040,38 @@
           "part": "arm_out_fore_r"
         },
         "thigh_left": {
-          "offset": [
-            -20,
-            172
-          ],
-          "z_order": -1
+          "scale": [
+            0,
+            0
+          ]
         },
         "thigh_right": {
           "offset": [
-            -10,
+            -6,
             172
           ],
-          "z_order": 0
+          "scale": [
+            0.9,
+            1.0
+          ]
         },
         "hand_right": {
           "part": "arm_out_hand_r",
           "scale": [
             0.75,
             0.75
+          ]
+        },
+        "shin_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "shin_right": {
+          "scale": [
+            0.9,
+            1.0
           ]
         }
       }
@@ -4138,23 +4152,37 @@
         },
         "thigh_left": {
           "offset": [
-            20,
+            6,
             172
           ],
-          "z_order": 0
+          "scale": [
+            0.9,
+            1.0
+          ]
         },
         "thigh_right": {
-          "offset": [
-            10,
-            172
-          ],
-          "z_order": -1
+          "scale": [
+            0,
+            0
+          ]
         },
         "hand_left": {
           "part": "arm_out_hand_l",
           "scale": [
             0.75,
             0.75
+          ]
+        },
+        "shin_right": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "shin_left": {
+          "scale": [
+            0.9,
+            1.0
           ]
         }
       }
@@ -4207,6 +4235,10 @@
           "offset": [
             -13,
             -56
+          ],
+          "scale": [
+            1.0,
+            2.2
           ]
         },
         "upper_arm_left": {
@@ -4315,6 +4347,10 @@
           "offset": [
             -31,
             -56
+          ],
+          "scale": [
+            1.0,
+            2.2
           ]
         },
         "upper_arm_left": {
@@ -4520,26 +4556,33 @@
           "part": "arm_out_fore_r"
         },
         "thigh_left": {
-          "rotation": -40,
-          "offset": [
-            -20,
-            172
-          ],
-          "z_order": -1
+          "scale": [
+            0,
+            0
+          ]
         },
         "thigh_right": {
           "rotation": 30,
           "offset": [
-            -10,
+            -6,
             172
           ],
-          "z_order": 0
+          "scale": [
+            0.9,
+            1.0
+          ]
         },
         "shin_left": {
-          "rotation": 30
+          "scale": [
+            0,
+            0
+          ]
         },
         "shin_right": {
-          "rotation": -34
+          "scale": [
+            0.9,
+            1.0
+          ]
         },
         "hand_right": {
           "part": "arm_out_hand_r",
@@ -4625,26 +4668,33 @@
           "part": "arm_out_fore_r"
         },
         "thigh_left": {
-          "rotation": 30,
-          "offset": [
-            -20,
-            172
-          ],
-          "z_order": -1
+          "scale": [
+            0,
+            0
+          ]
         },
         "thigh_right": {
           "rotation": -40,
           "offset": [
-            -10,
+            -6,
             172
           ],
-          "z_order": 0
+          "scale": [
+            0.9,
+            1.0
+          ]
         },
         "shin_left": {
-          "rotation": -34
+          "scale": [
+            0,
+            0
+          ]
         },
         "shin_right": {
-          "rotation": 30
+          "scale": [
+            0.9,
+            1.0
+          ]
         },
         "hand_right": {
           "part": "arm_out_hand_r",
@@ -4732,24 +4782,31 @@
         "thigh_left": {
           "rotation": -40,
           "offset": [
-            20,
+            6,
             172
           ],
-          "z_order": 0
+          "scale": [
+            0.9,
+            1.0
+          ]
         },
         "thigh_right": {
-          "rotation": 30,
-          "offset": [
-            10,
-            172
-          ],
-          "z_order": -1
+          "scale": [
+            0,
+            0
+          ]
         },
         "shin_left": {
-          "rotation": 30
+          "scale": [
+            0.9,
+            1.0
+          ]
         },
         "shin_right": {
-          "rotation": -34
+          "scale": [
+            0,
+            0
+          ]
         },
         "hand_left": {
           "part": "arm_out_hand_l",
@@ -4837,24 +4894,31 @@
         "thigh_left": {
           "rotation": 30,
           "offset": [
-            20,
+            6,
             172
           ],
-          "z_order": 0
+          "scale": [
+            0.9,
+            1.0
+          ]
         },
         "thigh_right": {
-          "rotation": -40,
-          "offset": [
-            10,
-            172
-          ],
-          "z_order": -1
+          "scale": [
+            0,
+            0
+          ]
         },
         "shin_left": {
-          "rotation": -34
+          "scale": [
+            0.9,
+            1.0
+          ]
         },
         "shin_right": {
-          "rotation": 30
+          "scale": [
+            0,
+            0
+          ]
         },
         "hand_left": {
           "part": "arm_out_hand_l",
