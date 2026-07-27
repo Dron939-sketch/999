@@ -3,46 +3,66 @@
 """
 turn.py — РАЗВОРОТ ФИГУРЫ СЧИТАЕТСЯ, А НЕ ПОДБИРАЕТСЯ.
 
-Позы разворота (три четверти, профиль, полуспина, спина) я собирал руками:
-каждое число — на глаз, каждая правка ломала соседнее. Плечо уезжало за
-силуэт, нога вылезала из-под подола, дальняя рука пропадала в чёрном. Всё это
-не вкусовые вопросы, а геометрия: у поворота вокруг вертикальной оси есть
-формула, и из неё следует ВСЁ — что укоротится, что удлинится, что поднимется,
-насколько сузится силуэт и куда уедет глаз.
+Позы разворота я сперва собирал руками: каждое число на глаз, каждая правка
+ломала соседнее. Плечо уезжало за силуэт, нога вылезала из-под подола, голова
+сбоку выглядела «не той формы». Всё это не вкусовые вопросы, а геометрия: у
+поворота вокруг вертикальной оси есть формула, и из неё следует ВСЁ — что
+сузится, что уедет, что перекроет что.
 
-Модель. Фигура — коробка шириной W и глубиной D, голова — цилиндр радиуса R,
-глаза сидят на его окружности под углом ±φ от направления «вперёд».
+ЧТО СЧИТАЕТСЯ, А ЧТО ЗАМЕРЕНО
+-----------------------------
+Считается — проекция. Замерено — то, чего в проекции нет: как эту фигуру
+рисуют. Источник замеров: лист разворотов (ref/NanoBanana …model-sheet.png),
+8 клеток одного роста, снято tools/turn.py --measure.
 
   ширина силуэта       half(θ) = √((W/2)²cos²θ + (D/2)²sin²θ)
-        фигура в плане — ЭЛЛИПС, а не коробка. Формула коробки
-        (W/2·cos + D/2·sin) даёт на 45° силуэт ШИРЕ, чем анфас (259 против
-        248) — у коробки на косом ракурсе действительно видно два борта сразу,
-        у округлого тела нет. Первая версия модели считала по коробке, и
-        полуповорот выходил толще анфаса.
+        фигура в плане — ЭЛЛИПС, а не коробка. Формула коробки даёт на 45°
+        силуэт ШИРЕ анфаса — у коробки на косом ракурсе видно два борта сразу,
+        у округлого тела нет.
+        W = 248 (плащ анфас), D = 173 (плащ в профиль). D взято ЗАМЕРОМ:
+        86/122 = 0.70 от анфаса. Раньше стояло 0.49 — ширина ребра коробки, —
+        и фигура сбоку выглядела доской. Наклон корпуса вперёд ОТКРЫВАЕТ плащ:
+        сбоку видно не ребро, а спину в три четверти сверху.
 
   гнездо руки/ноги     x(θ) = x₀·cos θ
         всё, что отстоит от оси на x₀, проецируется в x₀·cos θ. Поэтому НОГИ
         НЕ ВЫЛЕЗАЮТ ЗА ПОДОЛ ни при каком угле: и гнездо, и подол сжимаются
-        одним и тем же косинусом, а гнездо изначально внутри. Раньше подол
-        сжимался, а гнёзда — нет, отсюда ноги «мимо» юбки.
+        одним косинусом, а гнездо изначально внутри.
 
-  ближе/дальше         k(θ) = 1 ± k·sin θ
-        слабая перспектива: ближняя половина крупнее, дальняя мельче. Отсюда
-        разная длина ног, разный размер кистей и наклон плечевой дуги.
+  вынос головы         Δ(θ) = d·sin θ,  d = 82
+        СУТУЛОСТЬ. Голова сидит не над серединой плеч, а вынесена вперёд на
+        постоянное в системе тела расстояние d; на экране видно проекцию
+        d·sin θ. Отсюда сразу три вещи, которые раньше ставились руками:
+        анфас голова по центру (sin 0 = 0), в пол-оборота смещена относительно
+        середины плеч, в профиль вынесена за переднюю кромку плаща. Замер
+        листа: в профиль затылок заходит за кромку на 0.29 ширины маски,
+        остальные 0.71 висят впереди — d = 82 даёт ровно это.
+        Клетка 3/4 на листе нарисована прямее (Δ ≈ 0.16 ширины плаща против
+        0.31 по формуле) — лист рисовала генеративная модель, и сутулость у
+        неё от клетки к клетке гуляет. Держим d34 отдельным числом и берём
+        замер листа: формула задаёт закон, лист — амплитуду.
 
-  глаз на голове       x = R·sin(α+θ),  ширина ∝ |cos(α+θ)|
-        глаз едет к кромке и сплющивается по мере ухода за край; когда
-        cos(α+θ) ≤ 0, глаз за головой и гасится. Ничего не надо решать
-        отдельно «в профиль виден один глаз» — это следствие.
+  рисунок по плоскости
+        Проекцией НЕ получаются: профиль плаща (спина дугой, грудь вогнута,
+        масса завалена вперёд), профиль головы (круглый затылок, прямая
+        лицевая кромка), рот сбоку (ровно половина дуги от контура). Для них
+        отдельные рисунки — torso_side, head_side, mouth_side. Сжатие
+        анфасного рисунка даёт худой анфас, а не профиль: то же правило, что
+        с крысой на стене.
 
-  ГОЛОВА ПОЧТИ НЕ СУЖАЕТСЯ. Замер оригинала: маска H/W 1.60–1.65 на 22 кадрах
-  с одним видимым глазом — столько же, сколько анфас. Яйцо в плане круглое, а
-  круг с любой стороны выглядит одинаково. Наши прежние 0.72 ширины в профиль
-  были ошибкой: мы сужали голову как доску.
+  зеркало
+        Левый разворот = правый с ОТРИЦАТЕЛЬНЫМ torso.scale.x. Кость `torso` —
+        общий предок головы, рук, ног и плаща, поэтому минус по x зеркалит всё
+        поддерево разом: и рисунки, и смещения, и повороты. Отдельные
+        «левые» числа больше не нужны — и не могут разъехаться с правыми.
+        (До правки рендерера отрицательный масштаб кости зеркалил только
+        смещения детей, но не сам рисунок: левый профиль получал
+        правостороннюю маску, и глаз уезжал за контур.)
 
 Использование:
-    python3 tools/turn.py --list                 # какие позы сгенерирует
-    python3 tools/turn.py --write                # записать в rig.json
+    python3 tools/turn.py            # что получится
+    python3 tools/turn.py --write    # записать позы разворота в rig.json
+    python3 tools/turn.py --measure  # перезамерить лист разворотов
 """
 
 import argparse
@@ -53,154 +73,176 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 RIG = ROOT / "examples/assets/characters/freeman_rig/rig.json"
+SHEET = Path("/home/user/ref/NanoBanana_narisuy-list-razvorotov-_character-turnaround-_-model-sheet.png")
 
-# --- обмеры фигуры (в единицах torso.svg; сняты с рига и рендера) -----------
-W = 248.0          # ширина плаща анфас (191 · масштаб кости 1.3)
-D = 118.0          # глубина: ширина профильного рисунка torso_side
-K = 0.16           # сила слабой перспективы (ближе крупнее)
-EYE_PHI = 38.0     # угол глаза от направления «вперёд», градусов
-DROP = 12.0        # насколько ближнее плечо опускается на полном профиле
-
-SOCK_ARM = {"upper_arm_left": -125.0, "upper_arm_right": 79.0}
-SOCK_LEG = {"thigh_left": -77.0, "thigh_right": 37.0}
-EYE_X = {"eye_left": -33.0, "eye_right": 20.0}
-EYE_SCALE = {"eye_left": (0.9, 1.07), "eye_right": (0.85, 1.0)}
-
-# рисунок плаща по углу: у каждого своя нарисованная ширина
-CLOAKS = [(30.0, None, W), (65.0, "torso_34", 155.0), (180.0, "torso_side", D)]
+# --- обмеры (единицы torso.svg, если не сказано иначе) -----------------------
+W = 248.0            # плащ анфас на экране: ink 191 × масштаб кости 1.3
+D = 173.0            # плащ в профиль: ink 133 × 1.3 (замер листа: 0.70 от W)
+CLOAK_34_INK = 161.0 # ink torso_34
+HEAD_FRONT_OFF = -13.8   # центр ink head.svg относительно пивота
+DEEP = 82.0          # вынос головы вперёд (сутулость)
+DEEP_34 = 34.0       # то же на 45° — по замеру листа, а не по d·sin45
+TORSO_SCALE = 1.55
 
 
-def half_width(deg):
+def half(deg):
     t = math.radians(deg)
     return math.hypot(W / 2 * math.cos(t), D / 2 * math.sin(t))
 
 
-def cloak_for(deg):
-    """Какой рисунок плаща и с каким масштабом даёт нужную ширину силуэта."""
-    a = abs(deg) if abs(deg) <= 90 else 180 - abs(deg)
-    for lim, part, drawn in CLOAKS:
-        if a <= lim:
-            return part, half_width(deg) * 2 / drawn
-    return "torso_side", half_width(deg) * 2 / D
+def mirror(pose, name):
+    """Левый разворот: тот же набор костей, зеркальный torso."""
+    q = json.loads(json.dumps(pose))
+    q["name"] = name
+    q["bones"]["torso"] = {"scale": [-TORSO_SCALE, TORSO_SCALE]}
+    return q
 
 
-def turn_pose(name, deg, blank_face=False, head_tilt=0.0, head_squash=1.0):
-    """Кости одной позы разворота. deg>0 — фигура повёрнута ВПРАВО."""
-    t = math.radians(deg)
-    c, s = math.cos(t), math.sin(t)
-    d = 1 if deg >= 0 else -1
-    near = 1 + K * abs(s)          # ближняя половина
-    far = 1 - K * abs(s)           # дальняя
-    bones = {}
-
-    part, sc = cloak_for(deg)
-    bones["cloak"] = {"scale": [round(sc * (1 if deg >= 0 else -1), 3), 1.0]}
-    if part:
-        bones["cloak"]["part"] = part
-
-    # голова: ширина почти не меняется (в плане круг), садится глубже к профилю
-    bones["head"] = {
-        "scale": [round(1.05 * (0.97 + 0.03 * abs(c)), 3),
-                  round(1.05 * head_squash, 3)],
-        "offset": [round(6 * s), round(66 + 40 * abs(s))],
-        "rotation": round(head_tilt + 9 * s, 1),
-    }
-    if abs(deg) > 100:                       # затылок: черт лица нет
-        blank_face = True
-    if abs(deg) > 35:                        # плечо перекрывает низ головы
-        bones["head"]["z_order"] = 1
-
-    for eye, x0 in EYE_X.items():
-        if blank_face:
-            bones[eye] = {"scale": [0, 0]}
-            continue
-        # плановый угол глаза: знак по стороне головы
-        alpha = math.radians((-EYE_PHI if x0 < 0 else EYE_PHI) + deg)
-        vis = math.cos(alpha)
-        if vis <= 0.12:                      # ушёл за голову
-            bones[eye] = {"scale": [0, 0]}
-            continue
-        sx, sy = EYE_SCALE[eye]
-        R = 46.0                             # радиус головы в плане
-        bones[eye] = {
-            "offset": [round(R * math.sin(alpha)), -121],
-            "scale": [round(sx * vis, 3), round(sy, 3)],
-        }
-    bones["mouth"] = ({"scale": [0, 0]} if blank_face else
-                      {"offset": [round(-22 * c + 30 * s), -56],
-                       "scale": [round(max(0.35, abs(c)), 3), 1.0]})
-
-    # руки: гнездо по косинусу, размер и высота по близости
-    for arm, x0 in SOCK_ARM.items():
-        is_near = (x0 > 0) == (deg >= 0)
-        k = near if is_near else far
-        fore = arm.replace("upper_arm", "forearm")
-        # гнездо — на 62% полуширины, а не на краю: дуга плеч срезала углы, и
-        # у самой кромки плеча под гнездом уже нет (замер CAMERA.md).
-        hw = half_width(deg)
-        bones[arm] = {
-            "offset": [round((hw * 0.62) * (1 if x0 > 0 else -1)),
-                       round((3 if x0 < 0 else 13) + DROP * s * (1 if is_near else -1))],
-            "scale": [round(k, 3), round(k, 3)],
-            "z_order": 4 if is_near else 1,
-        }
-        # локоть гнётся ТОЛЬКО к лицу: рука не складывается назад
-        bones[fore] = {"rotation": round(34 * d * (1 if is_near else 0.6), 1)}
-
-    # ноги: гнездо тем же косинусом — потому и не вылезают за подол
-    for th, x0 in SOCK_LEG.items():
-        is_near = (x0 > 0) == (deg >= 0)
-        k = near if is_near else far
-        sh = th.replace("thigh", "shin")
-        bones[th] = {"offset": [round(x0 * c), round(172 - 8 * abs(s) * (0 if is_near else 1))],
-                     "scale": [0.9, round(k, 3)]}
-        bones[sh] = {"scale": [0.9, round(k, 3)]}
-    return {"name": name, "transition_duration": 0.3, "bones": bones}
+def profile():
+    """Полный профиль, фигура смотрит ВПРАВО."""
+    return {"name": "bok_pravo", "transition_duration": 0.3, "bones": {
+        "cloak": {"part": "torso_side", "scale": [1.3, 1.0]},
+        # голова: отдельный рисунок, вынесена вперёд на d·sin90 = d
+        "head": {"part": "head_side", "scale": [0.98, 0.98],
+                 "offset": [round(DEEP), 72], "z_order": 1},
+        # глаз у передней кромки: центр на 18% ширины маски от края (замер)
+        "eye_right": {"part": "eye_right", "offset": [26, -121],
+                      "scale": [0.643, 0.537]},
+        "eye_left": {"scale": [0, 0]},
+        # рот — половина дуги, передний угол ставится НА контур маски
+        "mouth": {"part": "mouth_side", "offset": [17, -56], "scale": [1.0, 1.0]},
+        # ближняя рука по середине ширины плаща, светлой заливкой (иначе
+        # чёрное на чёрном); локоть гнётся В СТОРОНУ ЛИЦА
+        "upper_arm_right": {"part": "arm_out_upper_r", "offset": [0, 23],
+                            "rotation": -6, "z_order": 4},
+        "forearm_right": {"part": "arm_out_fore_r", "rotation": -18},
+        "hand_right": {"part": "arm_out_hand_r", "scale": [0.75, 0.75]},
+        "upper_arm_left": {"offset": [-10, 27], "rotation": 10, "z_order": 1},
+        "forearm_left": {"rotation": -10},
+        # ноги: гнездо × cos 90 = 0, обе на оси — видно одну
+        "thigh_right": {"offset": [0, 172], "scale": [0.9, 1.0]},
+        "shin_right": {"scale": [0.9, 1.0]},
+        "thigh_left": {"scale": [0, 0]},
+        "shin_left": {"scale": [0, 0]},
+    }}
 
 
-POSES = [
-    ("chetvert_pravo", 45), ("chetvert_levo", -45),
-    ("bok_pravo", 90), ("bok_levo", -90),
-    ("polu_spina", 135), ("spina", 180),
-]
+def quarter():
+    """Три четверти вправо."""
+    c = math.cos(math.radians(45))
+    sc = half(45) / CLOAK_34_INK * 2
+    return {"name": "chetvert_pravo", "transition_duration": 0.3, "bones": {
+        "cloak": {"part": "torso_34", "scale": [round(sc, 3), 1.0]},
+        # маска анфасного рисунка сидит левее пивота — компенсируем, чтобы
+        # смещение считалось от ЦЕНТРА МАСКИ, а не от пивота кости
+        # посадка головы: глубже анфаса, но НЕ глубже рта — плечо в
+        # полуобороте перекрывает низ маски, и на 76 рот прятался целиком
+        "head": {"scale": [0.9, 1.03], "z_order": 1,
+                 "offset": [round(DEEP_34 - HEAD_FRONT_OFF * 0.9), 62]},
+        # ближний глаз крупнее и уходит к кромке, дальний сужается косинусом
+        # ГЛАЗНАЯ ДУГА. Межзрачковая линия на повороте — не прямая, а дуга,
+        # выгнутая в сторону взгляда: глаза сидят на шаре, и ближний край
+        # лица «заворачивается». Ближний глаз опускается, дальний поднимается.
+        "eye_left": {"part": "eye_left", "offset": [-23, -125],
+                     "scale": [0.624, 1.092]},
+        "eye_right": {"part": "eye_right", "offset": [30, -117],
+                      "scale": [0.817, 0.86]},
+        # рот: отдельный рисунок с асимметричным сжатием (ближняя половина
+        # тянется, дальняя убегает за щёку) — равномерным scale не берётся
+        "mouth": {"part": "mouth_34", "offset": [round(-22 * c + 26), -56],
+                  "scale": [0.86, 1.0]},
+        # плечевая дуга наклонена: ближнее плечо ниже и длиннее
+        "upper_arm_right": {"offset": [round(half(45) * 0.62), 20],
+                            "scale": [1.11, 1.11], "z_order": 4},
+        "upper_arm_left": {"offset": [round(-half(45) * 0.62), 6],
+                           "scale": [0.89, 0.89], "z_order": 1},
+        "thigh_left": {"offset": [round(-77 * c), 172], "scale": [0.9, 0.89]},
+        "shin_left": {"scale": [0.9, 0.89]},
+        "thigh_right": {"offset": [round(37 * c), 172], "scale": [0.9, 1.11]},
+        "shin_right": {"scale": [0.9, 1.11]},
+    }}
 
 
-def main(argv):
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--write", action="store_true")
-    ap.add_argument("--list", action="store_true")
-    a = ap.parse_args(argv)
-
-    print(f"  {'поза':<18}{'угол':>6}{'полуширина':>12}{'плащ':>14}")
-    for name, deg in POSES:
-        part, sc = cloak_for(deg)
-        print(f"  {name:<18}{deg:>6}{half_width(deg):>12.1f}"
-              f"{(part or 'анфас') + f' ×{sc:.2f}':>14}")
-    if not a.write:
-        return 0
-
+def write():
     rig = json.loads(RIG.read_text(encoding="utf-8"))
-    for name, deg in POSES:
-        p = turn_pose(name, deg,
-                      head_tilt=(6 if abs(deg) > 100 else 0),
-                      head_squash=(0.88 if abs(deg) > 100 else 1.0))
-        rig["poses"][name] = p
-    # шаг в профиль: профиль + ноги из шага
-    for base, deg in (("bok_pravo", 90), ("bok_levo", -90)):
+    P = rig["poses"]
+    made = []
+
+    for pose, left in ((profile(), "bok_levo"), (quarter(), "chetvert_levo")):
+        P[pose["name"]] = pose
+        P[left] = mirror(pose, left)
+        made += [pose["name"], left]
+
+    # полуспина: тот же плащ, что и три четверти, но развёрнутый; лица нет
+    ps = P["polu_spina"]["bones"]
+    ps["cloak"] = {"part": "torso_34", "scale": [-round(half(45) / CLOAK_34_INK * 2, 3), 1.0]}
+    ps["head"]["offset"] = [round(DEEP_34), 111]
+    made.append("polu_spina")
+
+    # шаг в профиль: профиль + ноги из шаговой позы
+    for base in ("bok_pravo", "bok_levo"):
         for step in ("shag_levoj", "shag_pravoj"):
-            q = json.loads(json.dumps(rig["poses"][base]))
+            if step not in P:
+                continue
+            q = json.loads(json.dumps(P[base]))
             q["name"] = f"{base}_{step.split('_')[1]}"
             for leg in ("thigh_left", "thigh_right", "shin_left", "shin_right"):
-                src = rig["poses"][step]["bones"].get(leg)
-                if src:
+                src = P[step]["bones"].get(leg)
+                if src and q["bones"].get(leg, {}).get("scale") != [0, 0]:
                     keep = q["bones"].get(leg, {})
                     m = dict(src)
                     m["offset"] = keep.get("offset", m.get("offset"))
                     m["scale"] = keep.get("scale", m.get("scale"))
                     q["bones"][leg] = m
-            rig["poses"][q["name"]] = q
+            P[q["name"]] = q
+            made.append(q["name"])
+
     RIG.write_text(json.dumps(rig, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"\n  записано поз разворота: {len(POSES) + 4}")
+    return made
+
+
+def measure():
+    """Перезамер листа разворотов: ширина плаща и маски по клеткам."""
+    try:
+        from PIL import Image
+        import numpy as np
+    except ImportError:
+        print("нужен Pillow + numpy"); return 1
+    if not SHEET.exists():
+        print(f"нет листа: {SHEET}"); return 1
+    a = np.array(Image.open(SHEET).convert("L")); ink = a < 128
+    cells = [(60, 240, "анфас"), (300, 480, "3/4"), (550, 740, "профиль"),
+             (800, 990, "полуспина")]
+    print(f"  {'клетка':<12}{'маска':>8}{'плащ':>8}{'плащ/анфас':>12}")
+    base = None
+    for x0, x1, name in cells:
+        s = ink[60:520, x0:x1]
+        hw = max((np.nonzero(s[y])[0].max() - np.nonzero(s[y])[0].min()
+                  for y in range(100) if s[y].any()), default=0)
+        ys, _ = np.nonzero(s)
+        y = int(ys.min() + (ys.max() - ys.min()) * 0.5)
+        r = np.nonzero(s[y])[0]
+        cw = r.max() - r.min()
+        base = base or cw
+        print(f"  {name:<12}{hw:>8}{cw:>8}{cw/base:>12.2f}")
+    return 0
+
+
+def main(argv):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--write", action="store_true")
+    ap.add_argument("--measure", action="store_true")
+    a = ap.parse_args(argv)
+    if a.measure:
+        return measure()
+
+    print(f"  плащ анфас {W:.0f}, профиль {D:.0f} ({D/W:.2f}), "
+          f"три четверти {half(45)*2:.0f} ({half(45)*2/W:.2f})")
+    print(f"  вынос головы: профиль {DEEP:.0f}, три четверти {DEEP_34:.0f}")
+    if not a.write:
+        return 0
+    made = write()
+    print(f"  записаны позы: {', '.join(made)}")
     return 0
 
 

@@ -1132,13 +1132,23 @@ fn collect_bone_drawables<'a>(
     };
 
     // Compute world position of this bone.
-    let rot_rad = parent_rot.to_radians();
+    //
+    // ЗЕРКАЛО ПРИМЕНЯЕТСЯ РОВНО ОДИН РАЗ. Смещение кости поворачивается на
+    // угол родителя, и только потом умножается на накопленный масштаб — а он в
+    // зеркальной ветке отрицательный. Но parent_rot УЖЕ зеркальный, поэтому
+    // поворот отражал смещение второй раз, и знаки взаимно гасились: кисть в
+    // зеркальной позе оставалась с той же стороны от предплечья, рука
+    // расползалась на куски. Разворачиваем угол обратно в НЕзеркальную систему,
+    // считаем смещение там, а зеркалит его один-единственный множитель ниже.
+    let rot_rad = (parent_rot * entity_scale_x.signum()).to_radians();
     let rx = offset_x * rot_rad.cos() - offset_y * rot_rad.sin();
     let ry = offset_x * rot_rad.sin() + offset_y * rot_rad.cos();
 
     let mut world_x = parent_x + rx * scale * flip * entity_scale_x;
     let mut world_y = parent_y + ry * scale * entity_scale_y;
-    let world_rot = parent_rot + (rotation + arc_rot) * flip;
+    // В отзеркаленной ветке поворот тоже зеркалится: знак накопленного
+    // entity_scale_x и есть признак зеркала (произведение масштабов предков).
+    let world_rot = parent_rot + (rotation + arc_rot) * flip * entity_scale_x.signum();
 
     // Queue this bone's part if it has one. The state's part may be a pose
     // cel-swap (a different drawing); fall back to the bone's default part.
@@ -1173,7 +1183,18 @@ fn collect_bone_drawables<'a>(
             } else {
                 0.0
             };
-            let bend_local = (joint_bend + state.map(|s| s.bend).unwrap_or(0.0)).clamp(-1.2, 1.2);
+            // Знак зеркала: произведение масштабов до этой кости включительно.
+            // Изгиб «резинового шланга» считается от УГЛА В СУСТАВЕ
+            // (delta_deg), а в зеркальной ветке угол сустава сам зеркальный —
+            // значит и завиток обязан развернуться. Знак ставится ЗДЕСЬ, у
+            // источника, а не при отрисовке: тем же bend_local пользуется
+            // child_bend, по которому точка крепления ребёнка едет по дуге
+            // родителя. Пока знак ставился только на отрисовке, предплечье
+            // рисовалось по одной дуге, а кисть цеплялась к другой — рука в
+            // зеркальной позе расползалась на куски.
+            let mir = (scale_x * entity_scale_x).signum();
+            let bend_local =
+                ((joint_bend + state.map(|s| s.bend).unwrap_or(0.0)) * mir).clamp(-1.2, 1.2);
             // The spine bends from the pelvis up (feet stay planted, shoulders
             // sweep); limbs bend from their top joint down.
             let bend_origin = if is_spine { 1.0 } else { 0.0 };
@@ -1652,6 +1673,14 @@ fn render_bone_part(
     bend_origin: f64,
     boil_seed: u32,
 ) -> Result<(), AnimError> {
+    // Зеркало даёт И разворот сущности (`flip`), И ОТРИЦАТЕЛЬНЫЙ МАСШТАБ КОСТИ.
+    // Раньше учитывался только первый: `scale: [-1.3, 1.0]` разворачивал
+    // смещения детей (через накопленный entity_scale_x), но сам рисунок
+    // оставлял как есть. Поза «левый профиль» получала правостороннюю маску с
+    // отзеркаленными координатами глаза — глаз уезжал наружу от контура, а
+    // плащ смотрел не в ту сторону. Знаки перемножаются, поэтому два зеркала
+    // подряд снова дают прямой рисунок.
+    let mirror = (scale_x < 0.0) != (flip < 0.0);
     let render_sx = scale_x.abs() * flip.abs();
     let render_sy = scale_y.abs();
 
@@ -1723,7 +1752,7 @@ fn render_bone_part(
     // Flip is applied at composite time. The cache holds the unflipped raster, so
     // only clone+flip when needed; otherwise borrow the shared pixmap directly.
     let mut flipped: Option<Pixmap> = None;
-    let part_pixmap: &Pixmap = if flip < 0.0 {
+    let part_pixmap: &Pixmap = if mirror {
         let mut c = (*base).clone();
         flip_pixmap_horizontal(&mut c);
         flipped = Some(c);
@@ -1732,8 +1761,16 @@ fn render_bone_part(
         &base
     };
 
-    // The pivot point in rendered pixel space.
-    let pivot_px = pivot.0 * render_sx;
+    // The pivot point in rendered pixel space. У отзеркаленного растра точка,
+    // лежавшая на pivot_px, оказывается на render_w − pivot_px: без этой
+    // поправки деталь съезжает на (render_w − 2·pivot_px). У большинства наших
+    // частей пивот ровно посередине, поэтому промах был нулевым и не всплывал;
+    // у несимметричных (кисти, предплечья) — всплыл бы.
+    let pivot_px = if mirror {
+        render_w as f64 - pivot.0 * render_sx
+    } else {
+        pivot.0 * render_sx
+    };
     let pivot_py = pivot.1 * render_sy;
 
     // Build the composite transform.
