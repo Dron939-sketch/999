@@ -3811,6 +3811,985 @@
           ]
         }
       }
+    },
+    "spina": {
+      "name": "spina",
+      "transition_duration": 0.3,
+      "bones": {
+        "eye_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "mouth": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "head": {
+          "offset": [
+            -5,
+            46
+          ],
+          "rotation": 6,
+          "scale": [
+            1.03,
+            0.88
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": 22,
+          "offset": [
+            -82,
+            -8
+          ],
+          "z_order": 1
+        },
+        "forearm_left": {
+          "rotation": -8
+        },
+        "upper_arm_right": {
+          "rotation": -21,
+          "offset": [
+            49,
+            -4
+          ],
+          "z_order": 1
+        },
+        "forearm_right": {
+          "rotation": 7
+        },
+        "thigh_left": {
+          "offset": [
+            -70,
+            172
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            32,
+            172
+          ]
+        }
+      }
+    },
+    "spina_oglyadka": {
+      "name": "spina_oglyadka",
+      "transition_duration": 0.3,
+      "bones": {
+        "head": {
+          "offset": [
+            3,
+            30
+          ],
+          "scale": [
+            0.8,
+            1.05
+          ],
+          "rotation": -6
+        },
+        "eye_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "eye_right": {
+          "part": "eye_squint",
+          "offset": [
+            10,
+            -96
+          ],
+          "scale": [
+            0.95,
+            1.0
+          ]
+        },
+        "mouth": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": 16,
+          "offset": [
+            -88,
+            2
+          ],
+          "z_order": 1
+        },
+        "upper_arm_right": {
+          "rotation": -15,
+          "offset": [
+            55,
+            6
+          ],
+          "z_order": 1
+        },
+        "thigh_left": {
+          "offset": [
+            -70,
+            172
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            32,
+            172
+          ]
+        }
+      }
+    },
+    "bok_pravo": {
+      "name": "bok_pravo",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "scale": [
+            0.62,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.72,
+            1.04
+          ],
+          "offset": [
+            -2,
+            26
+          ]
+        },
+        "eye_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            24,
+            -96
+          ],
+          "scale": [
+            0.92,
+            1.02
+          ]
+        },
+        "mouth": {
+          "offset": [
+            16,
+            -56
+          ],
+          "scale": [
+            0.75,
+            1.0
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": -10,
+          "offset": [
+            -10,
+            8
+          ],
+          "z_order": 1
+        },
+        "forearm_left": {
+          "rotation": 16
+        },
+        "upper_arm_right": {
+          "rotation": 24,
+          "offset": [
+            -58,
+            4
+          ],
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": -34
+        },
+        "thigh_left": {
+          "offset": [
+            -20,
+            172
+          ],
+          "z_order": -1
+        },
+        "thigh_right": {
+          "offset": [
+            -10,
+            172
+          ],
+          "z_order": 0
+        }
+      }
+    },
+    "bok_levo": {
+      "name": "bok_levo",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "scale": [
+            0.62,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.72,
+            1.04
+          ],
+          "offset": [
+            -2,
+            26
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -24,
+            -96
+          ],
+          "scale": [
+            0.95,
+            1.06
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "mouth": {
+          "offset": [
+            -16,
+            -56
+          ],
+          "scale": [
+            0.75,
+            1.0
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": -24,
+          "offset": [
+            40,
+            4
+          ],
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": 34
+        },
+        "upper_arm_right": {
+          "rotation": 10,
+          "offset": [
+            10,
+            8
+          ],
+          "z_order": 1
+        },
+        "forearm_right": {
+          "rotation": -16
+        },
+        "thigh_left": {
+          "offset": [
+            20,
+            172
+          ],
+          "z_order": 0
+        },
+        "thigh_right": {
+          "offset": [
+            10,
+            172
+          ],
+          "z_order": -1
+        }
+      }
+    },
+    "chetvert_pravo": {
+      "name": "chetvert_pravo",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "scale": [
+            0.87,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.9,
+            1.03
+          ],
+          "offset": [
+            0,
+            26
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -23,
+            -96
+          ],
+          "scale": [
+            0.6,
+            1.05
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            30,
+            -96
+          ],
+          "scale": [
+            0.95,
+            1.0
+          ]
+        },
+        "mouth": {
+          "offset": [
+            11,
+            -56
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": 18,
+          "offset": [
+            -78,
+            -6
+          ],
+          "z_order": 1
+        },
+        "upper_arm_right": {
+          "rotation": -41,
+          "offset": [
+            79,
+            4
+          ],
+          "z_order": 4
+        },
+        "thigh_left": {
+          "offset": [
+            -61,
+            172
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            53,
+            172
+          ]
+        }
+      }
+    },
+    "chetvert_levo": {
+      "name": "chetvert_levo",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "scale": [
+            0.87,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.9,
+            1.03
+          ],
+          "offset": [
+            -8,
+            26
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -43,
+            -96
+          ],
+          "scale": [
+            0.95,
+            1.05
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            10,
+            -96
+          ],
+          "scale": [
+            0.6,
+            1.0
+          ]
+        },
+        "mouth": {
+          "offset": [
+            -7,
+            -56
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": 42,
+          "offset": [
+            -114,
+            -6
+          ],
+          "z_order": 4
+        },
+        "upper_arm_right": {
+          "rotation": -17,
+          "offset": [
+            43,
+            4
+          ],
+          "z_order": 1
+        },
+        "thigh_left": {
+          "offset": [
+            -93,
+            172
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            21,
+            172
+          ]
+        }
+      }
+    },
+    "polu_spina": {
+      "name": "polu_spina",
+      "transition_duration": 0.3,
+      "bones": {
+        "eye_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "mouth": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "cloak": {
+          "scale": [
+            0.8,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.857,
+            0.946
+          ],
+          "offset": [
+            -4,
+            41
+          ],
+          "rotation": 5
+        },
+        "upper_arm_left": {
+          "rotation": 26,
+          "offset": [
+            -64,
+            -10
+          ],
+          "z_order": 1
+        },
+        "upper_arm_right": {
+          "rotation": -18,
+          "offset": [
+            36,
+            -4
+          ],
+          "z_order": 1
+        },
+        "thigh_left": {
+          "offset": [
+            -52,
+            172
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            20,
+            172
+          ]
+        }
+      }
+    },
+    "bok_pravo_levoj": {
+      "name": "bok_pravo_levoj",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "scale": [
+            0.62,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.72,
+            1.04
+          ],
+          "offset": [
+            -2,
+            26
+          ]
+        },
+        "eye_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            24,
+            -96
+          ],
+          "scale": [
+            0.92,
+            1.02
+          ]
+        },
+        "mouth": {
+          "offset": [
+            16,
+            -56
+          ],
+          "scale": [
+            0.75,
+            1.0
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": -10,
+          "offset": [
+            -10,
+            8
+          ],
+          "z_order": 1
+        },
+        "forearm_left": {
+          "rotation": 16
+        },
+        "upper_arm_right": {
+          "rotation": 24,
+          "offset": [
+            -58,
+            4
+          ],
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": -34
+        },
+        "thigh_left": {
+          "rotation": -40,
+          "offset": [
+            -20,
+            172
+          ],
+          "z_order": -1
+        },
+        "thigh_right": {
+          "rotation": 30,
+          "offset": [
+            -10,
+            172
+          ],
+          "z_order": 0
+        },
+        "shin_left": {
+          "rotation": 30
+        },
+        "shin_right": {
+          "rotation": -34
+        }
+      }
+    },
+    "bok_pravo_pravoj": {
+      "name": "bok_pravo_pravoj",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "scale": [
+            0.62,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.72,
+            1.04
+          ],
+          "offset": [
+            -2,
+            26
+          ]
+        },
+        "eye_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            24,
+            -96
+          ],
+          "scale": [
+            0.92,
+            1.02
+          ]
+        },
+        "mouth": {
+          "offset": [
+            16,
+            -56
+          ],
+          "scale": [
+            0.75,
+            1.0
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": -10,
+          "offset": [
+            -10,
+            8
+          ],
+          "z_order": 1
+        },
+        "forearm_left": {
+          "rotation": 16
+        },
+        "upper_arm_right": {
+          "rotation": 24,
+          "offset": [
+            -58,
+            4
+          ],
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": -34
+        },
+        "thigh_left": {
+          "rotation": 30,
+          "offset": [
+            -20,
+            172
+          ],
+          "z_order": -1
+        },
+        "thigh_right": {
+          "rotation": -40,
+          "offset": [
+            -10,
+            172
+          ],
+          "z_order": 0
+        },
+        "shin_left": {
+          "rotation": -34
+        },
+        "shin_right": {
+          "rotation": 30
+        }
+      }
+    },
+    "bok_levo_levoj": {
+      "name": "bok_levo_levoj",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "scale": [
+            0.62,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.72,
+            1.04
+          ],
+          "offset": [
+            -2,
+            26
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -24,
+            -96
+          ],
+          "scale": [
+            0.95,
+            1.06
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "mouth": {
+          "offset": [
+            -16,
+            -56
+          ],
+          "scale": [
+            0.75,
+            1.0
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": -24,
+          "offset": [
+            40,
+            4
+          ],
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": 34
+        },
+        "upper_arm_right": {
+          "rotation": 10,
+          "offset": [
+            10,
+            8
+          ],
+          "z_order": 1
+        },
+        "forearm_right": {
+          "rotation": -16
+        },
+        "thigh_left": {
+          "rotation": -40,
+          "offset": [
+            20,
+            172
+          ],
+          "z_order": 0
+        },
+        "thigh_right": {
+          "rotation": 30,
+          "offset": [
+            10,
+            172
+          ],
+          "z_order": -1
+        },
+        "shin_left": {
+          "rotation": 30
+        },
+        "shin_right": {
+          "rotation": -34
+        }
+      }
+    },
+    "bok_levo_pravoj": {
+      "name": "bok_levo_pravoj",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "scale": [
+            0.62,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.72,
+            1.04
+          ],
+          "offset": [
+            -2,
+            26
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -24,
+            -96
+          ],
+          "scale": [
+            0.95,
+            1.06
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "mouth": {
+          "offset": [
+            -16,
+            -56
+          ],
+          "scale": [
+            0.75,
+            1.0
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": -24,
+          "offset": [
+            40,
+            4
+          ],
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": 34
+        },
+        "upper_arm_right": {
+          "rotation": 10,
+          "offset": [
+            10,
+            8
+          ],
+          "z_order": 1
+        },
+        "forearm_right": {
+          "rotation": -16
+        },
+        "thigh_left": {
+          "rotation": 30,
+          "offset": [
+            20,
+            172
+          ],
+          "z_order": 0
+        },
+        "thigh_right": {
+          "rotation": -40,
+          "offset": [
+            10,
+            172
+          ],
+          "z_order": -1
+        },
+        "shin_left": {
+          "rotation": -34
+        },
+        "shin_right": {
+          "rotation": 30
+        }
+      }
+    },
+    "spina_ponuro": {
+      "name": "spina_ponuro",
+      "transition_duration": 0.3,
+      "bones": {
+        "eye_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "mouth": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "head": {
+          "offset": [
+            -5,
+            56
+          ],
+          "rotation": 9,
+          "scale": [
+            1.05,
+            0.776
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": 30,
+          "offset": [
+            -77,
+            -16
+          ],
+          "z_order": 1
+        },
+        "forearm_left": {
+          "rotation": -8
+        },
+        "upper_arm_right": {
+          "rotation": -29,
+          "offset": [
+            44,
+            -12
+          ],
+          "z_order": 1
+        },
+        "forearm_right": {
+          "rotation": 7
+        },
+        "thigh_left": {
+          "offset": [
+            -70,
+            172
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            32,
+            172
+          ]
+        },
+        "cloak": {
+          "scale": [
+            1.04,
+            0.97
+          ]
+        }
+      }
     }
   },
   "karta": {
