@@ -247,6 +247,9 @@ pub struct EntityState {
     pub facing: Direction,
     pub layer: i32,
     pub visible: bool,
+    /// `on floor`: предмет стоит на полу локации — точка привязки внизу
+    /// рисунка, размер считается по глубине пола (см. `assets::Floor`).
+    pub grounded: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -270,6 +273,7 @@ impl EntityState {
             facing: Direction::Right,
             layer: 0,
             visible: true,
+            grounded: false,
         }
     }
 
@@ -287,6 +291,7 @@ impl EntityState {
             facing: Direction::Right,
             layer: -1, // props behind characters by default
             visible: true,
+            grounded: false,
         }
     }
 }
@@ -428,9 +433,14 @@ fn register_let_props(
     for stmt in stmts {
         match stmt {
             SceneStatement::Let(let_stmt) => {
-                let (position, layer) = match &let_stmt.kind {
-                    LetKind::Prop { position, layer, .. } => (position, layer),
-                    LetKind::Text { position, layer, .. } => (position, layer),
+                let (position, layer, grounded) = match &let_stmt.kind {
+                    LetKind::Prop {
+                        position,
+                        layer,
+                        grounded,
+                        ..
+                    } => (position, layer, *grounded),
+                    LetKind::Text { position, layer, .. } => (position, layer, false),
                 };
                 if entities.contains_key(&let_stmt.name) {
                     continue;
@@ -444,6 +454,7 @@ fn register_let_props(
                 if let Some(l) = layer {
                     state.layer = *l;
                 }
+                state.grounded = grounded;
                 entities.insert(let_stmt.name.clone(), state);
             }
             SceneStatement::Together(inner) | SceneStatement::Do(inner) => {

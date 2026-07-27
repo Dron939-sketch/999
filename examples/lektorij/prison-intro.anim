@@ -34,8 +34,20 @@ scene "cell" (duration: 40s, set: cell) {
 
     place freeman at (0.5, 0.45) facing front
     freeman scales 1.15
-    let rat = prop("rat", "../assets/props/rat.svg") at (0.80, 0.66)
+    // Крыса на полу: `on floor` — точка привязки внизу рисунка (лапы стоят
+    // на полу, а не тонут в нём), размер считается по глубине из
+    // prison-cell.surfaces.json. Раньше и того и другого не было: центр
+    // рисунка садился на сиденье унитаза — половина крысы висела в воздухе, —
+    // а на дальней кромке пола она оставалась того же размера, что под ногами.
+    let rat = prop("rat", "../assets/props/rat.svg") at (0.804, 0.653) on floor
     rat scales 0.42
+    // ЛЕЗЕТ ПО СТЕНЕ — отдельный рисунок, вид СО СПИНЫ. Задняя стена смотрит
+    // в камеру, значит лезущего по ней видно сверху-сзади. Раньше по стене
+    // ехал вид сбоку, повёрнутый на −80°: крыса на боку, приклеенная к стене.
+    // Масштаб 0.23 = 0.42 на дальней кромке пола, чтобы при подмене рисунка
+    // размер не прыгнул.
+    let ratb = prop("ratb", "../assets/props/rat-back.svg") at (0.45, -1.5)
+    ratb scales 0.23
     let ratw = prop("rat_wave", "../assets/props/rat-wave.svg") at (0.42, 0.30)
     ratw scales 0.39
     ratw hides
@@ -49,13 +61,14 @@ scene "cell" (duration: 40s, set: cell) {
     // --- t=0..3.5 БЕЗ СЛОВ: крыса-одиссея (крючок 3с — уже лезет по стене) ---
     camera wide
     freeman pose "calm"
-    rat moves-to (0.70, 0.93) over 0.5s ease-out
-    rat moves-to (0.45, 0.66) over 0.7s
-    together {
-        rat moves-to (0.42, 0.34) over 0.7s
-        rat rotates -80 over 0.45s
-    }
-    rat hides over 0.1s
+    // вылезла из унитаза, спрыгнула на пол и бежит к стене — вид сбоку
+    rat moves-to (0.70, 0.99) over 0.5s ease-out
+    rat moves-to (0.46, 0.70) over 0.7s
+    // у стены разворачивается вверх: рисунок МЕНЯЕТСЯ на вид со спины
+    rat hides over 0.01s
+    ratb moves-to (0.45, 0.64) over 0.01s
+    ratb moves-to (0.42, 0.36) over 0.7s
+    ratb moves-to (0.42, -1.5) over 0.01s
     ratw shows over 0.1s
     ratw rotates 10 over 0.12s
     ratw rotates -12 over 0.15s

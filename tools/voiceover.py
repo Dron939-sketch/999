@@ -369,13 +369,21 @@ def main(argv):
         print(f"OK: {args.output}")
         return 0
 
-    # ОСНОВНОЙ путь — Frederick (голос Фреди): решение студии, вернули после
-    # сравнения на слух. Прямой Fish (модель s2 + автопоиск голоса Фримена в
-    # аккаунте) остаётся ЗАПАСНЫМ — включается, если токена Frederick нет.
+    # ОСНОВНОЙ путь — ПРЯМОЙ Fish Audio: студия клонировала свой голос и держит
+    # его id в секрете FISH_AUDIO_VOICE_ID, поэтому ходить за озвучкой через
+    # Frederick больше незачем — это лишнее звено, чужой кэш и чужой голос по
+    # умолчанию. Frederick остаётся ЗАПАСНЫМ: включается, только если ключа
+    # Fish нет вовсе. Переключить обратно можно переменной VOICE_VIA=frederick.
     api_key = os.environ.get("FISH_AUDIO_API_KEY")
-    use_frederick = bool(FREDERICK_TOKEN)
+    via = (os.environ.get("VOICE_VIA") or "").strip().lower()
+    if via == "frederick":
+        use_frederick = bool(FREDERICK_TOKEN)
+    elif via == "fish":
+        use_frederick = False
+    else:
+        use_frederick = not api_key and bool(FREDERICK_TOKEN)
     if not use_frederick and not api_key:
-        sys.exit("Нет FREDERICK_ADMIN_TOKEN (и нет запасного FISH_AUDIO_API_KEY) — пропускаю озвучку.")
+        sys.exit("Нет FISH_AUDIO_API_KEY (и нет запасного FREDERICK_ADMIN_TOKEN) — пропускаю озвучку.")
     voice_id = os.environ.get("FISH_AUDIO_VOICE_ID")
     voice_src = "запасной путь Frederick"
     if not use_frederick:
@@ -389,8 +397,8 @@ def main(argv):
         print("!!! ВНИМАНИЕ: голос Фримена не найден в аккаунте Fish — озвучка "
               "пойдёт СТОКОВЫМ голосом. Проверь `--list-voices`; если модель "
               "названа иначе, задай FISH_VOICE_NAME или FISH_AUDIO_VOICE_ID.")
-    src = (f"Frederick ({FREDERICK_BASE}) — голос Фреди" if use_frederick
-           else f"Fish [запасной], модель {fish_model}, голос: {voice_src}")
+    src = (f"Frederick ({FREDERICK_BASE}) [запасной] — голос Фреди" if use_frederick
+           else f"Fish напрямую, модель {fish_model}, голос: {voice_src}")
     print(f"Реплик: {len(rows)}; озвучка: {src}")
 
     if args.parts_dir:

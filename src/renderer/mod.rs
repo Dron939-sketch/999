@@ -211,6 +211,13 @@ pub fn render_frame(
     // the on-twos hold).
     let step_dt = (config.on_twos.max(1) as f64) / (config.fps.max(1) as f64);
 
+    // Пол текущей локации: по нему считаются опора и глубина для пропов,
+    // объявленных `on floor`.
+    let set_floor = set_name
+        .and_then(|n| assets.sets.get(n))
+        .and_then(|s| s.surfaces.as_ref())
+        .map(|s| s.floor);
+
     // Render set (background).
     if let Some(name) = set_name {
         if let Some(set_asset) = assets.sets.get(name) {
@@ -227,6 +234,7 @@ pub fn render_frame(
                 1.0,
                 &camera,
                 true,
+                None,
             )?;
         }
     }
@@ -305,6 +313,7 @@ pub fn render_frame(
                         state.opacity,
                         &camera,
                         false,
+                        if state.grounded { set_floor } else { None },
                     )?;
                 }
             }
@@ -388,6 +397,7 @@ fn render_character(
                 state.opacity,
                 camera,
                 false,
+                None,
             )
         }
         CharacterAsset::Rigged(rig) => render_rigged_character(
@@ -1957,6 +1967,9 @@ fn render_svg_to_pixmap(
     opacity: f64,
     camera: &CameraKeyframe,
     is_background: bool,
+    // Пол локации, если предмет объявлен `on floor`. Тогда заданная точка —
+    // ОПОРА (низ рисунка), а размер уменьшается с глубиной.
+    floor: Option<crate::assets::Floor>,
 ) -> Result<(), AnimError> {
     let tree = parse_svg_cached(svg_data)?;
 
@@ -1990,8 +2003,14 @@ fn render_svg_to_pixmap(
         (base * zoom, base * zoom, screen_x, screen_y)
     };
 
-    let final_scale_x = base_scale_x * scale_x;
-    let final_scale_y = base_scale_y * scale_y;
+    // Предмет на полу: чем ближе к передней кромке, тем крупнее. Дальняя
+    // кромка даёт FAR от размера на переднем плане — это и есть перспектива,
+    // которой у пропов не было вовсе: крыса на дальней стене выходила такой
+    // же, как под ногами.
+    const FAR: f64 = 0.55;
+    let depth = floor.map(|f| f.depth_scale(norm_y, FAR)).unwrap_or(1.0);
+    let final_scale_x = base_scale_x * scale_x * depth;
+    let final_scale_y = base_scale_y * scale_y * depth;
 
     let render_w = (svg_w * final_scale_x.abs()).ceil() as u32;
     let render_h = (svg_h * final_scale_y.abs()).ceil() as u32;
@@ -2052,7 +2071,14 @@ fn render_svg_to_pixmap(
         };
 
     let dest_x = px - (render_w as f64 / 2.0);
-    let dest_y = py - (render_h as f64 / 2.0);
+    // Якорь пропа — центр его рисунка. Для стоящего на полу это значит, что
+    // половина предмета уходит НИЖЕ точки опоры: крыса тонула в полу, а на
+    // сиденье унитаза висела в воздухе. У `on floor` якорь внизу.
+    let dest_y = if floor.is_some() {
+        py - render_h as f64
+    } else {
+        py - (render_h as f64 / 2.0)
+    };
 
     let transform = if rotation_deg.abs() > 0.01 {
         let cx = dest_x + render_w as f64 / 2.0;

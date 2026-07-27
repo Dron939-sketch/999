@@ -2,6 +2,8 @@
 //! Characters can be either single SVGs (legacy) or rig directories (new).
 
 use std::collections::HashMap;
+
+use serde::Deserialize;
 use std::path::{Path, PathBuf};
 
 use crate::ast::{ImportDecl, ImportKind};
@@ -44,6 +46,42 @@ pub struct SetAsset {
     pub svg_data: Vec<u8>,
     pub width: f64,
     pub height: f64,
+    /// Карта поверхностей локации из `<локация>.surfaces.json`, если она есть.
+    pub surfaces: Option<Surfaces>,
+}
+
+/// КАРТА ПОВЕРХНОСТЕЙ ЛОКАЦИИ: где в кадре пол и на какой высоте горизонт.
+///
+/// Локация нарисована в перспективе, а пропы живут в плоских долях кадра и
+/// ничего о ней не знают. Отсюда крыса, которая на дальней стене того же
+/// размера, что на переднем плане, и предметы, наполовину утопленные в пол:
+/// якорь пропа — ЦЕНТР его рисунка, а не точка опоры.
+///
+/// Файл рядом с локацией существовал и раньше — но его не читала ни одна
+/// строчка кода. Это была документация, которую никто не соблюдал.
+#[derive(Debug, Clone, Deserialize)]
+pub struct Surfaces {
+    pub floor: Floor,
+}
+
+#[derive(Debug, Clone, Copy, Deserialize)]
+pub struct Floor {
+    /// Задняя кромка пола (у стен) — доля высоты кадра.
+    pub back_y: f64,
+    /// Передняя кромка пола (низ кадра).
+    pub front_y: f64,
+}
+
+impl Floor {
+    /// Во сколько раз предмет на полу на высоте `y` мельче, чем на передней
+    /// кромке. Линейно по глубине: у задней кромки — `far`, у передней — 1.0.
+    /// Точка схода лежит выше задней кромки, поэтому за ней ничего не
+    /// уменьшается дальше — зажимаем.
+    pub fn depth_scale(&self, y: f64, far: f64) -> f64 {
+        let span = (self.front_y - self.back_y).abs().max(1e-6);
+        let t = ((y - self.back_y) / span).clamp(0.0, 1.0);
+        far + (1.0 - far) * t
+    }
 }
 
 /// A loaded prop asset.
@@ -253,12 +291,26 @@ fn load_set(name: &str, path: &Path) -> Result<SetAsset, AnimError> {
 
     let size = tree.size();
 
+    // Карта поверхностей — необязательный файл рядом: `<локация>.surfaces.json`.
+    let surf_path = path.with_extension("surfaces.json");
+    let surfaces = match std::fs::read_to_string(&surf_path) {
+        Ok(txt) => Some(serde_json::from_str::<Surfaces>(&txt).map_err(|e| {
+            AnimError::Asset(format!(
+                "карта поверхностей '{}' не разбирается: {}",
+                surf_path.display(),
+                e
+            ))
+        })?),
+        Err(_) => None,
+    };
+
     Ok(SetAsset {
         name: name.to_string(),
         path: path.to_path_buf(),
         svg_data,
         width: size.width() as f64,
         height: size.height() as f64,
+        surfaces,
     })
 }
 

@@ -150,6 +150,9 @@ pub enum LetKind {
         path: String,
         position: Option<Position>,
         layer: Option<i32>,
+        /// `on floor`: точка привязки — низ рисунка, размер — по глубине пола.
+        #[serde(default)]
+        grounded: bool,
     },
     /// Кинетическая типографика: `let w = text("СВОБОДА", 140) at (0.5, 0.4)`.
     /// Слово синтезируется в SVG-проп (жирная тушь) — анимируется как проп.

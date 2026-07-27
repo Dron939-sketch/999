@@ -70,8 +70,9 @@ jobs:
       # Один завод: картинки → рендер → озвучка → сведение → videos/*.mp4(+mp3)
       - name: Studio (render + voice + mux)
         env:
-          # ОСНОВНОЙ путь озвучки — Frederick (голос Фреди). Прямой Fish
-          # (модель s2 + автопоиск голоса Фримена) — запасной путь.
+          # ОСНОВНОЙ путь озвучки — ПРЯМОЙ Fish Audio: студия клонировала свой
+          # голос, его id лежит в FISH_AUDIO_VOICE_ID. Frederick — запасной,
+          # включается только если ключа Fish нет.
           FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
           # Голос: по умолчанию завод САМ находит в аккаунте модель с
           # «freeman»/«фримен» в названии. Секрет нужен, только чтобы
@@ -80,7 +81,7 @@ jobs:
           FISH_VOICE_NAME: ${{ secrets.FISH_VOICE_NAME }}
           # Модель Fish (s2 — новее и живее s1). Пусто = s2 с откатом.
           FISH_AUDIO_MODEL: ${{ secrets.FISH_AUDIO_MODEL }}
-          # Основной путь (см. выше).
+          # Запасной путь (см. выше).
           FREDERICK_ADMIN_TOKEN: ${{ secrets.FREDERICK_ADMIN_TOKEN != '' && secrets.FREDERICK_ADMIN_TOKEN || secrets.ADMIN_TOKEN }}
           FREDERICK_TTS_URL: ${{ secrets.FREDERICK_TTS_URL }}
           IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
