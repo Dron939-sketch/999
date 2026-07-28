@@ -132,6 +132,10 @@ pub struct PlaceStmt {
     pub entity: String,
     pub position: Position,
     pub facing: Option<Direction>,
+    /// `on floor`: заданная точка — СТУПНИ на плоскости пола, а не якорь
+    /// фигуры. Масштаб при этом идёт по глубине: дальше — мельче.
+    #[serde(default)]
+    pub grounded: bool,
     pub layer: Option<i32>,
 }
 
@@ -149,6 +153,18 @@ pub enum LetKind {
         label: String,
         path: String,
         position: Option<Position>,
+        layer: Option<i32>,
+        /// `on floor`: точка привязки — низ рисунка, размер — по глубине пола.
+        #[serde(default)]
+        grounded: bool,
+    },
+    /// Кинетическая типографика: `let w = text("СВОБОДА", 140) at (0.5, 0.4)`.
+    /// Слово синтезируется в SVG-проп (жирная тушь) — анимируется как проп.
+    Text {
+        content: String,
+        size: Option<f64>,
+        position: Option<Position>,
+        layer: Option<i32>,
     },
 }
 
@@ -165,6 +181,13 @@ pub enum ActionStmt {
         easing: Option<Easing>,
     },
     Pose {
+        entity: String,
+        pose: String,
+    },
+    /// `freeman overlays "kurit_zatyazhka"` — кости названной позы кладутся
+    /// ПОВЕРХ удерживаемой, а не заменяют её. Так одна часть тела продолжает
+    /// прежнее движение, пока другая делает своё.
+    Overlay {
         entity: String,
         pose: String,
     },
@@ -249,8 +272,26 @@ pub enum CameraStmt {
     },
     /// `camera shake 0.3s intensity 5`
     Shake { duration: Duration, intensity: f64 },
+    /// `camera dutch 6` — крен кадра (dutch-угол) в градусах, до смены/reset.
+    Dutch { angle: f64 },
+    /// `camera pitch 25` — вертикальный ракурс в градусах. >0 камера сверху
+    /// (смотрит вниз), <0 снизу (вверх). Даёт форшортенинг по высоте фигуры.
+    Pitch { angle: f64 },
+    /// `camera angle high|low|level [target]` — пресет ракурса: ставит и
+    /// наклон камеры, и подходящее кадрирование по вертикали.
+    Angle {
+        kind: AngleKind,
+        target: Option<String>,
+    },
     /// `camera reset over 0.5s`
     Reset { duration: Option<Duration> },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum AngleKind {
+    High,
+    Low,
+    Level,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -278,6 +319,11 @@ pub enum TransitionStmt {
     FadeBlack(Duration),
     FadeWhite(Duration),
     Cut,
+    /// TV-noise glitch cut (Freeman-style): screen bursts to static, then the
+    /// next scene snaps in. Hard, jarring — used on the sharpest transitions.
+    Static(Duration),
+    /// Invert the frame (white figure on black) for the duration — a punch.
+    Invert(Duration),
     Dissolve(Duration),
     Wipe {
         direction: Direction,

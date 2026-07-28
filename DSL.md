@@ -109,6 +109,11 @@ config {
 | `mono-contrast` | Float  | Contrast for the monochrome post (~1.1 soft; 2–4 = stark 2-tone silhouette) | `1.12` |
 | `film-grain` | Float     | Aged-film grain intensity (0 = off, 0.3–0.7 typical) | `0` |
 | `vignette`   | Float     | Darkened-corners vignette intensity (0 = off, 0.3–0.6 typical) | `0` |
+| `light-angle`| Float     | Light direction in degrees (0 = overhead, >0 = from the right, <0 = left). Drives shadow lean and the lit side | `35` |
+| `ground-shadow` | Boolean | Soft contact ellipse under the feet — pins the figure to the floor | `false` |
+| `cast-shadow`| Float     | Thrown silhouette-shadow strength projected onto the ground by `light-angle` (0 = off, 0.3–0.6 typical) | `0` |
+| `form-shadow`| Float     | Self (form) shadow: the side away from the light darkens with a hard cel edge — volume on the mask (0 = off, 0.35–0.5 typical) | `0` |
+| `rim-light`  | Float     | Rim/back light: a warm off-white contour on the lit edge of the silhouette — separates the figure from a dark background (0 = off, 0.4–0.7 typical). Pair with `form-shadow` for volume. Reads only against darker backgrounds | `0` |
 
 ### Example
 
@@ -349,8 +354,10 @@ detective moves-to (0.6, 0.5) over 1s linear
 
 #### pose
 
-Changes the entity's pose. The transition between the current pose and the new
-pose is interpolated smoothly.
+Changes the entity's pose ENTIRELY — every bone goes to what this pose says, or
+to the rig default if the pose is silent about it. Для движения второй частью
+тела параллельно первой есть `overlays` (ниже). The transition between the
+current pose and the new pose is interpolated smoothly.
 
 ```
 <entity> pose "<pose-name>"
@@ -360,6 +367,29 @@ pose is interpolated smoothly.
 detective pose "thinking"
 informant pose "drinking"
 ```
+
+#### overlays
+
+Layers a pose ON TOP of the held one instead of replacing it. Only the bones
+named in the overlay pose change; everything else keeps doing what it was doing.
+
+```
+<entity> overlays "<pose-name>"
+```
+
+```
+freeman pose     "shag_levoj"        // база: ноги, корпус
+freeman overlays "kurit_zatyazhka"   // слой: рука, кисть, рот
+freeman speaks for 2.4s              // слой поверх: рот идёт по звуку
+```
+
+Зачем. `pose` задаёт тело ЦЕЛИКОМ, поэтому «идёт и курит» распадалось на
+«идёт», потом «курит»: шаг замирал на время затяжки. Человек так не двигается —
+разные части тела работают одновременно. Слои НАКАПЛИВАЮТСЯ: на последнюю
+полную позу ложатся по порядку все слои после неё.
+
+Слой держится до следующей полной позы. После `pose` слой нужно поставить
+заново — это осознанно: иначе вернуться к чистой базе было бы нечем.
 
 #### speaks
 
@@ -509,6 +539,28 @@ camera two-shot
 camera over-shoulder informant
 ```
 
+#### Cutting inside a speech block
+
+Speech advances the scene cursor, so a plain `camera` statement can never cut
+mid-line — the shot lasts as long as the line. To cut *during* speech, run the
+camera chain in parallel with `together { ... do { ... } }`:
+
+```
+together {
+    freeman speaks for 4.0s
+    do {
+        camera angle low freeman
+        wait 1.4s
+        camera extreme-close-up freeman
+        wait 1.3s
+        camera medium freeman
+    }
+}
+```
+
+The line plays uninterrupted while shots change on their own timer. This is how
+the montage rhythm gets down to the reference median (~1.3–2s per shot).
+
 #### Motion Commands
 
 | Command   | Description                                          |
@@ -572,6 +624,43 @@ let phone = prop("phone", "assets/props/phone.svg") at near detective
 
 The `<label>` is a human-readable name for the prop. The `<path>` is the file
 path to the SVG asset. The optional `at` clause sets the initial position.
+
+#### `on floor` — предмет СТОИТ на полу локации
+
+```
+let rat = prop("rat", "../assets/props/rat.svg") at (0.7, 0.93) on floor
+```
+
+Без этой пометки точка привязки пропа — ЦЕНТР его рисунка, поэтому предмет,
+поставленный на линию пола, наполовину в него утоплен, а на дальнем плане
+остаётся того же размера, что на переднем. С `on floor` привязка переезжает в
+низ рисунка (опора), а размер считается по глубине: у дальней кромки пола
+предмет мельче, у передней крупнее. Глубина берётся из карты поверхностей
+локации `<локация>.surfaces.json` (поле `floor`); без карты пометка не делает
+ничего.
+
+### Kinetic Typography (`text`)
+
+A `text` binding creates a word as an animatable entity — bold ink lettering
+(DejaVu Sans Bold with a rough displacement edge) synthesized into a prop, so
+every prop action works on it: `moves-to`, `scales`, `rotates`, `shows`,
+`hides`, `fades-to`.
+
+```
+let <name> = text("<слово>"[, <font-size-px>]) [at <position>] [layer <n>]
+```
+
+```
+let w = text("СВОБОДА?", 150) at (0.5, 0.3)
+w scales 1.0 over 0.2s ease-in     // впечатывается
+transition invert 0.16s             // негатив-вспышка на ударе
+```
+
+Word-hit pattern (проверенный): держите слово ЗА КАДРОМ в масштабе удара
+(`at (0.5, -2.0)` + `scales 2.6`), в момент удара телепортируйте
+(`moves-to ... over 0.01s`) и вжимайте `scales 1.0 over 0.2s ease-in` +
+`transition invert`. Не полагайтесь на `hides` в первый кадр сцены и помните:
+каждое действие двигает курсор времени.
 
 ---
 

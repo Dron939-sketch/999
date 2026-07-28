@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 102" width="120" height="102"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+
+
+<!-- РУКА В ПРОФИЛЬ — ЗАЛИВКА БЕЛЫМ ПО ЧЁРНОМУ.
+     С листа разворотов: сбоку рука не чёрная фигура рядом с телом, а СВЕТЛАЯ
+     ЛИНИЯ ПОВЕРХ чёрного балахона — контур, не заливка. Этим снимается затык,
+     об который я бился: чёрная рука на чёрном плаще пропадает, и чтобы её
+     показать, приходилось выносить гнездо наружу — рука отрывалась от фигуры.
+     Контуром рука остаётся ВНУТРИ силуэта и при этом читается.
+     Геометрия — ровно та же, что у чёрной версии: файл сделан из неё заменой
+     заливки на обводку, поэтому крепление и длина совпадают до единицы. -->
+<g filter="url(#ink)">
+<path d="M52.5 21.7 L24.3 27.9" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round"/>
+    <path d="M53.6 23.0 L22.5 37.1" stroke="#0e0e0e" stroke-width="4.8" stroke-linecap="round"/>
+    <path d="M55.3 24.0 L27.1 47.3" stroke="#0e0e0e" stroke-width="5.7" stroke-linecap="round"/>
+    <path d="M57.4 24.7 L45.3 45.7" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round"/>
+    <path d="M59.7 25.0 L58.1 52.6" stroke="#0e0e0e" stroke-width="4.8" stroke-linecap="round"/>
+    <path d="M62.1 24.8 L71.1 45.1" stroke="#0e0e0e" stroke-width="5.7" stroke-linecap="round"/>
+    <path d="M64.2 24.2 L87.6 46.6" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round"/>
+    <path d="M66.0 23.3 L90.9 36.3" stroke="#0e0e0e" stroke-width="4.8" stroke-linecap="round"/>
+    <path d="M67.3 22.0 L105.7 32.3" stroke="#0e0e0e" stroke-width="5.7" stroke-linecap="round"/>
+    <ellipse cx="60.0" cy="20.0" rx="21" ry="14" fill="#0e0e0e" stroke="#0e0e0e" stroke-width="3.6"/>
+    <path d="M55.7 23.2 L43.4 31.8" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
+    <path d="M57.0 23.6 L45.6 37.1" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M58.5 23.9 L54.4 34.7" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M60.1 24.0 L60.6 38.8" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
+    <path d="M61.7 23.9 L66.5 34.6" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M63.2 23.6 L75.4 36.8" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M64.5 23.1 L77.4 31.5" stroke="#0e0e0e" stroke-width="4.4" stroke-linecap="round"/>
+    <path d="M65.6 22.4 L87.2 31.3" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M66.4 21.6 L84.7 26.1" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
+    <ellipse cx="60.0" cy="20.0" rx="17" ry="12" fill="#0e0e0e" stroke="#0e0e0e" stroke-width="3.6"/>
+    <path d="M55 10 Q51 38 53 58 Q54 78 56 92 L63 92 Q64 78 64 58 Q66 38 65 10 Z" fill="#0e0e0e" stroke="#0e0e0e" stroke-width="3.6"/>
+</g></svg>

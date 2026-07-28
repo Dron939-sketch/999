@@ -13,6 +13,9 @@ pub struct Timeline {
     pub duration: f64,
     pub tracks: Vec<Track>,
     pub pose_events: Vec<PoseEvent>,
+    /// Speech blocks (start,end) in scene time — one per voiced line
+    /// (a `speaks` action or an uninterrupted run of `lips` actions).
+    pub speech_blocks: Vec<(f64, f64)>,
     pub camera_track: CameraTrack,
     pub transitions: Vec<TransitionEvent>,
 }
@@ -69,6 +72,12 @@ pub struct CameraKeyframe {
     pub y: f64,
     /// Zoom level (1.0 = full scene visible).
     pub zoom: f64,
+    /// Крен кадра в градусах (dutch-угол); 0 = ровно.
+    pub roll: f64,
+    /// Вертикальный ракурс (наклон объектива) в градусах. >0 — камера сверху
+    /// (смотрит вниз), <0 — снизу (вверх), 0 — на уровне глаз. Двигатель
+    /// превращает это в форшортенинг по высоте фигуры (ближняя часть крупнее).
+    pub pitch: f64,
     pub easing: Easing,
     /// Optional shake intensity (0 = no shake).
     pub shake: f64,
@@ -87,16 +96,38 @@ pub enum TransitionKind {
     FadeBlack,
     FadeWhite,
     Cut,
+    Static,
+    Invert,
     Dissolve,
     Wipe(Direction),
 }
 
 /// Compile a resolved scene into a timeline.
 pub fn compile(scene: &ResolvedScene) -> Result<Timeline, AnimError> {
+    compile_with_kartas(scene, &HashMap::new())
+}
+
+/// То же, но с картами фигур персонажей (см. `skeleton::Karta`): по ним
+/// считается кадрирование планов. Без карт поведение прежнее.
+pub fn compile_with_kartas(
+    scene: &ResolvedScene,
+    kartas: &HashMap<String, crate::skeleton::Karta>,
+) -> Result<Timeline, AnimError> {
+    compile_full(scene, kartas, None)
+}
+
+/// То же, но с полом локации: нужен, чтобы КАДРИРОВАНИЕ знало про `on floor`.
+pub fn compile_full(
+    scene: &ResolvedScene,
+    kartas: &HashMap<String, crate::skeleton::Karta>,
+    floor: Option<crate::assets::Floor>,
+) -> Result<Timeline, AnimError> {
     let mut compiler = TimelineCompiler {
         time: 0.0,
         tracks: HashMap::new(),
         pose_events: Vec::new(),
+        speech_blocks: Vec::new(),
+        lips_open: None,
         camera_keyframes: vec![CameraKeyframe {
             time: 0.0,
             x: 0.5,
@@ -104,9 +135,13 @@ pub fn compile(scene: &ResolvedScene) -> Result<Timeline, AnimError> {
             zoom: 1.0,
             easing: Easing::Linear,
             shake: 0.0,
+            roll: 0.0,
+            pitch: 0.0,
         }],
         transitions: Vec::new(),
         entities: scene.entities.clone(),
+        kartas: kartas.clone(),
+        floor,
     };
 
     compiler.compile_statements(&scene.statements)?;
@@ -132,6 +167,7 @@ pub fn compile(scene: &ResolvedScene) -> Result<Timeline, AnimError> {
         duration,
         tracks,
         pose_events: compiler.pose_events,
+        speech_blocks: compiler.speech_blocks,
         camera_track: CameraTrack {
             keyframes: compiler.camera_keyframes,
         },
@@ -144,9 +180,15 @@ struct TimelineCompiler {
     /// entity -> property -> keyframes
     tracks: HashMap<String, HashMap<Property, Vec<Keyframe>>>,
     pose_events: Vec<PoseEvent>,
+    speech_blocks: Vec<(f64, f64)>,
+    lips_open: Option<usize>,
     camera_keyframes: Vec<CameraKeyframe>,
     transitions: Vec<TransitionEvent>,
     entities: HashMap<String, EntityState>,
+    /// Карты фигур: имя сущности -> замеренная карта персонажа.
+    kartas: HashMap<String, crate::skeleton::Karta>,
+    /// Пол текущей локации — для сущностей, объявленных `on floor`.
+    floor: Option<crate::assets::Floor>,
 }
 
 impl TimelineCompiler {
@@ -158,6 +200,11 @@ impl TimelineCompiler {
     }
 
     fn compile_statement(&mut self, stmt: &SceneStatement) -> Result<(), AnimError> {
+        // Границы речевых блоков: непрерывный ряд `lips` = одна реплика; любое
+        // другое утверждение (поза, камера, wait) закрывает текущий блок.
+        if !matches!(stmt, SceneStatement::Action(ActionStmt::Lips { .. })) {
+            self.lips_open = None;
+        }
         match stmt {
             SceneStatement::Place(_) => {
                 // Already handled during scene resolution.
@@ -230,6 +277,19 @@ impl TimelineCompiler {
                     e.pose = pose.clone();
                 }
             }
+            ActionStmt::Overlay { entity, pose } => {
+                // Слой: событие помечается overlay, и рендер сливает кости этой
+                // позы поверх последней ПОЛНОЙ позы. Состояние сущности при
+                // этом не меняется — база остаётся прежней, иначе следующий
+                // слой лёг бы уже на слой, и вернуться к базовой позе было бы
+                // нечем.
+                self.pose_events.push(PoseEvent {
+                    time: self.time,
+                    entity: entity.clone(),
+                    pose: pose.clone(),
+                    overlay: true,
+                });
+            }
             ActionStmt::Speak { entity, duration } => {
                 // Auto-speech: cycle phoneme mouth poses for the duration and
                 // advance time (a wait that talks). The pattern is deterministic
@@ -237,7 +297,14 @@ impl TimelineCompiler {
                 // Flaps are overlays: they merge onto the held body pose.
                 let dur = duration.as_secs();
                 let end = self.time + dur;
-                const FLAPS: [&str; 6] = ["talk", "gab", "talk", "idle", "gab", "talk"];
+                self.speech_blocks.push((self.time, end));
+                // Закрытый рот — `visA` (ТОЛЬКО кость рта), а не `idle`.
+                // `idle` задаёт ещё руки, кисть и голову: каждый четвёртый флэп
+                // сбрасывал жест говорящего в покой на один рисунок. На речи в
+                // позе `lunge` это читалось дёрганьем рук примерно раз в
+                // полсекунды — тем более заметным, что мы держим 12 рисунков в
+                // секунду.
+                const FLAPS: [&str; 6] = ["talk", "gab", "talk", "visA", "gab", "talk"];
                 let mut t = self.time;
                 let mut i: usize = 0;
                 while t < end - 0.05 {
@@ -251,11 +318,11 @@ impl TimelineCompiler {
                     t += 0.14 + 0.05 * ((i * 7 + 3) % 3) as f64;
                     i += 1;
                 }
-                // Close the mouth at the end of the line.
+                // Закрыть рот в конце реплики — тоже мимо тела: `visA`.
                 self.pose_events.push(PoseEvent {
                     time: end,
                     entity: entity.clone(),
-                    pose: "idle".to_string(),
+                    pose: "visA".to_string(),
                     overlay: true,
                 });
                 self.time = end;
@@ -274,7 +341,15 @@ impl TimelineCompiler {
                     pose: pose.clone(),
                     overlay: true,
                 });
+                let start = self.time;
                 self.time += duration.as_secs();
+                match self.lips_open {
+                    Some(i) => self.speech_blocks[i].1 = self.time,
+                    None => {
+                        self.speech_blocks.push((start, self.time));
+                        self.lips_open = Some(self.speech_blocks.len() - 1);
+                    }
+                }
             }
             ActionStmt::Show {
                 entity,
@@ -457,44 +532,115 @@ impl TimelineCompiler {
         Ok(())
     }
 
+    /// Кадрирование плана по РАЗМЕРУ фигуры, а не по постоянной.
+    ///
+    /// Прежние зумы (medium 2.2, close-up 3.4, ecu 6.0) были подобраны на глаз
+    /// для персонажа в натуральную величину — `scales 1.0`. Как только фигура
+    /// подросла (в тюрьме `scales 1.5`), те же числа стали резать макушку: на
+    /// крупном плане голова уезжала за верхний край, потому что зум не знал,
+    /// какого роста то, что он приближает.
+    ///
+    /// Здесь план задан ГЕОМЕТРИЕЙ. Замеры сняты с рендера стенда и выражены в
+    /// долях высоты кадра НА ЕДИНИЦУ `scales` (доля от кадра не зависит от
+    /// разрешения, потому что рост фигуры сам считается от высоты холста):
+    /// якорь сущности сидит на уровне плеч, макушка на 0.19 выше, подбородок
+    /// на 0.05 ниже, ступни на 0.45 ниже. Зум делится на масштаб, вертикальный
+    /// центр на него умножается — при `scales 1.0` выходят ровно прежние числа,
+    /// при любом другом росте план держится тот же.
+    fn frame_shot(
+        &self,
+        shot: ShotType,
+        target: Option<&str>,
+    ) -> Result<(f64, f64, f64), AnimError> {
+        // (смещение центра от якоря, зум) — при scales 1.0, для персонажа без
+        // замеренной карты. Числа исторические, подобранные на глаз.
+        let (dy, zoom) = match shot {
+            ShotType::Wide => return Ok((0.5, 0.5, 1.0)),
+            ShotType::Medium => (0.05, 2.2),
+            ShotType::CloseUp => (-0.045, 3.4),
+            ShotType::ExtremeCloseUp => (-0.06, 6.0),
+            ShotType::TwoShot => return Ok((0.5, 0.5, 1.2)),
+            ShotType::OverShoulder => return Ok((0.5, 0.45, 1.8)),
+        };
+        let Some(name) = target else {
+            // Без цели роста не знаем — остаются исторические постоянные.
+            return Ok((0.5, 0.5 + dy, zoom));
+        };
+        let e = self
+            .entities
+            .get(name)
+            .ok_or_else(|| AnimError::Timeline(format!("unknown entity: {name}")))?;
+        // `on floor`: e.y — это СТУПНИ, а план считается от якоря и от
+        // масштаба, уже уменьшенного глубиной. Без этого камера наводилась на
+        // точку пола и зумила по негрунтованному размеру: на среднем плане
+        // фигура вылезала за кадр.
+        let (ey, s) = match (self.floor, self.kartas.get(name)) {
+            (Some(f), Some(k)) if e.grounded => {
+                let (anchor, d) = f.ground(e.y, e.scale_y, k.feet);
+                (anchor, (e.scale_y * d).abs().max(0.05))
+            }
+            _ => (e.y, e.scale_y.abs().max(0.05)),
+        };
+
+        // Есть карта — план считается ГЕОМЕТРИЕЙ этого персонажа: берём
+        // верхнюю и нижнюю границы того, что план обязан показать, и подбираем
+        // зум так, чтобы они уложились в кадр с полем. Так одна и та же
+        // команда `camera close-up` одинаково правильно кадрирует и Фримена, и
+        // любого следующего персонажа с другими пропорциями — без единой новой
+        // постоянной в движке.
+        if let Some(k) = self.kartas.get(name) {
+            let head_h = (k.chin - k.crown).abs().max(1e-6);
+            let (top, bottom, fill) = match shot {
+                // пояс-вверх: от макушки до колена. Было `feet * 0.55` при
+                // заполнении 0.92 — на фигуре с крупной головой это выходило
+                // почти крупным планом: в кадре голова и плечи, корпуса нет.
+                // План обязан читаться как ПОЯСНОЙ, поэтому нижняя граница
+                // опущена до 0.78 роста, а поле увеличено.
+                ShotType::Medium => (k.crown, k.feet * 0.78, 0.86),
+                // голова и плечи: макушка плюс немного корпуса под подбородком
+                ShotType::CloseUp => (k.crown, k.chin + (k.feet - k.chin) * 0.18, 0.96),
+                // морда на весь кадр: врез внутрь головы
+                ShotType::ExtremeCloseUp => {
+                    (k.crown + head_h * 0.18, k.chin - head_h * 0.10, 0.94)
+                }
+                _ => (k.crown, k.feet, 0.90),
+            };
+            let span = (bottom - top).abs().max(1e-6);
+            return Ok((
+                e.x,
+                ey + (top + bottom) / 2.0 * s,
+                fill / (span * s),
+            ));
+        }
+
+        Ok((e.x, ey + dy * s, zoom / s))
+    }
+
     fn compile_camera(&mut self, cam: &CameraStmt) -> Result<(), AnimError> {
+        // Ракурс (pitch) держится ПОПЕРЁК склеек: смена размера плана не сбивает
+        // «снизу/сверху». Захватываем текущий наклон на входе в команду.
+        let carry_pitch = self.camera_keyframes.last().map(|k| k.pitch).unwrap_or(0.0);
         match cam {
             CameraStmt::ShotType { shot, target } => {
-                let (x, y, zoom) = match shot {
-                    ShotType::Wide => (0.5, 0.5, 1.0),
-                    ShotType::Medium => {
-                        if let Some(name) = target {
-                            let e = self.entities.get(name).ok_or_else(|| {
-                                AnimError::Timeline(format!("unknown entity: {name}"))
-                            })?;
-                            (e.x, e.y, 1.5)
-                        } else {
-                            (0.5, 0.5, 1.5)
-                        }
+                let (x, y, zoom) = self.frame_shot(*shot, target.as_deref())?;
+
+                // Hard cut: `evaluate_camera` tweens smoothly across the ENTIRE
+                // gap since the last keyframe. That gap can be many seconds —
+                // e.g. a `speak for Ns` placeholder that prep_lipsync replaces
+                // with the real (often longer) voice duration — so without a
+                // hold, a punchy "СКЛЕЙКА → крупно" cut renders as a slow dolly
+                // zoom instead of an instant Freeman-style cut. Freeze the
+                // previous camera state right up to just before this cut, so
+                // the actual tween window collapses to ~1 frame.
+                if let Some(prev) = self.camera_keyframes.last().cloned() {
+                    let hold_time = (self.time - 0.04).max(prev.time);
+                    if hold_time > prev.time {
+                        self.camera_keyframes.push(CameraKeyframe {
+                            time: hold_time,
+                            ..prev
+                        });
                     }
-                    ShotType::CloseUp => {
-                        if let Some(name) = target {
-                            let e = self.entities.get(name).ok_or_else(|| {
-                                AnimError::Timeline(format!("unknown entity: {name}"))
-                            })?;
-                            (e.x, e.y - 0.1, 2.5) // slightly above center for face
-                        } else {
-                            (0.5, 0.4, 2.5)
-                        }
-                    }
-                    ShotType::ExtremeCloseUp => {
-                        if let Some(name) = target {
-                            let e = self.entities.get(name).ok_or_else(|| {
-                                AnimError::Timeline(format!("unknown entity: {name}"))
-                            })?;
-                            (e.x, e.y - 0.15, 4.0)
-                        } else {
-                            (0.5, 0.35, 4.0)
-                        }
-                    }
-                    ShotType::TwoShot => (0.5, 0.5, 1.2),
-                    ShotType::OverShoulder => (0.5, 0.45, 1.8),
-                };
+                }
 
                 self.camera_keyframes.push(CameraKeyframe {
                     time: self.time,
@@ -503,6 +649,8 @@ impl TimelineCompiler {
                     zoom,
                     easing: Easing::EaseInOut,
                     shake: 0.0,
+                    roll: 0.0,
+                    pitch: carry_pitch,
                 });
             }
             CameraStmt::ZoomTo {
@@ -522,6 +670,8 @@ impl TimelineCompiler {
                     zoom: 2.5,
                     easing: easing.unwrap_or(Easing::EaseInOut),
                     shake: 0.0,
+                    roll: 0.0,
+                    pitch: carry_pitch,
                 });
                 self.time += dur;
             }
@@ -549,6 +699,8 @@ impl TimelineCompiler {
                     zoom: last_zoom,
                     easing: easing.unwrap_or(Easing::EaseInOut),
                     shake: 0.0,
+                    roll: 0.0,
+                    pitch: carry_pitch,
                 });
                 self.time += dur;
             }
@@ -568,6 +720,8 @@ impl TimelineCompiler {
                         zoom: 1.0,
                         easing: Easing::Linear,
                         shake: 0.0,
+                        roll: 0.0,
+                        pitch: carry_pitch,
                     });
 
                 // Start shake.
@@ -578,6 +732,8 @@ impl TimelineCompiler {
                     zoom: last.zoom,
                     easing: Easing::Linear,
                     shake: *intensity,
+                    roll: last.roll,
+                    pitch: last.pitch,
                 });
 
                 // End shake.
@@ -588,9 +744,95 @@ impl TimelineCompiler {
                     zoom: last.zoom,
                     easing: Easing::Linear,
                     shake: 0.0,
+                    roll: last.roll,
+                    pitch: last.pitch,
                 });
 
                 self.time += dur;
+            }
+            CameraStmt::Dutch { angle } => {
+                // Мгновенный крен кадра: держится до следующего плана/reset.
+                let last = self
+                    .camera_keyframes
+                    .last()
+                    .cloned()
+                    .unwrap_or(CameraKeyframe {
+                        time: 0.0,
+                        x: 0.5,
+                        y: 0.5,
+                        zoom: 1.0,
+                        easing: Easing::Linear,
+                        shake: 0.0,
+                        roll: 0.0,
+                        pitch: carry_pitch,
+                    });
+                self.camera_keyframes.push(CameraKeyframe {
+                    time: self.time,
+                    x: last.x,
+                    y: last.y,
+                    zoom: last.zoom,
+                    easing: Easing::Linear,
+                    shake: last.shake,
+                    roll: *angle,
+                    pitch: last.pitch,
+                });
+            }
+            CameraStmt::Pitch { angle } => {
+                // Мгновенная смена ракурса, держится до следующего pitch/reset.
+                let last = self.camera_keyframes.last().cloned().unwrap_or(CameraKeyframe {
+                    time: 0.0,
+                    x: 0.5,
+                    y: 0.5,
+                    zoom: 1.0,
+                    easing: Easing::Linear,
+                    shake: 0.0,
+                    roll: 0.0,
+                    pitch: 0.0,
+                });
+                self.camera_keyframes.push(CameraKeyframe {
+                    time: self.time,
+                    x: last.x,
+                    y: last.y,
+                    zoom: last.zoom,
+                    easing: Easing::Linear,
+                    shake: last.shake,
+                    roll: last.roll,
+                    pitch: *angle,
+                });
+            }
+            CameraStmt::Angle { kind, target } => {
+                // Пресет ракурса: наклон объектива + вертикальное кадрирование.
+                // Низ (снизу вверх) — фигура возвышается: центр ниже, наклон −.
+                // Верх (сверху вниз) — фигура придавлена: центр выше, наклон +.
+                let (pitch, dy) = match kind {
+                    crate::ast::AngleKind::Low => (-26.0, 0.10),
+                    crate::ast::AngleKind::High => (26.0, -0.10),
+                    crate::ast::AngleKind::Level => (0.0, 0.0),
+                };
+                let (cx, cy, zoom) = if let Some(name) = target {
+                    let e = self.entities.get(name).ok_or_else(|| {
+                        AnimError::Timeline(format!("unknown entity: {name}"))
+                    })?;
+                    (e.x, (e.y + dy).clamp(0.1, 0.9), 1.0)
+                } else {
+                    (0.5, (0.5 + dy).clamp(0.1, 0.9), 1.0)
+                };
+                if let Some(prev) = self.camera_keyframes.last().cloned() {
+                    let hold_time = (self.time - 0.04).max(prev.time);
+                    if hold_time > prev.time {
+                        self.camera_keyframes.push(CameraKeyframe { time: hold_time, ..prev });
+                    }
+                }
+                self.camera_keyframes.push(CameraKeyframe {
+                    time: self.time,
+                    x: cx,
+                    y: cy,
+                    zoom,
+                    easing: Easing::EaseInOut,
+                    shake: 0.0,
+                    roll: 0.0,
+                    pitch,
+                });
             }
             CameraStmt::Reset { duration } => {
                 let dur = duration.map(|d| d.as_secs()).unwrap_or(0.0);
@@ -601,6 +843,8 @@ impl TimelineCompiler {
                     zoom: 1.0,
                     easing: Easing::EaseInOut,
                     shake: 0.0,
+                    roll: 0.0,
+                    pitch: 0.0,
                 });
                 self.time += dur;
             }
@@ -614,6 +858,8 @@ impl TimelineCompiler {
             TransitionStmt::FadeWhite(d) => (TransitionKind::FadeWhite, d.as_secs()),
             TransitionStmt::Cut => (TransitionKind::Cut, 0.0),
             TransitionStmt::Dissolve(d) => (TransitionKind::Dissolve, d.as_secs()),
+            TransitionStmt::Static(d) => (TransitionKind::Static, d.as_secs()),
+            TransitionStmt::Invert(d) => (TransitionKind::Invert, d.as_secs()),
             TransitionStmt::Wipe {
                 direction,
                 duration,
@@ -649,6 +895,26 @@ impl TimelineCompiler {
             keyframes.push(Keyframe {
                 time,
                 value,
+                easing: Easing::Linear,
+            });
+            return;
+        }
+
+        // ХОЛД ДО ТЕКУЩЕГО МОМЕНТА. Раньше здесь не делалось НИЧЕГО, если
+        // дорожка уже не пуста, — и вторая анимация того же свойства тянулась
+        // от ПРЕДЫДУЩЕГО ключа через весь разрыв. Очки в «Теориях личности»
+        // прятались на 3-й секунде и показывались на 29-й: вместо мгновенного
+        // появления движок 26 секунд плавно проявлял их посреди кадра, и
+        // призрачная пара висела рядом с головой всю первую половину ролика.
+        // Тот же класс ошибки, что «плавный наезд вместо склейки» у камеры:
+        // там он уже лечился холдом, здесь — нет. Пришпиливаем текущее
+        // значение к текущему времени, тогда следующий ключ отрабатывает свою
+        // длительность, а не длительность паузы перед ним.
+        let last = keyframes[keyframes.len() - 1].clone();
+        if last.time < time - 1e-9 {
+            keyframes.push(Keyframe {
+                time,
+                value: last.value,
                 easing: Easing::Linear,
             });
         }
@@ -758,6 +1024,8 @@ pub fn evaluate_camera(camera_track: &CameraTrack, t: f64) -> CameraKeyframe {
             zoom: 1.0,
             easing: Easing::Linear,
             shake: 0.0,
+            roll: 0.0,
+            pitch: 0.0,
         };
     }
     if kfs.len() == 1 || t <= kfs[0].time {
@@ -782,6 +1050,8 @@ pub fn evaluate_camera(camera_track: &CameraTrack, t: f64) -> CameraKeyframe {
                 zoom: lerp(kfs[i].zoom, kfs[i + 1].zoom, eased),
                 easing: kfs[i + 1].easing,
                 shake: lerp(kfs[i].shake, kfs[i + 1].shake, eased),
+                roll: lerp(kfs[i].roll, kfs[i + 1].roll, eased),
+                pitch: lerp(kfs[i].pitch, kfs[i + 1].pitch, eased),
             };
         }
     }

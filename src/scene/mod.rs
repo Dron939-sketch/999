@@ -20,10 +20,60 @@ pub struct RenderConfig {
     /// Contrast strength for the monochrome post-process. ~1.1 keeps gradient
     /// shading; crank it (2–4) for a stark 2-tone silhouette ("ink" Freeman).
     pub mono_contrast: f64,
+    /// Дуотон: 0 — чистое ч/б, 1 — полный перевод в двухцветную шкалу
+    /// (холодная тень ↔ тёплая бумага). Промежуточное между ч/б и цветом.
+    pub duotone: f64,
+    /// Мягкий объём: подсветка массы силуэта изнутри, 0 — плоская тушь.
+    /// Промежуточное между 2D-заливкой и 3D-формой.
+    pub volume: f64,
     /// Film-grain intensity (0 = off, ~0.3–0.7 = aged-film look).
     pub film_grain: f64,
     /// Vignette intensity (0 = off, ~0.3–0.6 = darkened edges).
     pub vignette: f64,
+    /// "Animate on N's": hold each drawing for N rendered frames before the
+    /// pose/procedural motion advances (0 or 1 = smooth 24fps; 2 = on-twos,
+    /// 3 = on-threes). The hand-drawn choppiness that reads as "alive but
+    /// drawn" — the original Freeman animates on 2s–3s, not smooth. Camera
+    /// pushes and transitions stay smooth; only the character drawing steps.
+    pub on_twos: u32,
+    /// Falling-particle overlay density (0 = off; ~0.3–0.8 = drifting snow/ash
+    /// specks — Freeman's atmospheric layer). Deterministic per (particle, time).
+    pub snow: f64,
+    /// Hand-drawn "line boil" (0 = off; ~0.8–1.6 = px wobble amplitude). Every
+    /// held drawing-frame, the ink OUTLINE resettles to a new position along a
+    /// smooth per-stroke noise field, as if redrawn — while flat fills and the
+    /// background stay perfectly solid. This is what a rig can't get from pose
+    /// interpolation alone: no two holds of the same drawing are pixel-identical.
+    pub line_boil: f64,
+    /// Мягкая контактная тень под ногами персонажа (0/false = выкл). Прибивает
+    /// фигуру к полу — она перестаёт «парить». Включать в сценах, где персонаж
+    /// стоит на поверхности (не в пустоте/полёте).
+    pub ground_shadow: bool,
+    /// Отбрасываемая тень-силуэт персонажа на пол (0 = выкл; ~0.3–0.6 сила).
+    /// Силуэт проецируется на землю по направлению света — киношный объём.
+    pub cast_shadow: f64,
+    /// Направление света в градусах: 0 = прямо сверху (тень строго вниз),
+    /// >0 свет справа (тень клонится влево), <0 свет слева. Управляет наклоном
+    /// отбрасываемой тени.
+    pub light_angle: f64,
+    /// Собственная (form) тень на персонаже: сторона, обратная свету, темнеет
+    /// жёсткой cel-гранью — объём на маске. 0 = выкл, ~0.35–0.5 — норма.
+    pub form_shadow: f64,
+    /// Плёночные мелочи (MELOCHI.md, группа А) — «снято», а не «сгенерировано».
+    /// Мерцание экспозиции: яркость кадра плавает (0 = выкл, 0.02–0.06 норма).
+    pub film_flicker: f64,
+    /// Гуляние кадра в лентопротяжном тракте: микро-сдвиг всего кадра
+    /// (0 = выкл, 0.5–1.5 = доли пикселя … пара пикселей).
+    pub gate_weave: f64,
+    /// Царапины плёнки: вертикальные линии, живут несколько кадров
+    /// (0 = выкл, 0.15–0.4 — редкие, читаются подсознательно).
+    pub film_scratch: f64,
+    /// Пылинки/ворс на кадре, каждый кадр новые (0 = выкл, 0.3–1.0).
+    pub film_dust: f64,
+    /// Rim/контровой свет: светлая тёплая кромка на освещённой стороне силуэта.
+    /// Отделяет фигуру от фона (киношный бэклайт). 0 = выкл, ~0.4–0.7 — норма.
+    /// Парой к form-shadow (свет+тень) даёт объём. Ключ сцены: `rim-light`.
+    pub rim_light: f64,
 }
 
 impl Default for RenderConfig {
@@ -35,8 +85,24 @@ impl Default for RenderConfig {
             background: Color::rgb(0, 0, 0),
             monochrome: false,
             mono_contrast: 1.12,
-            film_grain: 0.0,
+            duotone: 0.0,
+            volume: 0.0,
+            // Фримен-пресет по умолчанию: ни один ролик не стартует «стерильным»
+            // (гладкий 24fps, чистая линия). Сцена может переопределить любой ключ.
+            film_grain: 0.08,
             vignette: 0.0,
+            on_twos: 2,
+            snow: 0.0,
+            line_boil: 0.6,
+            ground_shadow: false,
+            cast_shadow: 0.0,
+            light_angle: 35.0,
+            form_shadow: 0.0,
+            rim_light: 0.0,
+            film_flicker: 0.0,
+            gate_weave: 0.0,
+            film_scratch: 0.0,
+            film_dust: 0.0,
         }
     }
 }
@@ -77,6 +143,16 @@ impl RenderConfig {
                         cfg.mono_contrast = *n;
                     }
                 }
+                "duotone" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.duotone = n.clamp(0.0, 1.0);
+                    }
+                }
+                "volume" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.volume = n.clamp(0.0, 1.0);
+                    }
+                }
                 "film-grain" => {
                     if let Value::Number(n) = &entry.value {
                         cfg.film_grain = *n;
@@ -85,6 +161,58 @@ impl RenderConfig {
                 "vignette" => {
                     if let Value::Number(n) = &entry.value {
                         cfg.vignette = *n;
+                    }
+                }
+                "on-twos" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.on_twos = *n as u32;
+                    }
+                }
+                "snow" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.snow = *n;
+                    }
+                }
+                "line-boil" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.line_boil = *n;
+                    }
+                }
+                "ground-shadow" => match &entry.value {
+                    Value::Bool(b) => cfg.ground_shadow = *b,
+                    Value::Number(n) => cfg.ground_shadow = *n != 0.0,
+                    _ => {}
+                },
+                "cast-shadow" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.cast_shadow = *n;
+                    }
+                }
+                "light-angle" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.light_angle = *n;
+                    }
+                }
+                "form-shadow" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.form_shadow = *n;
+                    }
+                }
+                "film-flicker" | "flicker" => {
+                    if let Value::Number(n) = &entry.value { cfg.film_flicker = *n; }
+                }
+                "gate-weave" | "weave" => {
+                    if let Value::Number(n) = &entry.value { cfg.gate_weave = *n; }
+                }
+                "film-scratch" | "scratch" => {
+                    if let Value::Number(n) = &entry.value { cfg.film_scratch = *n; }
+                }
+                "film-dust" | "dust" => {
+                    if let Value::Number(n) = &entry.value { cfg.film_dust = *n; }
+                }
+                "rim-light" | "rim" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.rim_light = *n;
                     }
                 }
                 _ => {}
@@ -119,6 +247,9 @@ pub struct EntityState {
     pub facing: Direction,
     pub layer: i32,
     pub visible: bool,
+    /// `on floor`: предмет стоит на полу локации — точка привязки внизу
+    /// рисунка, размер считается по глубине пола (см. `assets::Floor`).
+    pub grounded: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -142,6 +273,7 @@ impl EntityState {
             facing: Direction::Right,
             layer: 0,
             visible: true,
+            grounded: false,
         }
     }
 
@@ -159,6 +291,7 @@ impl EntityState {
             facing: Direction::Right,
             layer: -1, // props behind characters by default
             visible: true,
+            grounded: false,
         }
     }
 }
@@ -261,6 +394,7 @@ pub fn resolve_scene(
             let (x, y) = resolve_position(&place.position, &entities)?;
             state.x = x;
             state.y = y;
+            state.grounded = place.grounded;
 
             if let Some(facing) = place.facing {
                 state.facing = facing;
@@ -274,6 +408,10 @@ pub fn resolve_scene(
         }
     }
 
+    // Register inline `let name = prop(...) at (x,y)` props as entities so they
+    // render at their declared position (asset is loaded separately at startup).
+    register_let_props(&scene.body, &mut entities)?;
+
     // Also register entities that are referenced via `enters` but not `place`d.
     // They start offscreen and invisible.
     register_entering_entities(&scene.body, assets, &mut entities);
@@ -285,6 +423,48 @@ pub fn resolve_scene(
         entities,
         statements: scene.body.clone(),
     })
+}
+
+/// Recursively register inline `let name = prop(...) at (x,y)` props as prop
+/// entities positioned where declared (visible from the start).
+fn register_let_props(
+    stmts: &[SceneStatement],
+    entities: &mut HashMap<String, EntityState>,
+) -> Result<(), AnimError> {
+    for stmt in stmts {
+        match stmt {
+            SceneStatement::Let(let_stmt) => {
+                let (position, layer, grounded) = match &let_stmt.kind {
+                    LetKind::Prop {
+                        position,
+                        layer,
+                        grounded,
+                        ..
+                    } => (position, layer, *grounded),
+                    LetKind::Text { position, layer, .. } => (position, layer, false),
+                };
+                if entities.contains_key(&let_stmt.name) {
+                    continue;
+                }
+                let mut state = EntityState::new_prop(&let_stmt.name);
+                if let Some(pos) = position {
+                    let (x, y) = resolve_position(pos, entities)?;
+                    state.x = x;
+                    state.y = y;
+                }
+                if let Some(l) = layer {
+                    state.layer = *l;
+                }
+                state.grounded = grounded;
+                entities.insert(let_stmt.name.clone(), state);
+            }
+            SceneStatement::Together(inner) | SceneStatement::Do(inner) => {
+                register_let_props(inner, entities)?;
+            }
+            _ => {}
+        }
+    }
+    Ok(())
 }
 
 /// Recursively scan statements for Enter actions and register any entities

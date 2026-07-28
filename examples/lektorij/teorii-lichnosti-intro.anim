@@ -1,0 +1,317 @@
+// =============================================================================
+//  «ТЕОРИИ ЛИЧНОСТИ» — продающее интро курса
+//  (meysternlp.ru/blog/lektorij/teorii-lichnosti — 13 лекций, 20 теорий).
+//
+//  Сквозная метафора — ЧУЖИЕ ОЧКИ. Зритель уже пользуется теорией личности:
+//  он объясняет людей. Просто объяснения не его — донашивает чужую оптику.
+//  Очки садятся на маску в первые три секунды (крючок без слов), живут на ней
+//  весь ролик и слетают на взлёте: их смысл зритель понимает только на 29-й
+//  секунде. Курс продаётся не «пониманием себя», а сменой линзы.
+//
+//    · персонаж — канон (SIMILARITY.md);
+//    · поле — ПУСТОЕ светлое (дефолт оригинала), без павильона;
+//    · режиссура (HOLLYWOOD.md): каты ВНУТРИ реплик, ракурсы high/low,
+//      флэш-морды, наезд-удар, слово-удар + инверсия, отъезд-одиночество;
+//    · сценарий (SCRIPT-FREEMAN.md) — teorii-lichnosti-intro-VO.md, //lip 1..9,
+//      гейт tools/script_lint.py: 100/100.
+//
+//  ОЧКИ — КОСТЬ, НЕ ПРОП. Проп стоит в мировых координатах, а голова ездит
+//  от позы к позе: очки-пропом то съезжали на рот, то висели над бровью, и
+//  подгонка под один кадр ломала все остальные. Теперь это кость `glasses`
+//  под `head` в тех же координатах, что и маска, — оправы едут с головой в
+//  любой позе и на любом плане сами. Включают её позы с суффиксом `_ochki`.
+//  Проп остался только на два движения — прилёт и срыв.
+//  Правило целиком: KARTA.md, «кость или проп».
+//
+//  ВКЛЮЧАЕТСЯ КОСТЬ ПОДМЕНОЙ ДЕТАЛИ, А НЕ МАСШТАБОМ [0,0]. Масштаб движок
+//  ТЯНЕТ через переход позы (0.18с), а тянется он от пивота кости — пивот же
+//  стоит на пивоте головы, у подбородка. Поэтому очки не появлялись и не
+//  исчезали, а вырастали из шеи и уползали обратно ко рту: на срыве это
+//  читалось как пара крошечных оправ у подбородка на четыре кадра. Деталь
+//  же не тянется — `part` щёлкает на середине перехода. Отсюда: по умолчанию
+//  кость несёт `blank` при масштабе [1,1], а позы `_ochki` подменяют деталь
+//  на `glasses`. Пивот при этом ТРОГАТЬ НЕЛЬЗЯ: он общий с головой, и любой
+//  его сдвиг уводит рисунок (проверено — уехал на 4 пикселя).
+//
+//  ПОСАДКА ФИГУРЫ. Якорь сущности сидит на уровне плеч; макушка на 0.19,
+//  ступни на 0.45 высоты кадра от него — НА ЕДИНИЦУ `scales` (см. frame_shot
+//  в src/timeline и KARTA.md). Отсюда: scales 0.80 при y 0.585 ставит ступни
+//  на 0.946 (линия земли поля) и макушку на 0.433 — фигура целиком в общем
+//  плане.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set titry from "../assets/sets/lektorij-final.svg"
+import set pole from "../assets/sets/field-empty.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab        // тон земли: поле задаёт сет field-empty
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.35
+    on-twos: 2
+    line-boil: 1.25
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.04
+    gate-weave: 0.8
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0           // канон: лицо плоское
+    rim-light: 0.0
+}
+
+// ============================ СЦЕНА 1: ЛИНЗА ================================
+scene "linza" (duration: 61s, set: pole) {
+    transition static 0.35s
+
+    place freeman at (0.5, 0.585) facing front
+    // `over 0.01s` у КАЖДОЙ установочной строки. Голый `scales` стоит
+    // движку полсекунды: три установки подряд съедали 1.5 секунды до первого
+    // слова, и фирменное приветствие уезжало с 2.4-й секунды на 3.9-ю —
+    // полторы секунды пустого поля в самом начале продающего ролика.
+    freeman scales 0.80 over 0.01s
+    let ochki = prop("ochki", "../assets/props/glasses-alien.svg") at (0.5, -1.0) layer 7
+    // Размер и точки посадки пропа СНЯТЫ С КАДРА, а не подобраны на глаз:
+    // в кость `glasses` временно ставилась красная метка на середину пары
+    // линз, кадр рендерился, и её пиксели переводились в координаты сцены.
+    // Прежние 0.4925/0.511 достались от старой посадки очков и после того,
+    // как оправы пересели на линию глаз, стали указывать на МАКУШКУ: проп
+    // прилетал на темя и подменялся костью со скачком в 19 пикселей.
+    // Прилёт идёт при позе `smug` (голова без смещения), срыв — при
+    // `raskryl_ochki` (голова опущена на 34 и повёрнута на 9°), поэтому точки
+    // РАЗНЫЕ; одна на оба движения была ошибкой сама по себе.
+    // Масштаб 0.201: расстояние между центрами линз пропа (146 из 420 ширины
+    // рисунка) приведено к расстоянию между центрами линз кости (53.5 единиц
+    // head.svg) на этом плане.
+    ochki scales 0.201 over 0.01s
+    let hand = prop("hand", "../assets/props/hand-point.svg") at (-1.5, 1.5) layer 5
+    let slovo = text("ЧЬИ?", 170) at (0.5, -2.0) layer 6
+    slovo scales 2.6 over 0.01s
+
+    // ── t=0..2 БЕЗ СЛОВ: фигура одна в пустом поле ────────────────────────
+    camera wide
+    freeman pose "open"
+    wait 1.4s
+    camera medium freeman
+    freeman pose "doubt"
+    wait 0.6s
+
+    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1) ──────────────────────────────────────
+    // «Ну-у-у... здравствуйте. Дорогие мои.» — и ничего сверх этого: шутка
+    // под тему у каждого ролика своя и стоит ПОСЛЕ, в хуке. Идёт ПОВЕРХ
+    // визуального крючка: пока звучит «дорогие мои», на маску садятся чужие
+    // очки, поэтому пустых секунд не прибавляется.
+    //
+    // Глаза по контексту реплики: приветствие снисходительное, а не злое —
+    // здесь прищур и ухмылка (`smug`), клин злости приберегается для
+    // приговоров. Проп ЛЕТИТ, кость НАДЕТА: в момент касания проп прячется,
+    // поза меняется на «_ochki», и дальше оправы едут с головой сами.
+    freeman pose "smug"
+    //lip 1
+    together {
+        freeman speaks for 3.4s
+        do {
+            wait 0.7s
+            camera close-up freeman
+            ochki moves-to (0.4953, 0.5382) over 0.55s ease-out
+            // ПОДМЕНА С ПЕРЕКРЫТИЕМ, А НЕ ВСТЫК. `hides` гасит проп за пару
+            // кадров, а поза встаёт примерно через шесть — при команде встык
+            // между ними проваливались четыре кадра, где очков нет вообще:
+            // на экране это мигание. Кость включается ЗАРАНЕЕ, пока проп ещё
+            // виден; оба стоят в одной точке и одного размера, поэтому
+            // перекрытие не читается, а провал читался.
+            freeman pose "blink_ochki"
+            wait 0.15s
+            ochki hides
+            wait 0.15s
+            freeman pose "smug_ochki"
+            wait 0.6s
+            camera medium freeman
+        }
+    }
+    freeman pose "calm_ochki"
+    wait 0.6s
+
+    // ── ХУК (VO-1): фигура ВПРАВО-треть, ракурс СВЕРХУ (зритель мелкий) ────
+    freeman moves-to (0.63, 0.585) over 0.01s
+    freeman pose "smug_ochki"
+    //lip 2
+    together {
+        freeman speaks for 2.6s
+        do {
+            camera angle high freeman
+            wait 1.3s
+            camera medium freeman
+        }
+    }
+    // ── ХУК-добивка (VO-2): КАТ крупный, фигура ВЛЕВО-треть ───────────────
+    freeman moves-to (0.37, 0.585) over 0.01s
+    freeman pose "v_upor_ochki"
+    //lip 3
+    together {
+        freeman speaks for 3.0s
+        do {
+            camera medium freeman
+            wait 1.5s
+            camera close-up freeman
+        }
+    }
+    freeman pose "flash_pupils_ochki"
+    wait 0.08s
+    freeman pose "hero_skeptic_ochki"
+    wait 0.5s
+
+    // ── ПУЛЕМЁТ 1 (VO-3): три приговора — марионетка чужих слов ───────────
+    freeman moves-to (0.5, 0.585) over 0.01s
+    freeman pose "puppet_ochki"
+    //lip 4
+    together {
+        freeman speaks for 3.4s
+        do {
+            camera medium freeman
+            wait 1.7s
+            camera close-up freeman
+        }
+    }
+    // ── ПУЛЕМЁТ 2 (VO-4): тот же рывок марионетки — приём монотонности ────
+    freeman pose "puppet_jerk_ochki"
+    //lip 5
+    together {
+        freeman speaks for 3.4s
+        do {
+            camera medium freeman
+            wait 1.7s
+            camera close-up freeman
+        }
+    }
+    // ── ПУЛЕМЁТ финал (VO-5): презрение, тряска ───────────────────────────
+    freeman pose "otvraschenie_ochki"
+    //lip 6
+    together {
+        freeman speaks for 3.4s
+        do {
+            camera close-up freeman
+            wait 1.7s
+            camera medium freeman
+        }
+    }
+    camera shake 0.35s intensity 2
+    freeman pose "flash_disgust_ochki"
+    wait 0.08s
+    freeman pose "stern_ochki"
+    wait 0.7s
+
+    // ── t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука в камеру ───────
+    freeman moves-to (0.44, 0.585) over 0.01s
+    freeman pose "v_upor_ochki"
+    //lip 7
+    together {
+        freeman speaks for 7.2s
+        do {
+            camera angle low freeman
+            wait 2.2s
+            camera close-up freeman
+            wait 2.2s
+            camera medium freeman
+            wait 1.6s
+            camera close-up freeman
+        }
+    }
+    hand moves-to (0.72, 0.72) over 0.01s
+    camera shake 0.3s intensity 2
+    wait 0.7s
+    hand moves-to (-1.5, 1.5) over 0.01s
+    freeman pose "think_ochki"
+    wait 0.6s
+
+    // ── ВЗЛЁТ (VO-7): очки слетают, фигура раскрывается ───────────────────
+    freeman moves-to (0.5, 0.585) over 0.01s
+    freeman pose "raskryl_ochki"
+    //lip 8
+    together {
+        freeman speaks for 11.1s
+        do {
+            camera medium freeman
+            wait 2.4s
+            camera close-up freeman
+            wait 2.2s
+            camera medium freeman
+            // Срыв: проп встаёт НА МЕСТО КОСТИ И ТОЛЬКО ПОТОМ гаснет кость.
+            // Обратный порядок давал провал: `hides`/подмена детали срабатывает
+            // на середине перехода позы, и между уходом кости и появлением
+            // пропа кадр оставался без очков вовсе.
+            ochki moves-to (0.5022, 0.5068) over 0.01s
+            ochki shows
+            freeman pose "raskryl"
+            together {
+                ochki moves-to (0.16, 1.25) over 0.45s ease-in
+                ochki rotates -140 over 0.45s
+            }
+            wait 1.9s
+            camera close-up freeman
+            wait 2.2s
+            camera wide
+        }
+    }
+    // ── СЛОВО-УДАР «ЧЬИ?» + негатив-панч ──────────────────────────────────
+    camera wide
+    slovo moves-to (0.5, 0.30) over 0.01s
+    slovo scales 1.0 over 0.18s ease-in
+    transition invert 0.16s
+    camera shake 0.3s intensity 3
+    wait 0.9s
+    slovo moves-to (0.5, -2.0) over 0.22s ease-in
+    freeman pose "flash_grin"
+    wait 0.08s
+
+    // ── ЖАЛО-CTA (VO-8): наезд-удар, подмиг-издёвка ───────────────────────
+    freeman pose "lunge"
+    //lip 9
+    together {
+        freeman speaks for 12.8s
+        do {
+            camera medium freeman
+            wait 2.6s
+            camera close-up freeman
+            wait 2.4s
+            camera wide
+            wait 2.4s
+            camera medium freeman
+            wait 2.6s
+            camera close-up freeman
+        }
+    }
+    camera zoom-to freeman over 0.18s ease-in
+    freeman pose "hero_wink"
+    wait 0.6s
+    // отъезд-одиночество: снова маленькая фигура в пустом поле
+    camera reset over 0.5s
+    freeman pose "calm"
+    wait 0.8s
+}
+
+// ============================ СЦЕНА 2: ТИТРЫ ================================
+scene "titry" (duration: 6s, set: titry) {
+    transition static 0.45s
+
+    place freeman at (0.5, 3.0) facing front
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 1.2s
+
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6 over 0.01s
+    stamp rotates -7 over 0.01s
+    stamp scales 0.94 over 0.22s ease-in
+    stamp scales 1.0 over 0.1s ease-out
+    stamp rotates -4 over 0.12s
+
+    wait 2.5s
+    transition fade-black 0.8s
+}

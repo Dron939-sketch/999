@@ -93,7 +93,7 @@ scene_statement = {
 
 // Place
 place_stmt = {
-    "place" ~ identifier ~ "at" ~ position ~ (facing_clause)? ~ (layer_clause)?
+    "place" ~ identifier ~ "at" ~ position ~ (facing_clause)? ~ (layer_clause)? ~ (grounded_clause)?
 }
 
 facing_clause = { "facing" ~ direction }
@@ -120,10 +120,25 @@ let_stmt = {
 
 let_kind = {
     let_prop
+  | let_text
 }
 
+// `on floor` — предмет СТОИТ на полу локации, а не висит в её координатах.
+// Тогда его точка привязки — низ рисунка (опора), а размер считается по
+// глубине: у дальней кромки пола предмет мельче, у передней крупнее. Без этого
+// проп сидит центром рисунка в заданной точке — половина ниже пола — и на
+// дальнем плане остаётся того же размера, что на переднем.
 let_prop = {
-    "prop" ~ "(" ~ string_literal ~ "," ~ string_literal ~ ")" ~ ("at" ~ position)?
+    "prop" ~ "(" ~ string_literal ~ "," ~ string_literal ~ ")" ~ ("at" ~ position)? ~ ("layer" ~ integer)? ~ grounded_clause?
+}
+
+grounded_clause = { "on" ~ "floor" }
+
+// Кинетическая типографика: слово как анимируемая сущность (все действия
+// пропов — moves-to/scales/rotates/shows/hides/fades-to — работают).
+// `let w = text("СВОБОДА") at (0.5, 0.4)`; опц. второй аргумент — кегль (px).
+let_text = {
+    "text" ~ "(" ~ string_literal ~ ("," ~ number)? ~ ")" ~ ("at" ~ position)? ~ ("layer" ~ integer)?
 }
 
 // ---------------------------------------------------------------------------
@@ -135,6 +150,7 @@ action_stmt = {
     | exit_action
     | move_action
     | pose_action
+    | overlay_action
     | speak_action
     | lips_action
     | show_action
@@ -163,6 +179,15 @@ move_action = {
 
 pose_action = {
     identifier ~ "pose" ~ string_literal
+}
+
+// Слой поверх удерживаемой позы: движение ВТОРОЙ частью тела, параллельно
+// первой. Тело у нас держит ОДНУ позу целиком, поэтому «идёт и курит»
+// распадалось на «идёт», потом «курит» — шаг замирал на время затяжки.
+// `overlays` кладёт кости названной позы поверх текущей: ноги продолжают
+// шагать, рука подносит сигарету.
+overlay_action = {
+    identifier ~ "overlays" ~ string_literal
 }
 
 show_action = {
@@ -200,7 +225,10 @@ fade_action = {
 camera_stmt = { "camera" ~ camera_command }
 
 camera_command = {
-    camera_shake
+    camera_dutch
+    | camera_pitch
+    | camera_angle
+    | camera_shake
     | camera_reset
     | camera_zoom
     | camera_pan
@@ -222,6 +250,24 @@ camera_pan = {
 camera_shake = {
     "shake" ~ duration ~ ("intensity" ~ number)?
 }
+
+camera_dutch = {
+    "dutch" ~ number
+}
+
+// Вертикальный ракурс (наклон камеры вверх/вниз). Положительный градус —
+// камера СВЕРХУ (смотрит вниз), отрицательный — СНИЗУ (смотрит вверх).
+// Даёт настоящий форшортенинг: ближняя к камере часть тела крупнее.
+camera_pitch = {
+    "pitch" ~ number
+}
+
+// Сахар: camera angle high|low|level [target] — ставит и наклон, и кадр.
+camera_angle = {
+    "angle" ~ angle_kind ~ identifier?
+}
+
+angle_kind = { "high" | "low" | "level" }
 
 camera_reset = {
     "reset" ~ ("over" ~ duration)?
@@ -246,6 +292,8 @@ transition_kind = {
     transition_fade_black
     | transition_fade_white
     | transition_dissolve
+    | transition_static
+    | transition_invert
     | transition_wipe
     | transition_cut
 }
@@ -253,6 +301,8 @@ transition_kind = {
 transition_fade_black = { "fade-black" ~ duration }
 transition_fade_white = { "fade-white" ~ duration }
 transition_dissolve   = { "dissolve" ~ duration }
+transition_static     = { "static" ~ duration }
+transition_invert     = { "invert" ~ duration }
 transition_cut        = { "cut" }
 transition_wipe       = { "wipe" ~ direction ~ duration }
 

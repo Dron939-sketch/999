@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 30" width="44" height="30"><defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.5" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 30" width="44" height="30"><defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
 <g filter="url(#ink)">
   <!-- широкий раскрытый рот -->
-  <path d="M5 12 Q22 3 39 12 Q41 23 22 28 Q3 23 5 12 Z" fill="#0e0e0e"/>
+  <path d="M-0.4 12 Q22.0 3 39 12 Q47.1 23 22 28 Q-3.1 23 5 12 Z" fill="#0e0e0e"/>
   <!-- язык -->
-  <ellipse cx="22" cy="23" rx="8.5" ry="4.5" fill="#6b6b6b"/>
+  <ellipse cx="22" cy="23" rx="11.2" ry="4.5" fill="#6b6b6b"/>
   <!-- верхние зубы: белая полоса с треугольными зазубринами вниз -->
-  <path d="M7 10 H37 L34 16 L31 10 L28 16 L25 10 L22 16 L19 10 L16 16 L13 10 L10 16 Z" fill="#eef1ec"/>
+  <path d="M2.2 10 H37 L34 16 L31 10 L28 16 L25 10 L22 16 L19 10 L16 16 L13 10 L10 16 Z" fill="#eef1ec"/>
   <!-- нижние зубы -->
-  <path d="M10 26 L13 21 L16 26 L19 21 L22 26 L25 21 L28 26 L31 21 L34 26 Z" fill="#eef1ec"/>
+  <path d="M6.2 26 L13 21 L16 26 L19 21 L22 26 L25 21 L28 26 L31 21 L34 26 Z" fill="#eef1ec"/>
 </g></svg>

@@ -22,6 +22,35 @@ use serde::{Deserialize, Serialize};
 
 use crate::errors::AnimError;
 
+/// КАРТА ФИГУРЫ: где у персонажа что находится относительно его якоря.
+///
+/// Все величины — доли ВЫСОТЫ кадра на единицу `scales` (кроме `mask_dx`,
+/// который в долях ШИРИНЫ), отсчёт от точки, куда ставит `place`. Снимаются
+/// замером с рендера: `python3 tools/karta.py --rig <папка> --write`.
+///
+/// Зачем в риге, а не в движке. Кадрирование планов раньше держалось на
+/// постоянных, подобранных на глаз для ОДНОГО персонажа ростом 1.0. Стоило
+/// фигуре подрасти — крупный план срезал макушку; появись второй персонаж с
+/// другими пропорциями — те же числа врали бы уже на нём. Карта принадлежит
+/// персонажу, поэтому и лежит рядом с его скелетом.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+pub struct Karta {
+    /// Макушка (отрицательное — выше якоря).
+    pub crown: f64,
+    /// Центр глаз.
+    pub eyes: f64,
+    /// Низ головы/маски (подбородок).
+    pub chin: f64,
+    /// Ступни.
+    pub feet: f64,
+    /// Смещение центра головы по X, в долях ШИРИНЫ кадра.
+    #[serde(default)]
+    pub mask_dx: f64,
+    /// Ширина головы, в долях ВЫСОТЫ кадра.
+    #[serde(default)]
+    pub mask_w: f64,
+}
+
 /// A complete character rig: skeleton + part assets + poses.
 #[derive(Debug, Clone)]
 pub struct CharacterRig {
@@ -31,6 +60,9 @@ pub struct CharacterRig {
     pub poses: HashMap<String, Pose>,
     /// Total bounding height (used for scaling to scene).
     pub height: f64,
+    /// Замеренная карта фигуры (см. `Karta`). Нет — планы считаются по
+    /// историческим постоянным, как до появления карты.
+    pub karta: Option<Karta>,
 }
 
 /// The skeleton: a tree of bones.
@@ -121,6 +153,10 @@ pub struct RigDefinition {
     pub height: f64,
     pub skeleton: Skeleton,
     pub poses: HashMap<String, Pose>,
+    /// Замеренная карта фигуры. Необязательна: риг без неё работает, просто
+    /// планы считаются по историческим постоянным.
+    #[serde(default)]
+    pub karta: Option<Karta>,
 }
 
 /// Load a character rig from a directory.
@@ -156,6 +192,7 @@ pub fn load_rig(name: &str, dir: &Path) -> Result<CharacterRig, AnimError> {
         parts,
         poses: rig_def.poses,
         height: rig_def.height,
+        karta: rig_def.karta,
     })
 }
 
@@ -226,6 +263,10 @@ pub struct BoneState {
     pub rotation: f64,
     pub scale: (f64, f64),
     pub z_order: i32,
+    /// Rubber-hose curl (radians) the drawing takes along its length — driven
+    /// procedurally (spine sway, speech emphasis), added to any joint-derived
+    /// bend at render time. 0.0 = rigid part.
+    pub bend: f64,
 }
 
 /// Compute the interpolated bone states for a skeleton, blending between two poses.
@@ -296,6 +337,7 @@ fn interpolate_bone(
             lerp(from_scale.1, to_scale.1, t_smooth),
         ),
         z_order,
+        bend: 0.0,
     });
 
     for child in &bone.children {
@@ -307,6 +349,34 @@ fn interpolate_bone(
 // Procedural animations
 // ---------------------------------------------------------------------------
 
+/// Per-occurrence pose variance: nudges non-facial bone rotation/offset by a
+/// small amount that's stable for the ENTIRE hold of one pose occurrence (not
+/// per-frame — that's `apply_idle_motion`'s job). A rig reuses the exact same
+/// numbers every time a named pose fires; a hand artist never traces an old
+/// page twice. This is the cheap stand-in: seed from (entity, pose, start
+/// time) so the same "confident" pose on freeman at t=4s and on a clone at
+/// t=19s reads as two distinct drawings, while a single occurrence stays
+/// internally consistent across its own frames (no swimming mid-hold).
+pub fn apply_pose_variance(states: &mut [BoneState], seed: u64) {
+    for state in states.iter_mut() {
+        let is_face = state.name.contains("eye")
+            || state.name.contains("mouth")
+            || state.name.contains("brow")
+            || state.name == "hat"
+            || state.name == "cane";
+        if is_face {
+            continue;
+        }
+        let h = name_hash(&state.name) as u64 ^ seed.wrapping_mul(0x9E37_79B9_7F4A_7C15);
+        let r = hash_unit((h ^ (h >> 32)) as u32);
+        let ox = hash_unit((h.wrapping_add(97) ^ (h >> 17)) as u32);
+        let oy = hash_unit((h.wrapping_add(191) ^ (h >> 23)) as u32);
+        state.rotation += r * 3.2;
+        state.offset.0 += ox * 1.6;
+        state.offset.1 += oy * 1.6;
+    }
+}
+
 /// Apply idle breathing/swaying animation to bone states.
 pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f64) {
     let tau = 2.0 * PI;
@@ -317,47 +387,108 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
     // head leads/counters it — reads as a living body holding its weight, not a
     // frozen puppet. Low frequency, so it's life, not the tremor we calmed.
     let shift = (time * 0.12 * tau).sin();
+    // АСИММЕТРИЯ ПОКОЯ (SIMILARITY.md §5): у оригинала фигура «развинченная» —
+    // маска всегда чуть наклонена, плечи не на одной высоте. Идеально ровная
+    // симметричная стойка читается как кукла, а не как рисунок. Постоянные
+    // (не колеблющиеся) смещения — характер позы, а не движение.
+    const HEAD_TILT: f64 = 4.0;        // градусы: наклон маски (было 0.055 —
+                                       // значение писали как радианы, а поле
+                                       // в ГРАДУСАХ, и наклона фактически не было)
+    const SHOULDER_SKEW: f64 = 1.2;    // градусы: одно плечо выше другого
+    for state in states.iter_mut() {
+        match state.name.as_str() {
+            "head" => state.rotation += HEAD_TILT,
+            "upper_arm_left" => state.rotation -= SHOULDER_SKEW,
+            "upper_arm_right" => state.rotation += SHOULDER_SKEW * 0.6,
+            _ => {}
+        }
+    }
+
     // "Animation boil": the jitter target updates ~5x/sec (held on fours), so a
     // static pose is never perfectly still — but calm, not a tremor.
-    let step = (time * 5.0).floor() as i64;
-
     for state in states.iter_mut() {
         let is_face = state.name.contains("eye")
             || state.name.contains("mouth")
             || state.name.contains("brow");
 
         // Per-bone procedural micro-float (skipped for facial features).
+        // SMOOTH coherent drift, not a stepped random jump: earlier this
+        // resampled a hash ~5×/sec, which made every limb TWITCH (read as
+        // «дёрганье»). Now each bone floats on slow, low-amplitude sines with a
+        // per-bone phase — the figure breathes without jittering. The hand-drawn
+        // «redrawn» wobble is carried by the ink line-boil (outline), not by
+        // shaking the skeleton.
         if !is_face {
             let h = name_hash(&state.name);
-            let jr = hash_unit(h ^ (step as u32).wrapping_mul(2654435761));
-            let jx = hash_unit(h.wrapping_add(97) ^ (step as u32).wrapping_mul(40503));
-            let jy = hash_unit(h.wrapping_add(191) ^ (step as u32).wrapping_mul(22695477));
-            state.rotation += jr * 0.45;
-            state.offset.0 += jx * 0.28;
-            state.offset.1 += jy * 0.22;
+            let ph1 = hash_unit(h) * PI;
+            let ph2 = hash_unit(h ^ 0x9E37_79B9) * PI;
+            let f = 0.14 + hash_unit(h ^ 0x1234_5678).abs() * 0.08; // ~0.14–0.22 Hz, slow
+            state.rotation += (time * f * tau + ph1).sin() * 0.06;
+            state.offset.0 += (time * f * 0.7 * tau + ph2).sin() * 0.045;
+            state.offset.1 += (time * f * 0.5 * tau + ph1).sin() * 0.035;
         }
 
         match state.name.as_str() {
+            // NOTE: amplitudes deliberately SMALL. On-twos steps this idle every
+            // 1/12s; loud idle → visible «дёрганье» ×N characters. A held drawing
+            // must nearly HOLD (like the original) — life comes from deliberate
+            // gestures + the occasional blink, not constant breathing/bobbing.
             "torso" => {
-                state.scale.1 *= 1.0 + breath * 0.014; // breathing
-                state.offset.0 += shift * 2.2; // weight shift (whole upper body)
-                state.rotation += sway * 1.0 + shift * 0.8;
+                state.scale.1 *= 1.0 + breath * 0.008; // faint breathing
+                state.offset.0 += shift * 0.7; // slow weight shift
+                state.rotation += sway * 0.3 + shift * 0.25;
+                state.bend += sway * 0.02 + shift * 0.025 + breath * 0.005;
             }
             "head" => {
-                state.offset.1 += breath * 1.0;
-                // slow "looking" life + counter to the weight shift (head leads)
-                state.offset.0 += shift * 1.4 + (time * 0.23 * tau).sin() * 1.0;
-                state.rotation += (time * 0.37 * tau).sin() * 1.3 + sway * 0.6 - shift * 0.9;
+                state.offset.1 += breath * 0.5;
+                // very slow "looking" life, small
+                state.offset.0 += shift * 0.5 + (time * 0.19 * tau).sin() * 0.35;
+                state.rotation += (time * 0.29 * tau).sin() * 0.45 + sway * 0.2 - shift * 0.3;
             }
             name if name.contains("thigh") => {
-                state.offset.0 += shift * 0.7; // legs plant against the shift
+                state.offset.0 += shift * 0.22;
             }
             name if name.contains("arm") => {
                 let phase = if name.contains("right") { PI } else { 0.0 };
-                // gentle arm float, and hands drift with the weight shift
-                state.rotation += (time * 0.6 * tau + phase).sin() * 1.4 + shift * 0.6;
+                state.rotation += (time * 0.5 * tau + phase).sin() * 0.5 + shift * 0.22;
             }
             _ => {}
+        }
+
+        // Auto-blink: deterministic, ~every 3.4–4.6s the lids snap shut for
+        // ~0.12s. Cel-swapped eyes (part overrides) are unaffected only in
+        // scale, so the blink reads on any eye drawing. Instant life on every
+        // character with zero scripting.
+        if state.name.starts_with("eye") {
+            // Shared cycle for both eyes (hash of the common prefix), so the
+            // lids close together.
+            let cycle = 3.4 + hash_unit(name_hash("eye")).abs() * 1.2;
+            let ph = time % cycle as f64;
+            let lids_shut = ph < 0.12;
+            if lids_shut {
+                let k = (ph / 0.12 * PI).sin(); // 0→1→0
+                state.scale.1 *= (1.0 - 0.92 * k).max(0.06);
+            }
+
+            // --- Микро-саккады (дарты взгляда) --------------------------------
+            // Огромные глаза Фримена «мертвеют» между морганиями, если зрачок
+            // не двигается. Настоящий взгляд НЕ плывёт — он ДЁРГАЕТСЯ: держит
+            // точку фиксации ~0.9–1.5с, затем МГНОВЕННО прыгает на новую
+            // (саккада ~1 кадр). Детерминированно; общий хэш «gaze» → оба глаза
+            // смотрят в одну точку (не косят). Амплитуда крошечная — глаз крупный
+            // на экране, поэтому смещение баесится к центру (gx*|gx|): почти все
+            // дарты мелкие, изредка — заметный взгляд в сторону.
+            let sac = std::env::var("ANIMDSL_SACCADE_AMP").ok()
+                .and_then(|v| v.parse::<f64>().ok())
+                .unwrap_or(1.0);
+            if !lids_shut && sac > 0.0 {
+                let hold = 0.95 + hash_unit(name_hash("gaze")).abs() * 0.55; // 0.95–1.5с
+                let idx = (time / hold).floor() as i64 as u32;
+                let gx = hash_unit(idx.wrapping_mul(2_654_435_761) ^ 0x00A5_A5A5);
+                let gy = hash_unit(idx.wrapping_mul(40_503) ^ 0x0000_1357);
+                state.offset.0 += gx * gx.abs() * 6.0 * sac; // взгляд по горизонтали шире
+                state.offset.1 += gy * gy.abs() * 3.5 * sac; // по вертикали — уже
+            }
         }
     }
 }
@@ -405,12 +536,39 @@ pub fn apply_walk_cycle(states: &mut [BoneState], walk_phase: f64, speed: f64) {
             "arm_right" => {
                 state.rotation += (-phase).sin() * 25.0 * speed;
             }
-            "leg_left" => {
-                // Legs alternate forward/back
-                state.rotation += (phase).sin() * 20.0 * speed;
+            // ИМЕНА КОСТЕЙ ЗДЕСЬ ОБЯЗАНЫ СОВПАДАТЬ С РИГОМ. Цикл искал
+            // `leg_left`/`leg_right` и `arm_left`/`arm_right`, а у Фримена
+            // кости называются `thigh_*`, `shin_*`, `upper_arm_*` — ни одна
+            // ветка не срабатывала. Из всего цикла работали только покачивание
+            // корпуса и головы, и фигура ЕХАЛА по полу, не переставляя ног.
+            // Молча: цикл заводился, `speed` считался, кадры менялись.
+            "leg_left" | "thigh_left" => {
+                // ХОД НА КАМЕРУ ЧИТАЕТСЯ ДЛИНОЙ, А НЕ УГЛОМ. При движении
+                // вглубь нога вынесена вперёд почти вдоль оси зрения: её угол
+                // на экране почти не меняется, а вот ДЛИНА меняется сильно —
+                // выставленная нога кажется длиннее, опорная короче. Поэтому
+                // к повороту добавлено попеременное растяжение бедра; масштаб
+                // кости наследуется голенью, так что удлиняется вся нога.
+                state.rotation += (phase).sin() * 16.0 * speed;
+                state.scale.1 *= 1.0 + (phase).sin() * 0.12 * speed;
             }
-            "leg_right" => {
-                state.rotation += (-phase).sin() * 20.0 * speed;
+            "leg_right" | "thigh_right" => {
+                state.rotation += (-phase).sin() * 16.0 * speed;
+                state.scale.1 *= 1.0 - (phase).sin() * 0.12 * speed;
+            }
+            // Голень догибается только на выносе (вперёд), как в живом шаге:
+            // назад нога идёт прямой. `min(0.0)` и отсекает половину периода.
+            "shin_left" => {
+                state.rotation += (phase).sin().min(0.0) * 12.0 * speed;
+            }
+            "shin_right" => {
+                state.rotation += (-phase).sin().min(0.0) * 12.0 * speed;
+            }
+            "upper_arm_left" => {
+                state.rotation += (-phase).sin() * 14.0 * speed;
+            }
+            "upper_arm_right" => {
+                state.rotation += (phase).sin() * 14.0 * speed;
             }
             _ => {}
         }

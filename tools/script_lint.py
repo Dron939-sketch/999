@@ -1,0 +1,201 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+script_lint.py — гейт сценария: проверка VO-сценария по базе завода.
+
+Правила берутся из `SCRIPT-FREEMAN.md` (формула §5, чек-лист §6, тайм-якоря
+§5.0) и `PSYCHOLOGY.md` (порядок битов, стоп-приёмы §5, условия глубины §4).
+Проверяется ровно то, что можно посчитать: порядок и наличие битов, длина
+ударных фраз, обращение к зрителю, тип финала, запретные обороты. Всё, что
+требует вкуса, — в отчёте помечено как «на человеке» и в балл не входит.
+
+Формат входа — таблица VO из наших сценариев:
+
+    | # | Тайм | Бит формулы | Реплика (интонация) |
+    | VO-1 | 0:03.5–0:05.2 | ХУК | «Ты дышишь. Поздравляю.» *(фамильярно)* |
+
+Использование:
+    python3 tools/script_lint.py examples/lektorij/snova-zhivoj-intro-VO.md
+    python3 tools/script_lint.py --all          # все *-VO.md в examples
+"""
+
+import argparse
+import glob
+import re
+import statistics
+import sys
+from pathlib import Path
+
+ACCENT = "́"          # U+0301 — знак ударения в VO-сценариях
+GATE = 70
+
+# --- словари правил ---------------------------------------------------------
+ADDRESS = re.compile(r"\b(ты|тебя|тебе|тобой|вы|вас|вам|вами|твой|тво[ёяие]\w*|ваш\w*"
+                     r"|дорогие\s+мои|милые\s+мои)\b", re.I)
+WARMUP = re.compile(r"^\s*[«\"]?\s*(сегодня\s+мы|сегодня\s+поговорим|в\s+этом\s+(видео|ролике)"
+                    r"|поговорим\s+о|здравствуйте|добрый\s+день|дорогие\s+друзья"
+                    r"|меня\s+зовут|прежде\s+чем\s+начать)", re.I)
+# ФИРМЕННОЕ ПРИВЕТСТВИЕ — не разогрев, хотя и начинается со «здравствуйте».
+# Разогрев тянет время и ничего не делает со зрителем. Это приветствие в первой
+# же фразе НАЗНАЧАЕТ РОЛЬ — «сидите? ну сидите, сидите»: зритель уже пойман за
+# тем, чем занят, и признан пассивным. Поэтому оно засчитывается как обращение,
+# а не как раскачка. Отличаем по связке «здравствуйте» + «дорогие мои»/«сидите».
+GREETING = re.compile(r"здравствуйте.*(дорогие\s+мои|сидите)|(дорогие\s+мои|сидите).*здравствуйте",
+                      re.I | re.S)
+SUMMING = re.compile(r"(подводя\s+итог|в\s+заключение|итак,|таким\s+образом|мораль\s+так)", re.I)
+# стоп-приёмы PSYCHOLOGY.md §5 — ложь, давление и обещания не по адресу
+FORBIDDEN = {
+    "ложный дефицит": r"(только\s+сегодня|успей|осталось\s+\d+\s+мест|спешит[ье]|последний\s+шанс)",
+    "фальшивый аргумент": r"(учён[ыо][ех]\s+доказали|доказано\s+наукой|9[0-9]\s*%\s+людей)",
+    "терапевтическое обещание": r"(вылеч|избавим|гарантиру|навсегда\s+избав|за\s+\d+\s+дн[ея])",
+}
+BEATS = ["ХУК", "ПУЛЕМ", "РАЗВОРОТ", "ВЗЛ", "ЖАЛО"]
+# Приветствие — необязательный бит ПЕРЕД хуком. Если оно есть, хуку даётся
+# больше времени: приветствие само держит зрителя, потому что назначает роль.
+HELLO = "ПРИВЕТСТВИЕ"
+FINALE_OK = re.compile(r"(\?|!|…|\.\.\.)\s*[»\"]?\s*$")
+# высокий и сниженный регистры — их столкновение и есть стиль (§4 SCRIPT-FREEMAN)
+HIGH = re.compile(r"(свобод|сознани|достоинств|вечност|смысл|истин|бытие|судьб|душ)", re.I)
+LOW = re.compile(r"(жр[ая]|жу[ёе]|мяс|шкур|брюх|лент[аы]|диван|жвачк|стад|быдл|дыши|доживать|тухн)", re.I)
+
+
+def parse(path):
+    """Достаём из таблицы VO пары (бит, реплика)."""
+    rows = []
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        if not line.strip().startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) < 3 or cells[0].startswith(("#", "---", ":--")):
+            continue
+        if not re.match(r"VO-?\d", cells[0], re.I):
+            continue
+        # ранние сценарии писались без колонки «Бит формулы» — тогда её нет,
+        # и проверки по битам честно провалятся, а не молча пропустятся
+        beat, text = (cells[2], cells[3]) if len(cells) >= 4 else ("", cells[2])
+        # ремарка режиссёра в курсиве — не произносится, из текста убираем
+        remark = " ".join(re.findall(r"\*\((.*?)\)\*", text))
+        spoken = re.sub(r"\*\(.*?\)\*", "", text).strip()
+        spoken = spoken.strip("«»\"").strip()
+        # Ударения (U+0301 после ударной гласной) — разметка для синтеза, а не
+        # часть слова. Гейт ищет слова по списку («ты», «вы», бытовое/высокое),
+        # и размеченный текст мимо этих списков проходил: у ролика с honest
+        # разметкой падало «обращение к зрителю» и «столкновение регистров»
+        # при неизменном тексте. Снимаем знак ПЕРЕД любыми проверками.
+        spoken = spoken.replace(ACCENT, "")
+        rows.append({"n": cells[0], "time": cells[1], "beat": beat,
+                     "text": spoken, "remark": remark})
+    return rows
+
+
+def first_time(cell):
+    """Начало реплики в секундах из «0:03.5–0:05.2»."""
+    m = re.search(r"(\d+):(\d+(?:\.\d+)?)", cell)
+    return int(m.group(1)) * 60 + float(m.group(2)) if m else None
+
+
+def hits(rows):
+    """Список проверок: (вес, пройдено, название, что не так)."""
+    out = []
+    if not rows:
+        return [(100, False, "таблица VO", "не нашёл ни одной строки VO-N")]
+    text_all = " ".join(r["text"] for r in rows)
+    beats_all = " ".join(r["beat"] for r in rows).upper()
+    first, last = rows[0], rows[-1]
+
+    out.append((10, bool(ADDRESS.search(first["text"])), "обращение к зрителю в первой реплике",
+                "первая фраза не адресована лично («ты/вы») — зритель остаётся наблюдателем"))
+    out.append((10, not WARMUP.search(first["text"]) or bool(GREETING.search(first["text"])),
+                "нет разогрева",
+                "первая фраза начинается с представления или «сегодня поговорим»"))
+
+    missing = [b for b in BEATS if b not in beats_all]
+    out.append((15, not missing, "все биты формулы на месте",
+                f"нет битов: {', '.join(missing)}" if missing else ""))
+
+    # порядок битов: ХУК раньше ПУЛЕМЁТА, РАЗВОРОТ раньше ВЗЛЁТА, ЖАЛО последним
+    idx = {b: next((i for i, r in enumerate(rows) if b in r["beat"].upper()), None)
+           for b in BEATS}
+    seq = [idx[b] for b in BEATS if idx[b] is not None]
+    out.append((10, seq == sorted(seq), "порядок битов",
+                "биты идут не в порядке формулы — кривая энергии ломается"))
+
+    # длина ударной фразы: считаем по предложениям, медиана ядра ≤7 слов
+    sents = [s for s in re.split(r"[.!?…]+", text_all) if s.strip()]
+    lens = [len(s.split()) for s in sents if s.split()]
+    med = statistics.median(lens) if lens else 99
+    out.append((10, med <= 7, f"медиана ударной фразы {med:.0f} слов (норма ≤7)",
+                "фразы длинные — рублёный ритм оригинала теряется"))
+
+    # триада: три и более коротких предложения подряд (пулемёт)
+    triad = any(all(len(s.split()) <= 3 for s in sents[i:i + 3]) for i in range(len(sents) - 2))
+    out.append((10, triad, "есть пулемётная триада",
+                "нет серии из трёх коротких ударов подряд"))
+
+    out.append((8, bool(HIGH.search(text_all) and LOW.search(text_all)),
+                "столкновение регистров",
+                "нет пары «высокое + бытовое» — текст в одном регистре"))
+
+    # тайм-якоря 3–7–21
+    t_first = first_time(first["time"])
+    has_hello = HELLO in beats_all
+    # Считаем по ПЕРВОЙ реплике: она обязана прозвучать в первые 7 секунд.
+    # Если открывает фирменное приветствие, самому хуку даётся до 14 секунд —
+    # но не больше: приветствие держит внимание, а не заменяет удар.
+    hook_row = next((r for r in rows if "ХУК" in r["beat"].upper()), None)
+    t_hook = first_time(hook_row["time"]) if hook_row else None
+    limit = 14.0 if has_hello else 7.0
+    ok_first = t_first is not None and t_first <= 7.0
+    ok_hook = t_hook is not None and t_hook <= limit
+    out.append((7, ok_first and ok_hook,
+                f"первая реплика ≤7с, хук ≤{limit:.0f}с"
+                + (" (с фирменным приветствием)" if has_hello else ""),
+                f"первая реплика на {t_first}с, хук на {t_hook}с — зритель уже ушёл"))
+    turn = next((r for r in rows if "РАЗВОРОТ" in r["beat"].upper()), None)
+    t_turn = first_time(turn["time"]) if turn else None
+    out.append((5, t_turn is not None and 14.0 <= t_turn <= 28.0, "перелом в окне 14–28с",
+                f"разворот на {t_turn}с — вторая перезагрузка внимания не туда"
+                if t_turn else "бита РАЗВОРОТ нет"))
+
+    out.append((5, not SUMMING.search(text_all), "нет подведения итогов",
+                "есть «подводя итог»/«таким образом» — мораль проговорена, глубина схлопывается"))
+    out.append((5, bool(FINALE_OK.search(last["text"])), "финал — удар, а не точка",
+                "последняя реплика заканчивается ровной точкой: нет вопроса, вызова или обрыва"))
+
+    bad = [name for name, pat in FORBIDDEN.items() if re.search(pat, text_all, re.I)]
+    out.append((5, not bad, "нет стоп-приёмов",
+                f"сработали запреты PSYCHOLOGY.md §5: {', '.join(bad)}" if bad else ""))
+    return out
+
+
+def main(argv):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("files", nargs="*")
+    ap.add_argument("--all", action="store_true", help="все *-VO.md в examples/")
+    a = ap.parse_args(argv)
+
+    files = a.files or (sorted(glob.glob("examples/**/*-VO.md", recursive=True))
+                        if a.all else [])
+    if not files:
+        raise SystemExit("нечего проверять: укажи файл или --all")
+
+    worst = 0
+    for f in files:
+        rows = parse(f)
+        checks = hits(rows)
+        score = sum(w for w, ok, _, _ in checks if ok)
+        total = sum(w for w, _, _, _ in checks)
+        score = round(100 * score / total) if total else 0
+        worst = max(worst, 0 if score >= GATE else 1)
+        print(f"\n  ГЕЙТ СЦЕНАРИЯ: {Path(f).name}   реплик: {len(rows)}")
+        for w, ok, name, why in checks:
+            print(f"    [{'OK  ' if ok else 'ПРОВАЛ'}] {name}" + (f"\n             → {why}" if not ok and why else ""))
+        print(f"    ИТОГО {score}/100 — {'взят' if score >= GATE else f'НЕ ВЗЯТ (порог {GATE})'}")
+    print("\n  Не проверяется машиной и остаётся на человеке: выстреливает ли\n"
+          "  притча на развороте, не подменена ли глубина красивыми словами,\n"
+          "  честен ли хук по отношению к содержанию ролика.\n")
+    return worst
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

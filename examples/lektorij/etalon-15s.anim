@@ -1,0 +1,86 @@
+// =============================================================================
+//  ЭТАЛОН-15с — контрольный кусок «планки Фримена».
+//
+//  Назначение: НЕ витрина, а измерительный эталон. Один и тот же 15-секундный
+//  кусок гоняется через QC-гейт (tools/qc_metrics.py) и проверяется машинно по
+//  критериям Рубежа 2 (FREEMAN_TARGET.md §3):
+//     • средняя длина плана ≤ 3.5с  (здесь 6 катов на 15с → ~2.5с);
+//     • громкость озвучки EBU R128 в целевом окне;
+//     • время рендера ≤ 3 мин / 15с;
+//     • golden-frame diff — кадры не «поехали» между правками движка.
+//
+//  Кусок намеренно задействует всё, что легко ломается: жёсткие каты, ECU на
+//  hero-cel лица, жесты (→ смазы), речь (→ липсинк/громкость), свет (cast+form).
+//  Правишь движок → CI перегоняет эталон → гейт говорит «планка взята» или нет.
+//
+//  Рендер:  cargo run --release -- render examples/lektorij/etalon-15s.anim -o etalon.mp4
+//  Метрики: python3 tools/qc_metrics.py --anim examples/lektorij/etalon-15s.anim \
+//             --engine target/release/animdsl --golden-dir tests/golden/etalon-15s
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set stage from "../assets/sets/freeman-stage.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #ccd2ca
+    // фримен-пресет (покадровость) + финиш «старой плёнки»
+    on-twos: 2
+    line-boil: 1.25
+    film-grain: 0.05
+    vignette: 0.12
+    // свет и тень: объём на маске (form) + силуэт на полу (cast), свет справа
+    cast-shadow: 0.40
+    light-angle: 34
+    form-shadow: 0.0        // канон: лицо Фримена ПЛОСКОЕ, без объёма
+    ground-shadow: 1
+}
+
+scene "etalon" (duration: 15s, set: stage) {
+    place freeman at (0.5, 0.74) facing front
+
+    // --- ПЛАН 1 (wide): установка + жест указания (проверяем смаз руки) ---
+    camera wide freeman
+    freeman pose "calm"
+    wait 1.0s
+    freeman pose "point"
+    wait 1.2s
+
+    // --- ПЛАН 2 (medium): говорит всем телом ---
+    camera medium freeman
+    freeman speaks for 2s
+    freeman pose "wide"
+    wait 0.6s
+
+    // --- ПЛАН 3 (close-up): строгий взгляд + реплика в упор ---
+    camera close-up freeman
+    freeman pose "stern"
+    wait 0.8s
+    freeman speaks for 1.4s
+
+    // --- ПЛАН 4 (ECU): экстремум мимики — hero-cel во весь кадр ---
+    camera extreme-close-up freeman
+    freeman pose "hero_rage"
+    wait 1.0s
+    freeman pose "grotesque"
+    wait 1.0s
+
+    // --- ПЛАН 5 (medium): пожатие плечами + указание (смазы конечностей) ---
+    camera medium freeman
+    freeman pose "shrug"
+    wait 1.2s
+    freeman pose "point"
+    wait 1.0s
+
+    // --- ПЛАН 6 (close-up): доводка, моргание, уход в чёрное ---
+    camera close-up freeman
+    freeman pose "calm"
+    wait 0.8s
+    freeman pose "blink"
+    wait 0.2s
+    freeman pose "calm"
+    wait 1.0s
+    transition fade-black 1.2s
+}

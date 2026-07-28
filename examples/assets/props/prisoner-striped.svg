@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 176" width="90" height="176">
+  <defs>
+    <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="1" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- полосы робы (вид со спины): горизонтальные ink/paper -->
+    <clipPath id="back">
+      <path d="M24 118 Q20 62 45 58 Q70 62 66 118 Z"/>
+    </clipPath>
+  </defs>
+  <!-- Фоновый актёр 2 (цех костюмера): заключённый в полосатой робе СТОИТ
+       НОСОМ В УГОЛ, как наказанный ребёнок — вид со спины, голова уткнута в угол,
+       руки висят/за спиной, ссутулен. Привязка — стопы у низа viewBox. Флэт-инк. -->
+  <g filter="url(#ink)" fill="#161612">
+    <!-- ноги стоя (штанины робы тёмные) -->
+    <path d="M32 174 Q30 128 40 122 L44 122 L42 174 Z"/>
+    <path d="M58 174 Q60 128 50 122 L46 122 L48 174 Z"/>
+    <!-- РОБА со спины: тело в клипе, полосы -->
+  </g>
+  <g clip-path="url(#back)">
+    <rect x="18" y="58" width="54" height="62" fill="#e8e6dc"/>
+    <g fill="#1b1b16">
+      <rect x="18" y="58" width="54" height="7"/>
+      <rect x="18" y="72" width="54" height="7"/>
+      <rect x="18" y="86" width="54" height="7"/>
+      <rect x="18" y="100" width="54" height="7"/>
+      <rect x="18" y="114" width="54" height="6"/>
+    </g>
+  </g>
+  <g filter="url(#ink)">
+    <!-- контур робы -->
+    <path d="M24 118 Q20 62 45 58 Q70 62 66 118 Z" fill="none" stroke="#1b1b16" stroke-width="2.2"/>
+    <!-- руки висят вдоль тела (тёмные рукава) -->
+    <path d="M25 66 Q18 88 22 110 Q28 108 30 84 Z" fill="#161612"/>
+    <path d="M65 66 Q72 88 68 110 Q62 108 60 84 Z" fill="#161612"/>
+    <!-- шея + уткнутая в угол голова (вид сзади-сверху) -->
+    <path d="M39 60 L51 60 L50 50 L40 50 Z" fill="#161612"/>
+    <ellipse cx="45" cy="38" rx="17" ry="16" fill="#161612"/>
+    <!-- бритый затылок: блик макушки -->
+    <path d="M33 32 Q45 24 57 32" fill="none" stroke="#3a3a34" stroke-width="2.6" stroke-linecap="round"/>
+  </g>
+</svg>

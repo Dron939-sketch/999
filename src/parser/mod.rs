@@ -192,9 +192,11 @@ fn parse_place(pair: Pair) -> Result<PlaceStmt, AnimError> {
     let mut position = Position::Named(NamedPosition::Center);
     let mut facing = None;
     let mut layer = None;
+    let mut grounded = false;
 
     for part in inner {
         match part.as_rule() {
+            Rule::grounded_clause => grounded = true,
             Rule::position => {
                 position = parse_position(part)?;
             }
@@ -221,6 +223,7 @@ fn parse_place(pair: Pair) -> Result<PlaceStmt, AnimError> {
         position,
         facing,
         layer,
+        grounded,
     })
 }
 
@@ -233,6 +236,7 @@ fn parse_action(pair: Pair) -> Result<ActionStmt, AnimError> {
     match inner.as_rule() {
         Rule::move_action => parse_move_action(inner),
         Rule::pose_action => parse_pose_action(inner),
+        Rule::overlay_action => parse_overlay_action(inner),
         Rule::speak_action => parse_speak_action(inner),
         Rule::lips_action => parse_lips_action(inner),
         Rule::show_action => parse_show_action(inner),
@@ -269,6 +273,14 @@ fn parse_pose_action(pair: Pair) -> Result<ActionStmt, AnimError> {
     let pose = parse_string_literal(inner.next().unwrap());
 
     Ok(ActionStmt::Pose { entity, pose })
+}
+
+fn parse_overlay_action(pair: Pair) -> Result<ActionStmt, AnimError> {
+    let mut inner = pair.into_inner();
+    let entity = inner.next().unwrap().as_str().to_string();
+    let pose = parse_string_literal(inner.next().unwrap());
+
+    Ok(ActionStmt::Overlay { entity, pose })
 }
 
 fn parse_speak_action(pair: Pair) -> Result<ActionStmt, AnimError> {
@@ -458,6 +470,36 @@ fn parse_camera(pair: Pair) -> Result<CameraStmt, AnimError> {
                 intensity,
             })
         }
+        Rule::camera_dutch => {
+            let angle = cmd
+                .into_inner()
+                .next()
+                .unwrap()
+                .as_str()
+                .parse::<f64>()
+                .unwrap_or(0.0);
+            Ok(CameraStmt::Dutch { angle })
+        }
+        Rule::camera_pitch => {
+            let angle = cmd
+                .into_inner()
+                .next()
+                .unwrap()
+                .as_str()
+                .parse::<f64>()
+                .unwrap_or(0.0);
+            Ok(CameraStmt::Pitch { angle })
+        }
+        Rule::camera_angle => {
+            let mut inner = cmd.into_inner();
+            let kind = match inner.next().unwrap().as_str() {
+                "high" => crate::ast::AngleKind::High,
+                "low" => crate::ast::AngleKind::Low,
+                _ => crate::ast::AngleKind::Level,
+            };
+            let target = inner.next().map(|p| p.as_str().to_string());
+            Ok(CameraStmt::Angle { kind, target })
+        }
         Rule::camera_reset => {
             let mut inner = cmd.into_inner();
             let duration = inner.next().map(parse_duration);
@@ -507,6 +549,14 @@ fn parse_transition(pair: Pair) -> Result<TransitionStmt, AnimError> {
             let dur = parse_duration(kind.into_inner().next().unwrap());
             Ok(TransitionStmt::Dissolve(dur))
         }
+        Rule::transition_static => {
+            let dur = parse_duration(kind.into_inner().next().unwrap());
+            Ok(TransitionStmt::Static(dur))
+        }
+        Rule::transition_invert => {
+            let dur = parse_duration(kind.into_inner().next().unwrap());
+            Ok(TransitionStmt::Invert(dur))
+        }
         Rule::transition_cut => Ok(TransitionStmt::Cut),
         Rule::transition_wipe => {
             let mut inner = kind.into_inner();
@@ -536,13 +586,49 @@ fn parse_let(pair: Pair) -> Result<LetStmt, AnimError> {
             let mut parts = prop_pair.into_inner();
             let label = parse_string_literal(parts.next().unwrap());
             let path = parse_string_literal(parts.next().unwrap());
-            let position = parts.next().map(|p| parse_position(p)).transpose()?;
+            let mut position = None;
+            let mut layer = None;
+            let mut grounded = false;
+            for p in parts {
+                match p.as_rule() {
+                    Rule::position => position = Some(parse_position(p)?),
+                    Rule::integer => layer = p.as_str().parse::<i32>().ok(),
+                    Rule::grounded_clause => grounded = true,
+                    _ => {}
+                }
+            }
             Ok(LetStmt {
                 name,
                 kind: LetKind::Prop {
                     label,
                     path,
                     position,
+                    layer,
+                    grounded,
+                },
+            })
+        }
+        Rule::let_text => {
+            let mut parts = prop_pair.into_inner();
+            let content = parse_string_literal(parts.next().unwrap());
+            let mut size = None;
+            let mut position = None;
+            let mut layer = None;
+            for p in parts {
+                match p.as_rule() {
+                    Rule::number => size = p.as_str().parse::<f64>().ok(),
+                    Rule::position => position = Some(parse_position(p)?),
+                    Rule::integer => layer = p.as_str().parse::<i32>().ok(),
+                    _ => {}
+                }
+            }
+            Ok(LetStmt {
+                name,
+                kind: LetKind::Text {
+                    content,
+                    size,
+                    position,
+                    layer,
                 },
             })
         }

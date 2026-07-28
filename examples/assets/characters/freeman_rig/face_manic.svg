@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 200" width="160" height="200">
+  <defs>
+    <filter id="ink" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="1" seed="29" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- Маниакальная ухмылка: один глаз распахнут, другой прищурен, кривая улыбка. -->
+  <g filter="url(#ink)">
+    <path d="M66 158 L64 190 L96 190 L94 158 Z" fill="#0e0e0e"/>
+    <path d="M80 6 Q128 12 130 84 Q130 146 100 172 Q88 182 80 182 Q72 182 60 172 Q30 146 30 84 Q32 12 80 6 Z"
+          fill="#eef1ec" stroke="#0e0e0e" stroke-width="7.2"/>
+    <path d="M31 96 Q34 150 62 174 Q73 182 80 182 Q88 182 99 174 Q126 152 129 98"
+          fill="none" stroke="#0e0e0e" stroke-width="18.0" stroke-linecap="round"/>
+    <path d="M30 78 Q31 60 36 44" fill="none" stroke="#0e0e0e" stroke-width="13.2" stroke-linecap="round"/>
+
+    <circle cx="56" cy="82" r="20" fill="#eef1ec" stroke="#0e0e0e" stroke-width="7.2"/>
+    <circle cx="56" cy="82" r="11" fill="#0e0e0e"/>
+    <path d="M86 84 Q104 74 122 84 Q104 92 86 84 Z" fill="#0e0e0e"/>
+    <path d="M36 60 Q54 52 74 62" fill="none" stroke="#0e0e0e" stroke-width="12.0" stroke-linecap="round"/>
+    <path d="M124 68 Q106 62 88 70" fill="none" stroke="#0e0e0e" stroke-width="12.0" stroke-linecap="round"/>
+    <path d="M46 128 Q70 152 112 124" fill="none" stroke="#0e0e0e" stroke-width="15.6" stroke-linecap="round"/>
+    <path d="M96 130 L104 138 L112 126" fill="none" stroke="#0e0e0e" stroke-width="9.6" stroke-linejoin="round"/>
+  </g>
+</svg>

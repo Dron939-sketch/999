@@ -8,6 +8,13 @@ on:
       - 'claude/**'      # пуши рабочей ветки тоже запускают завод
   # Ручной запуск на любой ветке: Actions → Render Videos → Run workflow
   workflow_dispatch:
+    inputs:
+      production:
+        description: >-
+          id одного продакшена из tools/productions.json (например
+          teorii-lichnosti-intro). Пусто — рендерить всё.
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -26,8 +33,52 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Какой продакшен гнать. Два входа, потому что ручной запуск доступен не
+      # всем токенам: у ассистента `workflow_dispatch` отдаёт 403, а починить
+      # один ролик надо, не переозвучивая остальные восемь. Поэтому тот же
+      # выбор читается из сообщения последнего коммита: маркер `[only: <id>]`.
+      # Пусто в обоих входах — гоним весь манифест, как и раньше.
+      - name: Какой продакшен рендерим
+        env:
+          INPUT_ONLY: ${{ inputs.production }}
+        run: |
+          ONLY="$INPUT_ONLY"
+          if [ -z "$ONLY" ]; then
+            ONLY=$(git log -1 --pretty=%B \
+              | sed -n 's/.*\[only:[[:space:]]*\([A-Za-z0-9_-]*\)[[:space:]]*\].*/\1/p' \
+              | head -1)
+          fi
+          echo "RENDER_ONLY=$ONLY" >> "$GITHUB_ENV"
+          echo "Продакшен: ${ONLY:-ВСЕ}"
+
       - name: Install ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      # Питон-зависимости планки (qc_metrics: golden-diff по SSIM). Без них
+      # измеритель падал на `import numpy` — прогон писал «планка не измерена».
+      - name: Python deps (планка)
+        run: python3 -m pip install --quiet --upgrade numpy pillow
+
+      # Rhubarb Lip Sync — фонемный липсинк (рот артикулирует слоги, не флэпы).
+      # Бинарь кэшируется; при недоступности завод честно падает на RMS-огибающую.
+      - name: Rhubarb cache
+        id: rhubarb-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/rhubarb
+          key: rhubarb-1.13.0-linux
+
+      - name: Install Rhubarb Lip Sync
+        if: steps.rhubarb-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/rhubarb
+          curl -sSL -o /tmp/rhubarb.zip \
+            https://github.com/DanielSWolf/rhubarb-lip-sync/releases/download/v1.13.0/Rhubarb-Lip-Sync-1.13.0-Linux.zip
+          unzip -q /tmp/rhubarb.zip -d ~/rhubarb
+          find ~/rhubarb -name rhubarb -type f -exec chmod +x {} \;
+
+      - name: Expose RHUBARB_BIN
+        run: echo "RHUBARB_BIN=$(find ~/rhubarb -name rhubarb -type f | head -1)" >> "$GITHUB_ENV"
 
       - name: Rust cache
         uses: actions/cache@v4
@@ -44,43 +95,74 @@ jobs:
       # Один завод: картинки → рендер → озвучка → сведение → videos/*.mp4(+mp3)
       - name: Studio (render + voice + mux)
         env:
-          # Озвучка через Frederick (ключ Fish живёт на его сервере) — нужен только токен.
-          # Секрет в репо назван ADMIN_TOKEN (= ADMIN_TOKEN сервера Frederick); поддержим
-          # и FREDERICK_ADMIN_TOKEN, если задан.
+          # ОСНОВНОЙ путь озвучки — ПРЯМОЙ Fish Audio: студия клонировала свой
+          # голос, его id лежит в FISH_AUDIO_VOICE_ID. Frederick — запасной,
+          # включается только если ключа Fish нет.
+          FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
+          # Голос: по умолчанию завод САМ находит в аккаунте модель с
+          # «freeman»/«фримен» в названии. Секрет нужен, только чтобы
+          # переопределить выбор конкретным id.
+          FISH_AUDIO_VOICE_ID: ${{ secrets.FISH_AUDIO_VOICE_ID }}
+          FISH_VOICE_NAME: ${{ secrets.FISH_VOICE_NAME }}
+          # Модель Fish (s2 — новее и живее s1). Пусто = s2 с откатом.
+          FISH_AUDIO_MODEL: ${{ secrets.FISH_AUDIO_MODEL }}
+          # Запасной путь (см. выше).
           FREDERICK_ADMIN_TOKEN: ${{ secrets.FREDERICK_ADMIN_TOKEN != '' && secrets.FREDERICK_ADMIN_TOKEN || secrets.ADMIN_TOKEN }}
           FREDERICK_TTS_URL: ${{ secrets.FREDERICK_TTS_URL }}
-          # ...либо прямой Fish (запасной путь), если Frederick не используем:
-          FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
-          FISH_AUDIO_VOICE_ID: ${{ secrets.FISH_AUDIO_VOICE_ID }}
           IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
           IMAGE_API_PROVIDER: ${{ secrets.IMAGE_API_PROVIDER }}
         run: |
-          # Рендерим ТОЛЬКО тот ролик, над которым работаем (id из productions.json),
-          # чтобы прогон был быстрым. Убери аргумент → соберёт все продакшены.
-          python3 tools/studio.py pereproshivka-intro
+          ONLY="$RENDER_ONLY"
+          # По умолчанию рендерим ВСЕ продакшены из манифеста — регрессии в
+          # любом ролике видны в CI, а не только вручную. Ручной запуск с
+          # заполненным полем `production` гонит ОДИН ролик: правка одного
+          # интро не должна стоить сорока минут раннера и переозвучки всех
+          # остальных.
+          # --strict: QC-гейт роняет прогон на немом/рассинхронном ролике, если
+          # ключи озвучки заданы (иначе черновой режим — только предупреждения).
+          if [ -n "$ONLY" ]; then
+            echo "Один продакшен: $ONLY"
+            python3 tools/studio.py --strict "$ONLY"
+          else
+            python3 tools/studio.py --strict
+          fi
           echo "=== videos/ ==="
           ls -la videos/
 
-      - name: Commit videos to the repo
+      - name: Upload videos to a GitHub Release
+        # always(): даже при красном QC уже отрендеренные здоровые ролики должны
+        # уехать в Release — принцип «отдать хоть что-то». B2: артефакты НЕ в git
+        # (иначе videos/ и история пухнут линейно по прогонам), а в Releases по
+        # rolling-тегу на ветку. GitHub Releases держат до 2ГБ на файл — прежний
+        # 95МБ-предохранитель под git-пуш больше не нужен.
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "render-bot"
-          git config user.email "actions@github.com"
-          # Предохранитель: GitHub жёстко отклоняет push файлов >100МБ. Битрейт
-          # закапан в кодировщике (~14МБ/52с), но на всякий случай не коммитим
-          # ничего тяжелее 95МБ — вместо падения пайплайна честно логируем.
-          for f in videos/*.mp4; do
-            [ -f "$f" ] || continue
-            sz=$(stat -c%s "$f")
-            if [ "$sz" -gt 99614720 ]; then
-              echo "ПРОПУСК (слишком большой, $((sz/1048576))МБ): $f — не коммичу."
-              rm -f "$f"
-            fi
-          done
-          git add videos/*.mp4 videos/*.mp3 2>/dev/null || git add videos/*.mp4
-          if git diff --cached --quiet; then
-            echo "Видео не изменились — коммит не нужен."
+          ONLY="$RENDER_ONLY"
+          shopt -s nullglob
+          assets=(videos/*.mp4 videos/*.mp3)
+          if [ ${#assets[@]} -eq 0 ]; then
+            echo "Нет готовых роликов — заливать нечего."
             exit 0
           fi
-          git commit -m "CI: обновлены готовые видео и озвучка в videos/ [skip ci]"
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin HEAD:"${GITHUB_REF_NAME}"
+          TAG="renders-${GITHUB_REF_NAME//\//-}"
+          NOTES="Автосборка роликов и озвучки для ветки \`$GITHUB_REF_NAME\` (commit \`$GITHUB_SHA\`). Обновляется на каждый прогон CI. Немой = рендер без голоса (TTS был недоступен)."
+          echo "Заливаю ${#assets[@]} файл(ов) в Release '$TAG' (commit $GITHUB_SHA)"
+          if [ -n "$ONLY" ]; then
+            # Прогон одного ролика ДОЗАЛИВАЕТ, а не пересоздаёт релиз: videos/
+            # не лежит в git, поэтому в таком прогоне собран ровно один ролик,
+            # и пересоздание стёрло бы ссылки на все остальные.
+            gh release view "$TAG" >/dev/null 2>&1 || \
+              gh release create "$TAG" --target "$GITHUB_SHA" \
+                --title "Renders — $GITHUB_REF_NAME" --notes "$NOTES"
+            gh release upload "$TAG" "${assets[@]}" --clobber
+          else
+            # Полный прогон — пересоздаём rolling-релиз на текущий SHA.
+            gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
+            gh release create "$TAG" "${assets[@]}" \
+              --target "$GITHUB_SHA" \
+              --title "Renders — $GITHUB_REF_NAME" \
+              --notes "$NOTES"
+          fi
+          echo "Готово: $(gh release view "$TAG" --json url -q .url)"

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <filter id="ink" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="1" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+
+  <!-- Светлое поле-«бумага» (чёрный субъект читается на нём) -->
+  <rect width="1280" height="720" fill="#d4d7cf"/>
+
+  <!-- Ряд безликих домов-башен: город, где все спешат. Средний тон, плоско. -->
+  <g filter="url(#ink)" stroke="#141410" stroke-width="5" stroke-linejoin="round">
+    <rect x="-10" y="150" width="230" height="330" fill="#a2a59d"/>
+    <rect x="235" y="90"  width="200" height="390" fill="#b0b3ab"/>
+    <rect x="450" y="170" width="180" height="310" fill="#9a9d95"/>
+    <rect x="645" y="60"  width="210" height="420" fill="#a2a59d"/>
+    <rect x="870" y="140" width="200" height="340" fill="#b4b7af"/>
+    <rect x="1085" y="100" width="210" height="380" fill="#9a9d95"/>
+  </g>
+
+  <!-- Пустые тёмные окна — сетка, безликость, «толпа-фасады» -->
+  <g fill="#5f625b">
+    <!-- дом 1 -->
+    <rect x="20" y="185" width="34" height="44"/><rect x="74" y="185" width="34" height="44"/><rect x="128" y="185" width="34" height="44"/>
+    <rect x="20" y="255" width="34" height="44"/><rect x="74" y="255" width="34" height="44"/><rect x="128" y="255" width="34" height="44"/>
+    <rect x="20" y="325" width="34" height="44"/><rect x="74" y="325" width="34" height="44"/><rect x="128" y="325" width="34" height="44"/>
+    <!-- дом 2 -->
+    <rect x="260" y="130" width="32" height="42"/><rect x="312" y="130" width="32" height="42"/><rect x="364" y="130" width="32" height="42"/>
+    <rect x="260" y="200" width="32" height="42"/><rect x="312" y="200" width="32" height="42"/><rect x="364" y="200" width="32" height="42"/>
+    <rect x="260" y="270" width="32" height="42"/><rect x="312" y="270" width="32" height="42"/><rect x="364" y="270" width="32" height="42"/>
+    <!-- дом 4 (высокий) -->
+    <rect x="668" y="100" width="34" height="46"/><rect x="726" y="100" width="34" height="46"/><rect x="784" y="100" width="34" height="46"/>
+    <rect x="668" y="176" width="34" height="46"/><rect x="726" y="176" width="34" height="46"/><rect x="784" y="176" width="34" height="46"/>
+    <rect x="668" y="252" width="34" height="46"/><rect x="726" y="252" width="34" height="46"/><rect x="784" y="252" width="34" height="46"/>
+    <!-- дом 6 -->
+    <rect x="1105" y="140" width="32" height="42"/><rect x="1157" y="140" width="32" height="42"/><rect x="1209" y="140" width="32" height="42"/>
+    <rect x="1105" y="210" width="32" height="42"/><rect x="1157" y="210" width="32" height="42"/><rect x="1209" y="210" width="32" height="42"/>
+    <rect x="1105" y="280" width="32" height="42"/><rect x="1157" y="280" width="32" height="42"/><rect x="1209" y="280" width="32" height="42"/>
+  </g>
+
+  <!-- Тротуар: средний тон, светлее домов → под ним ляжет отбрасываемая тень -->
+  <rect x="0" y="478" width="1280" height="242" fill="#b0b3ab"/>
+  <g filter="url(#ink)" stroke="#141410" stroke-width="6">
+    <line x1="0" y1="480" x2="1280" y2="480"/>
+    <!-- пара плит-стыков, чтобы пол не был пустым (мало деталей) -->
+    <line x1="0" y1="600" x2="1280" y2="600" stroke-width="3" opacity="0.5"/>
+  </g>
+</svg>

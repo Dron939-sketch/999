@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 190" width="560" height="190">
+  <defs>
+    <filter id="stamp-ink" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="17" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- ПЕЧАТЬ (финальные титры): прямоугольный штамп красной штемпельной краской.
+       Штампуется анимацией (scales over + rotates), неровность краски — фильтром.
+       Полупрозрачность — как у настоящего оттиска на бумаге. -->
+  <g filter="url(#stamp-ink)" opacity="0.88"
+     fill="none" stroke="#a32d24" font-family="DejaVu Sans, sans-serif">
+    <!-- двойная рамка -->
+    <rect x="10" y="10" width="540" height="170" stroke-width="7"/>
+    <rect x="24" y="24" width="512" height="142" stroke-width="2.5"/>
+    <!-- текст оттиска -->
+    <g fill="#a32d24" stroke="none" text-anchor="middle" font-weight="bold">
+      <text x="280" y="72" font-size="34" letter-spacing="3">МАТЕРИАЛЫ ЛЕКЦИЙ</text>
+      <text x="280" y="112" font-size="26" letter-spacing="6">ПОДГОТОВИЛ</text>
+      <text x="280" y="152" font-size="34" letter-spacing="2">МЕЙСТЕР А.Ю.</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,27 @@
+name: Голоса Fish (найти voice_id)
+
+# Кнопка «Run workflow» печатает список голосов аккаунта Fish Audio:
+# reference_id + название. Нужный id кладём в секрет FISH_AUDIO_VOICE_ID —
+# именно им завод озвучивает ролики (голос Фримена вместо стокового).
+on:
+  workflow_dispatch:
+
+jobs:
+  voices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Показать голоса аккаунта
+        env:
+          FISH_AUDIO_API_KEY: ${{ secrets.FISH_AUDIO_API_KEY }}
+        run: |
+          if [ -z "$FISH_AUDIO_API_KEY" ]; then
+            echo "Секрет FISH_AUDIO_API_KEY не задан — добавь его в"
+            echo "Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          python3 tools/voiceover.py --list-voices
+          echo ""
+          echo "Скопируй id нужного голоса и положи в секрет FISH_AUDIO_VOICE_ID."

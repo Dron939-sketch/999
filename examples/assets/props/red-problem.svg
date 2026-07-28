@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- Красный «осколок-проблема»: угловатый, брошенный. В руках предпринимателя
+       та же форма читается как ценность/куш (spot-red выживает в ч/б). -->
+  <g filter="url(#ink)">
+    <polygon points="60,8 96,40 82,96 34,102 16,54 40,22"
+             fill="#c31a1a" stroke="#7a0e0e" stroke-width="4" stroke-linejoin="round"/>
+    <!-- внутренние грани-блики (плоские, без градиента) -->
+    <polygon points="60,8 40,22 54,58 78,50" fill="#e23b3b"/>
+    <polygon points="54,58 34,102 60,92" fill="#9c1414"/>
+    <polygon points="78,50 82,96 60,92 54,58" fill="#b81818"/>
+  </g>
+</svg>
