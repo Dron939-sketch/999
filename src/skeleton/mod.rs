@@ -536,12 +536,39 @@ pub fn apply_walk_cycle(states: &mut [BoneState], walk_phase: f64, speed: f64) {
             "arm_right" => {
                 state.rotation += (-phase).sin() * 25.0 * speed;
             }
-            "leg_left" => {
-                // Legs alternate forward/back
-                state.rotation += (phase).sin() * 20.0 * speed;
+            // ИМЕНА КОСТЕЙ ЗДЕСЬ ОБЯЗАНЫ СОВПАДАТЬ С РИГОМ. Цикл искал
+            // `leg_left`/`leg_right` и `arm_left`/`arm_right`, а у Фримена
+            // кости называются `thigh_*`, `shin_*`, `upper_arm_*` — ни одна
+            // ветка не срабатывала. Из всего цикла работали только покачивание
+            // корпуса и головы, и фигура ЕХАЛА по полу, не переставляя ног.
+            // Молча: цикл заводился, `speed` считался, кадры менялись.
+            "leg_left" | "thigh_left" => {
+                // ХОД НА КАМЕРУ ЧИТАЕТСЯ ДЛИНОЙ, А НЕ УГЛОМ. При движении
+                // вглубь нога вынесена вперёд почти вдоль оси зрения: её угол
+                // на экране почти не меняется, а вот ДЛИНА меняется сильно —
+                // выставленная нога кажется длиннее, опорная короче. Поэтому
+                // к повороту добавлено попеременное растяжение бедра; масштаб
+                // кости наследуется голенью, так что удлиняется вся нога.
+                state.rotation += (phase).sin() * 16.0 * speed;
+                state.scale.1 *= 1.0 + (phase).sin() * 0.12 * speed;
             }
-            "leg_right" => {
-                state.rotation += (-phase).sin() * 20.0 * speed;
+            "leg_right" | "thigh_right" => {
+                state.rotation += (-phase).sin() * 16.0 * speed;
+                state.scale.1 *= 1.0 - (phase).sin() * 0.12 * speed;
+            }
+            // Голень догибается только на выносе (вперёд), как в живом шаге:
+            // назад нога идёт прямой. `min(0.0)` и отсекает половину периода.
+            "shin_left" => {
+                state.rotation += (phase).sin().min(0.0) * 12.0 * speed;
+            }
+            "shin_right" => {
+                state.rotation += (-phase).sin().min(0.0) * 12.0 * speed;
+            }
+            "upper_arm_left" => {
+                state.rotation += (-phase).sin() * 14.0 * speed;
+            }
+            "upper_arm_right" => {
+                state.rotation += (phase).sin() * 14.0 * speed;
             }
             _ => {}
         }
