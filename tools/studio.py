@@ -203,6 +203,9 @@ def step_sfx(prod, video_mp4, out_sfx, prepped_anim=None):
         times = Path(str(prepped_anim) + ".times.json") if prepped_anim else None
         if times and times.exists():
             cmd += ["--times-json", str(times)]
+            mapf = Path(str(prepped_anim) + ".map.json")
+            if mapf.exists():
+                cmd += ["--map-json", str(mapf)]
         run(cmd)
         return out_sfx if Path(out_sfx).exists() else None
     except subprocess.CalledProcessError as e:

@@ -295,6 +295,9 @@ def main(argv):
     ap.add_argument("vo_md")
     ap.add_argument("-o", "--output", required=True)
     ap.add_argument("--duration", type=float, default=55.0)
+    ap.add_argument("--map-json", help="карта блоков (.map.json): какой блок какой "
+                                       "репликой VO озвучен — нужна, когда есть "
+                                       "дикторские реплики без речевого блока")
     ap.add_argument("--times-json", help="`animdsl timing` подготовленного сценария: "
                                          "фактические времена реплик. Есть — тайм-коды "
                                          "звука переводятся с плана на факт.")
@@ -308,8 +311,25 @@ def main(argv):
         try:
             with open(args.times_json, encoding="utf-8") as f:
                 blocks = json.load(f)
-            real = [(b["start"], b["end"]) for b in blocks.get("blocks", [])]
-            planned = parse_vo_times(args.vo_md)
+            real_all = [(b["start"], b["end"]) for b in blocks.get("blocks", [])]
+            planned_all = parse_vo_times(args.vo_md)
+            # ДИКТОРСКИЕ РЕПЛИКИ ЛОМАЛИ ПАРУ. У реплики за кадром нет речевого
+            # блока (рот открывать некому), поэтому реплик в таблице больше,
+            # чем блоков у движка, и сверка «поровну» отключала перевод целиком
+            # — в «Перепрошивке» с двумя дикторскими звук так и остался бы на
+            # плановых секундах. Пары строим по КАРТЕ блоков (`.map.json`,
+            # тот же файл, по которому собирается голос): каждый блок знает
+            # свой номер VO, дикторские просто не участвуют в опорах.
+            if args.map_json and os.path.isfile(args.map_json):
+                with open(args.map_json, encoding="utf-8") as f:
+                    order = json.load(f)
+                pairs = [(planned_all[n - 1], real_all[i])
+                         for i, n in enumerate(order)
+                         if i < len(real_all) and 1 <= n <= len(planned_all)]
+                planned = [a for a, _ in pairs]
+                real = [b for _, b in pairs]
+            else:
+                planned, real = planned_all, real_all
             if real and len(real) == len(planned):
                 before = list(cues)
                 # Хвост после последней реплики (титры, точка) тянется по
