@@ -614,7 +614,7 @@ Let bindings create named prop instances within a scene. This is useful for
 introducing props dynamically without a top-level import.
 
 ```
-let <name> = prop("<label>", "<path>") [at <position>]
+let <name> = prop("<label>", "<path>") [at <position>] [facing left|right] [layer <n>] [on floor]
 ```
 
 ```
@@ -624,6 +624,22 @@ let phone = prop("phone", "assets/props/phone.svg") at near detective
 
 The `<label>` is a human-readable name for the prop. The `<path>` is the file
 path to the SVG asset. The optional `at` clause sets the initial position.
+
+#### `facing left|right` — у предмета есть ПЕРЁД
+
+```
+let rat = prop("rat", "../assets/props/rat.svg") at (0.804, 0.653) facing left on floor
+```
+
+Рисунок пропа по канону смотрит ВПРАВО; `facing left` его зеркалит. Нужно
+всему, у чего есть перёд: зверю, фигуре, руке. Двери, очкам, кабелю не нужно —
+у них передней стороны нет.
+
+Без этого крыса, бегущая справа налево, бежала задом: развернуть проп можно
+было только отрицательным масштабом, а тот же знак задаёт и размер, поэтому
+разворот и рост нельзя было менять раздельно. Приёмщик `studio.lint_propy`
+ругается, когда предмет С ПЕРЕДОМ едет влево без `facing left`
+(`PRAVILA-DVIZHENIYA.md` §6).
 
 #### `on floor` — предмет СТОИТ на полу локации
 

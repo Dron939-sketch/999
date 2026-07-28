@@ -588,11 +588,15 @@ fn parse_let(pair: Pair) -> Result<LetStmt, AnimError> {
             let path = parse_string_literal(parts.next().unwrap());
             let mut position = None;
             let mut layer = None;
+            let mut facing = None;
             let mut grounded = false;
             for p in parts {
                 match p.as_rule() {
                     Rule::position => position = Some(parse_position(p)?),
                     Rule::integer => layer = p.as_str().parse::<i32>().ok(),
+                    Rule::facing_clause => {
+                        facing = Some(parse_direction(p.into_inner().next().unwrap()));
+                    }
                     Rule::grounded_clause => grounded = true,
                     _ => {}
                 }
@@ -604,6 +608,7 @@ fn parse_let(pair: Pair) -> Result<LetStmt, AnimError> {
                     path,
                     position,
                     layer,
+                    facing,
                     grounded,
                 },
             })

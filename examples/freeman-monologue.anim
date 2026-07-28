@@ -16,9 +16,15 @@ config {
     height: 720
     fps: 24
     background: #ccd2ca
-    // aged-film post — the finishing layer of the Freeman look
-    film-grain: 0.34
-    vignette: 0.5
+    // aged-film post — the finishing layer of the Freeman look.
+    // ЗЕРНО 0.34 И ВИНЬЕТКА 0.5 УБРАНЫ. Витрина стиля отстала от замера: именно
+    // это зерно пересчитывалось каждый кадр поверх рисунка, живущего на двойках,
+    // и давало «дёрганье» 4.39 против 2.04 (MELOCHI.md). Плюс оно же плодило
+    // полутона — 26 тонов против шести у оригинала (SIMILARITY.md §6).
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
 }
 
 scene "monologue" (duration: 20s, set: stage) {
@@ -28,13 +34,16 @@ scene "monologue" (duration: 20s, set: stage) {
     camera medium freeman
     freeman pose "calm"
     wait 1.2s
-    freeman pose "blink"
+    freeman overlays "blink"
     wait 0.2s
 
     // говорит (авто-речь: фонемы чередуются сами)
+    //  Мимика — слоем, тело ведут полные позы: `pose "wide"` поставил бы телу
+    //  дефолт рига и погасил жест (PRAVILA-DVIZHENIYA.md §5).
     camera close-up freeman
+    freeman pose "open"
     freeman speaks for 2s
-    freeman pose "wide"
+    freeman overlays "wide"
     wait 1s
 
     // пожимает плечами
@@ -50,13 +59,17 @@ scene "monologue" (duration: 20s, set: stage) {
     // задумался
     camera close-up freeman
     freeman pose "think"
-    wait 2s
+    wait 1.1s
+    freeman pose "myslitel"
+    wait 0.9s
 
     // строгий взгляд в упор
     camera extreme-close-up freeman
-    freeman pose "stern"
+    freeman pose "v_upor"
+    freeman overlays "stern"
     wait 1.4s
-    freeman pose "angry"
+    freeman pose "yarost_telom"
+    freeman overlays "angry"
     wait 0.8s
     freeman speaks for 1.2s
 
@@ -66,7 +79,7 @@ scene "monologue" (duration: 20s, set: stage) {
     wait 1.6s
     freeman pose "calm"
     wait 0.8s
-    freeman pose "blink"
+    freeman overlays "blink"
     wait 0.2s
     freeman pose "calm"
     wait 1s

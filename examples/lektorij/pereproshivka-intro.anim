@@ -204,7 +204,7 @@ scene "cell-hook" (duration: 24s, set: cell) {
     // поэтому удар делается не вставанием, а СОКРАЩЕНИЕМ ДИСТАНЦИИ: ещё один
     // шаг из 0.90 в 0.955 по глубине — фигура растёт, зритель отшатывается.
     // Лязг в SFX + короткая тряска на акценте.
-    freeman pose "stern"
+    freeman overlays "stern"
     camera shake 0.18s intensity 0.3
     freeman pose "calm"
     freeman moves-to (0.55, 0.955) over 0.9s
@@ -218,13 +218,14 @@ scene "cell-hook" (duration: 24s, set: cell) {
         freeman speaks for 4.6s
         do {
             wait 2.3s
+            freeman pose "v_upor"          // ладонь в камеру на добивке
             camera extreme-close-up freeman
         }
     }
     // жест-приглашение: «выйти?» — руки распахнуты, потом жёсткий взгляд
     freeman pose "open"
     wait 0.35s
-    freeman pose "stern"
+    freeman overlays "stern"
     wait 0.3s
     // ТВ-шумовая склейка (глитч-удар в стиле Фримена) → книга
     transition static 0.5s
@@ -324,12 +325,13 @@ scene "alive" (duration: 9s, set: mind) {
     camera wide
     wait 0.25s
     camera close-up freeman
-    freeman pose "stern"
+    freeman overlays "stern"
     //lip 7
     together {
         freeman speaks for 3.3s
         do {
             wait 1.4s
+            freeman pose "point"           // тычет в зрителя
             camera extreme-close-up freeman
         }
     }
@@ -369,24 +371,28 @@ scene "void-punch" (duration: 7s, set: void) {
     // сколько их. Общий сначала, врез после.
     camera wide
     camera dutch -2
-    freeman pose "flash_scream"
+    freeman overlays "flash_scream"
     wait 0.08s
-    freeman pose "flash_rage"
+    freeman overlays "flash_rage"
     wait 0.08s
-    freeman pose "flash_dead"
+    freeman overlays "flash_dead"
     wait 0.08s
     camera shake 0.22s intensity 0.5
-    freeman pose "grotesque"
+    freeman overlays "grotesque"
     //lip 8
     together {
         freeman speaks for 4.0s
         do {
             wait 2.0s
+            // Руки, вскинутые в «despair», иначе простояли бы наверху весь
+            // финал: слой лица их не трогает (studio.lint_arms). Крик уходит
+            // из рук в корпус — и жест становится ударом, а не забытой позой.
+            freeman pose "yarost_telom"
             camera close-up freeman
         }
     }
     // оскал гаснет в прищур-ухмылку, тишина, обрыв в черноту
-    freeman pose "smug"
+    freeman overlays "smug"
     wait 0.8s
     transition fade-black 0.8s
 }

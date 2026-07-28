@@ -91,13 +91,14 @@ scene "dver" (duration: 50s, set: dveri) {
             wait 0.7s
             freeman pose "point"
             wait 0.7s
+            freeman pose "no"              // «да не думал ты» — развёл руками
             camera medium freeman
         }
     }
 
     // ── ОТРИЦАНИЕ (VO-3): ИДЁТ НА КАМЕРУ, уходя от двери ──────────────────
     freeman pose "calm"
-    freeman pose "smug"
+    freeman overlays "smug"
     //lip 3
     together {
         freeman speaks for 7.9s
@@ -106,11 +107,13 @@ scene "dver" (duration: 50s, set: dveri) {
             freeman moves-to (0.46, 0.72) over 2.6s
             wait 0.4s
             camera medium freeman
-            freeman pose "doubt"
+            freeman pose "idet"            // идёт на камеру, переставляя ноги
+            freeman overlays "doubt"
             freeman moves-to (0.44, 0.79) over 2.4s
             wait 0.5s
             camera close-up freeman
-            freeman pose "hero_skeptic"
+            freeman pose "hips"            // остановился, руки в боки
+            freeman overlays "hero_skeptic"
         }
     }
 
@@ -139,9 +142,9 @@ scene "dver" (duration: 50s, set: dveri) {
             camera close-up freeman
         }
     }
-    freeman pose "flash_disgust"
+    freeman overlays "flash_disgust"
     wait 0.08s
-    freeman pose "stern"
+    freeman overlays "stern"
     wait 0.5s
 
     // ── РАЗВОРОТ (VO-5): ракурс СНИЗУ, он один среди закрытых дверей ──────
@@ -153,12 +156,12 @@ scene "dver" (duration: 50s, set: dveri) {
             freeman pose "chetvert_pravo"
             wait 1.6s
             camera wide
-            freeman pose "flash_pupils"
+            freeman overlays "flash_pupils"
             wait 0.16s
             freeman pose "v_upor"
             wait 1.4s
             camera medium freeman
-            freeman pose "stern"
+            freeman overlays "stern"
         }
     }
     wait 0.5s
@@ -175,7 +178,7 @@ scene "dver" (duration: 50s, set: dveri) {
             freeman pose "point"
             wait 1.0s
             camera medium freeman
-            freeman pose "hero_wow"
+            freeman overlays "hero_wow"
             wait 1.4s
             camera wide
         }
@@ -187,8 +190,10 @@ scene "dver" (duration: 50s, set: dveri) {
         do {
             camera medium freeman
             wait 2.2s
+            freeman pose "raskryl"         // раскрыл обе на взлёте
             camera close-up freeman
             wait 2.2s
+            freeman pose "open"
             camera wide
         }
     }
@@ -200,7 +205,7 @@ scene "dver" (duration: 50s, set: dveri) {
     camera shake 0.3s intensity 3
     wait 0.8s
     slovo moves-to (0.5, -2.0) over 0.22s ease-in
-    freeman pose "flash_grin"
+    freeman overlays "flash_grin"
     wait 0.08s
 
     // ── ЖАЛО-CTA (VO-8): открытая дверь МЕДЛЕННО ЗАКРЫВАЕТСЯ ──────────────
@@ -216,12 +221,14 @@ scene "dver" (duration: 50s, set: dveri) {
         do {
             camera medium freeman
             wait 1.2s
-            freeman pose "hero_sly"
+            freeman pose "point"           // «сколько дверей ты закрыл?»
+            freeman overlays "hero_sly"
             wait 1.0s
+            freeman pose "hips"
             camera close-up freeman
         }
     }
-    freeman pose "hero_wink"
+    freeman overlays "hero_wink"
     wait 0.5s
     camera reset over 0.5s
     freeman pose "calm"
