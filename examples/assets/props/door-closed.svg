@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 460" width="200" height="460">
+  <defs><filter id="ink" x="-8%" y="-8%" width="116%" height="116%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="17" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter></defs>
+  <!-- ЗАКРЫТАЯ ДВЕРЬ ОТДЕЛЬНЫМ ПРЕДМЕТОМ: их будет много. Каждое решение за
+       полсекунды закрывает одну — коридор закрытых дверей строится в кадре,
+       а не называется словом. -->
+  <g filter="url(#ink)">
+    <path d="M22 634 L178 634 L196 700 L4 700 Z" fill="#f2f3ef" opacity="0"/>
+    <path d="M30 26 C 26 160, 26 320, 32 436 L168 438
+             C 174 320, 174 160, 170 24 Z" fill="#1a1a17"/>
+    <path d="M18 22 C 14 160, 14 322, 20 446 L180 448
+             C 186 322, 186 160, 182 20" stroke="#f2f3ef" stroke-width="8"
+             fill="none" stroke-linecap="round"/>
+    <path d="M14 22 L186 18" stroke="#f2f3ef" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <circle cx="54" cy="248" r="9" fill="#e8e9e4" stroke="#0e0e0e" stroke-width="4"/>
+  </g>
+</svg>

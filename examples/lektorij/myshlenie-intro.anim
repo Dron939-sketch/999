@@ -1,37 +1,44 @@
 // =============================================================================
 //  «МЫШЛЕНИЕ И КОГНИТИВНЫЕ ИСКАЖЕНИЯ» — продающее интро курса
-//  (meysternlp.ru/blog/lektorij/myshlenie — 10 лекций, Канеман и Тверски).
 //
-//  Сквозная игра — ПОЛСЕКУНДЫ: заявлена в хуке («за тебя решили за
-//  полсекунды»), выстреливает в жале («или решай дальше за полсекунды?»).
-//  Это быстрая система Канемана, названная не термином, а сроком.
+//  ФИШКА — ДВЕРЬ, КОТОРАЯ ЗАКРЫЛАСЬ (PRODAZHA.md §2). Мысль не проговаривается,
+//  а ПОКАЗЫВАЕТСЯ, и весь монтаж построен на этом:
 //
-//  ДЛИТЕЛЬНОСТИ РЕПЛИК ЧЕСТНЫЕ С ПЕРВОГО РАЗА. Считаны по темпу диктора,
-//  снятому с готовых роликов: 1.51 слова в секунду. Прежние два интро писались
-//  «на глаз», занижали вдвое, и камера потом стояла по десять секунд.
+//    · ролик открывается СО СПИНЫ: Фримен стоит лицом к закрытой двери, и
+//      зритель первые секунды смотрит туда же, куда он. Ракурс `spina` — тот
+//      самый, что до этой недели был сломан и не использовался ни разу;
+//    · на хуке он ОБОРАЧИВАЕТСЯ к камере — три четверти, потом в упор. Поворот
+//      и есть склейка: дверь остаётся за спиной, зритель остаётся с ним;
+//    · на отрицании он ИДЁТ НА КАМЕРУ, переставляя ногами (цикл ходьбы чинен
+//      в этом же заходе) — уходит от двери, как уходит зритель от мысли;
+//    · на пулемёте за спиной ОДНА ЗА ДРУГОЙ ВСТАЮТ ЕЩЁ ДВЕ ЗАКРЫТЫЕ ДВЕРИ.
+//      Ни одного слова про «каждое решение» — это видно;
+//    · на взлёте сбоку выезжает ОТКРЫТАЯ дверь: единственное светлое пятно в
+//      кадре. «А следующая — прямо перед тобой» сказано светом, а не словом;
+//    · под жало открытая дверь МЕДЛЕННО ЗАКРЫВАЕТСЯ. Финальный кадр — она
+//      почти закрыта, и вопрос «сколько дверей ты закрыл сегодня?» повисает
+//      над тем, что зритель видит своими глазами.
 //
-//  РАКУРСЫ РАЗВОРОТА ИДУТ В ДЕЛО. До сих пор все интро снимались анфасом,
-//  хотя в риге четырнадцать поз разворота. Здесь четверть оборота на
-//  приговорах и три четверти на переломе — те два ракурса, что взял гейт
-//  разворота (tools/turnaround.py).
+//  Проверка фишки: выключи звук — понятно, о чём ролик. Это и отличает
+//  локацию-вещдок от локации-фона.
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
 import set titry from "../assets/sets/lektorij-final.svg"
-import set pole from "../assets/sets/field-empty.svg"
+import set dveri from "../assets/sets/doors-empty.svg"
 
 config {
     width: 1280
     height: 720
     fps: 24
-    background: #b0b3ab
+    background: #b9bbb4
     monochrome: true
     mono-contrast: 2.2
     snow: 0.35
     on-twos: 2
     line-boil: 1.25
     film-grain: 0.05
-    vignette: 0.12
+    vignette: 0.14
     film-flicker: 0.04
     gate-weave: 0.8
     film-scratch: 0.25
@@ -41,134 +48,139 @@ config {
     rim-light: 0.0
 }
 
-scene "polsekundy" (duration: 47s, set: pole) {
+scene "dver" (duration: 50s, set: dveri) {
     transition static 0.35s
 
-    place freeman at (0.5, 0.585) facing front
-    freeman scales 0.80 over 0.01s
-    let slovo = text("ПОЛСЕКУНДЫ", 120) at (0.5, -2.0) layer 6
+    place freeman at (0.375, 0.66) facing front
+    freeman scales 0.62 over 0.01s
+    let d2 = prop("door-closed", "../assets/props/door-closed.svg") at (0.5, -1.0) layer 1
+    d2 scales 0.55 over 0.01s
+    let d3 = prop("door-closed", "../assets/props/door-closed.svg") at (0.5, -1.0) layer 1
+    d3 scales 0.55 over 0.01s
+    let dopen = prop("door-open", "../assets/props/door-open.svg") at (1.4, 0.462) layer 1
+    dopen scales 0.74 over 0.01s
+    let slovo = text("СКОЛЬКО?", 130) at (0.5, -2.0) layer 6
     slovo scales 2.4 over 0.01s
 
-    // ── t=0..1.2 БЕЗ СЛОВ ─────────────────────────────────────────────────
+    // ── БЕЗ СЛОВ: он стоит СПИНОЙ, лицом к закрытой двери ─────────────────
     camera wide
-    freeman pose "open"
-    wait 1.2s
+    freeman pose "spina"
+    wait 1.5s
 
-    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1) ──────────────────────────────────────
-    camera medium freeman
-    freeman pose "smug"
+    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1): всё ещё спиной ──────────────────────
     //lip 1
     together {
         freeman speaks for 3.3s
         do {
-            wait 1.7s
-            camera close-up freeman
+            wait 1.6s
+            camera medium freeman
         }
     }
-    freeman pose "calm"
-    wait 0.5s
 
-    // ── ХУК (VO-2): ракурс СВЕРХУ — зритель мелкий ────────────────────────
-    freeman moves-to (0.63, 0.585) over 0.01s
-    freeman pose "doubt"
+    // ── ХУК (VO-2): ОБОРАЧИВАЕТСЯ. Поворот и есть склейка ─────────────────
     //lip 2
-    together {
-        freeman speaks for 4.0s
-        do {
-            camera angle high freeman
-            wait 2.0s
-            camera medium freeman
-        }
-    }
-    // ── ХУК-добивка (VO-3): КАТ крупный, фигура ВЛЕВО-треть ───────────────
-    freeman moves-to (0.37, 0.585) over 0.01s
-    freeman pose "v_upor"
-    //lip 3
-    together {
-        freeman speaks for 3.3s
-        do {
-            camera medium freeman
-            wait 1.7s
-            camera close-up freeman
-        }
-    }
-    freeman pose "flash_pupils"
-    wait 0.08s
-    freeman pose "hero_skeptic"
-    wait 0.5s
-
-    // ── ПУЛЕМЁТ (VO-4): три приговора, ЧЕТВЕРТЬ ОБОРОТА ───────────────────
-    freeman moves-to (0.5, 0.585) over 0.01s
-    //lip 4
-    together {
-        freeman speaks for 4.0s
-        do {
-            camera medium freeman
-            freeman pose "povorot_pravo"
-            wait 1.4s
-            camera close-up freeman
-            freeman pose "povorot_levo"
-            wait 1.4s
-            camera medium freeman
-            freeman pose "calm"
-        }
-    }
-    // ── ПУЛЕМЁТ финал (VO-5): презрение ───────────────────────────────────
-    freeman pose "otvraschenie"
-    //lip 5
     together {
         freeman speaks for 4.6s
         do {
+            freeman pose "polu_spina"
+            wait 0.7s
             camera close-up freeman
-            wait 2.3s
+            freeman pose "chetvert_levo"
+            wait 1.0s
+            freeman pose "v_upor"
+            wait 1.4s
             camera medium freeman
         }
     }
-    camera shake 0.35s intensity 2
+
+    // ── ОТРИЦАНИЕ (VO-3): ИДЁТ НА КАМЕРУ, уходя от двери ──────────────────
+    freeman pose "smug"
+    //lip 3
+    together {
+        freeman speaks for 7.9s
+        do {
+            camera wide
+            freeman moves-to (0.46, 0.72) over 2.6s
+            wait 0.4s
+            camera medium freeman
+            freeman moves-to (0.44, 0.79) over 2.4s
+            wait 0.5s
+            camera close-up freeman
+        }
+    }
+
+    // ── ПУЛЕМЁТ (VO-4): за спиной встают ещё две закрытые двери ───────────
+    freeman pose "puppet"
+    //lip 4
+    together {
+        freeman speaks for 7.3s
+        do {
+            camera wide
+            d2 moves-to (0.235, 0.478) over 0.01s
+            d2 shows
+            camera shake 0.18s intensity 1
+            wait 1.6s
+            camera medium freeman
+            wait 1.2s
+            camera wide
+            d3 moves-to (0.765, 0.478) over 0.01s
+            d3 shows
+            camera shake 0.18s intensity 1
+            wait 1.8s
+            camera close-up freeman
+        }
+    }
     freeman pose "flash_disgust"
     wait 0.08s
     freeman pose "stern"
-    wait 0.6s
+    wait 0.5s
 
-    // ── ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ, ТРИ ЧЕТВЕРТИ ──────────────
-    freeman moves-to (0.44, 0.585) over 0.01s
-    //lip 6
+    // ── РАЗВОРОТ (VO-5): ракурс СНИЗУ, он один среди закрытых дверей ──────
+    //lip 5
     together {
         freeman speaks for 4.6s
         do {
             camera angle low freeman
             freeman pose "chetvert_pravo"
             wait 1.6s
-            camera close-up freeman
+            camera wide
             freeman pose "v_upor"
             wait 1.6s
             camera medium freeman
         }
     }
-    camera shake 0.3s intensity 2
     wait 0.6s
-    freeman pose "think"
-    wait 0.5s
 
-    // ── ВЗЛЁТ (VO-7): фигура раскрывается ─────────────────────────────────
-    freeman moves-to (0.5, 0.585) over 0.01s
+    // ── ВЗЛЁТ (VO-6): сбоку выезжает ОТКРЫТАЯ дверь — светлое пятно ───────
     freeman pose "raskryl"
+    //lip 6
+    together {
+        freeman speaks for 6.0s
+        do {
+            camera wide
+            wait 1.2s
+            dopen moves-to (0.845, 0.462) over 1.6s ease-out
+            wait 1.0s
+            camera medium freeman
+            wait 1.4s
+            camera wide
+        }
+    }
+    // ── ВЗЛЁТ-добивка (VO-7) ──────────────────────────────────────────────
     //lip 7
     together {
-        freeman speaks for 9.9s
+        freeman speaks for 6.6s
         do {
             camera medium freeman
-            wait 2.4s
+            wait 2.2s
             camera close-up freeman
             wait 2.2s
             camera wide
-            wait 2.4s
-            camera medium freeman
         }
     }
-    // ── СЛОВО-УДАР «ПОЛСЕКУНДЫ» + негатив-панч ────────────────────────────
-    camera wide
-    slovo moves-to (0.5, 0.30) over 0.01s
+
+    // ── СЛОВО-УДАР «СКОЛЬКО?» + негатив-панч ──────────────────────────────
+    slovo moves-to (0.5, 0.26) over 0.01s
     slovo scales 1.0 over 0.18s ease-in
     transition invert 0.16s
     camera shake 0.3s intensity 3
@@ -177,23 +189,26 @@ scene "polsekundy" (duration: 47s, set: pole) {
     freeman pose "flash_grin"
     wait 0.08s
 
-    // ── ЖАЛО-CTA (VO-8): наезд-удар, подмиг-издёвка ───────────────────────
+    // ── ЖАЛО-CTA (VO-8): открытая дверь МЕДЛЕННО ЗАКРЫВАЕТСЯ ──────────────
     freeman pose "lunge"
     //lip 8
     together {
-        freeman speaks for 4.0s
+        freeman speaks for 4.6s
+        // Дверь закрывается ровно столько, сколько длится реплика: к слову
+        // «сегодня?» от светлого проёма остаётся полоска. Ответ на вопрос
+        // зритель видит, а не слышит.
+        dopen scales 0.09 over 4.4s ease-in
         do {
             camera medium freeman
-            wait 2.0s
+            wait 2.2s
             camera close-up freeman
         }
     }
-    camera zoom-to freeman over 0.18s ease-in
     freeman pose "hero_wink"
     wait 0.5s
     camera reset over 0.5s
     freeman pose "calm"
-    wait 0.7s
+    wait 0.8s
 }
 
 scene "titry" (duration: 6s, set: titry) {

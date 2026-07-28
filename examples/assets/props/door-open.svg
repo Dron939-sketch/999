@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 460" width="260" height="460">
+  <defs><filter id="ink" x="-8%" y="-8%" width="116%" height="116%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="29" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter></defs>
+  <!-- ОТКРЫТАЯ ДВЕРЬ — та, что ещё впереди. Проём СВЕТЛЫЙ: единственное место
+       в кадре, где светлее, чем вокруг. Полотно отведено вбок и стоит тёмным
+       пятном — видно, что она именно ОТКРЫТА, а не отсутствует. -->
+  <g filter="url(#ink)">
+    <path d="M30 26 C 26 160, 26 320, 32 440 L150 442
+             C 156 320, 156 160, 152 24 Z" fill="#f7f8f5"/>
+    <path d="M18 22 C 14 160, 14 322, 20 450 L162 452
+             C 168 322, 168 160, 164 20" stroke="#f2f3ef" stroke-width="8"
+             fill="none" stroke-linecap="round"/>
+    <path d="M14 22 L168 18" stroke="#f2f3ef" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <path d="M164 40 C 200 60, 226 92, 238 132 L240 400
+             C 226 424, 198 440, 166 448 Z" fill="#1a1a17"/>
+    <circle cx="224" cy="252" r="9" fill="#e8e9e4" stroke="#0e0e0e" stroke-width="4"/>
+  </g>
+</svg>
