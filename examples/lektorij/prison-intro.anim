@@ -39,7 +39,7 @@ scene "cell" (duration: 40s, set: cell) {
     // prison-cell.surfaces.json. Раньше и того и другого не было: центр
     // рисунка садился на сиденье унитаза — половина крысы висела в воздухе, —
     // а на дальней кромке пола она оставалась того же размера, что под ногами.
-    let rat = prop("rat", "../assets/props/rat.svg") at (0.804, 0.653) on floor
+    let rat = prop("rat", "../assets/props/rat.svg") at (0.804, 0.653) facing left on floor
     rat scales 0.42
     // ЛЕЗЕТ ПО СТЕНЕ — отдельный рисунок, вид СО СПИНЫ. Задняя стена смотрит
     // в камеру, значит лезущего по ней видно сверху-сзади. Раньше по стене
@@ -103,7 +103,7 @@ scene "cell" (duration: 40s, set: cell) {
     // Глаза по контексту реплики: подача снисходительная, поэтому прищур и
     // ухмылка (`smug`), а не клин злости — тот приберегается для приговоров.
     freeman moves-to (0.5, 0.45) over 0.01s
-    freeman pose "smug"
+    freeman overlays "smug"
     //lip 1
     together {
         freeman speaks for 4.6s
@@ -124,7 +124,7 @@ scene "cell" (duration: 40s, set: cell) {
 
     // --- ХУК (VO-2): средний, фигура ВПРАВО-треть, ракурс СВЕРХУ ---
     freeman moves-to (0.63, 0.45) over 0.01s
-    freeman pose "smug"
+    freeman overlays "smug"
     //lip 2
     together {
         freeman speaks for 1.8s
@@ -136,7 +136,7 @@ scene "cell" (duration: 40s, set: cell) {
     }
     // --- ХУК-добивка (VO-3): КАТ на крупный, фигура ВЛЕВО-треть ---
     freeman moves-to (0.37, 0.45) over 0.01s
-    freeman pose "weary"
+    freeman overlays "weary"
     //lip 3
     together {
         freeman speaks for 1.6s
@@ -146,9 +146,9 @@ scene "cell" (duration: 40s, set: cell) {
             camera extreme-close-up freeman
         }
     }
-    freeman pose "flash_grotesque"
+    freeman overlays "flash_grotesque"
     wait 0.08s
-    freeman pose "skeptic"
+    freeman overlays "hero_skeptic"
     wait 0.45s
 
     // --- ПУЛЕМЁТ 1 (VO-3): средний, центр, ракурс обычный ---
@@ -176,20 +176,21 @@ scene "cell" (duration: 40s, set: cell) {
         }
     }
     // --- ПУЛЕМЁТ финал (VO-5): КАТ ECU + тряска на «здравом смысле» ---
-    freeman pose "stern"
+    freeman overlays "stern"
     //lip 6
     together {
         freeman speaks for 2.1s
         do {
             camera extreme-close-up freeman
             wait 1.0s
+            freeman pose "otvraschenie"    // отмахнулся от «здравого смысла»
             camera medium freeman
         }
     }
     camera shake 0.35s intensity 2
-    freeman pose "flash_grin"
+    freeman overlays "flash_grin"
     wait 0.08s
-    freeman pose "stern"
+    freeman overlays "stern"
     wait 0.6s
 
     // --- t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука-в-камеру ---
@@ -220,6 +221,7 @@ scene "cell" (duration: 40s, set: cell) {
         do {
             camera extreme-close-up freeman
             wait 1.8s
+            freeman pose "open"            // раскрыл ладони на взлёте
             camera wide
         }
     }
@@ -231,7 +233,7 @@ scene "cell" (duration: 40s, set: cell) {
     camera shake 0.3s intensity 2
     wait 0.8s
     slovo moves-to (0.5, -2.0) over 0.22s ease-in
-    freeman pose "flash_pupils"
+    freeman overlays "flash_pupils"
     wait 0.08s
 
     // --- ЖАЛО-CTA (VO-8): средний, центр, наезд-удар на подколке ---
@@ -243,13 +245,15 @@ scene "cell" (duration: 40s, set: cell) {
         do {
             camera medium freeman
             wait 1.8s
+            freeman pose "point"           // подколка — тычет в зрителя
             camera close-up freeman
             wait 1.7s
+            freeman pose "hips"            // руки в боки: «ну так что?»
             camera wide
         }
     }
     camera zoom-to freeman over 0.18s ease-in
-    freeman pose "hero_wink"
+    freeman overlays "hero_wink"
     wait 0.55s
     // отъезд-одиночество: зритель остаётся с мыслью
     camera reset over 0.5s

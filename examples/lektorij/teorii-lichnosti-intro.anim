@@ -94,11 +94,15 @@ scene "linza" (duration: 61s, set: pole) {
     slovo scales 2.6 over 0.01s
 
     // ── t=0..2 БЕЗ СЛОВ: фигура одна в пустом поле ────────────────────────
+    //  Было `open` — руки враскидку на 70°. Мимика идёт слоем и рук не трогает,
+    //  поэтому руки так и стояли раскинутыми всю завязку и всё приветствие:
+    //  пять слоёв подряд, четыре с лишним секунды (studio.lint_arms). Для «один
+    //  в пустом поле» верна закрытая стойка, а жест приходит на реплику.
     camera wide
-    freeman pose "open"
+    freeman pose "ugryumo"
     wait 1.4s
     camera medium freeman
-    freeman pose "doubt"
+    freeman overlays "doubt"
     wait 0.6s
 
     // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1) ──────────────────────────────────────
@@ -111,7 +115,7 @@ scene "linza" (duration: 61s, set: pole) {
     // здесь прищур и ухмылка (`smug`), клин злости приберегается для
     // приговоров. Проп ЛЕТИТ, кость НАДЕТА: в момент касания проп прячется,
     // поза меняется на «_ochki», и дальше оправы едут с головой сами.
-    freeman pose "smug"
+    freeman overlays "smug"
     //lip 1
     together {
         freeman speaks for 3.4s
@@ -125,11 +129,12 @@ scene "linza" (duration: 61s, set: pole) {
             // на экране это мигание. Кость включается ЗАРАНЕЕ, пока проп ещё
             // виден; оба стоят в одной точке и одного размера, поэтому
             // перекрытие не читается, а провал читался.
-            freeman pose "blink_ochki"
+            freeman overlays "blink_ochki"
             wait 0.15s
             ochki hides
             wait 0.15s
-            freeman pose "smug_ochki"
+            freeman overlays "smug_ochki"
+            freeman pose "open_ochki"     // «дорогие мои» — раскрыл руки
             wait 0.6s
             camera medium freeman
         }
@@ -139,13 +144,14 @@ scene "linza" (duration: 61s, set: pole) {
 
     // ── ХУК (VO-1): фигура ВПРАВО-треть, ракурс СВЕРХУ (зритель мелкий) ────
     freeman moves-to (0.63, 0.585) over 0.01s
-    freeman pose "smug_ochki"
+    freeman overlays "smug_ochki"
     //lip 2
     together {
         freeman speaks for 2.6s
         do {
             camera angle high freeman
             wait 1.3s
+            freeman overlays "no"             // «да не в вас дело» — развёл руками
             camera medium freeman
         }
     }
@@ -158,12 +164,13 @@ scene "linza" (duration: 61s, set: pole) {
         do {
             camera medium freeman
             wait 1.5s
+            freeman overlays "point"          // тычет пальцем в зрителя
             camera close-up freeman
         }
     }
-    freeman pose "flash_pupils_ochki"
+    freeman overlays "flash_pupils_ochki"
     wait 0.08s
-    freeman pose "hero_skeptic_ochki"
+    freeman overlays "hero_skeptic_ochki"
     wait 0.5s
 
     // ── ПУЛЕМЁТ 1 (VO-3): три приговора — марионетка чужих слов ───────────
@@ -175,6 +182,7 @@ scene "linza" (duration: 61s, set: pole) {
         do {
             camera medium freeman
             wait 1.7s
+            freeman overlays "shag_levoj"     // марионетку дёрнули за ногу
             camera close-up freeman
         }
     }
@@ -186,6 +194,7 @@ scene "linza" (duration: 61s, set: pole) {
         do {
             camera medium freeman
             wait 1.7s
+            freeman overlays "hips"           // руки в боки: «и что дальше?»
             camera close-up freeman
         }
     }
@@ -197,13 +206,14 @@ scene "linza" (duration: 61s, set: pole) {
         do {
             camera close-up freeman
             wait 1.7s
+            freeman overlays "za_golovu"      // схватился за маску
             camera medium freeman
         }
     }
     camera shake 0.35s intensity 2
-    freeman pose "flash_disgust_ochki"
+    freeman overlays "flash_disgust_ochki"
     wait 0.08s
-    freeman pose "stern_ochki"
+    freeman overlays "stern_ochki"
     wait 0.7s
 
     // ── t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука в камеру ───────
@@ -215,10 +225,13 @@ scene "linza" (duration: 61s, set: pole) {
         do {
             camera angle low freeman
             wait 2.2s
+            freeman overlays "point"          // тычет пальцем на переломе
             camera close-up freeman
             wait 2.2s
+            freeman overlays "raskryl"        // раскрыл обе
             camera medium freeman
             wait 1.6s
+            freeman overlays "v_upor"         // ладонь в камеру
             camera close-up freeman
         }
     }
@@ -238,8 +251,10 @@ scene "linza" (duration: 61s, set: pole) {
         do {
             camera medium freeman
             wait 2.4s
+            freeman overlays "open"           // раскрыл ладони
             camera close-up freeman
             wait 2.2s
+            freeman overlays "hips"           // руки в боки
             camera medium freeman
             // Срыв: проп встаёт НА МЕСТО КОСТИ И ТОЛЬКО ПОТОМ гаснет кость.
             // Обратный порядок давал провал: `hides`/подмена детали срабатывает
@@ -266,7 +281,7 @@ scene "linza" (duration: 61s, set: pole) {
     camera shake 0.3s intensity 3
     wait 0.9s
     slovo moves-to (0.5, -2.0) over 0.22s ease-in
-    freeman pose "flash_grin"
+    freeman overlays "flash_grin"
     wait 0.08s
 
     // ── ЖАЛО-CTA (VO-8): наезд-удар, подмиг-издёвка ───────────────────────
@@ -277,17 +292,21 @@ scene "linza" (duration: 61s, set: pole) {
         do {
             camera medium freeman
             wait 2.6s
+            freeman pose "point"           // «двадцать линз» — тычет
             camera close-up freeman
             wait 2.4s
+            freeman pose "open"            // раскрыл ладони
             camera wide
             wait 2.4s
+            freeman pose "hips"            // руки в боки
             camera medium freeman
             wait 2.6s
+            freeman pose "v_upor"          // ладонь в камеру на жале
             camera close-up freeman
         }
     }
     camera zoom-to freeman over 0.18s ease-in
-    freeman pose "hero_wink"
+    freeman overlays "hero_wink"
     wait 0.6s
     // отъезд-одиночество: снова маленькая фигура в пустом поле
     camera reset over 0.5s

@@ -379,65 +379,308 @@ def lint_sync(prod):
     return hard, soft
 
 
+# Кости ТЕЛА. Всё, что держит силуэт: руки, ноги, корпус. Лицо (глаза, рот,
+# бровь) в силуэт не входит — оно живёт внутри белой маски, а не по контуру.
+BODY_BONES = frozenset((
+    "torso", "cloak",
+    "upper_arm_left", "forearm_left", "hand_left",
+    "upper_arm_right", "forearm_right", "hand_right",
+    "thigh_left", "shin_left", "thigh_right", "shin_right",
+))
+
+
+def anim_code(text):
+    """Текст сценария без комментариев.
+
+    Гейты ищут `pose "…"` регуляркой, а в шапках сценариев и в пояснениях к
+    правкам те же слова стоят в тексте — комментарий с примером «пиши не
+    `pose "wide"`, а `overlays`» честно ловился как дефект. Разметку `//lip N`
+    читают другие приёмщики по сырому тексту, здесь она не нужна.
+    """
+    return re.sub(r"//[^\n]*", "", text)
+
+
+def _rig_poses(rig_dir=None):
+    rig = Path(rig_dir) if rig_dir else ROOT / "examples/assets/characters/freeman_rig"
+    f = rig / "rig.json"
+    if not f.exists():
+        return {}
+    return json.loads(f.read_text(encoding="utf-8"))["poses"]
+
+
+def is_face_pose(name, poses):
+    """Поза, которая НЕ называет ни одной кости тела — чистая мимика (cel лица).
+
+    Таких в риге 54 из 124: все `hero_*`, `flash_*`, `smug`, `stern`, `doubt`,
+    `angry`, `sad`, визимы. Они меняют только глаза/рот/бровь.
+    """
+    bones = set(poses.get(name, {}).get("bones", {}))
+    return bool(bones) and not (bones & BODY_BONES)
+
+
+def body_signature(name, poses):
+    """Отпечаток ТЕЛА позы. Одинаковый отпечаток — одинаковый силуэт в кадре."""
+    bones = poses.get(name, {}).get("bones", {})
+    body = {k: bones[k] for k in sorted(set(bones) & BODY_BONES)}
+    # Мимическая поза тела не называет — движок подставит дефолт рига, то есть
+    # ОДНУ И ТУ ЖЕ стойку: руки вдоль тела, плечи ровно, анфас.
+    return "DEFAULT" if not body else json.dumps(body, sort_keys=True)
+
+
+def lint_chehov(prod):
+    """Приёмщик РУЖЬЯ ЧЕХОВА: заявленное обязано выстрелить. (hard, soft).
+
+    Закон драматургии №5 (`DRAMATURGIYA.md`): предмет, попавший в кадр и ничего
+    не сделавший, — не деталь, а шум. Зритель держит его во внимании и не
+    получает выплаты, и это прямой вычет из напряжения, а не нейтральный ноль.
+    У нас закон буквален: локация — вещдок, все предметы в ней заряжены
+    (`PRODAZHA.md` §2).
+
+    Гейт структурный, без словарей: проп объявлен через `let` и ни разу не
+    получает действия (`moves-to`, `rotates`, `scales`, `fades-to`, `shows`,
+    `hides`). Ложных тревог такой счёт не даёт — потому и hard.
+    """
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return [], []
+    lines = anim_code(anim.read_text(encoding="utf-8")).split("\n")
+    declared, used = {}, set()
+    for i, l in enumerate(lines):
+        m = re.search(r"let (\w+) = (prop|text)\(", l)
+        if m:
+            declared[m.group(1)] = m.group(2)
+            continue
+        m = re.match(r"\s*(\w+)\s+(moves-to|rotates|scales|fades-to|shows|hides)\b", l)
+        if m:
+            used.add(m.group(1))
+    hard = []
+    for name, kind in declared.items():
+        if name not in used:
+            what = "предмет" if kind == "prop" else "слово"
+            hard.append(f"{prod['id']}: {what} «{name}» объявлен и ни разу не "
+                        f"действует — ружьё висит и не стреляет. Либо заряди его "
+                        f"движением, либо убери из сценария (DRAMATURGIYA.md §5)")
+    return hard, []
+
+
+# Гротескные морды: рисованный экстремум лица. Бьют по закону правды и
+# преувеличения (DRAMATURGIYA.md §9) — только ПОСЛЕ узнаваемой бытовой детали.
+# Две подряд обесценивают обе: зритель не успевает вернуться к норме, и вторая
+# читается не как удар, а как манера.
+GROTESK = ("flash_", "hero_", "grotesque", "gore")
+
+
+def lint_grotesk(prod):
+    """Приёмщик ГРОТЕСКА: не идут ли экстремумы лица очередью. (hard, soft)."""
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return [], []
+    soft, run, first, prev_flash = [], 0, "", False
+    for line in anim_code(anim.read_text(encoding="utf-8")).split("\n"):
+        m = re.search(r"\bwait\s+([\d.]+)s", line)
+        if m and float(m.group(1)) > 0.25:
+            run, first, prev_flash = 0, "", False
+            continue
+        m = re.search(r'(?:pose|overlays)\s+"([a-z_0-9]+)"', line)
+        if not m:
+            continue
+        name = m.group(1)
+        if any(name.startswith(g) or name == g for g in GROTESK):
+            # ФЛЭШ-ОЧЕРЕДЬ — ОДИН УДАР, А НЕ ТРИ. Морды `flash_*` держатся по
+            # 0.08с и подряд читаются как единственная вспышка; считать их
+            # порознь значит ругаться на приём, а не на дефект.
+            flash = name.startswith("flash_")
+            if not (flash and prev_flash):
+                run += 1
+                first = first or name
+            prev_flash = flash
+            if run == 4:
+                soft.append(f"{prod['id']}: гротеск идёт очередью — «{first}» и "
+                            f"ещё три подряд без спокойного кадра между ними. "
+                            f"Преувеличение работает после узнавания, а не "
+                            f"поверх другого преувеличения (DRAMATURGIYA.md §9)")
+                run = 0
+        else:
+            run, prev_flash = 0, False
+    return [], soft
+
+
+def lint_imena_poz(prod, rig_dir=None):
+    """Приёмщик ИМЁН: названа поза, которой в риге нет. (hard, soft).
+
+    Движок на такое НЕ РУГАЕТСЯ: `rig.poses.get(&ev.pose)?` возвращает None,
+    поза молча становится пустой, и фигура падает в дефолт рига. Опечатка
+    выглядит на экране ровно как «персонаж зачем-то встал по стойке смирно».
+    Так в двух роликах жил `pose "skeptic"` — в риге он называется
+    `hero_skeptic`, и обе сцены на этом месте теряли и лицо, и жест.
+    """
+    anim = ROOT / prod.get("anim", "")
+    poses = _rig_poses(rig_dir)
+    if not anim.exists() or not poses:
+        return [], []
+    used = re.findall(r'(?:pose|overlays)\s+"([a-z_0-9]+)"',
+                      anim_code(anim.read_text(encoding="utf-8")))
+    bad = sorted({u for u in used if u not in poses})
+    return [f"{prod['id']}: позы «{n}» нет в риге — движок молча поставит "
+            f"дефолтную стойку" for n in bad], []
+
+
+def lint_nosimoe(prod, rig_dir=None):
+    """Приёмщик НОСИМОЙ ДЕТАЛИ: не пропала ли надетая вещь. (hard, soft).
+
+    Очки — КОСТЬ, выключенная масштабом [0,0], и включают её только позы-двойники
+    с суффиксом `_ochki` (KARTA.md §3). Полная поза без суффикса кость не
+    называет, та падает в дефолт — и очки ИСЧЕЗАЮТ с маски посреди ролика.
+    Слой (`overlays`) кладётся поверх последней полной позы и её очки сохраняет,
+    поэтому жест телом после надевания ставится слоем, а не полной позой.
+
+    Ловушка проверена на себе: в «Теориях личности» жест, добавленный полной
+    позой, снимал с героя очки — весь смысл ролика — и ни один гейт этого не
+    видел.
+    """
+    anim = ROOT / prod.get("anim", "")
+    poses = _rig_poses(rig_dir)
+    if not anim.exists() or not poses:
+        return [], []
+    lines = anim_code(anim.read_text(encoding="utf-8")).split("\n")
+    worn, handoff, hard = False, False, []
+    for line in lines:
+        # СРЫВ ПО СЦЕНАРИЮ — не дефект. Деталь снимают, передав её пропу:
+        # проп встаёт на место кости (`ochki shows`) и только потом гаснет
+        # кость. Ровно так снимаются очки на взлёте «Теорий личности».
+        if re.search(r"\bochki\s+shows\b", line):
+            handoff = True
+        m = re.search(r'(pose|overlays)\s+"([a-z_0-9]+)"', line)
+        if not m:
+            continue
+        kind, name = m.group(1), m.group(2)
+        if kind == "overlays":
+            continue                       # слой базу не меняет
+        if name.endswith("_ochki"):
+            worn, handoff = True, False
+        elif worn:
+            if handoff:
+                worn, handoff = False, False   # снято намеренно
+                continue
+            hard.append(f"{prod['id']}: после надетых очков стоит полная поза "
+                        f"«{name}» без суффикса `_ochki` — кость очков выключится, "
+                        f"и они пропадут с маски. Возьми двойник «{name}_ochki», "
+                        f"поставь жест слоем `overlays \"{name}\"` или сними деталь "
+                        f"явно через проп (KARTA.md §3)")
+            worn = False                   # об одном месте — одно сообщение
+    return hard, []
+
+
+def lint_mimika(prod, rig_dir=None):
+    """Приёмщик МИМИКИ: не стирает ли смена лица жест тела. (hard, soft).
+
+    ГЛАВНЫЙ ИСТОЧНИК «НЕТ ДИНАМИКИ», и он не там, где искали.
+
+    Замер движка (проверено рендером, `pose "v_upor"` → `pose "hero_rage"`):
+    поза перекрывает названные кости, а ВСЕ ОСТАЛЬНЫЕ падают в дефолт рига —
+    `interpolate_bone` берёт `bone.rotation`, а не значение прошлой позы. Значит
+    каждая из 54 мимических поз, поставленная как `pose`, СТИРАЕТ жест тела:
+    поднятая рука падает, корпус выпрямляется, фигура встаёт анфас по стойке
+    смирно. Ролик, собранный на `hero_*`/`flash_*`/`smug`, стоит столбом при
+    любом числе «разных поз» в монтаже — что студия и увидела глазами.
+
+    Лечится без правок движка: в DSL уже есть `overlays`, который кладёт кости
+    позы ПОВЕРХ удержанной (`resolve_effective_pose`, ветка overlay). Мимика
+    через `overlays` меняет лицо и оставляет тело в жесте.
+
+    Гейт ловит мимическую позу, поставленную как `pose` ПОСЛЕ позы с телом:
+    именно там жест и теряется. Мимика после дефолтного тела (`calm`, `idle`)
+    ничего не стирает и претензии не вызывает.
+    """
+    anim = ROOT / prod.get("anim", "")
+    poses = _rig_poses(rig_dir)
+    if not anim.exists() or not poses:
+        return [], []
+    seq = re.findall(r'(pose|overlays)\s+"([a-z_0-9]+)"',
+                     anim_code(anim.read_text(encoding="utf-8")))
+    hard, soft = [], []
+    held = "DEFAULT"          # силуэт тела, который сейчас держит фигура
+    held_name = "idle"
+    for kind, name in seq:
+        if kind == "overlays":
+            continue          # слой тела не сбрасывает — это и есть верный путь
+        if is_face_pose(name, poses):
+            if held != "DEFAULT":
+                hard.append(
+                    f"{prod['id']}: мимика «{name}» поставлена как `pose` после "
+                    f"«{held_name}» — жест тела стирается в стойку смирно. "
+                    f"Пиши `overlays \"{name}\"`: лицо сменится, тело удержит "
+                    f"жест (PRAVILA-DVIZHENIYA.md §5)")
+                held, held_name = "DEFAULT", name
+            continue
+        held, held_name = body_signature(name, poses), name
+    return hard, soft
+
+
 # Кости рук и порог, за которым рука считается ПОДНЯТОЙ. Дефолт покоя — 30° и
 # −29°: рука висит вдоль тела. 60° и выше — вынос в сторону или вперёд.
 ARM_BONES = ("upper_arm_left", "upper_arm_right")
 ARM_RAISED = 60.0
+# Сколько СЕКУНД жест держится, пока это приём. Считать слоями нельзя: очередь
+# флэш-морд — три слоя за четверть секунды, и по счёту слоёв она выглядела как
+# забытая рука, хотя на экране это один удар. Держит время, а не число событий.
+ARM_HELD_MAX_SEC = 6.0
 
 
 def lint_arms(prod, rig_dir=None):
-    """Приёмщик РУК: не забыта ли поднятая рука в следующей позе. (hard, soft).
+    """Приёмщик ЗАБЫТОЙ РУКИ — теперь по тому конструкту, где она возможна.
 
-    ЛОВУШКА НАКЛАДЫВАЕМЫХ ПОЗ. Поза перекрывает ТОЛЬКО те кости, которые
-    называет. `v_upor` поднимает левую руку на 92°, `raskryl` на 100°, `lunge`
-    на 85° — а `smug`, `stern`, `doubt`, `calm_*` рук не называют вовсе. Значит
-    после «в упор» персонаж уходит в следующую реплику С ТОРЧАЩЕЙ В СТОРОНУ
-    РУКОЙ и стоит так, пока какая-нибудь поза руку не опустит.
+    ЧТО БЫЛО НЕ ТАК. Прошлая версия гейта считала, что `pose` наследует кости
+    прошлой позы, и потому поднятая рука висит через весь монтаж. Проверено
+    рендером (`calm → point → smug → stern`): рука ВНИЗУ уже на «smug». Позы
+    кости не наследуют — неназванная кость падает в дефолт рига. Гейт дал
+    двенадцать ложных тревог и один раз уронил завод целиком.
 
-    Это не описка в одном сценарии, а свойство рига, на которое наступает
-    каждый, кто пишет монтаж. В «Мышлении» рука так провисела половину ролика,
-    и заметил это не завод, а студия — глазами, на готовом видео.
-
-    Гейт проходит по сценарию в порядке поз и считает, сколько ПОДРЯД идёт поз
-    с унаследованной поднятой рукой. Одна-две — приём (жест держится через
-    склейку). Три и больше — рука забыта.
+    ГДЕ ДЕФЕКТ ЖИВЁТ НА САМОМ ДЕЛЕ. Наследует `overlays`: слой кладётся поверх
+    последней ПОЛНОЙ позы, и если та подняла руку, рука останется поднятой,
+    пока не придёт новая полная поза. Ровно этим `overlays` и ценен — жест
+    держится через смену лица, — и ровно поэтому за длиной удержания нужен
+    присмотр: жест, простоявший больше шести секунд без единой полной позы, это
+    уже не жест, а забытая рука.
     """
     anim = ROOT / prod.get("anim", "")
-    rig = Path(rig_dir) if rig_dir else ROOT / "examples/assets/characters/freeman_rig"
-    if not anim.exists() or not (rig / "rig.json").exists():
+    poses = _rig_poses(rig_dir)
+    if not anim.exists() or not poses:
         return [], []
-    poses = json.loads((rig / "rig.json").read_text(encoding="utf-8"))["poses"]
-    seq = re.findall(r'pose\s+"([a-z_0-9]+)"', anim.read_text(encoding="utf-8"))
-    hard, soft = [], []
-    state = {b: None for b in ARM_BONES}       # угол, унаследованный от прошлой позы
-    since = {b: 0 for b in ARM_BONES}          # сколько поз рука висит поднятой
+    soft = []
+    state = {b: 0.0 for b in ARM_BONES}     # угол, который держит база
+    since = {b: 0.0 for b in ARM_BONES}     # СЕКУНДЫ, что рука висит поднятой
     culprit = {b: "" for b in ARM_BONES}
-    for name in seq:
+    for line in anim_code(anim.read_text(encoding="utf-8")).split("\n"):
+        # Время идёт по `wait Ns` и `speaks for Ns` — тем же операторам, что
+        # двигают курсор в движке.
+        m = re.search(r"\b(?:wait|speaks for)\s+([\d.]+)s", line)
+        if m:
+            dt = float(m.group(1))
+            for b in ARM_BONES:
+                if abs(state[b]) >= ARM_RAISED:
+                    since[b] += dt
+            continue
+        m = re.search(r'(pose|overlays)\s+"([a-z_0-9]+)"', line)
+        if not m:
+            continue
+        kind, name = m.group(1), m.group(2)
         bones = poses.get(name, {}).get("bones", {})
         for b in ARM_BONES:
             if b in bones and "rotation" in bones[b]:
-                ang = float(bones[b]["rotation"])
-                state[b] = ang
-                since[b] = 1 if abs(ang) >= ARM_RAISED else 0
-                culprit[b] = name if abs(ang) >= ARM_RAISED else ""
-            elif state[b] is not None and abs(state[b]) >= ARM_RAISED:
-                since[b] += 1                  # поза руку не назвала — рука висит
-                if since[b] >= 4:
-                    # ПРЕДУПРЕЖДЕНИЕ, А НЕ ЗАПРЕТ — И ЭТО ОСОЗНАННО.
-                    # Гейт написан раньше, чем починены ролики: забытая рука
-                    # живёт в шести из семи, включая эталон. Жёстким он уронил
-                    # ЗАВОД ЦЕЛИКОМ и не отдал ни одного ролика — то есть
-                    # старый дефект перевесил всю новую работу. Гейт, который
-                    # останавливает линию из-за давно существующей болезни,
-                    # вреднее самой болезни: он не чинит, а только не даёт
-                    # выпускать. Станет жёстким, когда все шесть будут чисты.
-                    soft.append(
-                        f"{prod['id']}: {b} поднята в позе «{culprit[b]}» "
-                        f"({abs(state[b]):.0f}°) и не опущена — уже {since[b]} поз "
-                        f"подряд, к позе «{name}». Опусти явно или возьми позу, "
-                        f"которая называет руки.")
-                    since[b] = 0               # об одном месте — одно сообщение
-    return hard, soft
+                state[b] = float(bones[b]["rotation"])
+                since[b] = 0.0
+                culprit[b] = name if abs(state[b]) >= ARM_RAISED else ""
+            elif kind == "pose":
+                state[b], since[b] = 0.0, 0.0  # полная поза руку опускает в дефолт
+            elif since[b] >= ARM_HELD_MAX_SEC:
+                soft.append(
+                    f"{prod['id']}: {b} поднята в позе «{culprit[b]}» "
+                    f"({abs(state[b]):.0f}°) и держится уже {since[b]:.1f}с "
+                    f"подряд, к «{name}» — жест превратился в забытую руку. "
+                    f"Поставь полную позу телом или слой, называющий руки.")
+                since[b] = 0.0                 # об одном месте — одно сообщение
+    return [], soft
 
 
 # ПОКОЙ КАДРА. Три источника дрожи складываются, а считали их порознь: контур
@@ -492,14 +735,28 @@ def lint_propy(prod):
     if not anim.exists():
         return [], []
     lines = anim.read_text(encoding="utf-8").split("\n")
-    # Отрицательный масштаб — и есть разворот пропа: у пропов нет `facing`,
-    # флип делается знаком (см. render_svg_to_pixmap, flip_bg). Помечаем такие
-    # предметы, иначе гейт ругается на ПРАВИЛЬНО развёрнутую крысу.
-    pos, soft, flipped = {}, [], set()
+    # У КОГО ЕСТЬ ПЕРЁД. «Ехать задом» может только предмет, у которого перёд
+    # нарисован: крыса, фигура, рука. Дверь, очки, кабель, кардиограмма, слово
+    # переднего края не имеют, и требовать от них разворота — ложная тревога.
+    # Первая версия гейта этого не различала и кричала на семь предметов из
+    # восьми; ровно так гейты и теряют доверие.
+    #
+    # Признак берётся из рисунка, а не из сцены: перёд — свойство файла.
+    FRONTED = ("rat", "prisoner", "hand-point", "giant-hand")
+    # Разворот: `facing left` в объявлении (грамматика пропов) либо
+    # отрицательный масштаб — исторический способ до появления `facing`.
+    pos, soft, flipped, fronted = {}, [], set(), set()
     for i, l in enumerate(lines):
-        m = re.search(r"let (\w+) = prop\([^)]*\) at \(([\d.]+),", l)
+        m = re.search(r'let (\w+) = prop\("[^"]*",\s*"([^"]*)"\)(.*)', l)
         if m:
-            pos[m.group(1)] = float(m.group(2))
+            name, path, tail = m.group(1), m.group(2), m.group(3)
+            mp = re.search(r"at \(([\d.]+),", tail)
+            if mp:
+                pos[name] = float(mp.group(1))
+            if any(k in Path(path).name for k in FRONTED):
+                fronted.add(name)
+            if re.search(r"\bfacing\s+left\b", tail):
+                flipped.add(name)
             continue
         m = re.search(r"(\w+) scales\s+-[\d.]+", l)
         if m:
@@ -508,10 +765,12 @@ def lint_propy(prod):
         m = re.search(r"(\w+) moves-to \((-?[\d.]+),", l)
         if m and m.group(1) in pos:
             x0, x1 = pos[m.group(1)], float(m.group(2))
-            if x1 < x0 - 0.05 and m.group(1) not in flipped:
+            if (x1 < x0 - 0.05 and m.group(1) in fronted
+                    and m.group(1) not in flipped):
                 soft.append(f"{prod['id']}: «{m.group(1)}» едет ВЛЕВО "
-                            f"({x0:.2f}→{x1:.2f}), а пропы не разворачиваются — "
-                            f"предмет поедет задом (PRAVILA-DVIZHENIYA.md §6)")
+                            f"({x0:.2f}→{x1:.2f}), а рисунок смотрит вправо — "
+                            f"предмет поедет задом. Объяви его `facing left` "
+                            f"(PRAVILA-DVIZHENIYA.md §6)")
             pos[m.group(1)] = x1
             # `hides` сразу следом — предмет растворяется посреди плана
             nxt = next((x.strip() for x in lines[i + 1:i + 3] if x.strip()), "")
@@ -522,36 +781,71 @@ def lint_propy(prod):
     return [], soft
 
 
-# ПЛОТНОСТЬ ЖЕСТА. В риге 124 позы, а в монтаже крутится полтора десятка — и
-# именно отсюда «нет динамики», а не из настроек рендера. Порог снят с
-# «Перепрошивки» и «Тюрьмы» (32 и 30 поз в минуту), где движение читается;
-# «Мышление» с шестнадцатью выглядит стоячим.
-# Считается ДВА числа, и оба важны: сколько смен позы в минуту (движение) и
-# сколько РАЗНЫХ поз (разнообразие). Двадцать смен между тремя позами — это
-# не жестикуляция, а тик.
-POSES_PER_MIN = 26
-DISTINCT_MIN = 14
+# ПЛОТНОСТЬ ЖЕСТА. Меряется по ТЕЛУ, а не по именам поз, и это разные числа.
+#
+# Первая версия гейта считала `pose "…"` в тексте — и хвалила монтаж, который в
+# кадре стоял столбом. Причина в замере движка: мимическая поза тела не
+# называет, движок ставит телу дефолт рига, и десять подряд «разных» hero-морд
+# дают ОДИН силуэт. У «Теорий личности» 21 разное имя позы — и 10 разных тел,
+# почти половина событий возвращает фигуру в одну и ту же стойку смирно.
+#
+# Считается ДВА числа, и оба по силуэту: сколько раз тело реально меняется в
+# минуту и сколько РАЗНЫХ тел за ролик. Двадцать смен между тремя силуэтами —
+# это не жестикуляция, а тик. Пороги сняты с «Перепрошивки» и «Тюрьмы», где
+# движение читается.
+BODY_CHANGES_PER_MIN = 18
+DISTINCT_BODIES_MIN = 9
+# Доля событий, оставляющих тело в дефолтной стойке. Выше — фигура анфас с
+# висящими руками бóльшую часть хронометража; ровно это студия и назвала
+# «нет динамики».
+DEFAULT_BODY_SHARE_MAX = 0.35
 
 
-def lint_dinamika(prod):
-    """Приёмщик ДИНАМИКИ: часто ли и разнообразно ли меняются позы. (hard, soft)."""
+def lint_dinamika(prod, rig_dir=None):
+    """Приёмщик ДИНАМИКИ: меняется ли СИЛУЭТ ТЕЛА, а не только лицо. (hard, soft)."""
     anim = ROOT / prod.get("anim", "")
-    if not anim.exists():
+    poses = _rig_poses(rig_dir)
+    if not anim.exists() or not poses:
         return [], []
-    text = anim.read_text(encoding="utf-8")
-    seq = re.findall(r'pose\s+"([a-z_0-9]+)"', text)
+    text = anim_code(anim.read_text(encoding="utf-8"))
+    seq = re.findall(r'(pose|overlays)\s+"([a-z_0-9]+)"', text)
     secs = sum(float(x) for x in re.findall(r"duration:\s*(\d+)s", text))
     if secs < 5 or not seq:
         return [], []
-    per_min = 60.0 * len(seq) / secs
+
+    # Проигрываем сценарий так же, как движок: `pose` задаёт тело целиком
+    # (мимическая — дефолтом), `overlays` перекрывает только названные кости.
+    sigs, held = [], "DEFAULT"
+    for kind, name in seq:
+        bones = poses.get(name, {}).get("bones", {})
+        body = {k: bones[k] for k in sorted(set(bones) & BODY_BONES)}
+        if kind == "overlays":
+            if not body:
+                continue                       # слой мимики силуэт не трогает
+            held = f"{held}+{json.dumps(body, sort_keys=True)}"
+        else:
+            held = body_signature(name, poses)
+        sigs.append(held)
+
+    if not sigs:
+        return [], []
+    changes = sum(1 for a, b in zip(sigs, sigs[1:]) if a != b)
+    per_min = 60.0 * changes / secs
+    share = sum(1 for s in sigs if s == "DEFAULT") / len(sigs)
     soft = []
-    if per_min < POSES_PER_MIN:
-        soft.append(f"{prod['id']}: {per_min:.0f} смен позы в минуту при норме "
-                    f"{POSES_PER_MIN} — фигура стоит столбом. Живое движение это "
-                    f"НАМЕРЕННЫЕ жесты на ударах реплик (PRAVILA-DVIZHENIYA.md §4)")
-    if len(set(seq)) < DISTINCT_MIN:
-        soft.append(f"{prod['id']}: разных поз {len(set(seq))} при норме "
-                    f"{DISTINCT_MIN} — в риге их 124, монтаж их не видит")
+    if per_min < BODY_CHANGES_PER_MIN:
+        soft.append(f"{prod['id']}: {per_min:.0f} смен СИЛУЭТА в минуту при норме "
+                    f"{BODY_CHANGES_PER_MIN} — фигура стоит столбом. Живое движение "
+                    f"это НАМЕРЕННЫЕ жесты на ударах реплик (PRAVILA-DVIZHENIYA.md §4)")
+    if len(set(sigs)) < DISTINCT_BODIES_MIN:
+        soft.append(f"{prod['id']}: разных силуэтов {len(set(sigs))} при норме "
+                    f"{DISTINCT_BODIES_MIN} (имён поз {len({n for _, n in seq})}) — "
+                    f"в риге 70 поз с телом, монтаж их не видит")
+    if share > DEFAULT_BODY_SHARE_MAX:
+        soft.append(f"{prod['id']}: {share * 100:.0f}% событий оставляют тело в "
+                    f"дефолтной стойке при потолке {DEFAULT_BODY_SHARE_MAX * 100:.0f}% "
+                    f"— это и есть «анфас с висящей рукой». Мимику через `overlays`, "
+                    f"жест телом на каждый удар")
     return [], soft
 
 
@@ -810,9 +1104,24 @@ def main(argv):
         lh, ls = lint_location(prod)      # приёмщик локаций
         all_hard += lh
         all_soft += ls
-        ah, asf = lint_arms(prod)         # приёмщик рук
+        nh, ns = lint_imena_poz(prod)     # приёмщик имён поз
+        all_hard += nh
+        all_soft += ns
+        oh, os_ = lint_nosimoe(prod)      # приёмщик носимой детали (очки)
+        all_hard += oh
+        all_soft += os_
+        ch, cs = lint_chehov(prod)        # приёмщик ружья Чехова
+        all_hard += ch
+        all_soft += cs
+        gh, gs = lint_grotesk(prod)       # приёмщик гротеска (очередь морд)
+        all_hard += gh
+        all_soft += gs
+        ah, asf = lint_mimika(prod)       # приёмщик мимики (жест не стирается)
         all_hard += ah
         all_soft += asf
+        rh2, rs2 = lint_arms(prod)        # приёмщик забытой руки (по слоям)
+        all_hard += rh2
+        all_soft += rs2
         ph, ps = lint_pokoy(prod)         # приёмщик покоя кадра
         all_hard += ph
         all_soft += ps

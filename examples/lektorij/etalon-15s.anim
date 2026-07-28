@@ -43,28 +43,35 @@ scene "etalon" (duration: 15s, set: stage) {
 
     // --- ПЛАН 1 (wide): установка + жест указания (проверяем смаз руки) ---
     camera wide freeman
-    freeman pose "calm"
+    freeman pose "ugryumo"
     wait 1.0s
     freeman pose "point"
     wait 1.2s
 
     // --- ПЛАН 2 (medium): говорит всем телом ---
+    //  Мимика идёт СЛОЕМ (`overlays`), тело ведут полные позы: иначе каждая
+    //  смена выражения ставила бы телу дефолт рига, и эталон мерил бы фигуру,
+    //  которая всю реплику стоит по стойке смирно (PRAVILA-DVIZHENIYA.md §5).
     camera medium freeman
+    freeman pose "open"
     freeman speaks for 2s
-    freeman pose "wide"
+    freeman overlays "wide"
     wait 0.6s
 
     // --- ПЛАН 3 (close-up): строгий взгляд + реплика в упор ---
     camera close-up freeman
-    freeman pose "stern"
+    freeman pose "v_upor"
+    freeman overlays "stern"
     wait 0.8s
     freeman speaks for 1.4s
 
     // --- ПЛАН 4 (ECU): экстремум мимики — hero-cel во весь кадр ---
     camera extreme-close-up freeman
-    freeman pose "hero_rage"
+    freeman pose "yarost_telom"
+    freeman overlays "hero_rage"
     wait 1.0s
-    freeman pose "grotesque"
+    freeman pose "za_golovu"
+    freeman overlays "grotesque"
     wait 1.0s
 
     // --- ПЛАН 5 (medium): пожатие плечами + указание (смазы конечностей) ---
@@ -76,9 +83,9 @@ scene "etalon" (duration: 15s, set: stage) {
 
     // --- ПЛАН 6 (close-up): доводка, моргание, уход в чёрное ---
     camera close-up freeman
-    freeman pose "calm"
+    freeman pose "no"
     wait 0.8s
-    freeman pose "blink"
+    freeman overlays "blink"
     wait 0.2s
     freeman pose "calm"
     wait 1.0s

@@ -434,14 +434,15 @@ fn register_let_props(
     for stmt in stmts {
         match stmt {
             SceneStatement::Let(let_stmt) => {
-                let (position, layer, grounded) = match &let_stmt.kind {
+                let (position, layer, facing, grounded) = match &let_stmt.kind {
                     LetKind::Prop {
                         position,
                         layer,
+                        facing,
                         grounded,
                         ..
-                    } => (position, layer, *grounded),
-                    LetKind::Text { position, layer, .. } => (position, layer, false),
+                    } => (position, layer, *facing, *grounded),
+                    LetKind::Text { position, layer, .. } => (position, layer, None, false),
                 };
                 if entities.contains_key(&let_stmt.name) {
                     continue;
@@ -454,6 +455,9 @@ fn register_let_props(
                 }
                 if let Some(l) = layer {
                     state.layer = *l;
+                }
+                if let Some(dir) = facing {
+                    state.facing = dir;
                 }
                 state.grounded = grounded;
                 entities.insert(let_stmt.name.clone(), state);

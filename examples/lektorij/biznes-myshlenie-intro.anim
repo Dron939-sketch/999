@@ -62,16 +62,31 @@ scene "street" (duration: 13s, set: street) {
 
     // СКЛЕЙКА → средний. VO-1: наивная вера.
     camera medium freeman
-    freeman pose "smug"
+    freeman overlays "smug"
+    freeman pose "open"
     //lip 1
-    freeman speaks for 3.6s
+    //  Жест внутри реплики: речь держит курсор времени, поэтому силуэт ведут
+    //  полные позы в параллельном блоке (HOLLYWOOD.md, каты внутри реплики).
+    together {
+        freeman speaks for 3.6s
+        do {
+            wait 1.8s
+            freeman pose "no"              // «да не в этом дело»
+        }
+    }
     freeman pose "point"
     wait 0.4s
 
     // VO-2: «поэтому и не выходит» — жёстко, пауза.
-    freeman pose "stern"
+    freeman overlays "stern"
     //lip 2
-    freeman speaks for 2.6s
+    together {
+        freeman speaks for 2.6s
+        do {
+            wait 1.3s
+            freeman pose "otvraschenie"    // отмахнулся: «не выходит»
+        }
+    }
     wait 0.8s
 }
 
@@ -88,7 +103,13 @@ scene "pickup" (duration: 12s, set: street) {
     camera close-up freeman
     freeman pose "v_upor"
     //lip 3
-    freeman speaks for 3.8s
+    together {
+        freeman speaks for 3.8s
+        do {
+            wait 1.9s
+            freeman pose "hips"            // руки в боки — держит мысль
+        }
+    }
 
     // Поднимает «проблему» — она едет ему в руку; он выпрямляется с ней.
     // НИЖНИЙ РАКУРС: с добычей он возвышается (свет/форшортенинг).
@@ -120,8 +141,14 @@ scene "optics" (duration: 9s, set: street) {
     freeman pose "lunge"
     // VO-5: «разница не в удаче. В оптике. Ты смотришь не теми глазами».
     //lip 5
-    freeman speaks for 4.4s
-    freeman pose "stern"
+    together {
+        freeman speaks for 4.4s
+        do {
+            wait 2.2s
+            freeman pose "point"           // «ты смотришь не теми глазами»
+        }
+    }
+    freeman overlays "stern"
     // Пауза-давление: смотрит в тебя.
     wait 1.4s
     // Оптика «переключается» — инверсия.
@@ -131,12 +158,18 @@ scene "optics" (duration: 9s, set: street) {
 // === СЦЕНА 4: ПАНЧ + ОБЕЩАНИЕ КУРСА (8 с) ===
 scene "punch" (duration: 8s, set: street) {
     place freeman at (0.5, 0.72) facing front
-    freeman pose "smug"
+    freeman overlays "smug"
 
     // Сверхкруп, добивающая мысль в упор.
     camera extreme-close-up freeman
     //lip 6
-    freeman speaks for 4.0s
+    together {
+        freeman speaks for 4.0s
+        do {
+            wait 2.0s
+            freeman pose "raskryl"         // раскрыл обе — добивающая мысль
+        }
+    }
     wait 0.4s
 
     // СКЛЕЙКА на титр-карту курса.

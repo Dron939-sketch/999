@@ -154,6 +154,10 @@ pub enum LetKind {
         path: String,
         position: Option<Position>,
         layer: Option<i32>,
+        /// `facing left|right`: у предмета есть перёд. Рисунок смотрит вправо,
+        /// `facing left` его зеркалит — предмет едет лицом вперёд, а не задом.
+        #[serde(default)]
+        facing: Option<Direction>,
         /// `on floor`: точка привязки — низ рисунка, размер — по глубине пола.
         #[serde(default)]
         grounded: bool,
