@@ -28,7 +28,7 @@ config {
     background: #ccd2ca
     // фримен-пресет (покадровость) + финиш «старой плёнки»
     on-twos: 2
-    line-boil: 1.25
+    line-boil: 0.55
     film-grain: 0.05
     vignette: 0.12
     // свет и тень: объём на маске (form) + силуэт на полу (cast), свет справа

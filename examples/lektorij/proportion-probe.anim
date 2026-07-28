@@ -12,7 +12,7 @@ config {
     background: #e9eae4
     film-grain: 0.0
     vignette: 0.0
-    line-boil: 0.0
+    line-boil: 0.55
     on-twos: 1
     form-shadow: 0.0
     ground-shadow: 0.0

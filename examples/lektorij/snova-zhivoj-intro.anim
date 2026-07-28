@@ -25,11 +25,11 @@ config {
     mono-contrast: 2.2         // тональные блоки неба и земли должны выжить
     snow: 0.35                 // частицы есть в 100% кадров оригинала
     on-twos: 2
-    line-boil: 1.25
+    line-boil: 0.55
     film-grain: 0.05           // после замера дёрганья: фактура без шипения
     vignette: 0.12
-    film-flicker: 0.04
-    gate-weave: 0.8
+    film-flicker: 0.025
+    gate-weave: 0.35
     film-scratch: 0.25
     film-dust: 0.5
     light-angle: 45

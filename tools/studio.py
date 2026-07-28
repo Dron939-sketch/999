@@ -432,6 +432,88 @@ def lint_arms(prod, rig_dir=None):
     return hard, soft
 
 
+# ПОКОЙ КАДРА. Три источника дрожи складываются, а считали их порознь: контур
+# (`line-boil`), увод кадра (`gate-weave`) и мерцание (`film-flicker`). Каждый
+# по отдельности «еле заметен», вместе — рябь, которую студия увидела как
+# «персонаж корявый и трясётся». Ориентиры покоя из PRAVILA-DVIZHENIYA.md §2.
+BOIL_LIMITS = {"line-boil": 0.6, "gate-weave": 0.4, "film-flicker": 0.03}
+MAX_SECONDS = 60.0          # потолок длины ролика, задан студией
+
+
+def lint_pokoy(prod):
+    """Приёмщик ПОКОЯ: не трясётся ли кадр. (hard, soft)."""
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return [], []
+    text = anim.read_text(encoding="utf-8")
+    soft = []
+    for key, lim in BOIL_LIMITS.items():
+        m = re.search(rf"{key}:\s*([\d.]+)", text)
+        if m and float(m.group(1)) > lim:
+            soft.append(f"{prod['id']}: {key} = {m.group(1)} при пороге покоя "
+                        f"{lim} — на удержанном рисунке это тремор, а не "
+                        f"рукотворность (PRAVILA-DVIZHENIYA.md §2)")
+    return [], soft
+
+
+def lint_dlina(prod, final_mp4):
+    """Приёмщик ДЛИНЫ: ролик длиннее потолка. (hard, soft)."""
+    if not Path(final_mp4).exists() or not have_ffmpeg():
+        return [], []
+    try:
+        d = float(subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "csv=p=0", str(final_mp4)],
+            check=True, capture_output=True, text=True).stdout.strip())
+    except Exception:                                        # noqa: BLE001
+        return [], []
+    if d > MAX_SECONDS:
+        return [], [f"{prod['id']}: {d:.1f}с при потолке {MAX_SECONDS:.0f}с — "
+                    f"режь текст и паузы между сценами"]
+    return [], []
+
+
+def lint_propy(prod):
+    """Приёмщик ПРЕДМЕТОВ: бег задом и исчезновение посреди плана. (hard, soft).
+
+    Крыса в «Перепрошивке» бежала справа налево, нарисованная смотрящей вправо,
+    и пропадала на середине пути: `hides` стоял сразу после `moves-to`, а план
+    длился дольше. Оба дефекта видны в тексте сценария, но их никто не искал.
+    """
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return [], []
+    lines = anim.read_text(encoding="utf-8").split("\n")
+    # Отрицательный масштаб — и есть разворот пропа: у пропов нет `facing`,
+    # флип делается знаком (см. render_svg_to_pixmap, flip_bg). Помечаем такие
+    # предметы, иначе гейт ругается на ПРАВИЛЬНО развёрнутую крысу.
+    pos, soft, flipped = {}, [], set()
+    for i, l in enumerate(lines):
+        m = re.search(r"let (\w+) = prop\([^)]*\) at \(([\d.]+),", l)
+        if m:
+            pos[m.group(1)] = float(m.group(2))
+            continue
+        m = re.search(r"(\w+) scales\s+-[\d.]+", l)
+        if m:
+            flipped.add(m.group(1))
+            continue
+        m = re.search(r"(\w+) moves-to \((-?[\d.]+),", l)
+        if m and m.group(1) in pos:
+            x0, x1 = pos[m.group(1)], float(m.group(2))
+            if x1 < x0 - 0.05 and m.group(1) not in flipped:
+                soft.append(f"{prod['id']}: «{m.group(1)}» едет ВЛЕВО "
+                            f"({x0:.2f}→{x1:.2f}), а пропы не разворачиваются — "
+                            f"предмет поедет задом (PRAVILA-DVIZHENIYA.md §6)")
+            pos[m.group(1)] = x1
+            # `hides` сразу следом — предмет растворяется посреди плана
+            nxt = next((x.strip() for x in lines[i + 1:i + 3] if x.strip()), "")
+            if nxt == f"{m.group(1)} hides" and 0.0 <= x1 <= 1.0:
+                soft.append(f"{prod['id']}: «{m.group(1)}» прячется в точке "
+                            f"{x1:.2f} — это ВНУТРИ кадра, зритель увидит, как "
+                            f"предмет растворяется (§7)")
+    return [], soft
+
+
 def lint_turnaround(prods):
     """Приёмщик РАЗВОРОТА: одна ли это фигура на всех ракурсах. (hard, soft).
 
@@ -628,6 +710,9 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
 
     voice_produced = voice is not None and Path(voice).exists()
     hard, soft = qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced)
+    dh, ds = lint_dlina(prod, final_mp4)          # приёмщик длины
+    hard += dh
+    soft += ds
 
     # Планка Фримена: на эталонных продакшенах (флаг "planka") гоняем машинные
     # метрики Рубежа 2 — средняя длина плана / скорость рендера / golden-frame /
@@ -687,6 +772,12 @@ def main(argv):
         ah, asf = lint_arms(prod)         # приёмщик рук
         all_hard += ah
         all_soft += asf
+        ph, ps = lint_pokoy(prod)         # приёмщик покоя кадра
+        all_hard += ph
+        all_soft += ps
+        rh, rs = lint_propy(prod)         # приёмщик предметов
+        all_hard += rh
+        all_soft += rs
     th, ts = lint_turnaround(prods)       # приёмщик разворота (один на риг)
     all_hard += th
     all_soft += ts

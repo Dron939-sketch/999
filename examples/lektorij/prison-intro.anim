@@ -19,7 +19,7 @@ config {
     fps: 24
     background: #1a1c1a
     on-twos: 2
-    line-boil: 1.25
+    line-boil: 0.55
     film-grain: 0.05
     vignette: 0.12
     light-angle: 58
