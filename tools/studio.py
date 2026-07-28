@@ -514,6 +514,39 @@ def lint_propy(prod):
     return [], soft
 
 
+# ПЛОТНОСТЬ ЖЕСТА. В риге 124 позы, а в монтаже крутится полтора десятка — и
+# именно отсюда «нет динамики», а не из настроек рендера. Порог снят с
+# «Перепрошивки» и «Тюрьмы» (32 и 30 поз в минуту), где движение читается;
+# «Мышление» с шестнадцатью выглядит стоячим.
+# Считается ДВА числа, и оба важны: сколько смен позы в минуту (движение) и
+# сколько РАЗНЫХ поз (разнообразие). Двадцать смен между тремя позами — это
+# не жестикуляция, а тик.
+POSES_PER_MIN = 26
+DISTINCT_MIN = 14
+
+
+def lint_dinamika(prod):
+    """Приёмщик ДИНАМИКИ: часто ли и разнообразно ли меняются позы. (hard, soft)."""
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return [], []
+    text = anim.read_text(encoding="utf-8")
+    seq = re.findall(r'pose\s+"([a-z_0-9]+)"', text)
+    secs = sum(float(x) for x in re.findall(r"duration:\s*(\d+)s", text))
+    if secs < 5 or not seq:
+        return [], []
+    per_min = 60.0 * len(seq) / secs
+    soft = []
+    if per_min < POSES_PER_MIN:
+        soft.append(f"{prod['id']}: {per_min:.0f} смен позы в минуту при норме "
+                    f"{POSES_PER_MIN} — фигура стоит столбом. Живое движение это "
+                    f"НАМЕРЕННЫЕ жесты на ударах реплик (PRAVILA-DVIZHENIYA.md §4)")
+    if len(set(seq)) < DISTINCT_MIN:
+        soft.append(f"{prod['id']}: разных поз {len(set(seq))} при норме "
+                    f"{DISTINCT_MIN} — в риге их 124, монтаж их не видит")
+    return [], soft
+
+
 def lint_turnaround(prods):
     """Приёмщик РАЗВОРОТА: одна ли это фигура на всех ракурсах. (hard, soft).
 
@@ -778,6 +811,9 @@ def main(argv):
         rh, rs = lint_propy(prod)         # приёмщик предметов
         all_hard += rh
         all_soft += rs
+        dh, ds = lint_dinamika(prod)      # приёмщик динамики
+        all_hard += dh
+        all_soft += ds
     th, ts = lint_turnaround(prods)       # приёмщик разворота (один на риг)
     all_hard += th
     all_soft += ts

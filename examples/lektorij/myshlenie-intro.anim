@@ -88,12 +88,15 @@ scene "dver" (duration: 50s, set: dveri) {
             freeman pose "chetvert_levo"
             wait 1.0s
             freeman pose "v_upor"
-            wait 1.4s
+            wait 0.7s
+            freeman pose "point"
+            wait 0.7s
             camera medium freeman
         }
     }
 
     // ── ОТРИЦАНИЕ (VO-3): ИДЁТ НА КАМЕРУ, уходя от двери ──────────────────
+    freeman pose "calm"
     freeman pose "smug"
     //lip 3
     together {
@@ -103,9 +106,11 @@ scene "dver" (duration: 50s, set: dveri) {
             freeman moves-to (0.46, 0.72) over 2.6s
             wait 0.4s
             camera medium freeman
+            freeman pose "doubt"
             freeman moves-to (0.44, 0.79) over 2.4s
             wait 0.5s
             camera close-up freeman
+            freeman pose "hero_skeptic"
         }
     }
 
@@ -121,8 +126,12 @@ scene "dver" (duration: 50s, set: dveri) {
             camera shake 0.18s intensity 1
             wait 1.6s
             camera medium freeman
-            wait 1.2s
+            freeman pose "shrug"
+            wait 0.6s
+            freeman pose "puppet_jerk"
+            wait 0.6s
             camera wide
+            freeman pose "puppet"
             d3 moves-to (0.765, 0.478) over 0.01s
             d3 shows
             camera shake 0.18s intensity 1
@@ -144,12 +153,15 @@ scene "dver" (duration: 50s, set: dveri) {
             freeman pose "chetvert_pravo"
             wait 1.6s
             camera wide
+            freeman pose "flash_pupils"
+            wait 0.16s
             freeman pose "v_upor"
-            wait 1.6s
+            wait 1.4s
             camera medium freeman
+            freeman pose "stern"
         }
     }
-    wait 0.6s
+    wait 0.5s
 
     // ── ВЗЛЁТ (VO-6): сбоку выезжает ОТКРЫТАЯ дверь — светлое пятно ───────
     freeman pose "raskryl"
@@ -160,8 +172,10 @@ scene "dver" (duration: 50s, set: dveri) {
             camera wide
             wait 1.2s
             dopen moves-to (0.845, 0.462) over 1.6s ease-out
+            freeman pose "point"
             wait 1.0s
             camera medium freeman
+            freeman pose "hero_wow"
             wait 1.4s
             camera wide
         }
@@ -190,6 +204,7 @@ scene "dver" (duration: 50s, set: dveri) {
     wait 0.08s
 
     // ── ЖАЛО-CTA (VO-8): открытая дверь МЕДЛЕННО ЗАКРЫВАЕТСЯ ──────────────
+    freeman pose "calm"
     freeman pose "lunge"
     //lip 8
     together {
@@ -200,7 +215,9 @@ scene "dver" (duration: 50s, set: dveri) {
         dopen scales 0.09 over 4.4s ease-in
         do {
             camera medium freeman
-            wait 2.2s
+            wait 1.2s
+            freeman pose "hero_sly"
+            wait 1.0s
             camera close-up freeman
         }
     }
