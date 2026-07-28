@@ -85,11 +85,49 @@ def step_images(prod, out_dir):
             log(f"  [картинки] не удалось сгенерить {img['out']}: {e} — пропуск.")
 
 
-def step_render(src_anim, engine, out_mp4):
-    """Немой рендер .anim → mp4."""
+# ВЕРТИКАЛЬНЫЙ ФОРМАТ — ВТОРОЙ КАДР, А НЕ ОБРЕЗКА. Ролики живут в двух местах:
+# горизонталь для сайта и YouTube, вертикаль для ленты. Обрезать горизонталь по
+# бокам нельзя: у нас фигура ходит по трети кадра влево-вправо (хук справа,
+# добивка слева — это режиссура, а не украшение), и обрезка выбрасывает её из
+# кадра ровно на ударных репликах.
+#
+# Поэтому вертикаль РЕНДЕРИТСЯ ЗАНОВО из того же сценария другим размером кадра.
+# Одна поправка обязательна: `scales` и вся карта фигуры отсчитываются от ВЫСОТЫ
+# кадра, а в вертикали высота больше в 3.16 раза — фигура вылезла бы за кадр.
+# Компенсация ставится прямо в config через подмену строки `height`, а рост
+# сущностей делится на отношение высот.
+VERTICAL = (720, 1280)
+
+
+def _vertical_source(src_anim):
+    """Сценарий, пересчитанный под вертикальный кадр. Возвращает путь или None."""
+    src = Path(src_anim)
+    text = src.read_text(encoding="utf-8")
+    m = re.search(r"width:\s*(\d+)\s*\n\s*height:\s*(\d+)", text)
+    if not m:
+        return None
+    w0, h0 = int(m.group(1)), int(m.group(2))
+    k = VERTICAL[1] / h0                       # во столько раз выше кадр
+    out = text.replace(m.group(0), f"width: {VERTICAL[0]}\n    height: {VERTICAL[1]}")
+    # рост фигур: `x scales N` и `x scales N over ...` — делим на k
+    out = re.sub(r"(\b\w+ scales )([\d.]+)",
+                 lambda mm: f"{mm.group(1)}{round(float(mm.group(2)) / k, 4)}", out)
+    dst = src.with_name(f".{src.stem}.vert.anim")
+    dst.write_text(out, encoding="utf-8")
+    return dst
+
+
+def step_render(src_anim, engine, out_mp4, vertical=False):
+    """Немой рендер .anim → mp4. `vertical` — второй кадр 720×1280."""
     src = Path(src_anim)
     if not src.exists():
         raise FileNotFoundError(f"нет сценария: {src}")
+    if vertical:
+        vsrc = _vertical_source(src)
+        if vsrc is None:
+            log("  [вертикаль] в config нет width/height — вертикальный кадр пропущен.")
+            return None
+        src = vsrc
     out_mp4.parent.mkdir(parents=True, exist_ok=True)
     run([str(engine), "render", str(src), "-o", str(out_mp4)])
     return out_mp4
@@ -502,8 +540,28 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
     _t0 = _time.monotonic()
     step_render(src_anim, engine, video_mp4)
     render_sec = _time.monotonic() - _t0
+    # Вертикаль — тот же сценарий другим кадром. Отдельный файл, отдельная
+    # сборка звука не нужна: дорожка та же, различается только картинка.
+    # ВЕРТИКАЛЬ ВЫКЛЮЧЕНА ПО УМОЛЧАНИЮ. Пересчёт сценария работает (кадр
+    # 720×1280, рост фигур поделён на отношение высот — проверено), но сам
+    # рендер вертикального кадра на порядок медленнее горизонтального:
+    # локация 1280×720 в кадре 720×1280 растягивается по большей стороне и
+    # растрируется в 2278×1280 КАЖДЫЙ кадр, кэш пиксмапов такого не держит.
+    # Включать в прогон в таком виде нельзя — раннер встанет. Включается
+    # переменной VERTICAL=1, пока причина не найдена и не устранена.
+    video_vert = videos_dir / f"{pid}-vert.mp4"
+    if (os.environ.get("VERTICAL") or "").strip() not in ("", "0"):
+        try:
+            step_render(src_anim, engine, video_vert, vertical=True)
+        except Exception as e:                              # noqa: BLE001
+            log(f"  [вертикаль] рендер не удался ({e}) — только горизонталь.")
+            video_vert = None
+    else:
+        video_vert = None
     sfx = step_sfx(prod, video_mp4, videos_dir / f"{pid}-sfx.mp3", src_anim)
     step_mux(prod, video_mp4, voice, sfx, final_mp4)
+    if video_vert is not None and Path(video_vert).exists():
+        step_mux(prod, video_vert, voice, sfx, videos_dir / f"{pid}-vert-final.mp4")
 
     made = []
     for p in (video_mp4, voice_mp3, final_mp4):
