@@ -379,6 +379,59 @@ def lint_sync(prod):
     return hard, soft
 
 
+# Кости рук и порог, за которым рука считается ПОДНЯТОЙ. Дефолт покоя — 30° и
+# −29°: рука висит вдоль тела. 60° и выше — вынос в сторону или вперёд.
+ARM_BONES = ("upper_arm_left", "upper_arm_right")
+ARM_RAISED = 60.0
+
+
+def lint_arms(prod, rig_dir=None):
+    """Приёмщик РУК: не забыта ли поднятая рука в следующей позе. (hard, soft).
+
+    ЛОВУШКА НАКЛАДЫВАЕМЫХ ПОЗ. Поза перекрывает ТОЛЬКО те кости, которые
+    называет. `v_upor` поднимает левую руку на 92°, `raskryl` на 100°, `lunge`
+    на 85° — а `smug`, `stern`, `doubt`, `calm_*` рук не называют вовсе. Значит
+    после «в упор» персонаж уходит в следующую реплику С ТОРЧАЩЕЙ В СТОРОНУ
+    РУКОЙ и стоит так, пока какая-нибудь поза руку не опустит.
+
+    Это не описка в одном сценарии, а свойство рига, на которое наступает
+    каждый, кто пишет монтаж. В «Мышлении» рука так провисела половину ролика,
+    и заметил это не завод, а студия — глазами, на готовом видео.
+
+    Гейт проходит по сценарию в порядке поз и считает, сколько ПОДРЯД идёт поз
+    с унаследованной поднятой рукой. Одна-две — приём (жест держится через
+    склейку). Три и больше — рука забыта.
+    """
+    anim = ROOT / prod.get("anim", "")
+    rig = Path(rig_dir) if rig_dir else ROOT / "examples/assets/characters/freeman_rig"
+    if not anim.exists() or not (rig / "rig.json").exists():
+        return [], []
+    poses = json.loads((rig / "rig.json").read_text(encoding="utf-8"))["poses"]
+    seq = re.findall(r'pose\s+"([a-z_0-9]+)"', anim.read_text(encoding="utf-8"))
+    hard, soft = [], []
+    state = {b: None for b in ARM_BONES}       # угол, унаследованный от прошлой позы
+    since = {b: 0 for b in ARM_BONES}          # сколько поз рука висит поднятой
+    culprit = {b: "" for b in ARM_BONES}
+    for name in seq:
+        bones = poses.get(name, {}).get("bones", {})
+        for b in ARM_BONES:
+            if b in bones and "rotation" in bones[b]:
+                ang = float(bones[b]["rotation"])
+                state[b] = ang
+                since[b] = 1 if abs(ang) >= ARM_RAISED else 0
+                culprit[b] = name if abs(ang) >= ARM_RAISED else ""
+            elif state[b] is not None and abs(state[b]) >= ARM_RAISED:
+                since[b] += 1                  # поза руку не назвала — рука висит
+                if since[b] >= 4:
+                    hard.append(
+                        f"{prod['id']}: {b} поднята в позе «{culprit[b]}» "
+                        f"({abs(state[b]):.0f}°) и не опущена — уже {since[b]} поз "
+                        f"подряд, к позе «{name}». Опусти явно или возьми позу, "
+                        f"которая называет руки.")
+                    since[b] = 0               # об одном месте — одно сообщение
+    return hard, soft
+
+
 def lint_turnaround(prods):
     """Приёмщик РАЗВОРОТА: одна ли это фигура на всех ракурсах. (hard, soft).
 
@@ -631,6 +684,9 @@ def main(argv):
         lh, ls = lint_location(prod)      # приёмщик локаций
         all_hard += lh
         all_soft += ls
+        ah, asf = lint_arms(prod)         # приёмщик рук
+        all_hard += ah
+        all_soft += asf
     th, ts = lint_turnaround(prods)       # приёмщик разворота (один на риг)
     all_hard += th
     all_soft += ts
