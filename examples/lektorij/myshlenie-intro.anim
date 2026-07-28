@@ -1,0 +1,214 @@
+// =============================================================================
+//  «МЫШЛЕНИЕ И КОГНИТИВНЫЕ ИСКАЖЕНИЯ» — продающее интро курса
+//  (meysternlp.ru/blog/lektorij/myshlenie — 10 лекций, Канеман и Тверски).
+//
+//  Сквозная игра — ПОЛСЕКУНДЫ: заявлена в хуке («за тебя решили за
+//  полсекунды»), выстреливает в жале («или решай дальше за полсекунды?»).
+//  Это быстрая система Канемана, названная не термином, а сроком.
+//
+//  ДЛИТЕЛЬНОСТИ РЕПЛИК ЧЕСТНЫЕ С ПЕРВОГО РАЗА. Считаны по темпу диктора,
+//  снятому с готовых роликов: 1.51 слова в секунду. Прежние два интро писались
+//  «на глаз», занижали вдвое, и камера потом стояла по десять секунд.
+//
+//  РАКУРСЫ РАЗВОРОТА ИДУТ В ДЕЛО. До сих пор все интро снимались анфасом,
+//  хотя в риге четырнадцать поз разворота. Здесь четверть оборота на
+//  приговорах и три четверти на переломе — те два ракурса, что взял гейт
+//  разворота (tools/turnaround.py).
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set titry from "../assets/sets/lektorij-final.svg"
+import set pole from "../assets/sets/field-empty.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.35
+    on-twos: 2
+    line-boil: 1.25
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.04
+    gate-weave: 0.8
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+}
+
+scene "polsekundy" (duration: 47s, set: pole) {
+    transition static 0.35s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+    let slovo = text("ПОЛСЕКУНДЫ", 120) at (0.5, -2.0) layer 6
+    slovo scales 2.4 over 0.01s
+
+    // ── t=0..1.2 БЕЗ СЛОВ ─────────────────────────────────────────────────
+    camera wide
+    freeman pose "open"
+    wait 1.2s
+
+    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1) ──────────────────────────────────────
+    camera medium freeman
+    freeman pose "smug"
+    //lip 1
+    together {
+        freeman speaks for 3.3s
+        do {
+            wait 1.7s
+            camera close-up freeman
+        }
+    }
+    freeman pose "calm"
+    wait 0.5s
+
+    // ── ХУК (VO-2): ракурс СВЕРХУ — зритель мелкий ────────────────────────
+    freeman moves-to (0.63, 0.585) over 0.01s
+    freeman pose "doubt"
+    //lip 2
+    together {
+        freeman speaks for 4.0s
+        do {
+            camera angle high freeman
+            wait 2.0s
+            camera medium freeman
+        }
+    }
+    // ── ХУК-добивка (VO-3): КАТ крупный, фигура ВЛЕВО-треть ───────────────
+    freeman moves-to (0.37, 0.585) over 0.01s
+    freeman pose "v_upor"
+    //lip 3
+    together {
+        freeman speaks for 3.3s
+        do {
+            camera medium freeman
+            wait 1.7s
+            camera close-up freeman
+        }
+    }
+    freeman pose "flash_pupils"
+    wait 0.08s
+    freeman pose "hero_skeptic"
+    wait 0.5s
+
+    // ── ПУЛЕМЁТ (VO-4): три приговора, ЧЕТВЕРТЬ ОБОРОТА ───────────────────
+    freeman moves-to (0.5, 0.585) over 0.01s
+    //lip 4
+    together {
+        freeman speaks for 4.0s
+        do {
+            camera medium freeman
+            freeman pose "povorot_pravo"
+            wait 1.4s
+            camera close-up freeman
+            freeman pose "povorot_levo"
+            wait 1.4s
+            camera medium freeman
+            freeman pose "calm"
+        }
+    }
+    // ── ПУЛЕМЁТ финал (VO-5): презрение ───────────────────────────────────
+    freeman pose "otvraschenie"
+    //lip 5
+    together {
+        freeman speaks for 4.6s
+        do {
+            camera close-up freeman
+            wait 2.3s
+            camera medium freeman
+        }
+    }
+    camera shake 0.35s intensity 2
+    freeman pose "flash_disgust"
+    wait 0.08s
+    freeman pose "stern"
+    wait 0.6s
+
+    // ── ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ, ТРИ ЧЕТВЕРТИ ──────────────
+    freeman moves-to (0.44, 0.585) over 0.01s
+    //lip 6
+    together {
+        freeman speaks for 4.6s
+        do {
+            camera angle low freeman
+            freeman pose "chetvert_pravo"
+            wait 1.6s
+            camera close-up freeman
+            freeman pose "v_upor"
+            wait 1.6s
+            camera medium freeman
+        }
+    }
+    camera shake 0.3s intensity 2
+    wait 0.6s
+    freeman pose "think"
+    wait 0.5s
+
+    // ── ВЗЛЁТ (VO-7): фигура раскрывается ─────────────────────────────────
+    freeman moves-to (0.5, 0.585) over 0.01s
+    freeman pose "raskryl"
+    //lip 7
+    together {
+        freeman speaks for 9.9s
+        do {
+            camera medium freeman
+            wait 2.4s
+            camera close-up freeman
+            wait 2.2s
+            camera wide
+            wait 2.4s
+            camera medium freeman
+        }
+    }
+    // ── СЛОВО-УДАР «ПОЛСЕКУНДЫ» + негатив-панч ────────────────────────────
+    camera wide
+    slovo moves-to (0.5, 0.30) over 0.01s
+    slovo scales 1.0 over 0.18s ease-in
+    transition invert 0.16s
+    camera shake 0.3s intensity 3
+    wait 0.8s
+    slovo moves-to (0.5, -2.0) over 0.22s ease-in
+    freeman pose "flash_grin"
+    wait 0.08s
+
+    // ── ЖАЛО-CTA (VO-8): наезд-удар, подмиг-издёвка ───────────────────────
+    freeman pose "lunge"
+    //lip 8
+    together {
+        freeman speaks for 4.0s
+        do {
+            camera medium freeman
+            wait 2.0s
+            camera close-up freeman
+        }
+    }
+    camera zoom-to freeman over 0.18s ease-in
+    freeman pose "hero_wink"
+    wait 0.5s
+    camera reset over 0.5s
+    freeman pose "calm"
+    wait 0.7s
+}
+
+scene "titry" (duration: 6s, set: titry) {
+    transition static 0.45s
+    place freeman at (0.5, 3.0) facing front
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 1.2s
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6 over 0.01s
+    stamp rotates -7 over 0.01s
+    stamp scales 0.94 over 0.22s ease-in
+    stamp scales 1.0 over 0.1s ease-out
+    stamp rotates -4 over 0.12s
+    wait 2.5s
+    transition fade-black 0.8s
+}

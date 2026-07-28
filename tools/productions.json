@@ -54,6 +54,13 @@
    "anim": "examples/lektorij/teorii-lichnosti-intro.anim",
    "vo": "examples/lektorij/teorii-lichnosti-intro-VO.md",
    "images": []
+  },
+  {
+   "id": "myshlenie-intro",
+   "desc": "Подводка к курсу «Мышление и когнитивные искажения»: за тебя решили за полсекунды. 10 лекций, Канеман и Тверски.",
+   "anim": "examples/lektorij/myshlenie-intro.anim",
+   "vo": "examples/lektorij/myshlenie-intro-VO.md",
+   "images": []
   }
  ]
 }
