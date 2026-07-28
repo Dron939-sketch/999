@@ -35,7 +35,9 @@
   {
    "id": "fredi-expressions",
    "desc": "Фреди: библиотека мимики",
-   "anim": "examples/lektorij/fredi-expressions-demo.anim"
+   "anim": "examples/lektorij/fredi-expressions-demo.anim",
+   "_montage": "Витрина лиц, а не ролик: один портретный план на все 28 секунд — это её назначение. Приёмщик режиссуры (сверхкруп, смена крупности) здесь меряет не то и всегда красный.",
+   "montage": false
   },
   {
    "id": "lekciya-2-frejd",

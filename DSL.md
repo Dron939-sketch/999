@@ -528,7 +528,7 @@ specific entity.
 | `wide`             | Full scene view                                   | 0.60         |
 | `medium`           | Whole figure with plenty of air around it         | 0.45         |
 | `close-up`         | Whole figure, tight in frame                      | 0.78         |
-| `extreme-close-up` | Face only — the frame crops the head              | 3.60         |
+| `extreme-close-up` | Head and shoulders — the frame crops the body      | 2.01         |
 | `two-shot`         | Framing two characters                            | —            |
 | `over-shoulder`    | Over one character's shoulder toward another      | —            |
 
