@@ -991,6 +991,29 @@ def run_planka(prod, engine, render_sec, final_mp4):
     return hard, soft
 
 
+def run_montage(prod, video_mp4, final_mp4):
+    """Приёмщик режиссуры: гонит tools/montage_ref.py на готовом кадре.
+
+    Меряется КАРТИНКА, поэтому годится и немой рендер — если сведённого файла
+    нет, берём его. Все метрики мягкие: приёмщик новый, и ронять им прогон,
+    не подтянув сперва все продакшены, значит повторить историю гейта рук.
+    """
+    src = final_mp4 if final_mp4 and Path(final_mp4).exists() else video_mp4
+    if not src or not Path(src).exists():
+        return [f"{prod['id']}: режиссура не измерена (нет видео)"]
+    out_json = ROOT / "videos" / f".{prod['id']}.montage.json"
+    cmd = [sys.executable, str(TOOLS / "montage_ref.py"), str(src),
+           "--gate", "--json", str(out_json)]
+    try:
+        run(cmd)
+        data = json.loads(Path(out_json).read_text(encoding="utf-8"))
+    except (subprocess.CalledProcessError, OSError, ValueError) as e:
+        return [f"{prod['id']}: режиссура не измерена ({e})"]
+    return [f"{prod['id']}: режиссура «{name}» = {g['value']} "
+            f"(цель {g['target']}) — {g['unit']}"
+            for name, g in data.get("metrics", {}).items() if not g.get("pass")]
+
+
 def build_one(prod, engine, videos_dir, voice_expected=False):
     pid = prod["id"]
     log(f"\n=== ПРОДАКШЕН: {pid} — {prod.get('desc', '')}")
@@ -1056,6 +1079,12 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
         ph, ps = run_planka(prod, engine, render_sec, final_mp4)
         hard += ph
         soft += ps
+
+    # Режиссура — на КАЖДОМ продакшене. Планка гоняется только на эталоне и
+    # читает сценарий; этот приёмщик читает готовый кадр, поэтому ловит то,
+    # чего в тексте не видно: сценарий чередует планы, а на экране они одного
+    # размера. Так и жил сплошной сверхкруп в девяти роликах из десяти.
+    soft += run_montage(prod, video_mp4, final_mp4)
 
     for e in hard:
         log(f"  [QC-HARD] {e}")
