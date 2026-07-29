@@ -178,16 +178,31 @@ jobs:
           ls -la videos/
 
       - name: Upload videos to a GitHub Release
-        # always(): даже при красном QC уже отрендеренные здоровые ролики должны
-        # уехать в Release — принцип «отдать хоть что-то». B2: артефакты НЕ в git
-        # (иначе videos/ и история пухнут линейно по прогонам), а в Releases по
-        # rolling-тегу на ветку. GitHub Releases держат до 2ГБ на файл — прежний
-        # 95МБ-предохранитель под git-пуш больше не нужен.
-        if: always() && env.RENDER_SUBSET != 'skip'
+        # РЕЛИЗ НИКОГДА НЕ УДАЛЯЕТСЯ — ТОЛЬКО ДОЗАЛИВАЕТСЯ. Прежде полный прогон
+        # делал `release delete --cleanup-tag` и создавал релиз заново из того,
+        # что лежит в videos/. Вместе с `always()` и `cancel-in-progress` это
+        # один раз уже стоило пяти роликов: следующий push отменил прогон на
+        # середине, шаг заливки всё равно отработал (always() ловит и cancelled),
+        # снёс релиз и пересоздал его из четырёх роликов, успевших отрендериться.
+        # Остальные пять просто исчезли — при том, что их файлы были в порядке.
+        #
+        # Отсюда два предохранителя:
+        #   1) `!cancelled()` вместо `always()` — на отменённом прогоне
+        #      выкладывать нечего, он оборван на произвольном ролике. При КРАСНОМ
+        #      прогоне заливка остаётся: принцип «отдать хоть что-то» был про QC,
+        #      а не про отмену;
+        #   2) заливка всегда через `upload --clobber` — свежие файлы затирают
+        #      одноимённые, чужие остаются. Ценой того, что ассет удалённого из
+        #      манифеста продакшена придётся снять руками, — это дешевле, чем
+        #      терять релиз целиком.
+        #
+        # B2: артефакты НЕ в git (иначе videos/ и история пухнут линейно по
+        # прогонам), а в Releases по rolling-тегу на ветку. GitHub Releases
+        # держат до 2ГБ на файл — прежний 95МБ-предохранитель под git-пуш не нужен.
+        if: '!cancelled() && env.RENDER_SUBSET != ''skip'''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ONLY="$RENDER_ONLY"
           shopt -s nullglob
           assets=(videos/*.mp4 videos/*.mp3)
           if [ ${#assets[@]} -eq 0 ]; then
@@ -197,20 +212,11 @@ jobs:
           TAG="renders-${GITHUB_REF_NAME//\//-}"
           NOTES="Автосборка роликов и озвучки для ветки \`$GITHUB_REF_NAME\` (commit \`$GITHUB_SHA\`). Обновляется на каждый прогон CI. Немой = рендер без голоса (TTS был недоступен)."
           echo "Заливаю ${#assets[@]} файл(ов) в Release '$TAG' (commit $GITHUB_SHA)"
-          if [ "$RENDER_SUBSET" = "1" ]; then
-            # Выборочный прогон ДОЗАЛИВАЕТ, а не пересоздаёт релиз: videos/ не
-            # лежит в git, поэтому здесь собраны только затронутые правкой
-            # ролики, и пересоздание стёрло бы ссылки на все остальные.
-            gh release view "$TAG" >/dev/null 2>&1 || \
-              gh release create "$TAG" --target "$GITHUB_SHA" \
-                --title "Renders — $GITHUB_REF_NAME" --notes "$NOTES"
-            gh release upload "$TAG" "${assets[@]}" --clobber
-          else
-            # Полный прогон — пересоздаём rolling-релиз на текущий SHA.
-            gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
-            gh release create "$TAG" "${assets[@]}" \
-              --target "$GITHUB_SHA" \
-              --title "Renders — $GITHUB_REF_NAME" \
-              --notes "$NOTES"
-          fi
+          gh release view "$TAG" >/dev/null 2>&1 || \
+            gh release create "$TAG" --target "$GITHUB_SHA" \
+              --title "Renders — $GITHUB_REF_NAME" --notes "$NOTES"
+          gh release upload "$TAG" "${assets[@]}" --clobber
+          # Заметки указывают на коммит последнего прогона — при дозаливке они
+          # иначе врут про то, из чего собран релиз.
+          gh release edit "$TAG" --notes "$NOTES" >/dev/null
           echo "Готово: $(gh release view "$TAG" --json url -q .url)"
