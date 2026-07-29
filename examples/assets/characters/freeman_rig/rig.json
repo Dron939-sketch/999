@@ -4184,20 +4184,21 @@
           ]
         },
         "head": {
+          "part": "head_34",
           "scale": [
-            0.9,
-            0.8583
+            1.0,
+            0.9167
           ],
           "z_order": 5,
           "offset": [
-            23,
-            57
+            11,
+            70
           ]
         },
         "eye_left": {
           "part": "eye_left",
           "offset": [
-            -47,
+            -33,
             -125
           ],
           "scale": [
@@ -4208,7 +4209,7 @@
         "eye_right": {
           "part": "eye_right",
           "offset": [
-            3,
+            13,
             -117
           ],
           "scale": [
@@ -4219,7 +4220,7 @@
         "mouth": {
           "part": "mouth_34",
           "offset": [
-            -22,
+            -10,
             -56
           ],
           "scale": [
@@ -4295,20 +4296,21 @@
           ]
         },
         "head": {
+          "part": "head_34",
           "scale": [
-            0.9,
-            0.8583
+            1.0,
+            0.9167
           ],
           "z_order": 5,
           "offset": [
-            23,
-            57
+            11,
+            70
           ]
         },
         "eye_left": {
           "part": "eye_left",
           "offset": [
-            -47,
+            -33,
             -125
           ],
           "scale": [
@@ -4319,7 +4321,7 @@
         "eye_right": {
           "part": "eye_right",
           "offset": [
-            3,
+            13,
             -117
           ],
           "scale": [
@@ -4330,7 +4332,7 @@
         "mouth": {
           "part": "mouth_34",
           "offset": [
-            -22,
+            -10,
             -56
           ],
           "scale": [
