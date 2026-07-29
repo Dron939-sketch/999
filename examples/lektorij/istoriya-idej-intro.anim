@@ -164,7 +164,11 @@ scene "dveri" (duration: 4s, set: dveri) {
     // ПУЛЕМЁТ 1 (VO-4): три приговора, у каждого своя дата. Дверь за спиной —
     // та самая, в которую эта идея вошла в мир. Ритм рваный и ускоряющийся.
     camera medium freeman
-    freeman pose "gab"                   // тараторит чужое
+    // `gab` — МИМИКА (рот), а не поза тела: движок при `pose` сбрасывает все
+    // неназванные кости в дефолт, и фигура встала бы по стойке смирно. Тело
+    // даёт `hips` — руки в боки, вещает чужой список; рот тараторит слоем.
+    freeman pose "hips"
+    freeman overlays "gab"
     wait 0.3s
     //lip 4
     together {
@@ -201,7 +205,8 @@ scene "ruiny" (duration: 6.3s, set: ruiny) {
         do {
             camera medium freeman
             wait 0.9s
-            freeman pose "weary"
+            freeman pose "gore"          // тело оседает дальше, чем `hunch`
+            freeman overlays "weary"     // лицо — слоем, иначе сотрёт оседание
             camera close-up freeman
             wait 0.7s
         }
@@ -253,7 +258,11 @@ scene "znak" (duration: 24s, set: znak) {
         freeman speaks for 5.4s
         do {
             wait 1.3s
-            freeman pose "gab"
+            // «Вы не ду́маете. Вы цити́руете.» — МАРИОНЕТКА. Поза `puppet` тут
+            // не украшение: цитировать значит быть управляемым, и это ровно
+            // тот кадр, где мысль ролика видна без слов. Рот — слоем.
+            freeman pose "puppet"
+            freeman overlays "gab"
             camera extreme-close-up freeman
             wait 0.9s
             camera close-up freeman
