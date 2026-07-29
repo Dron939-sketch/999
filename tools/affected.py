@@ -103,8 +103,13 @@ def affected(changed, manifest=DEFAULT_MANIFEST):
     # `git diff --name-only` отдаёт пути от корня репо и уже нормализованными,
     # но руками этот модуль зовут и с «./», и с «a/../b» — нормализуем, иначе
     # «tools/../README.md» попадёт под префикс `tools/` и даст ложное ALL.
-    changed = [posixpath.normpath(c.strip()).lstrip("./")
-               for c in changed if c.strip()]
+    #
+    # Только normpath, БЕЗ `.lstrip("./")`: lstrip срезает не префикс, а любые
+    # ведущие символы из набора, и «.github/workflows/render.yml» превращался в
+    # «github/…». Путь переставал совпадать с GLOBAL_FILES, и правка самого
+    # workflow вместо полного прогона давала «рендерить нечего». normpath уже
+    # приводит «./README.md» к «README.md» — снимать больше нечего.
+    changed = [posixpath.normpath(c.strip()) for c in changed if c.strip()]
     for c in changed:
         if c in GLOBAL_FILES or c.startswith(GLOBAL_PREFIXES):
             return ["ALL"]
