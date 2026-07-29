@@ -97,7 +97,11 @@ scene "pustota" (duration: 5.4s, set: pustota) {
     freeman scales 0.80 over 0.01s
 
     camera wide
-    freeman pose "ugryumo"
+    // НЕ `ugryumo`: она сажает голову в плечи и опускает корпус, и на первом
+    // же кадре фигура читается как присевшая на корточки. Открывать ролик
+    // приседом нельзя. Настроение до реплики всё равно ведёт мимика — `doubt`
+    // ниже и `smug` перед словом, — а телу на вступлении нужна ровная стойка.
+    freeman pose "calm"
     wait 0.7s
     camera medium freeman
     freeman overlays "doubt"
