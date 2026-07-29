@@ -475,15 +475,6 @@
         "mouth": {
           "part": "mouth_teeth"
         },
-        "hat": {
-          "part": "hat",
-          "offset": [
-            -18,
-            -114
-          ],
-          "rotation": -18,
-          "z_order": 6
-        },
         "cane": {
           "part": "cane",
           "rotation": 26
