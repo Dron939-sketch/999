@@ -77,13 +77,30 @@ config {
     mono-contrast: 1.9
     snow: 0.35
     on-twos: 2
-    line-boil: 0.55
+
+    // КАДР СТОИТ РОВНО. Два эффекта «плёнки» отсюда убраны намеренно:
+    //   `gate-weave` (было 0.35) — качание всего кадра в фильмовом окне.
+    //     Замер изолированным прогоном: горизонт гулял на 2 px по вертикали
+    //     КАЖДЫЙ кадр. На бумаге это «жизнь плёнки», на экране — уезжающие
+    //     края, за которые глаз цепляется весь ролик.
+    //   `line-boil` (было 0.55) — пересборка контура на каждом удержанном
+    //     кадре, имитация перерисовки от руки. Вместе с качанием давала
+    //     сплошную дрожь краёв.
+    // Зерно, пыль и царапины оставлены: они живут в кадре, но не двигают
+    // рисунок. Плёнка должна быть слышна, а не ощущаться качкой.
+    line-boil: 0.0
+    gate-weave: 0.0
     film-grain: 0.05
     vignette: 0.12
     film-flicker: 0.025
-    gate-weave: 0.35
     film-scratch: 0.25
     film-dust: 0.5
+
+    // ФИГУРА ПРИБИТА К ПОЛУ. У новых локаций пол в центре кадра ровный и
+    // пустой, а ноги персонажа — две тонкие линии: без точки контакта он
+    // читается парящим, особенно на позах с наклоном корпуса. Контактная
+    // тень в движке была, но выключена.
+    ground-shadow: true
     light-angle: 45
     form-shadow: 0.0
     rim-light: 0.0
@@ -113,11 +130,8 @@ scene "pustota" (duration: 5.4s, set: pustota) {
     together {
         freeman speaks for 3.2s
         do {
-            wait 1.1s
-            camera close-up freeman
-            wait 1.0s
+            wait 2.1s
             freeman pose "open"          // «дорогие мои» — раскрыл руки
-            camera medium freeman
             wait 0.6s
         }
     }
@@ -144,10 +158,10 @@ scene "lavka" (duration: 6.5s, set: lavka) {
     together {
         freeman speaks for 2.4s
         do {
-            camera angle high freeman
-            camera zoom-to freeman over 1.2s ease-in
+            // Один медленный наезд на всю реплику вместо наезда плюс двух
+            // катов: движение тянет внимание, а каты его дробят.
+            camera zoom-to freeman over 2.0s ease-in
             freeman overlays "no"
-            camera medium freeman
             wait 0.4s
         }
     }
@@ -161,12 +175,10 @@ scene "lavka" (duration: 6.5s, set: lavka) {
         freeman speaks for 2.8s
         do {
             camera medium freeman
-            wait 1.2s
+            wait 1.6s
             freeman pose "v_upor"
-            camera close-up freeman
-            wait 0.7s
             camera extreme-close-up freeman
-            wait 0.5s
+            wait 0.8s
         }
     }
     // ФЛЭШ-МОРДА НА СВЕРХКРУПЕ (HOLLYWOOD.md §2): кадр уже сверхкрупный.
@@ -187,7 +199,8 @@ scene "zapasnik" (duration: 4s, set: zapasnik) {
     place freeman at (0.5, 0.585) facing front
     freeman scales 0.80 over 0.01s
 
-    camera medium freeman
+    // ОБЩИЙ ПЛАН: стеллажи от пола за потолок — то, ради чего локация снята.
+    camera wide
     // `gab` — МИМИКА (рот), а не поза тела: при `pose` движок сбросил бы все
     // неназванные кости в дефолт, и фигура встала бы по стойке смирно. Тело
     // даёт `hips` — руки в боки, вещает чужой список; рот тараторит слоем.
@@ -201,11 +214,8 @@ scene "zapasnik" (duration: 4s, set: zapasnik) {
             wait 1.0s
             freeman pose "bow"           // кланяется каждой дате
             camera close-up freeman
-            wait 0.9s
+            wait 1.5s
             freeman pose "facepalm"      // «Ты уникален» — позавчера
-            camera medium freeman
-            wait 0.6s
-            camera extreme-close-up freeman
             wait 0.3s
         }
     }
@@ -232,12 +242,11 @@ scene "raskop" (duration: 6.3s, set: raskop) {
     together {
         freeman speaks for 2.2s
         do {
-            camera medium freeman
-            wait 0.9s
+            wait 1.1s
             freeman pose "gore"          // тело оседает дальше, чем `hunch`
             freeman overlays "weary"     // лицо — слоем, иначе сотрёт оседание
-            camera close-up freeman
-            wait 0.7s
+            camera medium freeman
+            wait 0.9s
         }
     }
     // ПУЛЕМЁТ финал (VO-6): «жуёте чужую жвачку» — отвращение, тряска.
@@ -247,13 +256,10 @@ scene "raskop" (duration: 6.3s, set: raskop) {
     together {
         freeman speaks for 2.8s
         do {
-            camera close-up freeman
-            wait 1.1s
+            wait 1.6s
             freeman overlays "za_golovu"
-            camera medium freeman
-            wait 0.8s
             camera extreme-close-up freeman
-            wait 0.5s
+            wait 0.9s
         }
     }
     camera shake 0.35s intensity 2
@@ -281,27 +287,23 @@ scene "zal" (duration: 6.5s, set: zal) {
     camera wide
     freeman pose "bow"                   // поклон чтеца — до первого слова
     wait 0.5s
-    camera angle low freeman
     //lip 7
     together {
         freeman speaks for 5.4s
         do {
-            camera medium freeman
             wait 1.3s
             // «Вы не ду́маете. Вы цити́руете.» — МАРИОНЕТКА. Поза `puppet` тут
             // не украшение: цитировать значит быть управляемым, и это ровно
             // тот кадр, где мысль ролика видна без слов. Рот — слоем.
             freeman pose "puppet"
             freeman overlays "gab"
-            camera extreme-close-up freeman
-            wait 0.9s
-            camera close-up freeman
-            wait 0.5s
-            // «А кого́ — не по́мните» не режется катом, а НАЕЗЖАЕТ.
+            camera medium freeman
+            wait 1.4s
+            // «А кого́ — не по́мните» не режется катом, а НАЕЗЖАЕТ — один
+            // длинный ход на весь остаток реплики.
             freeman pose "v_upor"
-            camera zoom-to freeman over 1.8s ease-in
-            camera close-up freeman
-            wait 0.6s
+            camera zoom-to freeman over 2.4s ease-in
+            wait 0.3s
         }
     }
     camera shake 0.3s intensity 2
@@ -333,22 +335,19 @@ scene "stena" (duration: 9.9s, set: stena) {
     together {
         freeman speaks for 7.8s
         do {
-            wait 1.4s
+            wait 2.0s
             // «Два́дцать пя́ть веко́в его́ копи́ли» — ПРЕДШЕСТВЕННИК ВСТАЁТ У
             // СТЕНЫ. Второй план здесь не надпись, а вторая фигура: тот, кто
             // клал камень до тебя. Мельче и дальше — он уже история.
             predok shows
             camera wide
-            wait 1.1s
+            wait 1.8s
             freeman pose "raskryl"
             predok pose "wave"           // передал и уходит
-            wait 1.1s
-            camera close-up freeman
-            wait 0.9s
+            wait 2.0s
             predok hides
-            camera extreme-close-up freeman
-            wait 1.0s
-            camera wide
+            camera close-up freeman
+            wait 1.4s
         }
     }
     // ── СЛОВО-УДАР «ЧЬЯ?» + негатив-панч ─────────────────────────────────
@@ -389,19 +388,15 @@ scene "pustota-final" (duration: 12s, set: pustota) {
         freeman speaks for 10.2s
         do {
             camera medium freeman
-            wait 2.0s
+            wait 3.0s
             freeman pose "point"
-            camera close-up freeman
-            wait 2.0s
+            wait 2.2s
             freeman pose "confident"     // трость возвращается на счёт курса
             camera wide
-            wait 2.0s
-            freeman pose "hips"
-            camera medium freeman
-            wait 2.0s
+            wait 2.8s
             freeman pose "v_upor"
             camera close-up freeman
-            wait 1.2s
+            wait 1.4s
         }
     }
     // ПОДМИГ — ПУАНТ, И ОН НА СВЕРХКРУПЕ.
