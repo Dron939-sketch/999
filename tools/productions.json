@@ -70,6 +70,12 @@
       "anim": "examples/lektorij/istoriya-idej-intro.anim",
       "vo": "examples/lektorij/istoriya-idej-intro-VO.md",
       "images": []
+    },
+    {
+      "id": "proba-15s",
+      "desc": "Стенд персонажа: 15 секунд на проверку гипотез о пластике и сходстве. Не ролик — верстак (разворот, шаг, удержание жеста, лицо на сверхкрупе, покой).",
+      "anim": "examples/lektorij/proba-15s.anim",
+      "planka": true
     }
   ]
 }
