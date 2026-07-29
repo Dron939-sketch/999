@@ -70,20 +70,26 @@ Workflow `.github/workflows/render.yml`:
 всегда отдаёт хотя бы немой рендер. Локально: `python3 tools/studio.py`
 (нужен ffmpeg для звука; без него — только немые mp4).
 
-Добавить ролик в завод — дописать объект в `productions` внутри
-`tools/productions.json` (id, anim, vo, title, images).
-
 ## Ролики
 
 | Файл | Источник | Что это |
 |------|----------|---------|
+| `etalon-15s.mp4` | `examples/lektorij/etalon-15s.anim` | Эталон планки Фримена: контрольный 15-сек кусок для машинных метрик Рубежа 2 (длина плана/скорость/golden-frame/громкость) |
 | `pereproshivka-intro.mp4` | `examples/lektorij/pereproshivka-intro.anim` | Подводка к курсу «Перепрошивка»: камера-хук, книга, оживающая картинка |
+| `biznes-myshlenie-intro.mp4` | `examples/lektorij/biznes-myshlenie-intro.anim` | Подводка к курсу «Бизнес-мышление»: толпа обходит красную «проблему», Фримен поднимает — это куш |
 | `freeman-monologue.mp4` | `examples/freeman-monologue.anim` | Мистер Фримен: монолог в камеру (витрина стиля) |
+| `prison-intro.mp4` | `examples/lektorij/prison-intro.anim` | Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото) |
 | `fredi-expressions.mp4` | `examples/lektorij/fredi-expressions-demo.anim` | Фреди: библиотека мимики |
 | `lekciya-2-frejd.mp4` | `examples/lektorij/lekciya-2-frejd-psihodinamika.anim` | Пилот лекции (Фрейд, курс «Теории личности») |
+| `snova-zhivoj-intro.mp4` | `examples/lektorij/snova-zhivoj-intro.anim` | Подводка к курсу «Снова живой»: выключенный человек — дышит, но не живёт |
+| `teorii-lichnosti-intro.mp4` | `examples/lektorij/teorii-lichnosti-intro.anim` | Подводка к курсу «Теории личности»: чужие очки садятся на маску в первые 3 секунды и слетают на взлёте |
+| `myshlenie-intro.mp4` | `examples/lektorij/myshlenie-intro.anim` | Подводка к курсу «Мышление и когнитивные искажения»: за тебя решили за полсекунды |
+| `istoriya-idej-intro.mp4` | `examples/lektorij/istoriya-idej-intro.anim` | Подводка к курсу «История идей»: у каждой мысли есть год выпуска и владелец до тебя |
 
-Добавить ролик в конвейер — дописать строку в список `RENDERS` в
-`.github/workflows/render.yml`.
+Добавить ролик в завод — дописать объект в `productions` внутри
+`tools/productions.json` (id, desc, anim, vo, images). Список `RENDERS` в
+workflow, на который тут ссылались раньше, давно не существует: набор
+берётся из манифеста, а какие из них гнать — считает `tools/affected.py`.
 
 ## Озвучка (Fish Audio) — приходит в эту же папку
 
