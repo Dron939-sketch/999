@@ -77,8 +77,56 @@ enum Commands {
     },
 }
 
+/// Сколько раз сработал перехват паники resvg на фильтре смещения.
+static INK_FALLBACKS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+/// Гасит ШТАТНУЮ панику resvg, которую движок уже ловит сам.
+///
+/// `render_bone_part` оборачивает `resvg::render` в `catch_unwind`: у
+/// `feDisplacementMap` в resvg 0.44 есть size-assertion, которая срабатывает на
+/// некоторых размерах растра, и деталь просто дорисовывается без ink-фильтра.
+/// Ошибки в этом нет — силуэт верный, дрожь контура всё равно даёт пост-процесс
+/// `apply_line_boil`.
+///
+/// Но штатный хук паники печатал при этом полный backtrace с `animdsl::main` в
+/// стеке. В логе прогона это выглядит как падение рендера: ровно на этом я и
+/// потерял час, бисектя сцену, которая на самом деле собралась целиком. Теперь
+/// известная паника не печатается вовсе, а в конце прогона выводится честная
+/// строка «сколько раз пришлось снять фильтр». Любая ДРУГАЯ паника печатается
+/// как раньше — глушим по тексту сообщения, а не всё подряд.
+fn install_quiet_ink_panic_hook() {
+    let prev = std::panic::take_hook();
+    std::panic::set_hook(Box::new(move |info| {
+        let msg = info
+            .payload()
+            .downcast_ref::<&str>()
+            .map(|s| s.to_string())
+            .or_else(|| info.payload().downcast_ref::<String>().cloned())
+            .unwrap_or_default();
+        let known = msg.contains("src.width == map.width")
+            || msg.contains("src.height == map.height");
+        if known {
+            INK_FALLBACKS.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            return;
+        }
+        prev(info);
+    }));
+}
+
+fn report_ink_fallbacks() {
+    let n = INK_FALLBACKS.load(std::sync::atomic::Ordering::Relaxed);
+    if n > 0 {
+        eprintln!(
+            "  [ink] {n} раз(а) деталь дорисована без SVG-фильтра: resvg не смог \
+             применить feDisplacementMap на этом размере растра. Силуэт верный, \
+             дрожь контура даёт пост-процесс кадра — на картинке не сказывается."
+        );
+    }
+}
+
 fn main() -> Result<()> {
     env_logger::init();
+    install_quiet_ink_panic_hook();
     let cli = Cli::parse();
 
     match cli.command {
@@ -104,6 +152,7 @@ fn main() -> Result<()> {
         }
     }
 
+    report_ink_fallbacks();
     Ok(())
 }
 
