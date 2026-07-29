@@ -210,6 +210,10 @@ scene "linza" (duration: 61s, set: pole) {
     // реплики — вспышка попадает в лицо, ради которого нарисована.
     freeman overlays "flash_pupils_ochki"
     wait 0.08s
+    // И СРАЗУ ОТПУСКАЕМ. Сверхкруп — это два кадра удара; держать его дальше,
+    // на реакции, значит снова сделать его нормой ролика, а не ударом. Ровно
+    // так он и расползался до 0.74 в прошлый заход.
+    camera medium freeman
     freeman overlays "hero_skeptic_ochki"
     wait 0.5s
 
@@ -284,6 +288,7 @@ scene "linza" (duration: 61s, set: pole) {
     camera shake 0.35s intensity 2
     freeman overlays "flash_disgust_ochki"
     wait 0.08s
+    camera medium freeman             // удар отыгран — отпускаем (см. выше)
     freeman overlays "stern_ochki"
     wait 0.7s
 
