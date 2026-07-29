@@ -216,3 +216,74 @@ def main(argv=None):
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+# ============================================================================
+#  СИЛУЭТ КАРТИНКОЙ
+# ============================================================================
+#
+#  Меры мерами, но форму судят глазом. Здесь модель растеризуется по-настоящему:
+#  берутся ТРЕУГОЛЬНИКИ меша (не только вершины), проецируются ортографически и
+#  заливаются. Это честный силуэт, а не облако точек — у примитивов вершины
+#  стоят редко, и по ним форма читалась бы дырявой.
+
+def triangles(js, bin_, only=None):
+    """Треугольники сцены в мировых координатах: [(N,3,3)] по частям."""
+    out = {}
+
+    def walk(i, parent):
+        node = js["nodes"][i]
+        m = parent @ trs(node)
+        if "mesh" in node:
+            tris = []
+            for prim in js["meshes"][node["mesh"]]["primitives"]:
+                pi = prim["attributes"].get("POSITION")
+                if pi is None:
+                    continue
+                v = accessor(js, bin_, pi)
+                h = np.hstack([v, np.ones((len(v), 1))])
+                w = (m @ h.T).T[:, :3]
+                if "indices" in prim:
+                    idx = accessor(js, bin_, prim["indices"]).astype(int).ravel()
+                else:
+                    idx = np.arange(len(w))
+                tris.append(w[idx[: len(idx) // 3 * 3]].reshape(-1, 3, 3))
+            if tris:
+                out[node.get("name", f"node{i}")] = np.vstack(tris)
+        for c in node.get("children", []):
+            walk(c, m)
+
+    roots = js["scenes"][js.get("scene", 0)].get("nodes", range(len(js["nodes"])))
+    for r in roots:
+        walk(r, np.eye(4))
+    if only:
+        out = {k: v for k, v in out.items() if k in only}
+    return out
+
+
+def silhouette(js, bin_, angle_deg, size=(420, 720), margin=0.06):
+    """Залитый силуэт модели под углом. Возвращает PIL.Image (L)."""
+    from PIL import Image, ImageDraw
+    tris = triangles(js, bin_)
+    allt = np.vstack(list(tris.values()))
+    t = math.radians(angle_deg)
+    rot = np.array([[math.cos(t), 0, math.sin(t)],
+                    [0, 1, 0],
+                    [-math.sin(t), 0, math.cos(t)]])
+    p = allt.reshape(-1, 3) @ rot.T
+    # рамка считается по АНФАСУ, одна на все углы: иначе каждый ракурс
+    # масштабируется по себе и сравнивать их между собой нельзя.
+    ref = allt.reshape(-1, 3)
+    y0, y1 = ref[:, UP].min(), ref[:, UP].max()
+    W, H = size
+    span = (y1 - y0) * (1 + margin * 2)
+    scale = H / span
+    cx = W / 2.0
+
+    img = Image.new("L", size, 235)
+    d = ImageDraw.Draw(img)
+    for tri in p.reshape(-1, 3, 3):
+        pts = [(cx + v[SIDE] * scale, H - (v[UP] - y0 + span * margin) * scale)
+               for v in tri]
+        d.polygon(pts, fill=20)
+    return img
