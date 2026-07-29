@@ -60,30 +60,51 @@ def run(cmd, **kw):
 
 
 def step_images(prod, out_dir):
-    """Генерит объявленные картинки (если задан IMAGE_API_KEY)."""
+    """Генерит объявленные картинки и делает из них сеты (художник)."""
     images = prod.get("images", [])
     if not images:
         return
-    if not os.environ.get("IMAGE_API_KEY"):
-        log("  [картинки] IMAGE_API_KEY не задан — пропуск генерации "
-            f"({len(images)} шт., будут использованы существующие ассеты).")
-        return
     gen = TOOLS / "image_gen.py"
+    art = TOOLS / "vectorize.py"
+    have_key = bool(os.environ.get("IMAGE_API_KEY"))
+    if not have_key:
+        log(f"  [картинки] IMAGE_API_KEY не задан — генерация пропущена "
+            f"({len(images)} шт.), беру существующие ассеты.")
     for img in images:
         dst = ROOT / img["out"]
-        if dst.exists() and not img.get("force"):
+        wrap = ROOT / img["wrap_svg"] if img.get("wrap_svg") else None
+        fresh = not dst.exists() or img.get("force")
+
+        if fresh and have_key:
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            cmd = [sys.executable, str(gen), "-o", str(dst), "--prompt", img["prompt"]]
+            if wrap:
+                cmd += ["--wrap-svg", str(wrap)]
+                cmd += ["--wrap-mode", img.get("wrap_mode", "auto")]
+            if img.get("size"):
+                cmd += ["--size", img["size"]]
+            try:
+                run(cmd)
+                continue                      # генератор сам позвал художника
+            except subprocess.CalledProcessError as e:
+                log(f"  [картинки] не удалось сгенерить {img['out']}: {e} — пропуск.")
+
+        # ХУДОЖНИК РАБОТАЕТ И БЕЗ КЛЮЧА. Раньше шаг выходил целиком, если
+        # картинка уже лежит или ключа нет, — и объявленный сет не собирался
+        # никогда: растр в репозитории есть, а SVG для движка взять неоткуда.
+        # Обводка ключа не требует, поэтому недостающий сет собираем из того,
+        # что уже на диске.
+        if wrap and dst.exists() and (not wrap.exists() or img.get("force")):
+            cmd = [sys.executable, str(art), str(dst), str(wrap),
+                   "--mode", img.get("wrap_mode", "auto")]
+            if img.get("size"):
+                cmd += ["--size", img["size"]]
+            try:
+                run(cmd)
+            except subprocess.CalledProcessError as e:
+                log(f"  [художник] не смог сделать сет {img['wrap_svg']}: {e}")
+        elif dst.exists():
             log(f"  [картинки] уже есть: {img['out']} — пропуск.")
-            continue
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        cmd = [sys.executable, str(gen), "-o", str(dst), "--prompt", img["prompt"]]
-        if img.get("wrap_svg"):
-            cmd += ["--wrap-svg", str(ROOT / img["wrap_svg"])]
-        if img.get("size"):
-            cmd += ["--size", img["size"]]
-        try:
-            run(cmd)
-        except subprocess.CalledProcessError as e:
-            log(f"  [картинки] не удалось сгенерить {img['out']}: {e} — пропуск.")
 
 
 # ВЕРТИКАЛЬНЫЙ ФОРМАТ — ВТОРОЙ КАДР, А НЕ ОБРЕЗКА. Ролики живут в двух местах:

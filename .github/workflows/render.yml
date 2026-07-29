@@ -123,9 +123,12 @@ jobs:
 
       # Питон-зависимости планки (qc_metrics: golden-diff по SSIM). Без них
       # измеритель падал на `import numpy` — прогон писал «планка не измерена».
-      - name: Python deps (планка)
+      # vtracer — художник (tools/vectorize.py): обводка растра в векторные
+      # пути. Ставится готовым колесом, без сборки Rust; без него художник
+      # честно падает на вставку растром и говорит об этом в логе.
+      - name: Python deps (планка, художник)
         if: env.RENDER_SUBSET != 'skip'
-        run: python3 -m pip install --quiet --upgrade numpy pillow
+        run: python3 -m pip install --quiet --upgrade numpy pillow vtracer
 
       # Rhubarb Lip Sync — фонемный липсинк (рот артикулирует слоги, не флэпы).
       # Бинарь кэшируется; при недоступности завод честно падает на RMS-огибающую.
