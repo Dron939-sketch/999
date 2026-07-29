@@ -818,6 +818,39 @@ def lint_kamera(prod):
                 f"(HOLLYWOOD.md, «наезд-удар»)"]
 
 
+def lint_sloj_tela(prod, rig_dir=None):
+    """Приёмщик СЛОЯ: не идёт ли поза ТЕЛА через `overlays`. (hard, soft).
+
+    Зеркальная ошибка к `lint_mimika`, и та её не ловит. Там мимика шла как
+    `pose` и стирала жест; здесь поза тела идёт как `overlays` и кладёт свой
+    корпус с руками ПОВЕРХ чужих ног. Получается гибрид, которого никто не
+    рисовал: в «Истории идей» `myslitel` + `overlays "no"` дал заваленное
+    набок туловище и разъехавшиеся ноги — на экране фигура читалась сидящей,
+    и студия увидела это раньше гейта.
+
+    Soft, а не hard: приём законный. Слой тела осмыслен, когда надо добавить
+    жест, не теряя стойку (`otvraschenie` + `za_golovu` — руки к голове поверх
+    отвращения, силуэт остаётся ровным, проверено рендером). Но результат
+    НИКТО не рисовал, поэтому на него надо посмотреть глазами. Гейт говорит,
+    куда именно смотреть, а не запрещает.
+    """
+    anim = ROOT / prod.get("anim", "")
+    poses = _rig_poses(rig_dir)
+    if not anim.exists() or not poses:
+        return [], []
+    names = re.findall(r'overlays\s+"([a-z_0-9]+)"',
+                       anim_code(anim.read_text(encoding="utf-8")))
+    bad = sorted({n for n in names if n in poses and not is_face_pose(n, poses)})
+    if not bad:
+        return [], []
+    return [], [f"{prod['id']}: поза ТЕЛА идёт слоем — "
+                + ", ".join(f"`overlays \"{n}\"`" for n in bad)
+                + ". Слой кладёт корпус и руки поверх чужих ног: силуэт "
+                  "получается гибридным, и его надо проверить кадром. Нужен "
+                  "жест целиком — пиши `pose`; нужно только лицо — бери "
+                  "лицевую позу (PRAVILA-DVIZHENIYA.md §5)"]
+
+
 def lint_udareniya(prod):
     """Приёмщик УДАРЕНИЙ: реплика ушла в синтез без разметки. (hard, soft).
 
@@ -1296,6 +1329,9 @@ def main(argv):
         ah, asf = lint_mimika(prod)       # приёмщик мимики (жест не стирается)
         all_hard += ah
         all_soft += asf
+        oh, os_ = lint_sloj_tela(prod)    # приёмщик слоя (тело не идёт слоем)
+        all_hard += oh
+        all_soft += os_
         rh2, rs2 = lint_arms(prod)        # приёмщик забытой руки (по слоям)
         all_hard += rh2
         all_soft += rs2
