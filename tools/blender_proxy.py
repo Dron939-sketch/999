@@ -182,24 +182,39 @@ def set_paper_background():
         bg.inputs["Strength"].default_value = 1.0
 
 
-def add_part(kind, name, radius, radius2, height, z_bottom, x=0.0, tilt=0.0):
-    """Один примитив рига: сфера (голова) или цилиндр/конус (плащ, конечности).
+def add_part(kind, name, radius, radius2, height, z_bottom, x=0.0,
+             swing=0.0, segments=64):
+    """Один примитив рига: сфера (голова) или конус (конечности).
 
-    Сечение делаем ЭЛЛИПТИЧЕСКИМ (scale по Y после постройки) — та же формула
-    проекции, что уже проверена в `proxy3d.py`: полуширина(θ) = sqrt(a²cos²θ +
-    b²sin²θ), a — по X, b = a·DEPTH_K — по Y (глубина).
+    ГРАНЁНОСТЬ. Первая версия брала сегменты по умолчанию (32 у конуса), и на
+    силуэте фаски были отлично видны — модель читалась угловатой. 64 сегмента
+    плюс `shade_smooth` убирают это; для замера ширины разницы нет, а для
+    суждения о форме — есть.
+
+    НАКЛОН ВОКРУГ Y, А НЕ X. В первой версии руки наклонялись через
+    `rotation_euler.x` — это наклон В ГЛУБИНУ кадра, невидимый в анфас.
+    Руки от этого встали прямыми вертикальными брусками рядом с корпусом.
+    В сторону наклоняет поворот вокруг Y.
+
+    Сечение эллиптическое (`scale.y = DEPTH_K`) — та же формула проекции, что
+    проверена в `proxy3d.py`: полуширина(θ) = sqrt(a²cos²θ + b²sin²θ).
     """
     if kind == "sphere":
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=radius, location=(x, 0, z_bottom + height / 2))
+        bpy.ops.mesh.primitive_uv_sphere_add(
+            radius=radius, segments=segments, ring_count=segments // 2,
+            location=(x, 0, z_bottom + height / 2))
     else:
-        bpy.ops.mesh.primitive_cone_add(radius1=radius, radius2=radius2 if radius2 is not None else radius,
-                                        depth=height, location=(x, 0, z_bottom + height / 2))
+        bpy.ops.mesh.primitive_cone_add(
+            radius1=radius, radius2=radius2 if radius2 is not None else radius,
+            depth=height, vertices=segments,
+            location=(x, 0, z_bottom + height / 2))
     obj = bpy.context.active_object
     obj.name = name
     obj.scale.y = DEPTH_K
-    if tilt:
-        obj.rotation_euler.x = math.radians(tilt)
+    if swing:
+        obj.rotation_euler.y = math.radians(swing)
     obj.data.materials.append(flat_black_material())
+    bpy.ops.object.shade_smooth()
     return obj
 
 
@@ -220,7 +235,7 @@ def build_cloak(z_bottom, height):
     obj = bpy.data.objects.new("cloak", mesh)
     bpy.context.collection.objects.link(obj)
 
-    SEG = 32                       # долек по кругу
+    SEG = 64                       # долек по кругу (32 давали видимые фаски)
     max_half = CLOAK_W / 2 * TOTAL_HEIGHT
     bm = bmesh.new()
     rings = []
@@ -252,24 +267,35 @@ def build_figure():
     head_h = TOTAL_HEIGHT * HEAD_BOTTOM
     cloak_h = z_shoulder - z_hem
 
+    # ГОЛОВА СТОИТ НА ПЛАЩЕ, А НЕ В НЁМ. Было `z_shoulder - head_h * 0.55`:
+    # больше половины сферы уходило под плащ, и на силуэте головы не было видно
+    # ВОВСЕ — округлая макушка фигуры оказывалась верхом плаща. Перекрываем
+    # ровно подбородком.
+    HEAD_SINK = 0.15
     head = add_part("sphere", "head", HEAD_W / 2 * TOTAL_HEIGHT, None, head_h,
-                    z_shoulder - head_h * 0.55)
+                    z_shoulder - head_h * HEAD_SINK)
     head.scale.z = head_h / (HEAD_W * TOTAL_HEIGHT)
 
     cloak = build_cloak(z_hem, cloak_h)
 
-    leg_r = 0.028 * TOTAL_HEIGHT
-    leg_off = CLOAK_W * TOTAL_HEIGHT * 0.16
-    leg_l = add_part("cone", "leg_l", leg_r, leg_r, z_hem, 0.0, x=-leg_off)
-    leg_r_ = add_part("cone", "leg_r", leg_r, leg_r, z_hem, 0.0, x=leg_off)
+    # НОГИ-НИТОЧКИ. Было 0.028 роста радиусом — 5.6% роста в диаметре, толстые
+    # прямоугольники на силуэте. У оригинала ноги тоньше линии плаща в разы.
+    leg_r = 0.009 * TOTAL_HEIGHT
+    leg_off = CLOAK_W * TOTAL_HEIGHT * 0.13
+    leg_l = add_part("cone", "leg_l", leg_r, leg_r * 0.75, z_hem, 0.0, x=-leg_off)
+    leg_r_ = add_part("cone", "leg_r", leg_r, leg_r * 0.75, z_hem, 0.0, x=leg_off)
 
-    arm_r = 0.025 * TOTAL_HEIGHT
-    arm_len = 0.34 * TOTAL_HEIGHT
-    arm_off = CLOAK_W / 2 * TOTAL_HEIGHT + arm_r * 1.1
-    arm_l = add_part("cone", "arm_l", arm_r, arm_r * 0.8, arm_len,
-                     z_shoulder - arm_len, x=-arm_off, tilt=8)
-    arm_rr = add_part("cone", "arm_r", arm_r, arm_r * 0.8, arm_len,
-                      z_shoulder - arm_len, x=arm_off, tilt=-8)
+    # РУКИ ПРИМЫКАЮТ И РАСХОДЯТСЯ. Крепим у линии плеч (0.234 роста — замер по
+    # этой же модели), сажаем ВНУТРЬ габарита плаща, чтобы не висели отдельно,
+    # и разводим поворотом вокруг Y.
+    z_arm_top = TOTAL_HEIGHT * (1 - 0.234)
+    arm_r = 0.011 * TOTAL_HEIGHT
+    arm_len = 0.38 * TOTAL_HEIGHT
+    arm_off = CLOAK_W / 2 * TOTAL_HEIGHT * 0.88
+    arm_l = add_part("cone", "arm_l", arm_r, arm_r * 0.55, arm_len,
+                     z_arm_top - arm_len, x=-arm_off, swing=-7)
+    arm_rr = add_part("cone", "arm_r", arm_r, arm_r * 0.55, arm_len,
+                      z_arm_top - arm_len, x=arm_off, swing=7)
 
     parts = [head, cloak, leg_l, leg_r_, arm_l, arm_rr]
     empty = bpy.data.objects.new("freeman_proxy", None)
