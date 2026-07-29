@@ -286,7 +286,17 @@ fn cmd_render(
     // Freeman-style black & white ("ink") post-process.
     if config.monochrome {
         for frame in &mut all_frames {
-            apply_monochrome(&mut frame.data, config.mono_contrast as f32);
+            // ПЯТНО, А НЕ ПОЛКАДРА. Правило «насыщенный пиксель переживает
+            // монохром» задумано под АКЦЕНТ: красный плакат, одна вещь в руке.
+            // Но оно смотрело на пиксель и ничего не знало о площади, поэтому
+            // локация с закатным градиентом (`wasteland`) проходила его
+            // целиком — и в чёрно-белом ролике вставала оранжевая сцена, где
+            // насыщенность ещё и поднималась в 1.35 раза. Считаем долю
+            // насыщенных пикселей заранее: переросло акцент — значит это не
+            // акцент, а цветная картинка, и её надо обесцветить как всё
+            // остальное.
+            let keep = saturated_share(&frame.data) <= COLOR_ACCENT_MAX_SHARE;
+            apply_monochrome(&mut frame.data, config.mono_contrast as f32, keep);
         }
     }
 
@@ -379,7 +389,37 @@ fn cmd_render(
 /// Convert an RGBA frame buffer to a high-contrast black & white "ink" image
 /// in place. Alpha is preserved. This is what gives the Freeman-style lecture
 /// videos their stark hand-inked, mostly-monochrome look.
-fn apply_monochrome(data: &mut [u8], contrast: f32) {
+/// Доля кадра, выше которой «цветное пятно» перестаёт быть пятном. 12% — это
+/// заметно больше плаката на стене или книги в руке (единицы процентов) и
+/// заметно меньше залитого цветом неба (десятки).
+const COLOR_ACCENT_MAX_SHARE: f32 = 0.12;
+
+/// Насыщен ли пиксель настолько, чтобы претендовать на роль цветного акцента.
+#[inline]
+fn is_saturated(r: f32, g: f32, b: f32) -> bool {
+    let mx = r.max(g).max(b);
+    let mn = r.min(g).min(b);
+    mx - mn > 55.0 && mx > 90.0
+}
+
+/// Доля насыщенных пикселей в кадре (0.0–1.0).
+fn saturated_share(data: &[u8]) -> f32 {
+    let mut hits = 0usize;
+    let mut total = 0usize;
+    for px in data.chunks_exact(4) {
+        total += 1;
+        if is_saturated(px[0] as f32, px[1] as f32, px[2] as f32) {
+            hits += 1;
+        }
+    }
+    if total == 0 {
+        0.0
+    } else {
+        hits as f32 / total as f32
+    }
+}
+
+fn apply_monochrome(data: &mut [u8], contrast: f32, keep_color_accent: bool) {
     // Contrast strength around mid-grey. ~1.1 keeps gradient shading (fabric
     // sheen, facial form); high values (2–4) blow out to a stark 2-tone
     // silhouette — the flat-ink "Mr. Freeman" look.
@@ -391,9 +431,7 @@ fn apply_monochrome(data: &mut [u8], contrast: f32) {
         // Раньше правило пропускало только КРАСНОЕ, и цветной плакат на стене —
         // ровно та деталь, ради которой приём и заводился, — уходил в серое.
         // Теперь спасается любой достаточно насыщенный цвет, а не один оттенок.
-        let mx = r.max(g).max(b);
-        let mn = r.min(g).min(b);
-        if mx - mn > 55.0 && mx > 90.0 {
+        if keep_color_accent && is_saturated(r, g, b) {
             // Подтягиваем насыщенность и слегка притемняем: цвет должен
             // БИТЬ на фоне туши, а не выглядеть выцветшей фотографией.
             let mid = (r + g + b) / 3.0;
@@ -880,4 +918,53 @@ fn cmd_timing(input: &Path) -> Result<()> {
         .collect();
     println!("{{\"total\":{:.3},\"blocks\":[{}]}}", offset, items.join(","));
     Ok(())
+}
+
+#[cfg(test)]
+mod monochrome_tests {
+    use super::*;
+
+    /// Кадр WxH: заливка `bg`, поверх — прямоугольник `spot` шириной `spot_w`.
+    fn frame(w: usize, h: usize, bg: [u8; 3], spot: [u8; 3], spot_w: usize) -> Vec<u8> {
+        let mut data = Vec::with_capacity(w * h * 4);
+        for _y in 0..h {
+            for x in 0..w {
+                let c = if x < spot_w { spot } else { bg };
+                data.extend_from_slice(&[c[0], c[1], c[2], 255]);
+            }
+        }
+        data
+    }
+
+    /// Акцент (несколько процентов кадра) обязан пережить монохром цветным:
+    /// ради этого правило и заводилось — красный плакат, вещь в руке.
+    #[test]
+    fn small_accent_keeps_its_color() {
+        let mut data = frame(100, 100, [212, 215, 207], [200, 20, 20], 5);
+        assert!(saturated_share(&data) <= COLOR_ACCENT_MAX_SHARE);
+        apply_monochrome(&mut data, 2.2, true);
+        let px = &data[0..3];
+        assert!(
+            px[0] as i32 - px[2] as i32 > 55,
+            "акцент обесцветился: {px:?}"
+        );
+    }
+
+    /// А цветная КАРТИНКА (закатное небо на пол-кадра) — не акцент. Раньше
+    /// правило смотрело на пиксель и ничего не знало о площади, поэтому такая
+    /// локация вставала оранжевой сценой в чёрно-белом ролике.
+    #[test]
+    fn full_frame_color_is_not_an_accent() {
+        let mut data = frame(100, 100, [212, 215, 207], [214, 126, 30], 50);
+        let share = saturated_share(&data);
+        assert!(share > COLOR_ACCENT_MAX_SHARE, "доля {share} должна быть выше порога");
+        apply_monochrome(&mut data, 2.2, share <= COLOR_ACCENT_MAX_SHARE);
+        for px in data.chunks_exact(4) {
+            assert_eq!(
+                (px[0], px[1]),
+                (px[1], px[2]),
+                "остался цветной пиксель {px:?}"
+            );
+        }
+    }
 }

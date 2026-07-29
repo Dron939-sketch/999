@@ -2,32 +2,60 @@
 //  «ИСТОРИЯ ИДЕЙ» — продающее интро курса
 //  (meysternlp.ru/blog/lektorij/istoriya-idej — 10 лекций, ~4 часа).
 //
-//  Сквозная метафора — ПОДЕРЖАННОЕ. Зритель уверен, что думает сам, а понятия,
-//  которыми он думает, у него не свои: у каждого есть год выпуска и владелец до
-//  него. Даты впечатываются в поле за спиной с 3.4-й секунды, копятся весь
-//  пулемёт и осыпаются на взлёте, когда клеймо оборачивается наследством.
+//  ПЕРЕСНЯТО ЦЕЛИКОМ. Первая версия была шаблоном «Теорий личности»: та же
+//  единственная локация, тот же порядок поз (ugryumo → doubt → smug → open →
+//  calm → smug → no → v_upor → point → flash_pupils → hero_skeptic → puppet,
+//  совпадение подряд), тот же приём второго плана. Из 124 поз рига брались
+//  те же 23. Это не режиссура, а заполнение бланка, и на экране это видно.
+//
+//  ЗАМЫСЕЛ: ОН ИДЁТ СКВОЗЬ ЭПОХИ, А НЕ СТОИТ В ПОЛЕ. Тема курса — идеи
+//  путешествуют через века и достаются нам подержанными. Значит мир за спиной
+//  ОБЯЗАН меняться под голос, иначе ролик говорит одно, а показывает другое:
+//
+//    void          пустота до всего            приветствие
+//    field-pismena земля исписана чужим        хук: «думаете, что думаете сами»
+//    doors-empty   дверь, в которую вошли      пулемёт: у каждой идеи своя дата
+//    wasteland     руины прожитых эпох         «каждая мысль старше вас»
+//    field-emblem  знак на земле = наследство  разворот, взлёт, жало
+//
+//  Персонаж один и тот же, мир меняется — мысль ролика показана, а не сказана.
+//  Требование `HOLLYWOOD.md` §7 «≥3 разных поля за ролик» выполнено впервые:
+//  прошлая версия давала одно.
+//
+//  ТРОСТЬ ПОЯВЛЯЕТСЯ ПО ДЕЛУ. В прошлой версии в кадр вползал припаркованный
+//  за кадром проп `hand` — при наезде камеры точка (-1.5, 1.5) перестаёт быть
+//  за кадром, и он читался как обломок неизвестно чего. Теперь пропы прячутся
+//  `hides`, а трость приходит честно: поза `confident` даёт её в руку ровно на
+//  слове «наследство» — атрибут наследника, единственное её появление.
 //
 //    · персонаж — канон (SIMILARITY.md);
-//    · поле — ПУСТОЕ светлое (дефолт оригинала), без павильона;
 //    · режиссура (HOLLYWOOD.md): каты ВНУТРИ реплик, флэш-морды НА СВЕРХКРУПЕ
 //      (§2), наезд камеры на переломе (§4), второй план играет ту же мысль (§4a);
-//    · сценарий (SCRIPT-FREEMAN.md) — istoriya-idej-intro-VO.md, //lip 1..9,
-//      гейт tools/script_lint.py: 100/100.
+//    · сценарий (SCRIPT-FREEMAN.md) — istoriya-idej-intro-VO.md, //lip 1..9.
 //
-//  ДЛИНА. Сцена держится в 50с, чтобы финальный mp4 со звуком и титрами
-//  уложился в потолок 60с (приёмщик длины). У «Теорий личности» сцена 61с дала
-//  финал 70.8с — предупреждение на каждом прогоне; здесь запас взят заранее.
+//  ДЛИНА — 54.0с при потолке приёмщика 60с. `duration` у сцены это ПОЛ, а не
+//  потолок: движок досыпает тишину до объявленного значения, и завышенное
+//  число даёт не паузу, а замершую фигуру в хвосте сцены. Числа подогнаны под
+//  фактический контент — так ушли 3.8 лишних секунды, ни одной паузы не тронув.
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
+// ВТОРАЯ ФИГУРА — ПРЕДШЕСТВЕННИК. Тот же риг, отдельная сущность: на взлёте
+// он встаёт позади и мельче — тот, кто владел этой мыслью до тебя. Движок это
+// умеет (проверено рендером), и это сильнее висящих дат.
+import character predok from "../assets/characters/freeman_rig"
+import set pustota from "../assets/sets/void.svg"
+import set pismena from "../assets/sets/field-pismena.svg"
+import set dveri from "../assets/sets/doors-empty.svg"
+import set ruiny from "../assets/sets/wasteland.svg"
+import set znak from "../assets/sets/field-emblem.svg"
 import set titry from "../assets/sets/lektorij-final.svg"
-import set pole from "../assets/sets/field-empty.svg"
 
 config {
     width: 1280
     height: 720
     fps: 24
-    background: #b0b3ab        // тон земли: поле задаёт сет field-empty
+    background: #b0b3ab
     monochrome: true
     mono-contrast: 2.2
     snow: 0.35
@@ -40,171 +68,154 @@ config {
     film-scratch: 0.25
     film-dust: 0.5
     light-angle: 45
-    form-shadow: 0.0           // канон: лицо плоское
+    form-shadow: 0.0
     rim-light: 0.0
 }
 
-// ============================ СЦЕНА 1: ДАТЫ =================================
-scene "daty" (duration: 50s, set: pole) {
+// ═══════════════ СЦЕНА 1: ПУСТОТА — до всякой мысли ═══════════════════════
+scene "pustota" (duration: 5.4s, set: pustota) {
     transition static 0.35s
 
     place freeman at (0.5, 0.585) facing front
-    // `over 0.01s` у КАЖДОЙ установочной строки: голый `scales` стоит движку
-    // полсекунды, и установки подряд съедают время до первого слова.
     freeman scales 0.80 over 0.01s
-    let hand = prop("hand", "../assets/props/hand-point.svg") at (-1.5, 1.5) layer 5
-    let slovo = text("ЧЬЯ?", 170) at (0.5, -2.0) layer 6
-    slovo scales 2.6 over 0.01s
 
-    // ВТОРОЙ ПЛАН ИГРАЕТ ТУ ЖЕ МЫСЛЬ (HOLLYWOOD.md §4a). Ролик про то, что у
-    // каждой мысли есть год выпуска, — и годы должны быть В КАДРЕ, а не только
-    // в звуке. Слой 1 — ЗА фигурой. Координаты МИРОВЫЕ: камера их преобразует,
-    // и на `camera medium freeman` мировая y съезжает по экрану примерно на
-    // 0.22 вверх, поэтому небо над горизонтом — это y 0.33–0.43.
-    // Размер задаётся ТОЛЬКО `scales`: кегль в `text(...)` на итоговый размер
-    // не влияет. Держим за кадром в 1.4× от конечного — впечатка вжимает.
-    // РАЗВЕДЕНЫ И ПО ШИРИНЕ, И ПО ВЫСОТЕ. Первый заход ставил их как ярлыки
-    // «Теорий личности» — по тем же местам и с тем же размером. Но там слова
-    // были в 5–6 букв, а здесь «ПОЗАВЧЕРА» это девять: на рендере оно налезло
-    // на «XVI ВЕК» и читалось как «XVI ВЕПОЗАВЧЕРА». Ширина надписи растёт с
-    // числом букв, поэтому позиции нельзя копировать между роликами — их надо
-    // считать под конкретные слова.
-    // Замер: при `scales 0.5` одна буква занимает около 0.039 ширины кадра.
-    //   «XVI ВЕК»   7 знаков → 0.27, центр 0.17 → 0.04..0.31
-    //   «ПОЗАВЧЕРА» 9 знаков → 0.35, центр 0.50 → 0.33..0.68
-    //   «XVIII»     5 знаков → 0.20, центр 0.84 → 0.74..0.94
-    // Плюс разная высота: мировая y 0.30 / 0.40 / 0.46 даёт на экране 0.08 /
-    // 0.18 / 0.24 — строки не встают в один ряд, как титр.
-    let d1 = text("XVI ВЕК", 90) at (0.17, -2.0) layer 1
-    let d2 = text("XVIII", 90) at (0.84, -2.0) layer 1
-    let d3 = text("ПОЗАВЧЕРА", 90) at (0.50, -2.0) layer 1
-    d1 scales 0.68 over 0.01s
-    d2 scales 0.68 over 0.01s
-    d3 scales 0.68 over 0.01s
-
-    // ── t=0..2.2 БЕЗ СЛОВ: фигура одна в пустом поле ──────────────────────
     camera wide
     freeman pose "ugryumo"
-    wait 1.4s
+    wait 0.7s
     camera medium freeman
     freeman overlays "doubt"
-    wait 0.6s
+    wait 0.3s
 
-    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1) ──────────────────────────────────────
-    // Идёт ПОВЕРХ визуального крючка: пока звучит «дорогие мои», за спиной
-    // проступает первая дата. Пустых секунд не прибавляется.
+    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1) — сквозное для всех подводок ────────
     freeman overlays "smug"
     //lip 1
     together {
         freeman speaks for 3.2s
         do {
-            wait 1.0s
-            // t≈3.4 — КРЮЧОК БЕЗ СЛОВ: у мысли есть дата, и она не сегодняшняя.
-            d1 moves-to (0.17, 0.30) over 0.01s
-            d1 scales 0.50 over 0.16s ease-in
-            wait 0.9s
-            freeman pose "open"           // «дорогие мои» — раскрыл руки
+            wait 1.1s
             camera close-up freeman
             wait 1.0s
+            freeman pose "open"          // «дорогие мои» — раскрыл руки
+            camera medium freeman
+            wait 0.6s
         }
     }
-    freeman pose "calm"
-    wait 0.6s
+    wait 0.2s
+}
 
-    // ── ХУК (VO-2): фигура ВПРАВО-треть, ракурс СВЕРХУ (зритель мелкий) ────
-    // Камера не стоит, а НАВАЛИВАЕТСЯ: «вы думаете, что думаете сами» —
-    // обвинение, и наезд внутри реплики тяжелее ката на её середине.
-    freeman moves-to (0.63, 0.585) over 0.01s
-    freeman overlays "smug"
+// ═══════════════ СЦЕНА 2: ЗЕМЛЯ ИСПИСАНА — он стоит на чужих словах ═══════
+// `duration` — ПОЛ, а не потолок: движок досыпает тишину до объявленного
+// значения. Числа подогнаны под фактический контент (6.42/3.93/6.17), иначе
+// сцена доигрывает с замершей фигурой — это и были лишние 3.5с.
+scene "pismena" (duration: 6.5s, set: pismena) {
+    transition static 0.22s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    // ХУК (VO-2). Ирония реплики отыграна позой: он МЫСЛИТЕЛЬ — ровно та поза,
+    // которую зритель считает признаком собственной мысли.
+    camera wide
+    freeman pose "myslitel"
+    wait 0.4s
     //lip 2
     together {
         freeman speaks for 2.4s
         do {
             camera angle high freeman
             camera zoom-to freeman over 1.2s ease-in
-            freeman overlays "no"         // развёл руками
+            freeman overlays "no"
             camera medium freeman
-            wait 0.6s
+            wait 0.4s
         }
     }
-    // ── ХУК-добивка (VO-3): КАТ, фигура ВЛЕВО-треть ───────────────────────
+    wait 0.3s
+
+    // ХУК-добивка (VO-3): «получили подержанными» — пожал плечами, потом в упор.
     freeman moves-to (0.37, 0.585) over 0.01s
-    freeman pose "v_upor"
+    freeman pose "shrug"
     //lip 3
     together {
         freeman speaks for 2.8s
         do {
             camera medium freeman
-            wait 1.4s
-            freeman overlays "point"      // тычет пальцем в зрителя
+            wait 1.2s
+            freeman pose "v_upor"
             camera close-up freeman
-            wait 0.6s
-            camera extreme-close-up freeman   // «подержанными» — в упор
-            wait 0.4s
+            wait 0.7s
+            camera extreme-close-up freeman
+            wait 0.5s
         }
     }
-    // ФЛЭШ-МОРДА — НА СВЕРХКРУПЕ (HOLLYWOOD.md §2). Вспышка зрачков длится два
-    // кадра; на общем плане это две белые точки, и приёма нет. Кадр уже
-    // сверхкрупный с конца реплики.
+    // ФЛЭШ-МОРДА НА СВЕРХКРУПЕ (HOLLYWOOD.md §2): кадр уже сверхкрупный.
     freeman overlays "flash_pupils"
     wait 0.08s
     freeman overlays "hero_skeptic"
-    wait 0.4s
+    wait 0.2s
+}
 
-    // ── ПУЛЕМЁТ (VO-4..6): три приговора, у каждого — своя дата ───────────
-    //
-    // РИТМ РВАНЫЙ И УСКОРЯЮЩИЙСЯ, А НЕ МЕТРОНОМ: планы укорачиваются и внутри
-    // реплики, и от реплики к реплике. Ровные равные планы читаются как стук,
-    // а приговоры должны сыпаться всё быстрее.
-    freeman moves-to (0.5, 0.585) over 0.01s
-    freeman pose "puppet"
+// ═══════════════ СЦЕНА 3: ДВЕРЬ — в неё когда-то вошли ════════════════════
+scene "dveri" (duration: 4s, set: dveri) {
+    transition static 0.22s
+
+    place freeman at (0.62, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    // ПУЛЕМЁТ 1 (VO-4): три приговора, у каждого своя дата. Дверь за спиной —
+    // та самая, в которую эта идея вошла в мир. Ритм рваный и ускоряющийся.
+    camera medium freeman
+    freeman pose "gab"                   // тараторит чужое
+    wait 0.3s
     //lip 4
     together {
         freeman speaks for 3.2s
         do {
-            camera medium freeman
-            // ««Личность» — шестнадцатый век» — вторая дата.
-            d2 moves-to (0.84, 0.46) over 0.01s
-            d2 scales 0.50 over 0.16s ease-in
             wait 1.0s
-            // ««Свобода» — восемнадцатый» — третья, крупнее и за головой.
-            freeman overlays "shag_levoj"
-            d3 moves-to (0.50, 0.40) over 0.01s
-            d3 scales 0.50 over 0.16s ease-in
-            wait 0.9s
+            freeman pose "bow"           // кланяется каждой дате
             camera close-up freeman
-            wait 0.5s
-            camera extreme-close-up freeman   // «позавчера» в упор
-            wait 0.4s
+            wait 0.9s
+            freeman pose "facepalm"      // «Ты уникален» — позавчера
+            camera medium freeman
+            wait 0.6s
+            camera extreme-close-up freeman
+            wait 0.3s
         }
     }
-    // ── ПУЛЕМЁТ 2 (VO-5): рывок марионетки — приём монотонности ───────────
-    freeman pose "puppet_jerk"
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 4: РУИНЫ — что осталось от эпох ════════════════════
+scene "ruiny" (duration: 6.3s, set: ruiny) {
+    transition static 0.22s
+
+    place freeman at (0.44, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    // ПУЛЕМЁТ 2 (VO-5): «каждая мысль старше вас» — сутулится под её весом.
+    camera wide
+    freeman pose "hunch"
+    wait 0.3s
     //lip 5
     together {
         freeman speaks for 2.2s
         do {
             camera medium freeman
             wait 0.9s
-            freeman overlays "hips"       // руки в боки: «и что дальше?»
+            freeman pose "weary"
             camera close-up freeman
             wait 0.7s
-            // «старше вас» — придавили сверху И отодвинули: кат без смены
-            // размера глаз не читает как монтаж.
-            camera angle high freeman
-            camera medium freeman
-            wait 0.4s
         }
     }
-    // ── ПУЛЕМЁТ финал (VO-6): презрение, тряска ───────────────────────────
+    // ПУЛЕМЁТ финал (VO-6): «жуёте чужую жвачку» — отвращение, тряска.
+    freeman moves-to (0.56, 0.585) over 0.01s
     freeman pose "otvraschenie"
     //lip 6
     together {
         freeman speaks for 2.8s
         do {
             camera close-up freeman
-            wait 1.0s
-            freeman overlays "za_golovu"  // схватился за маску
+            wait 1.1s
+            freeman overlays "za_golovu"
             camera medium freeman
             wait 0.8s
             camera extreme-close-up freeman
@@ -215,86 +226,87 @@ scene "daty" (duration: 50s, set: pole) {
     freeman overlays "flash_disgust"
     wait 0.08s
     freeman overlays "stern"
-    wait 0.5s
+    wait 0.2s
+}
 
-    // ── t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-7), ракурс СНИЗУ + рука в камеру ───────
-    //
-    // «А кого — не помните» НЕ РЕЖЕТСЯ КАТОМ, А НАЕЗЖАЕТ. Это единственный
-    // вопрос ролика и его перелом; кат на середине сбрасывал бы напряжение
-    // ровно там, где оно должно копиться.
-    freeman moves-to (0.44, 0.585) over 0.01s
-    freeman pose "v_upor"
+// ═══════════════ СЦЕНА 5: ЗНАК НА ЗЕМЛЕ — наследство ══════════════════════
+scene "znak" (duration: 24s, set: znak) {
+    transition static 0.22s
+
+    place predok at (0.26, 0.545) facing front
+    predok scales 0.50 over 0.01s
+    predok pose "bow"
+    predok hides
+
+    place freeman at (0.46, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+    let slovo = text("ЧЬЯ?", 170) at (0.5, -2.0) layer 6
+    slovo scales 2.6 over 0.01s
+
+    // ── t≈24 ПЕРЕЛОМ: РАЗВОРОТ (VO-7) ────────────────────────────────────
+    // «Вы не думаете. Вы цитируете.» — он ДЕКЛАМИРУЕТ: поклон, как чтец чужого
+    // текста. Вопрос «а кого — не помните» не режется катом, а НАЕЗЖАЕТ.
+    camera angle low freeman
+    freeman pose "bow"
     //lip 7
     together {
         freeman speaks for 5.4s
         do {
-            camera angle low freeman
-            wait 1.4s
-            freeman overlays "point"      // палец на переломе — в лицо зрителю
+            wait 1.3s
+            freeman pose "gab"
             camera extreme-close-up freeman
             wait 0.9s
             camera close-up freeman
             wait 0.5s
-            freeman overlays "raskryl"
+            freeman pose "v_upor"
             camera zoom-to freeman over 1.8s ease-in
-            freeman overlays "v_upor"     // ладонь в камеру
             camera close-up freeman
             wait 0.6s
         }
     }
-    hand moves-to (0.72, 0.72) over 0.01s
     camera shake 0.3s intensity 2
-    wait 0.6s
-    hand moves-to (-1.5, 1.5) over 0.01s
-    freeman pose "think"
-    wait 0.5s
+    wait 0.3s
 
-    // ── ВЗЛЁТ (VO-8): даты осыпаются, фигура раскрывается ─────────────────
-    freeman moves-to (0.5, 0.585) over 0.01s
-    freeman pose "raskryl"
+    // ── ВЗЛЁТ (VO-8): наследство, и оно не одно ──────────────────────────
+    // ТРОСТЬ ПРИХОДИТ ЗДЕСЬ И ТОЛЬКО ЗДЕСЬ: поза `confident` даёт её в руку на
+    // слове «наследство» — атрибут наследника, а не случайный обломок.
+    freeman moves-to (0.52, 0.585) over 0.01s
+    freeman pose "confident"
+    camera medium freeman
     //lip 8
     together {
         freeman speaks for 7.8s
         do {
-            camera medium freeman
-            wait 1.2s
-            // «не со́бственность, а НАСЛЕ́ДСТВО» — и даты осыпаются. Реплика и
-            // второй план бьют в одну точку: клеймо перестаёт быть приговором,
-            // поле за спиной снова чистое. Показано, а не проговорено.
-            together {
-                d1 moves-to (0.14, 1.5) over 0.55s ease-in
-                d2 moves-to (0.86, 1.5) over 0.55s ease-in
-                d3 moves-to (0.50, 1.6) over 0.55s ease-in
-                d1 rotates -34 over 0.55s
-                d2 rotates 30 over 0.55s
-                d3 rotates 12 over 0.55s
-            }
-            wait 0.4s
-            freeman overlays "open"       // раскрыл ладони
+            wait 1.4s
+            // «Два́дцать пя́ть веко́в его́ копи́ли» — ПРЕДШЕСТВЕННИК ВСТАЁТ
+            // ПОЗАДИ. Второй план здесь не надпись, а вторая фигура: тот, кто
+            // владел этой мыслью до тебя. Мельче и дальше — он уже история.
+            predok shows
+            camera wide
+            wait 1.1s
+            freeman pose "raskryl"
+            predok pose "wave"           // передал и уходит
+            wait 1.1s
             camera close-up freeman
-            wait 1.6s
-            freeman overlays "hips"
-            camera medium freeman
-            wait 1.2s
-            // ЛИЦО В ЧИСТОМ ПОЛЕ — впервые за ролик за спиной пусто.
+            wait 0.9s
+            predok hides
             camera extreme-close-up freeman
             wait 1.0s
             camera wide
         }
     }
-    // ── СЛОВО-УДАР «ЧЬЯ?» + негатив-панч ──────────────────────────────────
-    camera wide
+    // ── СЛОВО-УДАР «ЧЬЯ?» + негатив-панч ─────────────────────────────────
     slovo moves-to (0.5, 0.30) over 0.01s
     slovo scales 1.0 over 0.18s ease-in
     transition invert 0.16s
     camera shake 0.3s intensity 3
-    wait 0.8s
+    wait 0.5s
     slovo moves-to (0.5, -2.0) over 0.22s ease-in
-    camera extreme-close-up freeman       // оскал после слова-удара — в лицо
+    camera extreme-close-up freeman
     freeman overlays "flash_grin"
     wait 0.08s
 
-    // ── ЖАЛО-CTA (VO-9): наезд-удар, подмиг-издёвка ───────────────────────
+    // ── ЖАЛО-CTA (VO-9) ──────────────────────────────────────────────────
     freeman pose "lunge"
     //lip 9
     together {
@@ -302,39 +314,37 @@ scene "daty" (duration: 50s, set: pole) {
         do {
             camera medium freeman
             wait 2.0s
-            freeman pose "point"          // «десять лекций» — тычет
+            freeman pose "point"
             camera close-up freeman
             wait 2.0s
-            freeman pose "open"           // раскрыл ладони
+            freeman pose "confident"     // трость возвращается на счёт курса
             camera wide
             wait 2.0s
             freeman pose "hips"
             camera medium freeman
             wait 2.0s
-            freeman pose "v_upor"         // ладонь в камеру на жале
+            freeman pose "v_upor"
             camera close-up freeman
-            wait 1.4s
+            wait 1.2s
         }
     }
-    // ПОДМИГ — ПУАНТ РОЛИКА, И ОН НА СВЕРХКРУПЕ: на среднем плане глаз в
-    // четыре пикселя, и вся подколка держалась бы только на интонации.
+    // ПОДМИГ — ПУАНТ, И ОН НА СВЕРХКРУПЕ.
     camera extreme-close-up freeman
     freeman overlays "hero_wink"
-    wait 0.7s
-    // отъезд-одиночество: снова маленькая фигура в пустом поле
+    wait 0.5s
     camera reset over 0.5s
     freeman pose "calm"
-    wait 0.7s
+    wait 0.3s
 }
 
-// ============================ СЦЕНА 2: ТИТРЫ ================================
-scene "titry" (duration: 6s, set: titry) {
+// ═══════════════ СЦЕНА 6: ТИТРЫ ═══════════════════════════════════════════
+scene "titry" (duration: 4.5s, set: titry) {
     transition static 0.45s
 
     place freeman at (0.5, 3.0) facing front
     let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
     stamp hides
-    wait 1.2s
+    wait 0.9s
 
     stamp moves-to (0.5, 0.80) over 0.01s
     stamp shows
@@ -344,6 +354,6 @@ scene "titry" (duration: 6s, set: titry) {
     stamp scales 1.0 over 0.1s ease-out
     stamp rotates -4 over 0.12s
 
-    wait 2.5s
-    transition fade-black 0.8s
+    wait 1.2s
+    transition fade-black 0.7s
 }
