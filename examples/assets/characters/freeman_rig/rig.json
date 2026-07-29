@@ -3805,15 +3805,16 @@
         },
         "head": {
           "offset": [
-            4,
-            52
+            -11,
+            69
           ],
           "rotation": 6,
           "scale": [
-            1.12,
-            0.775
+            1.0,
+            1.1667
           ],
-          "z_order": 1
+          "z_order": 1,
+          "part": "head_back"
         },
         "upper_arm_left": {
           "rotation": 22,
@@ -4433,15 +4434,16 @@
         },
         "head": {
           "scale": [
-            1.12,
-            0.5392
+            1.0,
+            0.6667
           ],
           "offset": [
-            55,
-            7
+            40,
+            -4
           ],
           "rotation": 5,
-          "z_order": 1
+          "z_order": 1,
+          "part": "head_back"
         },
         "upper_arm_left": {
           "rotation": 26,
