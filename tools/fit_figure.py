@@ -90,6 +90,10 @@ TORSO = RIG / "torso.svg"
 TARGET_MASK_H = 0.287      # доля роста; original_ref.py, 35 кадров оригинала
 TARGET_SHOULDER = 0.234    # доля роста; glb_turn.py по болвану с обводки
 
+# Рисунки головы, которые НЕ подчиняются общему множителю: у них своя
+# геометрия и свои условия приёмки (см. scale_head).
+BACK_PARTS = {"head_back"}
+
 POSE = "calm"              # эталон анфаса (у idle опущена голова, см. turnaround)
 
 
@@ -136,12 +140,22 @@ def scale_head(kx, ky):
 
     walk(d["skeleton"]["root"])
     touched = 0
-    for pose in d["poses"].values():
+    for name, pose in d["poses"].items():
         h = pose.get("bones", {}).get("head")
-        if h and "scale" in h:
-            h["scale"] = [round(h["scale"][0] * kx, 4),
-                          round(h["scale"][1] * ky, 4)]
-            touched += 1
+        if not (h and "scale" in h):
+            continue
+        # ПОЗЫ С ЧУЖИМ РИСУНКОМ ГОЛОВЫ — МИМО ОБЩЕГО МНОЖИТЕЛЯ.
+        # `spina` и `polu_spina` берут `head_back` (обруч затылка), а не
+        # `head.svg`. Множитель выводится из условия «маска head.svg = 0.287
+        # роста» и к другой геометрии неприменим: первый прогон умножил и их,
+        # из-за чего приёмщик разворота дал макушку, гуляющую на 9.2% роста, и
+        # купол спины на нижней границе полосы. Их масштаб решается отдельно,
+        # по своим условиям приёмки.
+        if h.get("part") in BACK_PARTS:
+            continue
+        h["scale"] = [round(h["scale"][0] * kx, 4),
+                      round(h["scale"][1] * ky, 4)]
+        touched += 1
     RIG_JSON.write_text(json.dumps(d, ensure_ascii=False, indent=2) + "\n",
                         encoding="utf-8")
     return touched
