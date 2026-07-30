@@ -34,7 +34,7 @@
   "stl": "examples/assets/characters/freeman_rig/source/mr_freeman.stl",
   "rig": "examples/assets/characters/freeman_rig",
   "px_per_unit": 10.0,
-  "simplify_eps": 1.5,
+  "simplify_eps": 4.5,
   "bones": [
     {
       "name": "head",
