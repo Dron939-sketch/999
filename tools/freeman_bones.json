@@ -566,7 +566,11 @@
         162,
         30
       ],
-      "fill_columns": true
+      "fill_columns": true,
+      "flank_taper": [
+        0.18,
+        0.84
+      ]
     }
   ]
 }

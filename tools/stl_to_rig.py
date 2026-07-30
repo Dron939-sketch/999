@@ -363,6 +363,70 @@ def fill_columns(mask):
     return out
 
 
+def flank_taper(mask, band, keep_left=True):
+    """Выправить БОРТА корпуса в прямой скос — трапецию.
+
+    Плащ и прижатая к телу рука в скульптуре СРОСЛИСЬ: поверхности между ними
+    нет вовсе. Рука уходит своей костью, и на её месте остаётся дыра, открытая
+    ВБОК и ВНИЗ, а рядом — «полка» из ткани, которая не досталась ни руке (она
+    дальше её радиуса), ни второму борту. В силуэте это читается прямоугольным
+    выкусом под плечом: сверху полка торчит наружу, ниже борт резко уходит
+    внутрь.
+
+    Подбором захвата это не лечится: шире — дыра больше, уже — полка больше.
+    Пробовалась и выпуклая огибающая борта, но она РАЗДУВАЕТ: соединяет полку с
+    корпусом косым клином и делает плечо шире, чем оно есть.
+
+    Правильное чтение: полка — это РУКАВ, и рисует его отдельная кость
+    (`upper_arm_left`). Плащ по правилам персонажа (`RULES.md`) —
+    «массивная тёмная колонна/трапеция», значит его борт прямой. Считаем по
+    робастным замерам ширину корпуса сверху и снизу полосы, проводим прямую и
+    приводим борт к ней: полка срезается, дыра заливается, разлёт к подолу
+    сохраняется, потому что прямая проведена по настоящим замерам.
+
+    Полоса не включает ни плечи (там своя дуга), ни подол (там рванина).
+    """
+    lo_f, hi_f = band
+    rows = np.flatnonzero(mask.any(1))
+    if len(rows) < 8:
+        return mask
+    y0, y1 = int(rows.min()), int(rows.max())
+    h = y1 - y0
+    ya, yb = y0 + int(h * lo_f), y0 + int(h * hi_f)
+    prof = []
+    for y in range(ya, yb + 1):
+        cols = np.flatnonzero(mask[y])
+        if len(cols):
+            prof.append((y, int(cols.min()), int(cols.max())))
+    if len(prof) < 8:
+        return mask
+    third = max(2, len(prof) // 3)
+    top, bot = prof[:third], prof[-third:]
+
+    def line(vals_top, vals_bot, q_top, q_bot):
+        """Прямая по робастным замерам верха и низа полосы."""
+        xt = float(np.percentile(vals_top, q_top))
+        xb = float(np.percentile(vals_bot, q_bot))
+        yt = (top[0][0] + top[-1][0]) / 2.0
+        ybt = (bot[0][0] + bot[-1][0]) / 2.0
+        k = 0.0 if ybt == yt else (xb - xt) / (ybt - yt)
+        return lambda y: xt + k * (y - yt)
+
+    # Процентиль берётся ВНУТРЬ корпуса: 70-й для левого борта и 30-й для
+    # правого отбрасывают выбросы-полки, не срезая сам корпус.
+    left = line([p[1] for p in top], [p[1] for p in bot], 70, 30) if keep_left else None
+    right = line([p[2] for p in top], [p[2] for p in bot], 30, 70)
+    out = mask.copy()
+    W = mask.shape[1]
+    for y, _, _ in prof:
+        a = 0 if left is None else int(round(max(0.0, left(y))))
+        b = int(round(min(float(W - 1), right(y))))
+        if b >= a:
+            out[y, :] = False
+            out[y, a:b + 1] = True
+    return out
+
+
 def shoulder_arc(mask, origin, rise, drop):
     """Срезать верх части СИММЕТРИЧНОЙ дугой плеч.
 
@@ -802,6 +866,8 @@ def main(argv):
             mask, origin = extend_mask(mask, origin)
         if b.get("fill_columns"):
             mask = fill_columns(mask)
+        if b.get("flank_taper"):
+            mask = flank_taper(mask, b["flank_taper"])
         if b.get("shoulder_arc"):
             mask = shoulder_arc(mask, origin, *b["shoulder_arc"])
         if b.get("frame"):
