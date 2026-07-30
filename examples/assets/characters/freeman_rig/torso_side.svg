@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 392" width="220" height="392">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 335 521" width="335" height="521">
+  <!-- ПЕРЕЛОЖЕНО в общую рамку плаща инструментом
+       tools/reframe_part.py: пивот кости [162.0,30.0], растяжение
+       1.17x1.635. Рисунок внутри — прежний, обведённый с листа
+       разворотов; правится он, а не эта обёртка. -->
+  <g transform="translate(33.30,3.84) scale(1.17,1.635)">
   <defs>
     <filter id="ink" x="-18%" y="-18%" width="136%" height="136%">
       <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="11" result="n"/>
@@ -53,4 +58,5 @@
              C 78 26, 104 8, 128 4
              C 145 1, 162 -2, 170 2 Z"/>
   </g>
+</g>
 </svg>

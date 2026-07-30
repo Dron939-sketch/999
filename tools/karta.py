@@ -77,7 +77,7 @@ scene "karta" (duration: 1s) {{
     place hero at (0.5, {y}) facing front
     hero scales {s}
     hero pose "{pose}"
-    camera wide
+{props_off}    camera wide
     wait 1s
 }}
 """
@@ -122,7 +122,14 @@ def render(rig_dir, pose, y, s):
     d = Path(tempfile.mkdtemp())
     src = ROOT / "examples" / "lektorij" / "_karta_stand.anim"
     rel = os.path.relpath(Path(rig_dir).resolve(), src.parent)
-    src.write_text(STAND.format(rig=rel, pose=pose, y=y, s=s), encoding="utf-8")
+    # ПРЕДМЕТЫ СНИМАЮТСЯ НА СТЕНДЕ. Трость свисает ниже подошв, цилиндр ездит с
+    # головой — по ним «ступни» и «макушка» мерятся не по фигуре, и рост с
+    # кадрированием уезжают. Риг объявляет накладку `bez_predmetov`; у кого её
+    # нет, стенд остаётся прежним.
+    poses = json.loads((Path(rig_dir) / "rig.json").read_text(encoding="utf-8")).get("poses", {})
+    off = '    hero overlays "bez_predmetov"\n' if "bez_predmetov" in poses else ""
+    src.write_text(STAND.format(rig=rel, pose=pose, y=y, s=s, props_off=off),
+                   encoding="utf-8")
     try:
         subprocess.run([str(ENGINE), "render", str(src), "--png-dir", str(d)],
                        check=True, capture_output=True)
@@ -286,7 +293,8 @@ def main(argv):
     ap.add_argument("--rig", default=str(ROOT / RIGS / "freeman_rig"))
     ap.add_argument("--all", action="store_true",
                     help="все риги в examples/assets/characters")
-    ap.add_argument("--pose", default="idle")
+    ap.add_argument("--pose", default="",
+                    help="по умолчанию — поза `measure` рига, иначе `idle`")
     ap.add_argument("--scale", type=float, default=0.90)
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--write", action="store_true",
@@ -301,7 +309,7 @@ def main(argv):
 
     bad = 0
     for d in dirs:
-        bad += one_rig(d, a.pose, a.scale, a.check, a.write)
+        bad += one_rig(d, a.pose or "idle", a.scale, a.check, a.write)
     return 1 if bad else 0
 
 
