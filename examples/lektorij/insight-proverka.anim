@@ -17,6 +17,13 @@
 //
 //  БЕЗ СВЕРХКРУПНЫХ ПЛАНОВ: растр сета на ECU-зуме взрывается (лечится
 //  отдельно, PR #15). Самый тесный план здесь — close-up.
+//
+//  ВНУТРИ РЕПЛИКИ — ТОЛЬКО СЛОИ. Липсинк идёт слоем поверх позы тела, а полная
+//  поза слои СБРАСЫВАЕТ: рот прыгал на рот позы и держался до следующего
+//  флэпа — это и есть «лицо не соответствует озвучке». Поэтому жест внутри
+//  реплики ставится через `overlays`, а полные позы — между репликами.
+//  Проверяет `tools/speech_lint.py`; рот в самих позах тела снят
+//  `tools/mouth_ownership.py`.
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
@@ -74,7 +81,7 @@ scene "proverka" (duration: 32s, set: pole) {
         do {
             camera medium freeman
             wait 0.95s
-            freeman pose "point"          // палец в зрителя
+            freeman overlays "point"          // палец в зрителя
         }
     }
     wait 0.6s
@@ -88,7 +95,7 @@ scene "proverka" (duration: 32s, set: pole) {
         do {
             camera close-up freeman
             wait 0.8s
-            freeman pose "no"             // развёл руками
+            freeman overlays "no"             // развёл руками
         }
     }
     // пауза: зритель пробует рассказать. Не выходит.
@@ -106,7 +113,7 @@ scene "proverka" (duration: 32s, set: pole) {
         do {
             camera medium freeman
             wait 1.0s
-            freeman pose "puppet_jerk"    // тот же жест — механика
+            freeman overlays "puppet_jerk"    // тот же жест — механика
         }
     }
     // ── ПУЛЕМЁТ 2 (VO-4): «Знакомый текст — как жвачка.» ──────────────────
@@ -117,7 +124,7 @@ scene "proverka" (duration: 32s, set: pole) {
         do {
             camera close-up freeman
             wait 1.0s
-            freeman pose "think"
+            freeman overlays "think"
         }
     }
     // ── ПУЛЕМЁТ финал (VO-5): «Это узнавание. Не знание.» ─────────────────
@@ -129,7 +136,7 @@ scene "proverka" (duration: 32s, set: pole) {
         do {
             camera medium freeman
             wait 0.9s
-            freeman pose "despair"
+            freeman overlays "despair"
         }
     }
     camera shake 0.3s intensity 2
@@ -154,7 +161,7 @@ scene "proverka" (duration: 32s, set: pole) {
             camera close-up freeman
             camera angle low
             wait 2.0s
-            freeman pose "point"
+            freeman overlays "point"
         }
     }
     hand moves-to (0.72, 0.72) over 0.01s
@@ -176,7 +183,7 @@ scene "proverka" (duration: 32s, set: pole) {
         freeman speaks for 3.5s
         do {
             wait 2.0s
-            freeman pose "open"           // ладони раскрыты — отдал приём
+            freeman overlays "open"           // ладони раскрыты — отдал приём
         }
     }
     // ── СЛОВО-УДАР «ВСПОМНИ» + негатив-панч ───────────────────────────────
@@ -198,7 +205,7 @@ scene "proverka" (duration: 32s, set: pole) {
         do {
             camera medium freeman
             wait 1.7s
-            freeman pose "v_upor"         // ладонь в камеру: «ну?»
+            freeman overlays "v_upor"         // ладонь в камеру: «ну?»
         }
     }
     freeman overlays "hero_wink"

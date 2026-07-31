@@ -86,7 +86,7 @@ scene "sklad" (duration: 42s, set: pole) {
         do {
             camera angle high freeman
             wait 0.95s
-            freeman pose "point"          // палец в зрителя: «своими словами»
+            freeman overlays "point"          // палец в зрителя: «своими словами»
             freeman scales 1.2
             camera medium freeman
         }
@@ -102,7 +102,7 @@ scene "sklad" (duration: 42s, set: pole) {
             freeman scales 1.6
             camera close-up freeman
             wait 0.8s
-            freeman pose "no"             // развёл руками: «ну, бывает»
+            freeman overlays "no"             // развёл руками: «ну, бывает»
         }
     }
     freeman overlays "flash_dead"
@@ -120,7 +120,7 @@ scene "sklad" (duration: 42s, set: pole) {
             freeman scales 1.2
             camera medium freeman
             wait 1.1s
-            freeman pose "shag_levoj"     // марионетка переставляет ногу
+            freeman overlays "shag_levoj"     // марионетка переставляет ногу
             freeman scales 1.6
             camera close-up freeman
         }
@@ -135,7 +135,7 @@ scene "sklad" (duration: 42s, set: pole) {
             freeman scales 1.2
             camera medium freeman
             wait 1.1s
-            freeman pose "shag_levoj"     // тот же шаг: повтор — сам приём
+            freeman overlays "shag_levoj"     // тот же шаг: повтор — сам приём
             freeman scales 1.6
             camera close-up freeman
         }
@@ -150,7 +150,7 @@ scene "sklad" (duration: 42s, set: pole) {
             freeman scales 1.6
             camera close-up freeman
             wait 1.1s
-            freeman pose "despair"        // руки вверх: завален чужим
+            freeman overlays "despair"        // руки вверх: завален чужим
             freeman scales 0.72
             camera wide
         }
@@ -171,11 +171,11 @@ scene "sklad" (duration: 42s, set: pole) {
         do {
             camera angle low freeman
             wait 1.5s
-            freeman pose "point"          // тычет пальцем: «тебя. не учили.»
+            freeman overlays "point"          // тычет пальцем: «тебя. не учили.»
             freeman scales 1.6
             camera close-up freeman
             wait 1.5s
-            freeman pose "open"           // раскрыл ладони: «некому было»
+            freeman overlays "open"           // раскрыл ладони: «некому было»
             freeman scales 1.2
             camera medium freeman
         }
@@ -195,7 +195,7 @@ scene "sklad" (duration: 42s, set: pole) {
             freeman scales 1.6
             camera close-up freeman
             wait 1.8s
-            freeman pose "open"           // ладони раскрыты — предложение
+            freeman overlays "open"           // ладони раскрыты — предложение
             freeman scales 0.72
             camera wide
         }
@@ -222,11 +222,11 @@ scene "sklad" (duration: 42s, set: pole) {
             freeman scales 1.2
             camera medium freeman
             wait 1.8s
-            freeman pose "v_upor"         // ладонь в камеру: «стой»
+            freeman overlays "v_upor"         // ладонь в камеру: «стой»
             freeman scales 1.6
             camera close-up freeman
             wait 1.7s
-            freeman pose "gopnik"         // вразвалку — «ну так что?»
+            freeman overlays "gopnik"         // вразвалку — «ну так что?»
             freeman scales 0.72
             camera wide
         }

@@ -82,16 +82,16 @@ scene "dver" (duration: 50s, set: dveri) {
     together {
         freeman speaks for 4.6s
         do {
-            freeman pose "polu_spina"
+            freeman overlays "polu_spina"
             wait 0.7s
             camera close-up freeman
-            freeman pose "chetvert_levo"
+            freeman overlays "chetvert_levo"
             wait 1.0s
-            freeman pose "v_upor"
+            freeman overlays "v_upor"
             wait 0.7s
-            freeman pose "point"
+            freeman overlays "point"
             wait 0.7s
-            freeman pose "no"              // «да не думал ты» — развёл руками
+            freeman overlays "no"              // «да не думал ты» — развёл руками
             camera medium freeman
         }
     }
@@ -107,12 +107,12 @@ scene "dver" (duration: 50s, set: dveri) {
             freeman moves-to (0.46, 0.72) over 2.6s
             wait 0.4s
             camera medium freeman
-            freeman pose "idet"            // идёт на камеру, переставляя ноги
+            freeman overlays "idet"            // идёт на камеру, переставляя ноги
             freeman overlays "doubt"
             freeman moves-to (0.44, 0.79) over 2.4s
             wait 0.5s
             camera close-up freeman
-            freeman pose "hips"            // остановился, руки в боки
+            freeman overlays "hips"            // остановился, руки в боки
             freeman overlays "hero_skeptic"
         }
     }
@@ -129,12 +129,12 @@ scene "dver" (duration: 50s, set: dveri) {
             camera shake 0.18s intensity 1
             wait 1.6s
             camera medium freeman
-            freeman pose "shrug"
+            freeman overlays "shrug"
             wait 0.6s
-            freeman pose "puppet_jerk"
+            freeman overlays "puppet_jerk"
             wait 0.6s
             camera wide
-            freeman pose "puppet"
+            freeman overlays "puppet"
             d3 moves-to (0.765, 0.478) over 0.01s
             d3 shows
             camera shake 0.18s intensity 1
@@ -153,12 +153,12 @@ scene "dver" (duration: 50s, set: dveri) {
         freeman speaks for 4.6s
         do {
             camera angle low freeman
-            freeman pose "chetvert_pravo"
+            freeman overlays "chetvert_pravo"
             wait 1.6s
             camera wide
             freeman overlays "flash_pupils"
             wait 0.16s
-            freeman pose "v_upor"
+            freeman overlays "v_upor"
             wait 1.4s
             camera medium freeman
             freeman overlays "stern"
@@ -175,7 +175,7 @@ scene "dver" (duration: 50s, set: dveri) {
             camera wide
             wait 1.2s
             dopen moves-to (0.845, 0.462) over 1.6s ease-out
-            freeman pose "point"
+            freeman overlays "point"
             wait 1.0s
             camera medium freeman
             freeman overlays "hero_wow"
@@ -190,10 +190,10 @@ scene "dver" (duration: 50s, set: dveri) {
         do {
             camera medium freeman
             wait 2.2s
-            freeman pose "raskryl"         // раскрыл обе на взлёте
+            freeman overlays "raskryl"         // раскрыл обе на взлёте
             camera close-up freeman
             wait 2.2s
-            freeman pose "open"
+            freeman overlays "open"
             camera wide
         }
     }
@@ -221,10 +221,10 @@ scene "dver" (duration: 50s, set: dveri) {
         do {
             camera medium freeman
             wait 1.2s
-            freeman pose "point"           // «сколько дверей ты закрыл?»
+            freeman overlays "point"           // «сколько дверей ты закрыл?»
             freeman overlays "hero_sly"
             wait 1.0s
-            freeman pose "hips"
+            freeman overlays "hips"
             camera close-up freeman
         }
     }

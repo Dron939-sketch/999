@@ -849,6 +849,39 @@ def lint_dinamika(prod, rig_dir=None):
     return [], soft
 
 
+def lint_rech(prods):
+    """Приёмщик РЕЧИ И ЛИЦА: рот обязан принадлежать озвучке.
+
+    Два разных дефекта, оба читаются как «лицо не соответствует голосу», и оба
+    ловятся до рендера, а не глазами на готовом ролике:
+      · в РИГЕ — поза тела, которая сама ставит рот (спорит с липсинком);
+      · в СЦЕНАРИИ — полная поза или мимический слой внутри реплики.
+    Разбор причин — в шапках tools/mouth_ownership.py и tools/speech_lint.py.
+    """
+    # HARD — то, что ломает синхрон наверняка: рот в позе тела и полная поза
+    # внутри реплики. SOFT — исторический долг старых роликов: ракурсные и
+    # мимические слои внутри реплик. Их тоже надо вычистить, но ронять из-за
+    # них ВЕСЬ завод нельзя: ролики сняты и живут, а правка каждого — отдельная
+    # режиссёрская работа, а не механическая замена.
+    sys.path.insert(0, str(TOOLS))
+    hard, soft = [], []
+    import mouth_ownership, speech_lint
+    rig = json.loads((ROOT / "examples/assets/characters/freeman_rig/rig.json")
+                     .read_text(encoding="utf-8"))
+    for name, part in mouth_ownership.offenders(rig):
+        hard.append(f"риг: поза тела «{name}» ставит рот {part} — "
+                    f"спорит с липсинком (tools/mouth_ownership.py --fix)")
+    for prod in prods:
+        anim = ROOT / prod["anim"]
+        if not anim.exists():
+            continue
+        bad, _ = speech_lint.check(str(anim))
+        for ln, msg in bad:
+            line = f"{anim.name}:{ln} — {msg}"
+            (soft if "трогает рот" in msg else hard).append(line)
+    return hard, soft
+
+
 def lint_turnaround(prods):
     """Приёмщик РАЗВОРОТА: одна ли это фигура на всех ракурсах. (hard, soft).
 
@@ -1134,6 +1167,9 @@ def main(argv):
     th, ts = lint_turnaround(prods)       # приёмщик разворота (один на риг)
     all_hard += th
     all_soft += ts
+    rch, rcs = lint_rech(prods)           # приёмщик речи и лица (липсинк)
+    all_hard += rch
+    all_soft += rcs
     for e in all_hard:
         log(f"  [LINT-HARD] {e}")
     for e in all_soft:

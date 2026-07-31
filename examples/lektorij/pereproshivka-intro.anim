@@ -161,7 +161,7 @@ scene "cell-hook" (duration: 24s, set: cell) {
     // поэтому «вверх» здесь — уход в глубину, к задней стене: рывок читается и
     // как подъём, и как отдёргивание назад.
     together {
-        freeman pose "puppet_jerk"
+        freeman overlays "puppet_jerk"
         freeman moves-to (0.55, 0.80) over 0.12s
         strings moves-to (0.55, 0.37) over 0.12s
     }
@@ -186,16 +186,16 @@ scene "cell-hook" (duration: 24s, set: cell) {
     together {
         freeman speaks for 6.6s
         do {
-            freeman pose "chetvert_pravo"
+            freeman overlays "chetvert_pravo"
             wait 2.2s
             camera angle low freeman
-            freeman pose "povorot_pravo"
+            freeman overlays "povorot_pravo"
             wait 2.0s
             camera medium freeman
-            freeman pose "chetvert_pravo"
+            freeman overlays "chetvert_pravo"
             wait 2.2s
             camera close-up freeman
-            freeman pose "calm"
+            freeman overlays "calm"
             wait 1.6s
         }
     }
@@ -218,7 +218,7 @@ scene "cell-hook" (duration: 24s, set: cell) {
         freeman speaks for 4.6s
         do {
             wait 2.3s
-            freeman pose "v_upor"          // ладонь в камеру на добивке
+            freeman overlays "v_upor"          // ладонь в камеру на добивке
             camera extreme-close-up freeman
         }
     }
@@ -286,7 +286,7 @@ scene "alive" (duration: 9s, set: mind) {
         do {
             // VO-7: «Пока ты читаешь эту фразу — прошивка работает.»
             // декламирующий палец вверх — силуэт, не бормотание в костюм
-            freeman pose "point"
+            freeman overlays "point"
             wait 0.4s
             //lip 5
             freeman speaks for 3.3s
@@ -331,7 +331,7 @@ scene "alive" (duration: 9s, set: mind) {
         freeman speaks for 3.3s
         do {
             wait 1.4s
-            freeman pose "point"           // тычет в зрителя
+            freeman overlays "point"           // тычет в зрителя
             camera extreme-close-up freeman
         }
     }
@@ -387,7 +387,7 @@ scene "void-punch" (duration: 7s, set: void) {
             // Руки, вскинутые в «despair», иначе простояли бы наверху весь
             // финал: слой лица их не трогает (studio.lint_arms). Крик уходит
             // из рук в корпус — и жест становится ударом, а не забытой позой.
-            freeman pose "yarost_telom"
+            freeman overlays "yarost_telom"
             camera close-up freeman
         }
     }
