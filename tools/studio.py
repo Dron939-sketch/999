@@ -272,6 +272,39 @@ def step_mux(prod, video_mp4, voice_mp3, sfx_mp3, out_final):
              "[v][s]amix=inputs=2:duration=longest:normalize=0",
              "-b:a", "160k", str(mixed)])
         audio = mixed
+
+    # МУЗЫКАЛЬНАЯ ВРЕЗКА. Ролик может кончаться песней: персонаж включает
+    # кассетник, и дальше играет кусок трека. Описывается в манифесте:
+    #     "music": {"file": "трек.mp3", "at": 62.0, "duration": 12.0,
+    #               "start": 0.0, "volume": 0.9, "fade_out": 1.5}
+    # `at` — секунда РОЛИКА, где музыка вступает (щелчок клавиши), `start` —
+    # с какой секунды берётся сам трек. Кусок вырезается, задерживается на
+    # `at` и подмешивается третьим входом: голос и SFX не трогаются, а музыка
+    # приходит ровно туда, где нажали кнопку.
+    music = prod.get("music")
+    if music and (ROOT / music["file"]).exists():
+        src = ROOT / music["file"]
+        at = float(music.get("at", 0.0))
+        dur = float(music.get("duration", 12.0))
+        start = float(music.get("start", 0.0))
+        vol = float(music.get("volume", 0.9))
+        fade = float(music.get("fade_out", 1.5))
+        piece = Path(video_mp4).with_name(Path(video_mp4).stem + "-music.mp3")
+        # Вырезаем кусок с затуханием в хвосте: обрыв на полуноте читается
+        # как технический сбой, а не как точка.
+        run(["ffmpeg", "-y", "-v", "error", "-ss", f"{start}", "-t", f"{dur}",
+             "-i", str(src),
+             "-af", f"volume={vol},afade=t=out:st={max(dur - fade, 0):.2f}:d={fade}",
+             "-b:a", "192k", str(piece)])
+        with_music = Path(video_mp4).with_name(Path(video_mp4).stem + "-mixmus.mp3")
+        run(["ffmpeg", "-y", "-v", "error", "-i", str(audio), "-i", str(piece),
+             "-filter_complex",
+             f"[1]adelay={int(at * 1000)}|{int(at * 1000)}[m];"
+             f"[0][m]amix=inputs=2:duration=longest:normalize=0",
+             "-b:a", "192k", str(with_music)])
+        audio = with_music
+        log(f"  [музыка] {src.name}: {dur:.0f} с с {start:.0f}-й секунды трека, "
+            f"вступает на {at:.0f}-й секунде ролика")
     cmd = ["bash", str(TOOLS / "compose_video.sh"),
            str(video_mp4), str(audio), str(out_final)]
     if prod.get("title"):

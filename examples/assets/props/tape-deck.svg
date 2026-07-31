@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 260" width="420" height="260">
+  <defs>
+    <filter id="ink" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="19" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- КАССЕТНЫЙ МАГНИТОФОН — последний предмет ролика. Персонаж ставит его на
+       землю и жмёт клавишу: всё сказанное отдано бесплатно, включая музыку.
+       Рисуется ПЛОСКОЙ ТУШЬЮ по бумаге, как весь канон: ни бликов, ни объёма,
+       ни серых полутонов — только вырезы бумаги внутри чёрной массы.
+       Якорь — низ рисунка: предмет ставится `on floor`, и точка опоры это
+       нижняя кромка корпуса, а не центр (иначе он утонет в земле наполовину). -->
+  <g filter="url(#ink)">
+    <!-- корпус: чуть кривой прямоугольник с ручкой сверху -->
+    <path d="M18 74 L402 70 L400 232 L20 236 Z" fill="#0e0e0e"/>
+    <!-- ручка-дужка -->
+    <path d="M138 72 Q140 22 210 20 Q280 18 284 70 L266 70 Q262 40 210 42
+             Q158 44 156 72 Z" fill="#0e0e0e"/>
+    <!-- окно кассеты: бумага внутри туши -->
+    <path d="M150 96 L292 94 L292 160 L150 162 Z" fill="#eef1ec"/>
+    <!-- две катушки — просто кольца туши на бумаге -->
+    <circle cx="190" cy="128" r="19" fill="none" stroke="#0e0e0e" stroke-width="7"/>
+    <circle cx="252" cy="128" r="19" fill="none" stroke="#0e0e0e" stroke-width="7"/>
+    <!-- лента между катушками -->
+    <path d="M190 147 Q221 154 252 147" fill="none" stroke="#0e0e0e" stroke-width="5"/>
+    <!-- динамик слева: решётка полосами -->
+    <g fill="#eef1ec">
+      <rect x="40" y="100" width="86" height="9"/>
+      <rect x="40" y="118" width="86" height="9"/>
+      <rect x="40" y="136" width="86" height="9"/>
+      <rect x="40" y="154" width="86" height="9"/>
+    </g>
+    <!-- клавиши: та, что справа, — PLAY (нажата, утоплена) -->
+    <g fill="#eef1ec">
+      <rect x="150" y="186" width="34" height="26"/>
+      <rect x="194" y="186" width="34" height="26"/>
+      <rect x="238" y="186" width="34" height="26"/>
+      <rect x="282" y="192" width="34" height="20"/>
+    </g>
+    <!-- ручка громкости справа -->
+    <circle cx="352" cy="150" r="26" fill="#eef1ec"/>
+    <path d="M352 150 L352 130" stroke="#0e0e0e" stroke-width="7"/>
+  </g>
+</svg>

@@ -75,6 +75,21 @@
    "anim": "examples/lektorij/insight-proverka.anim",
    "vo": "examples/lektorij/insight-proverka-VO.md",
    "images": []
+  },
+  {
+   "id": "lektorij-manifest",
+   "desc": "ВВОДНАЯ ПРЕЗЕНТАЦИЯ ЛЕКТОРИЯ: инфоцыган решили извести — сажали, не помогало; ответ лежал на поверхности: отдать то же самое бесплатно. Монолог с расхаживанием, пять локаций, финал под песню из кассетника.",
+   "anim": "examples/lektorij/lektorij-manifest.anim",
+   "vo": "examples/lektorij/lektorij-manifest-VO.md",
+   "music": {
+    "file": "Nikos_Band_-_GEORGIAN_DISCO_77079272.mp3",
+    "at": 68.0,
+    "start": 0.0,
+    "duration": 12.0,
+    "volume": 0.9,
+    "fade_out": 1.5
+   },
+   "images": []
   }
  ]
 }
