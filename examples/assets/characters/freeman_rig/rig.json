@@ -1,6 +1,6 @@
 {
   "name": "freeman",
-  "height": 982,
+  "height": 973,
   "skeleton": {
     "root": {
       "name": "root",
@@ -146,8 +146,8 @@
                     70
                   ],
                   "offset": [
-                    0,
-                    -199.0
+                    -12.7,
+                    -189.0
                   ],
                   "z_order": 7,
                   "children": [],
@@ -486,8 +486,8 @@
         "hat": {
           "part": "hat",
           "offset": [
-            -18,
-            -163.0
+            -30.7,
+            -153.0
           ],
           "rotation": -18,
           "z_order": 6
@@ -4023,7 +4023,7 @@
         },
         "thigh_right": {
           "offset": [
-            15,
+            15.0,
             286.9
           ],
           "scale": [
@@ -4153,7 +4153,7 @@
         },
         "thigh_right": {
           "offset": [
-            15,
+            15.0,
             286.9
           ],
           "scale": [
@@ -5325,11 +5325,11 @@
     }
   },
   "karta": {
-    "crown": -0.0508,
-    "eyes": -0.0129,
-    "chin": 0.0521,
-    "feet": 0.4171,
-    "mask_dx": 0.0053,
-    "mask_w": 0.0675
+    "crown": -0.0513,
+    "eyes": -0.013,
+    "chin": 0.0526,
+    "feet": 0.4211,
+    "mask_dx": 0.0054,
+    "mask_w": 0.0682
   }
 }
