@@ -284,7 +284,21 @@ def step_mux(prod, video_mp4, voice_mp3, sfx_mp3, out_final):
     music = prod.get("music")
     if music and (ROOT / music["file"]).exists():
         src = ROOT / music["file"]
-        at = float(music.get("at", 0.0))
+        # «ПОСЛЕ РЕЧИ» — НЕ ЧИСЛО, А ПРАВИЛО. Секунду вступления считали руками
+        # по рендеру, и она устаревала при первой же правке хронометража: в
+        # ролике-презентации сцены подросли на паузы для ходьбы, голос вытянулся
+        # до 112.8 с, а музыка осталась на 103.5 — и последние девять секунд
+        # монолога играли ПОД песню. Теперь можно написать `"at": "after-voice"`
+        # (плюс `gap`), и сборщик сам возьмёт длину готовой озвучки: музыка
+        # физически не может начаться раньше, чем персонаж договорит.
+        at_raw = music.get("at", 0.0)
+        if isinstance(at_raw, str) and at_raw.startswith("after-voice"):
+            gap = float(music.get("gap", 1.5))
+            at = (media_duration(voice_mp3) if have_voice else 0.0) + gap
+            log(f"  [музыка] вступает после речи: {at:.1f} c "
+                f"(озвучка {media_duration(voice_mp3):.1f} c + пауза {gap} c)")
+        else:
+            at = float(at_raw)
         dur = float(music.get("duration", 12.0))
         start = float(music.get("start", 0.0))
         vol = float(music.get("volume", 0.9))

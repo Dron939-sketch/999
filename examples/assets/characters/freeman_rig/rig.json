@@ -3753,7 +3753,7 @@
                 "cloak": {
                     "part": "torso_side",
                     "scale": [
-                        1.092,
+                        1.3759,
                         1.0
                     ]
                 },
@@ -3883,7 +3883,7 @@
                 "cloak": {
                     "part": "torso_side",
                     "scale": [
-                        1.092,
+                        1.5207,
                         1.0
                     ]
                 },
@@ -4318,7 +4318,7 @@
                 "cloak": {
                     "part": "torso_side",
                     "scale": [
-                        1.092,
+                        1.7336,
                         1.0
                     ]
                 },
@@ -4368,7 +4368,7 @@
                         21,
                         23
                     ],
-                    "rotation": 13,
+                    "rotation": -43.2,
                     "z_order": 4,
                     "scale": [
                         0.48,
@@ -4377,7 +4377,7 @@
                 },
                 "forearm_right": {
                     "part": "arm_out_fore_r",
-                    "rotation": -7
+                    "rotation": 21.6
                 },
                 "hand_right": {
                     "part": "arm_out_hand_r",
@@ -4405,7 +4405,7 @@
                     ]
                 },
                 "thigh_right": {
-                    "rotation": 30,
+                    "rotation": 18,
                     "offset": [
                         18,
                         172
@@ -4416,7 +4416,7 @@
                     ]
                 },
                 "shin_right": {
-                    "rotation": -34,
+                    "rotation": -20,
                     "offset": null,
                     "scale": [
                         -0.9,
@@ -4424,7 +4424,7 @@
                     ]
                 },
                 "thigh_left": {
-                    "rotation": -34,
+                    "rotation": -22,
                     "offset": [
                         12,
                         172
@@ -4435,7 +4435,7 @@
                     ]
                 },
                 "shin_left": {
-                    "rotation": 26,
+                    "rotation": 16,
                     "offset": null,
                     "scale": [
                         -0.846,
@@ -4451,7 +4451,7 @@
                 "cloak": {
                     "part": "torso_side",
                     "scale": [
-                        1.092,
+                        1.3759,
                         1.0
                     ]
                 },
@@ -4501,7 +4501,7 @@
                         21,
                         23
                     ],
-                    "rotation": 13,
+                    "rotation": 39.6,
                     "z_order": 4,
                     "scale": [
                         0.48,
@@ -4510,7 +4510,7 @@
                 },
                 "forearm_right": {
                     "part": "arm_out_fore_r",
-                    "rotation": -7
+                    "rotation": -19.8
                 },
                 "hand_right": {
                     "part": "arm_out_hand_r",
@@ -4538,7 +4538,7 @@
                     ]
                 },
                 "thigh_right": {
-                    "rotation": -40,
+                    "rotation": -24,
                     "offset": [
                         18,
                         172
@@ -4549,7 +4549,7 @@
                     ]
                 },
                 "shin_right": {
-                    "rotation": 30,
+                    "rotation": 18,
                     "offset": null,
                     "scale": [
                         -0.9,
@@ -4557,7 +4557,7 @@
                     ]
                 },
                 "thigh_left": {
-                    "rotation": 28,
+                    "rotation": 18,
                     "offset": [
                         12,
                         172
@@ -4568,7 +4568,7 @@
                     ]
                 },
                 "shin_left": {
-                    "rotation": -30,
+                    "rotation": -18,
                     "offset": null,
                     "scale": [
                         -0.846,
@@ -4584,7 +4584,7 @@
                 "cloak": {
                     "part": "torso_side",
                     "scale": [
-                        1.092,
+                        1.5207,
                         1.0
                     ]
                 },
@@ -4634,7 +4634,7 @@
                         21,
                         23
                     ],
-                    "rotation": 13,
+                    "rotation": -43.2,
                     "z_order": 4,
                     "scale": [
                         0.48,
@@ -4643,7 +4643,7 @@
                 },
                 "forearm_right": {
                     "part": "arm_out_fore_r",
-                    "rotation": -7
+                    "rotation": 21.6
                 },
                 "hand_right": {
                     "part": "arm_out_hand_r",
@@ -4671,7 +4671,7 @@
                     ]
                 },
                 "thigh_right": {
-                    "rotation": 30,
+                    "rotation": 18,
                     "offset": [
                         18,
                         172
@@ -4682,7 +4682,7 @@
                     ]
                 },
                 "shin_right": {
-                    "rotation": -34,
+                    "rotation": -20,
                     "offset": null,
                     "scale": [
                         -0.9,
@@ -4690,7 +4690,7 @@
                     ]
                 },
                 "thigh_left": {
-                    "rotation": -34,
+                    "rotation": -22,
                     "offset": [
                         12,
                         172
@@ -4701,7 +4701,7 @@
                     ]
                 },
                 "shin_left": {
-                    "rotation": 26,
+                    "rotation": 16,
                     "offset": null,
                     "scale": [
                         -0.846,
@@ -4723,7 +4723,7 @@
                 "cloak": {
                     "part": "torso_side",
                     "scale": [
-                        1.092,
+                        1.5207,
                         1.0
                     ]
                 },
@@ -4773,7 +4773,7 @@
                         21,
                         23
                     ],
-                    "rotation": 13,
+                    "rotation": 39.6,
                     "z_order": 4,
                     "scale": [
                         0.48,
@@ -4782,7 +4782,7 @@
                 },
                 "forearm_right": {
                     "part": "arm_out_fore_r",
-                    "rotation": -7
+                    "rotation": -19.8
                 },
                 "hand_right": {
                     "part": "arm_out_hand_r",
@@ -4810,7 +4810,7 @@
                     ]
                 },
                 "thigh_right": {
-                    "rotation": -40,
+                    "rotation": -24,
                     "offset": [
                         18,
                         172
@@ -4821,7 +4821,7 @@
                     ]
                 },
                 "shin_right": {
-                    "rotation": 30,
+                    "rotation": 18,
                     "offset": null,
                     "scale": [
                         -0.9,
@@ -4829,7 +4829,7 @@
                     ]
                 },
                 "thigh_left": {
-                    "rotation": 28,
+                    "rotation": 18,
                     "offset": [
                         12,
                         172
@@ -4840,7 +4840,7 @@
                     ]
                 },
                 "shin_left": {
-                    "rotation": -30,
+                    "rotation": -18,
                     "offset": null,
                     "scale": [
                         -0.846,

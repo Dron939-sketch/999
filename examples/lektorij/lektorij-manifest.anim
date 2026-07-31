@@ -39,7 +39,7 @@ import character freeman from "../assets/characters/freeman_rig"
 import set pole from "../assets/sets/field-empty.svg"
 import set tyurma from "../assets/sets/prison-infocygane.svg"
 import set yarmarka from "../assets/sets/bazaar-obeschanij.svg"
-import set ruiny from "../assets/sets/cafe-ruins.svg"
+import set ruiny from "../assets/sets/biznes-street.svg"
 import set dveri from "../assets/sets/doors-empty.svg"
 import set zal from "../assets/sets/lektorij-zal.svg"
 import set titry from "../assets/sets/lektorij-final.svg"
@@ -109,6 +109,9 @@ scene "pole" (duration: 10s, set: pole) {
             freeman overlays "shrug"
         }
     }
+    // вспышка-морда на стыке реплик: ролик не должен ехать ровно
+    freeman overlays "flash_dead"
+    wait 0.08s
     // ── ХУК-добивка (VO-2): развернулся на каблуках — и сказал ────────────
     freeman pose "calm"
     freeman overlays "smug"
@@ -146,14 +149,23 @@ scene "tyurma" (duration: 6s, set: tyurma) {
     wait 0.3s
 
     // ── ПУЛЕМЁТ 1 (VO-3): «Их сажали. Штрафовали. Запрещали.» ─────────────
+    //  ПУЛЕМЁТ ДОЛЖЕН БИТЬ. Три слова — три кадра: на каждом слове камера
+    //  меняет крупность, а тело — жест. Ровный план на перечислении усыпляет,
+    //  а приём здесь именно в отбойном ритме.
     //lip 3
     together {
         freeman speaks for 2.2s
         do {
-            wait 1.1s
+            camera medium freeman
+            wait 0.7s
             freeman overlays "hips"
+            camera wide
+            wait 0.7s
+            freeman overlays "shrug"
+            camera medium freeman
         }
     }
+    camera shake 0.25s intensity 2
     // ── ПУЛЕМЁТ 2 (VO-4): «Не помогало. Всплывали снова.» ─────────────────
     freeman pose "calm"
     freeman overlays "stern"
@@ -197,11 +209,17 @@ scene "yarmarka" (duration: 7s, set: yarmarka) {
         freeman speaks for 2.6s
         do {
             camera medium freeman
-            wait 1.3s
+            wait 0.85s
             freeman overlays "no"
+            camera wide
+            wait 0.85s
+            freeman overlays "hips"
+            camera medium freeman
         }
     }
     camera wide
+    freeman overlays "flash_disgust"
+    wait 0.08s
     // ── ПУЛЕМЁТ финал (VO-6): ОСТАНОВИЛСЯ. «И ты платишь…» ────────────────
     //  Остановка и есть знак препинания: до этого он ходил, теперь встал.
     freeman pose "v_upor"
@@ -221,7 +239,13 @@ scene "yarmarka" (duration: 7s, set: yarmarka) {
     wait 1.0s
 }
 
-// ==================== СЦЕНА 4: РУИНЫ — ТУПИК ================================
+// ==================== СЦЕНА 4: УЛИЦА — ТУПИК ================================
+//  ЛОКАЦИЯ СМЕНЕНА С РУИН НА УЛИЦУ. Замер сетов: cafe-ruins после
+//  монохромного прохода с контрастом 2.2 даёт среднюю яркость 1 из 255 —
+//  кадр чёрный целиком, и фигура висит в «космосе». Это не кадрирование, а
+//  сама локация: она рисовалась под мягкий контраст. Улица (210 из 255,
+//  90% светлого) держит тот же смысл — город, где всё продаётся, и тупик
+//  посреди него, — и при этом читается.
 scene "ruiny" (duration: 6s, set: ruiny) {
     transition static 0.3s
 
@@ -292,7 +316,10 @@ scene "dveri" (duration: 7s, set: dveri) {
     }
     // ── СЛОВО-УДАР «БЕСПЛАТНО» + негатив-панч ─────────────────────────────
     camera wide
-    slovo moves-to (0.5, 0.30) over 0.01s
+    //  Надпись ставится ВЫШЕ середины: на 0.30 её нижний край наезжал на
+    //  кромку дверного проёма, и слово читалось сквозь косяк. 0.20 — над
+    //  притолокой, на чистом фоне.
+    slovo moves-to (0.5, 0.20) over 0.01s
     slovo scales 1.0 over 0.18s ease-in
     transition invert 0.16s
     camera shake 0.3s intensity 3
@@ -309,7 +336,7 @@ scene "zal" (duration: 24s, set: zal) {
     freeman scales 0.72
     camera wide
 
-    // ── вошёл в зал и прошёл вдоль полок ──────────────────────────────────
+    // ── вошёл в зал и прошёл вдоль по́лок ──────────────────────────────────
     freeman pose "bok_pravo"
     freeman moves-to (0.58, 0.93) over 1.8s
     freeman pose "bok_pravo_levoj"
@@ -334,7 +361,7 @@ scene "zal" (duration: 24s, set: zal) {
     camera wide
     wait 0.4s
 
-    // ── прошёл обратно мимо полок ────────────────────────────────────────
+    // ── прошёл обратно мимо по́лок ────────────────────────────────────────
     freeman pose "bok_levo"
     freeman moves-to (0.42, 0.93) over 1.6s
     freeman pose "bok_levo_levoj"
@@ -385,6 +412,7 @@ scene "final" (duration: 20s, set: pole) {
     // ── ЖАЛО (VO-12): подколка в хвосте ───────────────────────────────────
     freeman pose "v_upor"
     freeman overlays "smug"
+    camera zoom-to freeman over 0.5s ease-in     // наезд-удар перед подколкой
     //lip 12
     together {
         freeman speaks for 5.5s
@@ -426,8 +454,13 @@ scene "final" (duration: 20s, set: pole) {
     wait 1.2s
     freeman pose "bok_levo_pravoj"
     wait 1.2s
-    freeman pose "bok_levo_levoj"
-    wait 1.5s
+    freeman pose "bok_levo_pravoj"
+    wait 1.0s
+    //  Проход ЗАКАНЧИВАЕТСЯ СТОЙКОЙ, а не шаговой позой: раньше последний
+    //  кадр застывал на разведённых ногах, и это читалось как «раскидывает
+    //  ногами». Шаг должен завершиться приставленной ногой.
+    freeman pose "bok_levo"
+    wait 1.2s
 }
 
 // ========================== СЦЕНА 8: ТИТРЫ ==================================

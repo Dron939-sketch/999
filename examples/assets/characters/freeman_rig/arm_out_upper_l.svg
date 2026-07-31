@@ -9,6 +9,17 @@
      Контуром рука остаётся ВНУТРИ силуэта и при этом читается.
      Геометрия — ровно та же, что у чёрной версии: файл сделан из неё заменой
      заливки на обводку, поэтому крепление и длина совпадают до единицы. -->
+
+  <!-- РУКА В ПРОФИЛЬ — ЧЁРНАЯ ТУШЬ С БЕЛОЙ КАЙМОЙ.
+       Двух крайностей избежать пришлось обеих. Сплошная чёрная рука на чёрном
+       балахоне пропадает: видно, что фигура идёт, но не видно, чем машет.
+       Целиком белый контур решал это на корпусе — и тут же ломался там, где
+       рука ВЫХОДИТ за силуэт: на светлом поле она становилась прозрачной
+       проволочкой, а гейт разворота считал профиль на 15% уже нормы, потому
+       что мерит силуэт по туши.
+       Отсюда два слоя: снизу та же чёрная рука, что и была, сверху — белая
+       кайма по её краю. За корпусом рука читается тушью, на корпусе её
+       очерчивает светлая линия. -->
 <g filter="url(#ink)">
 <path d="M52.5 21.7 L24.3 27.9" stroke="#0e0e0e" stroke-width="3.6" stroke-linecap="round"/>
     <path d="M53.6 23.0 L22.5 37.1" stroke="#0e0e0e" stroke-width="4.8" stroke-linecap="round"/>
@@ -31,4 +42,27 @@
     <path d="M66.4 21.6 L84.7 26.1" stroke="#0e0e0e" stroke-width="3.4" stroke-linecap="round"/>
     <ellipse cx="60.0" cy="20.0" rx="17" ry="12" fill="#0e0e0e" stroke="#0e0e0e" stroke-width="3.6"/>
     <path d="M55 10 Q51 38 53 58 Q54 78 56 92 L63 92 Q64 78 64 58 Q66 38 65 10 Z" fill="#0e0e0e" stroke="#0e0e0e" stroke-width="3.6"/>
+</g>
+  <g filter="url(#ink)">
+<path d="M52.5 21.7 L24.3 27.9" stroke="#eef1ec" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M53.6 23.0 L22.5 37.1" stroke="#eef1ec" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M55.3 24.0 L27.1 47.3" stroke="#eef1ec" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M57.4 24.7 L45.3 45.7" stroke="#eef1ec" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M59.7 25.0 L58.1 52.6" stroke="#eef1ec" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M62.1 24.8 L71.1 45.1" stroke="#eef1ec" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M64.2 24.2 L87.6 46.6" stroke="#eef1ec" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M66.0 23.3 L90.9 36.3" stroke="#eef1ec" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M67.3 22.0 L105.7 32.3" stroke="#eef1ec" stroke-width="2.6" stroke-linecap="round"/>
+    <ellipse cx="60.0" cy="20.0" rx="21" ry="14" fill="none" stroke="#eef1ec" stroke-width="1.6"/>
+    <path d="M55.7 23.2 L43.4 31.8" stroke="#eef1ec" stroke-width="2.0" stroke-linecap="round"/>
+    <path d="M57.0 23.6 L45.6 37.1" stroke="#eef1ec" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M58.5 23.9 L54.4 34.7" stroke="#eef1ec" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M60.1 24.0 L60.6 38.8" stroke="#eef1ec" stroke-width="2.0" stroke-linecap="round"/>
+    <path d="M61.7 23.9 L66.5 34.6" stroke="#eef1ec" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M63.2 23.6 L75.4 36.8" stroke="#eef1ec" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M64.5 23.1 L77.4 31.5" stroke="#eef1ec" stroke-width="2.0" stroke-linecap="round"/>
+    <path d="M65.6 22.4 L87.2 31.3" stroke="#eef1ec" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M66.4 21.6 L84.7 26.1" stroke="#eef1ec" stroke-width="1.6" stroke-linecap="round"/>
+    <ellipse cx="60.0" cy="20.0" rx="17" ry="12" fill="none" stroke="#eef1ec" stroke-width="1.6"/>
+    <path d="M55 10 Q51 38 53 58 Q54 78 56 92 L63 92 Q64 78 64 58 Q66 38 65 10 Z" fill="none" stroke="#eef1ec" stroke-width="1.6"/>
 </g></svg>
