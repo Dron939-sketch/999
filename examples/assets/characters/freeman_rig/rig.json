@@ -3856,15 +3856,22 @@
                     ]
                 },
                 "thigh_left": {
+                    "rotation": -8,
+                    "offset": [
+                        11,
+                        172
+                    ],
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 },
                 "shin_left": {
+                    "rotation": 6,
+                    "offset": null,
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 }
             }
@@ -3979,15 +3986,22 @@
                     ]
                 },
                 "thigh_left": {
+                    "rotation": -8,
+                    "offset": [
+                        11,
+                        172
+                    ],
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 },
                 "shin_left": {
+                    "rotation": 6,
+                    "offset": null,
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 },
                 "torso": {
@@ -4410,15 +4424,22 @@
                     ]
                 },
                 "thigh_left": {
+                    "rotation": -34,
+                    "offset": [
+                        12,
+                        172
+                    ],
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 },
                 "shin_left": {
+                    "rotation": 26,
+                    "offset": null,
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 }
             }
@@ -4536,15 +4557,22 @@
                     ]
                 },
                 "thigh_left": {
+                    "rotation": 28,
+                    "offset": [
+                        12,
+                        172
+                    ],
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 },
                 "shin_left": {
+                    "rotation": -30,
+                    "offset": null,
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 }
             }
@@ -4662,15 +4690,22 @@
                     ]
                 },
                 "thigh_left": {
+                    "rotation": -34,
+                    "offset": [
+                        12,
+                        172
+                    ],
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 },
                 "shin_left": {
+                    "rotation": 26,
+                    "offset": null,
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 },
                 "torso": {
@@ -4794,15 +4829,22 @@
                     ]
                 },
                 "thigh_left": {
+                    "rotation": 28,
+                    "offset": [
+                        12,
+                        172
+                    ],
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 },
                 "shin_left": {
+                    "rotation": -30,
+                    "offset": null,
                     "scale": [
-                        0,
-                        0
+                        -0.846,
+                        0.97
                     ]
                 },
                 "torso": {
