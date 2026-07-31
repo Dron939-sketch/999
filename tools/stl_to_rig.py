@@ -709,7 +709,10 @@ SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w
        Руками не править: правка сотрётся следующим прогоном. Форма меняется в
        скульптуре, привязка — в tools/freeman_bones.json. Плоский двухтоновый
        силуэт: объёма и полутонов у персонажа нет.
-       Пивот кости в этом viewBox: ({px}, {py}). -->
+       Пивот кости в этом viewBox: ({px}, {py}).
+       Рисунок в этом viewBox: x {ix0}..{ix1}, y {iy0}..{iy1}. Строка читается
+       машинно (`apply_sculpt_proportions.py`): по ней центрируются маска и
+       ноги, потому что центр НАРИСОВАННОЙ ткани не совпадает с пивотом кости. -->
   <g filter="url(#ink)">
     <path d="{d}" fill="{fill}"{stroke} fill-rule="evenodd"/>
   </g>
@@ -731,10 +734,14 @@ def write_svg(path, mask, origin, spec, eps):
     stroke = ""
     if spec.get("outline"):
         stroke = f' stroke="{INK}" stroke-width="{spec["outline"]}" stroke-linejoin="round"'
+    cols = np.flatnonzero(mask.any(0))
+    rows_ = np.flatnonzero(mask.any(1))
     svg = SVG.format(w=W, h=H, d=d, fill=fill, stroke=stroke,
                      freq=spec.get("boil_freq", 0.02), boil=spec.get("boil", 1.0),
                      seed=spec.get("seed", 7),
-                     px=round(origin[0], 1), py=round(origin[1], 1))
+                     px=round(origin[0], 1), py=round(origin[1], 1),
+                     ix0=int(cols.min()), ix1=int(cols.max()),
+                     iy0=int(rows_.min()), iy1=int(rows_.max()))
     Path(path).write_text(svg, encoding="utf-8")
 
 
