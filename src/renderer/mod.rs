@@ -819,6 +819,16 @@ fn render_rigged_character(
                 *px = PremultipliedColorU8::from_rgba(0, 0, 0, a)
                     .unwrap_or_else(|| PremultipliedColorU8::from_rgba(0, 0, 0, 0).unwrap());
             }
+            // CONTACT PATCH FIRST. The cast silhouette is anchored at the feet
+            // but sheared away from them, so a thin-legged figure gets a long
+            // smear that starts a step to the side — the eye reads "shadow
+            // nearby", not "standing on the floor". The contact ellipse is a
+            // different phenomenon (ambient occlusion right under the soles),
+            // and it is what actually plants the figure. Both, not either.
+            if light.ground_shadow {
+                let half_w = ((max_x - min_x) * 0.55).max(20.0);
+                draw_ground_shadow(pixmap, cx, feet_y - 4.0, half_w, state.opacity);
+            }
             let skew = -ang.sin() * 1.5; // light from the right (+) → shadow leans left
             let squash = 0.34; // flatten onto the floor plane
             let (fx, fy) = (cx as f32, feet_y as f32);
@@ -890,7 +900,8 @@ fn render_rigged_character(
     }
 
     // Ground contact shadow (opt-in): soft ellipse under the feet, behind the
-    // figure — used when there's no full cast shadow.
+    // figure. The cast-shadow branch above draws its own copy and returns, so
+    // this is the no-cast-shadow path.
     if light.ground_shadow && have_extent && state.opacity > 0.35 {
         let half_w = ((max_x - min_x) * 0.55).max(20.0);
         draw_ground_shadow(pixmap, cx, feet_y - 4.0, half_w, state.opacity);
