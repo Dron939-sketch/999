@@ -21,6 +21,6 @@
     <path d="M36 118 Q80 108 124 118 Q118 158 80 160 Q42 158 36 118 Z" fill="#0e0e0e"/>
     <path d="M42 120 L50 132 L58 119 L66 133 L74 119 L82 133 L90 119 L98 133 L106 119 L114 131 L118 120"
           fill="none" stroke="#eef1ec" stroke-width="10.8" stroke-linejoin="round"/>
-    <path d="M62 146 Q80 168 98 146 Q90 152 80 152 Q70 152 62 146 Z" fill="#0e0e0e"/>
+    <path d="M62 146 Q80 168 98 146 Q90 152 80 152 Q70 152 62 146 Z" fill="#8a2f2f"/>
   </g>
 </svg>

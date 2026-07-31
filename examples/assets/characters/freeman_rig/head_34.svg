@@ -18,6 +18,7 @@
     <path d="M49 98 Q52 148 78 170 Q90 180 87 180 Q95 180 106 170 Q131 148 134 100"
           fill="none" stroke="#0e0e0e" stroke-width="18.0" stroke-linecap="round"/>
     <path d="M48 80 Q50 60 55 46" fill="none" stroke="#0e0e0e" stroke-width="12.0" stroke-linecap="round"/>
-    <!-- ДВЕ КРАСКИ. Полутон убран: модель двухмерная и черно-белая, тушь и бумага, третьего тона нет. -->
+    <!-- лёгкие штрихи щеки -->
+    <path d="M120 72 Q128 104 112 146" fill="none" stroke="#c2c7c0" stroke-width="3.8" opacity="0.8"/>
   </g>
 </svg>

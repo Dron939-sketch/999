@@ -1,19 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 298" width="72" height="298">
-  <defs>
-    <filter id="ink" x="-25%" y="-25%" width="150%" height="150%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="23" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs>
-  <!-- СНЯТО СО СКУЛЬПТУРЫ `source/mr_freeman.stl` инструментом tools/stl_to_rig.py.
-       Руками не править: правка сотрётся следующим прогоном. Форма меняется в
-       скульптуре, привязка — в tools/freeman_bones.json. Плоский двухтоновый
-       силуэт: объёма и полутонов у персонажа нет.
-       Пивот кости в этом viewBox: (45.0, 4.4).
-       Рисунок в этом viewBox: x 4..66, y 4..292. Строка читается
-       машинно (`apply_sculpt_proportions.py`): по ней центрируются маска и
-       ноги, потому что центр НАРИСОВАННОЙ ткани не совпадает с пивотом кости. -->
-  <g filter="url(#ink)">
-    <path d="M35.5 4.0 Q67.0 4.0 67.0 33.8 Q67.0 63.5 67.0 93.2 Q67.0 123.0 63.5 130.5 Q60.0 138.0 56.0 139.0 Q52.0 140.0 53.2 165.3 Q54.3 190.7 55.5 216.0 Q56.7 241.3 57.8 266.7 Q59.0 292.0 44.0 292.5 Q29.0 293.0 26.5 260.0 Q24.0 227.0 15.0 184.5 Q6.0 142.0 5.7 119.0 Q5.3 96.0 5.0 73.0 Q4.7 50.0 4.3 27.0 Z" fill="#0e0e0e" fill-rule="evenodd"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 112" width="38" height="112"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="21" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<!-- Бедро удлинено до 112 (было 66): колено стыковалось с голенью впритык и
+     при любом наклоне между ними открывался просвет. Длинное бедро с округлым
+     концом прячет стык при любом сгибе. Нога у оригинала — простая сужающаяся
+     палка, поэтому форма проще некуда. -->
+<g filter="url(#ink)"><path d="M14 4 Q11 50 13 100 Q19 108 25 100 Q26 50 24 4 Z" fill="#0e0e0e"/></g></svg>

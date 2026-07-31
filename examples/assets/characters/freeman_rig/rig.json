@@ -1,6 +1,6 @@
 {
   "name": "freeman",
-  "height": 973,
+  "height": 470,
   "skeleton": {
     "root": {
       "name": "root",
@@ -16,8 +16,8 @@
         {
           "name": "torso",
           "pivot": [
-            162.0,
-            30.0
+            110,
+            16
           ],
           "offset": [
             0,
@@ -29,8 +29,8 @@
               "name": "cloak",
               "part": "torso",
               "pivot": [
-                162.0,
-                30.0
+                110,
+                16
               ],
               "offset": [
                 0,
@@ -39,8 +39,8 @@
               "z_order": 2,
               "children": [],
               "scale": [
-                1.1222,
-                0.8082
+                1.092,
+                1.0
               ]
             },
             {
@@ -51,7 +51,7 @@
                 190
               ],
               "offset": [
-                30.2,
+                0,
                 66
               ],
               "scale": [
@@ -140,21 +140,17 @@
                 },
                 {
                   "name": "hat",
-                  "part": "hat",
+                  "part": "blank",
                   "pivot": [
                     50,
                     70
                   ],
                   "offset": [
-                    -12.7,
-                    -189.0
+                    0,
+                    -150
                   ],
                   "z_order": 7,
-                  "children": [],
-                  "scale": [
-                    2.0401,
-                    2.2116
-                  ]
+                  "children": []
                 },
                 {
                   "name": "glasses",
@@ -184,8 +180,8 @@
                 8
               ],
               "offset": [
-                -105.4,
-                12
+                -100.0,
+                3
               ],
               "rotation": 30,
               "z_order": 4,
@@ -199,7 +195,7 @@
                   ],
                   "offset": [
                     0,
-                    94.0
+                    78
                   ],
                   "rotation": -14,
                   "z_order": 4,
@@ -230,8 +226,8 @@
                 }
               ],
               "scale": [
-                1.5553,
-                1.296
+                1.0,
+                1.0
               ]
             },
             {
@@ -242,8 +238,8 @@
                 8
               ],
               "offset": [
-                139.0,
-                12
+                63.2,
+                13
               ],
               "rotation": -29,
               "z_order": 4,
@@ -257,7 +253,7 @@
                   ],
                   "offset": [
                     0,
-                    94.0
+                    78
                   ],
                   "rotation": 13,
                   "z_order": 4,
@@ -277,21 +273,17 @@
                       "children": [
                         {
                           "name": "cane",
-                          "part": "cane",
+                          "part": "blank",
                           "pivot": [
-                            11.0,
-                            4.0
+                            10,
+                            10
                           ],
                           "offset": [
-                            0,
-                            8
+                            10,
+                            10
                           ],
                           "z_order": 3,
-                          "children": [],
-                          "scale": [
-                            1.0755,
-                            0.826
-                          ]
+                          "children": []
                         }
                       ],
                       "scale": [
@@ -307,20 +299,20 @@
                 }
               ],
               "scale": [
-                1.5553,
-                1.296
+                1.0,
+                1.0
               ]
             },
             {
               "name": "thigh_left",
               "part": "thigh_left",
               "pivot": [
-                26.0,
-                4.0
+                19,
+                6
               ],
               "offset": [
-                -49.1,
-                286.9
+                -61.6,
+                172
               ],
               "z_order": 0,
               "children": [
@@ -328,36 +320,36 @@
                   "name": "shin_left",
                   "part": "shin_left",
                   "pivot": [
-                    63.0,
-                    4.0
+                    21,
+                    8
                   ],
                   "offset": [
                     0,
-                    250.0
+                    92
                   ],
                   "z_order": 0,
                   "scale": [
-                    1.0,
-                    0.9967
+                    0.9,
+                    1.0
                   ],
                   "children": []
                 }
               ],
               "scale": [
-                0.8696,
-                0.7246
+                0.9,
+                1.0
               ]
             },
             {
               "name": "thigh_right",
               "part": "thigh_right",
               "pivot": [
-                45.0,
-                4.0
+                19,
+                6
               ],
               "offset": [
-                82.8,
-                286.9
+                29.6,
+                172
               ],
               "z_order": 0,
               "children": [
@@ -365,24 +357,24 @@
                   "name": "shin_right",
                   "part": "shin_right",
                   "pivot": [
-                    25.0,
-                    4.0
+                    21,
+                    8
                   ],
                   "offset": [
                     0,
-                    250.0
+                    92
                   ],
                   "z_order": 0,
                   "scale": [
-                    1.0,
-                    0.9967
+                    0.9,
+                    1.0
                   ],
                   "children": []
                 }
               ],
               "scale": [
-                0.8696,
-                0.7246
+                0.9,
+                1.0
               ]
             }
           ],
@@ -401,7 +393,7 @@
       "bones": {
         "head": {
           "offset": [
-            26.2,
+            -4,
             87
           ],
           "rotation": -6
@@ -439,7 +431,7 @@
         },
         "head": {
           "offset": [
-            22.2,
+            -8,
             48
           ],
           "rotation": -16
@@ -486,8 +478,8 @@
         "hat": {
           "part": "hat",
           "offset": [
-            -30.7,
-            -153.0
+            -18,
+            -114
           ],
           "rotation": -18,
           "z_order": 6
@@ -707,7 +699,7 @@
         "head": {
           "rotation": -13,
           "offset": [
-            24.2,
+            -6,
             44
           ]
         },
@@ -863,7 +855,7 @@
         "head": {
           "rotation": -9,
           "offset": [
-            30.2,
+            0,
             50
           ]
         },
@@ -1567,7 +1559,7 @@
         "head": {
           "rotation": 14,
           "offset": [
-            30.2,
+            0,
             46
           ]
         },
@@ -1640,7 +1632,7 @@
         "head": {
           "rotation": -4,
           "offset": [
-            30.2,
+            0,
             66
           ]
         },
@@ -1768,7 +1760,7 @@
           ],
           "rotation": -3,
           "offset": [
-            30.2,
+            0,
             50
           ]
         },
@@ -1777,36 +1769,36 @@
         },
         "thigh_left": {
           "offset": [
-            -22.7,
-            232.9
+            -35.2,
+            118
           ],
           "rotation": 7,
           "scale": [
-            1.0049,
-            1.4999
+            1.04,
+            2.07
           ]
         },
         "shin_left": {
           "scale": [
-            1.1556,
-            2.0632
+            1.04,
+            2.07
           ]
         },
         "thigh_right": {
           "offset": [
-            88.4,
-            232.9
+            35.2,
+            118
           ],
           "rotation": -7,
           "scale": [
-            1.0049,
-            1.4999
+            1.04,
+            2.07
           ]
         },
         "shin_right": {
           "scale": [
-            1.1556,
-            2.0632
+            1.04,
+            2.07
           ]
         }
       }
@@ -1822,7 +1814,7 @@
           ],
           "rotation": 6,
           "offset": [
-            30.2,
+            0,
             64
           ]
         },
@@ -1831,50 +1823,50 @@
         },
         "upper_arm_left": {
           "offset": [
-            -65.4,
-            58
+            -60.0,
+            49
           ],
           "rotation": 34
         },
         "upper_arm_right": {
           "offset": [
-            135.8,
-            48
+            60.0,
+            49
           ],
           "rotation": -34
         },
         "thigh_left": {
           "offset": [
-            -5.1,
-            232.9
+            -17.6,
+            118
           ],
           "rotation": -5,
           "scale": [
-            0.6957,
-            1.0434
+            0.72,
+            1.44
           ]
         },
         "shin_left": {
           "scale": [
-            0.8,
-            1.4352
+            0.72,
+            1.44
           ]
         },
         "thigh_right": {
           "offset": [
-            70.8,
-            232.9
+            17.6,
+            118
           ],
           "rotation": 5,
           "scale": [
-            0.6957,
-            1.0434
+            0.72,
+            1.44
           ]
         },
         "shin_right": {
           "scale": [
-            0.8,
-            1.4352
+            0.72,
+            1.44
           ]
         }
       }
@@ -2087,7 +2079,7 @@
         "head": {
           "rotation": -14,
           "offset": [
-            34.2,
+            4,
             56
           ],
           "scale": [
@@ -2138,7 +2130,7 @@
         "head": {
           "rotation": 9,
           "offset": [
-            30.2,
+            0,
             34
           ]
         },
@@ -2179,7 +2171,7 @@
         "head": {
           "rotation": 14,
           "offset": [
-            26.2,
+            -4,
             52
           ]
         },
@@ -2232,7 +2224,7 @@
         "head": {
           "rotation": -6,
           "offset": [
-            30.2,
+            0,
             74
           ]
         },
@@ -2279,8 +2271,8 @@
         },
         "cloak": {
           "scale": [
-            1.3359,
-            0.4849
+            1.3,
+            0.6
           ]
         }
       }
@@ -2299,15 +2291,15 @@
         "head": {
           "rotation": 3,
           "offset": [
-            30.2,
+            0,
             80
           ]
         },
         "thigh_left": {
           "rotation": -104,
           "offset": [
-            -70.7,
-            300.9
+            -83.2,
+            186
           ],
           "z_order": 4
         },
@@ -2318,8 +2310,8 @@
         "thigh_right": {
           "rotation": 100,
           "offset": [
-            115.6,
-            300.9
+            62.4,
+            186
           ],
           "z_order": 4
         },
@@ -2360,8 +2352,8 @@
         },
         "cloak": {
           "scale": [
-            1.3359,
-            0.4526
+            1.3,
+            0.56
           ]
         }
       }
@@ -2380,15 +2372,15 @@
         "head": {
           "rotation": -18,
           "offset": [
-            24.2,
+            -6,
             70
           ]
         },
         "thigh_left": {
           "rotation": -96,
           "offset": [
-            -61.1,
-            264.9
+            -73.6,
+            150
           ],
           "z_order": 4
         },
@@ -2399,8 +2391,8 @@
         "thigh_right": {
           "rotation": 90,
           "offset": [
-            106.0,
-            264.9
+            52.8,
+            150
           ],
           "z_order": 4
         },
@@ -2437,8 +2429,8 @@
         },
         "cloak": {
           "scale": [
-            1.3359,
-            0.5172
+            1.3,
+            0.64
           ]
         }
       }
@@ -2457,7 +2449,7 @@
         "head": {
           "rotation": -80,
           "offset": [
-            30.2,
+            0,
             64
           ]
         },
@@ -2556,7 +2548,7 @@
         "head": {
           "rotation": -16,
           "offset": [
-            34.2,
+            4,
             58
           ]
         },
@@ -2607,7 +2599,7 @@
         "head": {
           "rotation": 8,
           "offset": [
-            30.2,
+            0,
             32
           ]
         },
@@ -2670,15 +2662,15 @@
         "head": {
           "rotation": -3,
           "offset": [
-            30.2,
+            0,
             52
           ]
         },
         "thigh_left": {
           "rotation": -92,
           "offset": [
-            -57.9,
-            224.9
+            -70.4,
+            110
           ],
           "z_order": 4
         },
@@ -2689,8 +2681,8 @@
         "thigh_right": {
           "rotation": 88,
           "offset": [
-            102.8,
-            224.9
+            49.6,
+            110
           ],
           "z_order": 4
         },
@@ -2718,8 +2710,8 @@
         },
         "cloak": {
           "scale": [
-            1.3359,
-            0.5657
+            1.3,
+            0.7
           ]
         }
       }
@@ -2734,7 +2726,7 @@
         "head": {
           "rotation": -7,
           "offset": [
-            26.2,
+            -4,
             48
           ]
         },
@@ -2777,7 +2769,7 @@
         "head": {
           "rotation": 11,
           "offset": [
-            30.2,
+            0,
             34
           ]
         },
@@ -2819,7 +2811,7 @@
         "head": {
           "rotation": -12,
           "offset": [
-            30.2,
+            0,
             54
           ]
         },
@@ -2855,7 +2847,7 @@
         "head": {
           "rotation": -14,
           "offset": [
-            30.2,
+            0,
             60
           ]
         },
@@ -2978,7 +2970,7 @@
         "head": {
           "rotation": 22,
           "offset": [
-            20.2,
+            -10,
             34
           ]
         },
@@ -3035,7 +3027,7 @@
         "head": {
           "rotation": -8,
           "offset": [
-            30.2,
+            0,
             56
           ]
         },
@@ -3086,7 +3078,7 @@
         "head": {
           "rotation": 16,
           "offset": [
-            24.2,
+            -6,
             52
           ]
         },
@@ -3128,7 +3120,7 @@
         "head": {
           "rotation": -5,
           "offset": [
-            30.2,
+            0,
             46
           ]
         },
@@ -3171,7 +3163,7 @@
         "head": {
           "rotation": 9,
           "offset": [
-            30.2,
+            0,
             58
           ]
         },
@@ -3226,7 +3218,7 @@
         "head": {
           "rotation": 5,
           "offset": [
-            30.2,
+            0,
             54
           ]
         },
@@ -3263,7 +3255,7 @@
         "head": {
           "rotation": -20,
           "offset": [
-            34.2,
+            4,
             62
           ]
         },
@@ -3447,7 +3439,7 @@
         "head": {
           "rotation": -14,
           "offset": [
-            34.2,
+            4,
             56
           ],
           "scale": [
@@ -3639,7 +3631,7 @@
         "head": {
           "rotation": 16,
           "offset": [
-            24.2,
+            -6,
             52
           ]
         },
@@ -3755,7 +3747,7 @@
         "head": {
           "rotation": 9,
           "offset": [
-            30.2,
+            0,
             34
           ]
         },
@@ -3813,7 +3805,7 @@
         },
         "head": {
           "offset": [
-            34.2,
+            4,
             52
           ],
           "rotation": 6,
@@ -3826,8 +3818,8 @@
         "upper_arm_left": {
           "rotation": 22,
           "offset": [
-            -105.4,
-            26
+            -100.0,
+            17
           ],
           "z_order": 1
         },
@@ -3837,8 +3829,8 @@
         "upper_arm_right": {
           "rotation": -21,
           "offset": [
-            139.0,
-            16
+            63.2,
+            17
           ],
           "z_order": 1
         },
@@ -3847,14 +3839,14 @@
         },
         "thigh_left": {
           "offset": [
-            -43.5,
-            286.9
+            -56.0,
+            172
           ]
         },
         "thigh_right": {
           "offset": [
-            78.8,
-            286.9
+            25.6,
+            172
           ]
         }
       }
@@ -3865,7 +3857,7 @@
       "bones": {
         "head": {
           "offset": [
-            33.2,
+            3,
             84
           ],
           "scale": [
@@ -3901,29 +3893,29 @@
         "upper_arm_left": {
           "rotation": 16,
           "offset": [
-            -105.4,
-            26
+            -100.0,
+            17
           ],
           "z_order": 1
         },
         "upper_arm_right": {
           "rotation": -15,
           "offset": [
-            139.0,
-            16
+            63.2,
+            17
           ],
           "z_order": 1
         },
         "thigh_left": {
           "offset": [
-            -43.5,
-            286.9
+            -56.0,
+            172
           ]
         },
         "thigh_right": {
           "offset": [
-            78.8,
-            286.9
+            25.6,
+            172
           ]
         }
       }
@@ -3935,8 +3927,8 @@
         "cloak": {
           "part": "torso_side",
           "scale": [
-            1.1222,
-            0.8082
+            1.092,
+            1.0
           ]
         },
         "head": {
@@ -3982,19 +3974,19 @@
         "upper_arm_right": {
           "part": "arm_out_upper_r",
           "offset": [
-            70,
-            55
+            21,
+            23
           ],
-          "rotation": 0,
+          "rotation": 13,
           "z_order": 4,
           "scale": [
-            0.7,
+            0.48,
             1.0
           ]
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -10
+          "rotation": -7
         },
         "hand_right": {
           "part": "arm_out_hand_r",
@@ -4005,8 +3997,8 @@
         },
         "upper_arm_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "forearm_left": {
@@ -4023,37 +4015,30 @@
         },
         "thigh_right": {
           "offset": [
-            15.0,
-            286.9
+            18,
+            172
           ],
           "scale": [
-            -0.8696,
-            0.7246
+            -0.9,
+            1.0
           ]
         },
         "shin_right": {
           "scale": [
-            -1.0,
-            0.9967
+            -0.9,
+            1.0
           ]
         },
         "thigh_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "shin_left": {
           "scale": [
-            0.0,
-            0.0
-          ]
-        },
-        "cane": {
-          "rotation": -12,
-          "scale": [
-            1.0755,
-            1.05
+            0,
+            0
           ]
         }
       }
@@ -4065,8 +4050,8 @@
         "cloak": {
           "part": "torso_side",
           "scale": [
-            1.1222,
-            0.8082
+            1.092,
+            1.0
           ]
         },
         "head": {
@@ -4112,19 +4097,19 @@
         "upper_arm_right": {
           "part": "arm_out_upper_r",
           "offset": [
-            70,
-            55
+            21,
+            23
           ],
-          "rotation": 0,
+          "rotation": 13,
           "z_order": 4,
           "scale": [
-            0.7,
+            0.48,
             1.0
           ]
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -10
+          "rotation": -7
         },
         "hand_right": {
           "part": "arm_out_hand_r",
@@ -4135,8 +4120,8 @@
         },
         "upper_arm_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "forearm_left": {
@@ -4153,43 +4138,36 @@
         },
         "thigh_right": {
           "offset": [
-            15.0,
-            286.9
+            18,
+            172
           ],
           "scale": [
-            -0.8696,
-            0.7246
+            -0.9,
+            1.0
           ]
         },
         "shin_right": {
           "scale": [
-            -1.0,
-            0.9967
+            -0.9,
+            1.0
           ]
         },
         "thigh_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "shin_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "torso": {
           "scale": [
             -1.55,
             1.86
-          ]
-        },
-        "cane": {
-          "rotation": -12,
-          "scale": [
-            1.0755,
-            1.05
           ]
         }
       }
@@ -4201,8 +4179,8 @@
         "cloak": {
           "part": "torso_34",
           "scale": [
-            1.0893,
-            0.8082
+            1.06,
+            1.0
           ]
         },
         "head": {
@@ -4212,7 +4190,7 @@
           ],
           "z_order": 5,
           "offset": [
-            53.2,
+            23,
             57
           ]
         },
@@ -4251,56 +4229,56 @@
         },
         "upper_arm_right": {
           "offset": [
-            129.8,
-            3
+            54,
+            4
           ],
           "scale": [
-            1.7264,
-            1.4386
+            1.11,
+            1.11
           ],
           "z_order": 4
         },
         "upper_arm_left": {
           "offset": [
-            -47.4,
-            31
+            -42,
+            22
           ],
           "scale": [
-            1.3842,
-            1.1534
+            0.89,
+            0.89
           ],
           "z_order": 1
         },
         "thigh_left": {
           "offset": [
-            -14.5,
-            286.9
+            -27,
+            172
           ],
           "scale": [
-            0.8696,
-            0.6449
+            0.9,
+            0.89
           ]
         },
         "shin_left": {
           "scale": [
-            1.0,
-            0.8871
+            0.9,
+            0.89
           ]
         },
         "thigh_right": {
           "offset": [
-            74.2,
-            286.9
+            21,
+            172
           ],
           "scale": [
-            0.8696,
-            0.8043
+            0.9,
+            1.11
           ]
         },
         "shin_right": {
           "scale": [
-            1.0,
-            1.1063
+            0.9,
+            1.11
           ]
         }
       }
@@ -4312,8 +4290,8 @@
         "cloak": {
           "part": "torso_34",
           "scale": [
-            1.0893,
-            0.8082
+            1.06,
+            1.0
           ]
         },
         "head": {
@@ -4323,7 +4301,7 @@
           ],
           "z_order": 5,
           "offset": [
-            53.2,
+            23,
             57
           ]
         },
@@ -4362,56 +4340,56 @@
         },
         "upper_arm_right": {
           "offset": [
-            129.8,
-            3
+            54,
+            4
           ],
           "scale": [
-            1.7264,
-            1.4386
+            1.11,
+            1.11
           ],
           "z_order": 4
         },
         "upper_arm_left": {
           "offset": [
-            -47.4,
-            31
+            -42,
+            22
           ],
           "scale": [
-            1.3842,
-            1.1534
+            0.89,
+            0.89
           ],
           "z_order": 1
         },
         "thigh_left": {
           "offset": [
-            -14.5,
-            286.9
+            -27,
+            172
           ],
           "scale": [
-            0.8696,
-            0.6449
+            0.9,
+            0.89
           ]
         },
         "shin_left": {
           "scale": [
-            1.0,
-            0.8871
+            0.9,
+            0.89
           ]
         },
         "thigh_right": {
           "offset": [
-            74.2,
-            286.9
+            21,
+            172
           ],
           "scale": [
-            0.8696,
-            0.8043
+            0.9,
+            1.11
           ]
         },
         "shin_right": {
           "scale": [
-            1.0,
-            1.1063
+            0.9,
+            1.11
           ]
         },
         "torso": {
@@ -4447,8 +4425,8 @@
         "cloak": {
           "part": "torso_34",
           "scale": [
-            -1.0893,
-            0.8082
+            -1.06,
+            1.0
           ]
         },
         "head": {
@@ -4457,7 +4435,7 @@
             0.5392
           ],
           "offset": [
-            85.2,
+            55,
             7
           ],
           "rotation": 5,
@@ -4466,29 +4444,29 @@
         "upper_arm_left": {
           "rotation": 26,
           "offset": [
-            -67.4,
-            31
+            -62,
+            22
           ],
           "z_order": 1
         },
         "upper_arm_right": {
           "rotation": -18,
           "offset": [
-            104.8,
-            3
+            29,
+            4
           ],
           "z_order": 1
         },
         "thigh_left": {
           "offset": [
-            -29.1,
-            286.9
+            -41.6,
+            172
           ]
         },
         "thigh_right": {
           "offset": [
-            69.2,
-            286.9
+            16.0,
+            172
           ]
         }
       }
@@ -4500,8 +4478,8 @@
         "cloak": {
           "part": "torso_side",
           "scale": [
-            1.1222,
-            0.8082
+            1.092,
+            1.0
           ]
         },
         "head": {
@@ -4570,8 +4548,8 @@
         },
         "upper_arm_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "forearm_left": {
@@ -4589,32 +4567,32 @@
         "thigh_right": {
           "rotation": 30,
           "offset": [
-            71.2,
-            286.9
+            18,
+            172
           ],
           "scale": [
-            -0.8696,
-            0.7246
+            -0.9,
+            1.0
           ]
         },
         "shin_right": {
           "rotation": -34,
           "offset": null,
           "scale": [
-            -1.0,
-            0.9967
+            -0.9,
+            1.0
           ]
         },
         "thigh_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "shin_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         }
       }
@@ -4626,8 +4604,8 @@
         "cloak": {
           "part": "torso_side",
           "scale": [
-            1.1222,
-            0.8082
+            1.092,
+            1.0
           ]
         },
         "head": {
@@ -4696,8 +4674,8 @@
         },
         "upper_arm_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "forearm_left": {
@@ -4715,32 +4693,32 @@
         "thigh_right": {
           "rotation": -40,
           "offset": [
-            71.2,
-            286.9
+            18,
+            172
           ],
           "scale": [
-            -0.8696,
-            0.7246
+            -0.9,
+            1.0
           ]
         },
         "shin_right": {
           "rotation": 30,
           "offset": null,
           "scale": [
-            -1.0,
-            0.9967
+            -0.9,
+            1.0
           ]
         },
         "thigh_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "shin_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         }
       }
@@ -4752,8 +4730,8 @@
         "cloak": {
           "part": "torso_side",
           "scale": [
-            1.1222,
-            0.8082
+            1.092,
+            1.0
           ]
         },
         "head": {
@@ -4822,8 +4800,8 @@
         },
         "upper_arm_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "forearm_left": {
@@ -4841,32 +4819,32 @@
         "thigh_right": {
           "rotation": 30,
           "offset": [
-            71.2,
-            286.9
+            18,
+            172
           ],
           "scale": [
-            -0.8696,
-            0.7246
+            -0.9,
+            1.0
           ]
         },
         "shin_right": {
           "rotation": -34,
           "offset": null,
           "scale": [
-            -1.0,
-            0.9967
+            -0.9,
+            1.0
           ]
         },
         "thigh_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "shin_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "torso": {
@@ -4884,8 +4862,8 @@
         "cloak": {
           "part": "torso_side",
           "scale": [
-            1.1222,
-            0.8082
+            1.092,
+            1.0
           ]
         },
         "head": {
@@ -4954,8 +4932,8 @@
         },
         "upper_arm_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "forearm_left": {
@@ -4973,32 +4951,32 @@
         "thigh_right": {
           "rotation": -40,
           "offset": [
-            71.2,
-            286.9
+            18,
+            172
           ],
           "scale": [
-            -0.8696,
-            0.7246
+            -0.9,
+            1.0
           ]
         },
         "shin_right": {
           "rotation": 30,
           "offset": null,
           "scale": [
-            -1.0,
-            0.9967
+            -0.9,
+            1.0
           ]
         },
         "thigh_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "shin_left": {
           "scale": [
-            0.0,
-            0.0
+            0,
+            0
           ]
         },
         "torso": {
@@ -5033,7 +5011,7 @@
         },
         "head": {
           "offset": [
-            25.2,
+            -5,
             136
           ],
           "rotation": 9,
@@ -5046,8 +5024,8 @@
         "upper_arm_left": {
           "rotation": 30,
           "offset": [
-            -109.4,
-            26
+            -104.0,
+            17
           ],
           "z_order": 1
         },
@@ -5057,8 +5035,8 @@
         "upper_arm_right": {
           "rotation": -29,
           "offset": [
-            141.4,
-            16
+            65.6,
+            17
           ],
           "z_order": 1
         },
@@ -5067,20 +5045,20 @@
         },
         "thigh_left": {
           "offset": [
-            -43.5,
-            286.9
+            -56.0,
+            172
           ]
         },
         "thigh_right": {
           "offset": [
-            78.8,
-            286.9
+            25.6,
+            172
           ]
         },
         "cloak": {
           "scale": [
-            1.3894,
-            0.784
+            1.352,
+            0.97
           ]
         }
       }
@@ -5092,8 +5070,8 @@
         "cloak": {
           "part": "torso",
           "scale": [
-            1.079,
-            0.8082
+            1.05,
+            1.0
           ]
         },
         "head": {
@@ -5103,7 +5081,7 @@
           ],
           "z_order": 5,
           "offset": [
-            44.2,
+            14,
             61
           ]
         },
@@ -5141,56 +5119,56 @@
         },
         "upper_arm_right": {
           "offset": [
-            115.8,
-            8
+            40,
+            9
           ],
           "scale": [
-            1.6486,
-            1.3738
+            1.06,
+            1.06
           ],
           "z_order": 4
         },
         "upper_arm_left": {
           "offset": [
-            -91.4,
-            26
+            -86,
+            17
           ],
           "scale": [
-            1.462,
-            1.2182
+            0.94,
+            0.94
           ],
           "z_order": 1
         },
         "thigh_left": {
           "offset": [
-            -33.5,
-            286.9
+            -46,
+            172
           ],
           "scale": [
-            0.8696,
-            0.6811
+            0.9,
+            0.94
           ]
         },
         "shin_left": {
           "scale": [
-            1.0,
-            0.9369
+            0.9,
+            0.94
           ]
         },
         "thigh_right": {
           "offset": [
-            80.2,
-            286.9
+            27,
+            172
           ],
           "scale": [
-            0.8696,
-            0.7681
+            0.9,
+            1.06
           ]
         },
         "shin_right": {
           "scale": [
-            1.0,
-            1.0565
+            0.9,
+            1.06
           ]
         }
       }
@@ -5202,8 +5180,8 @@
         "cloak": {
           "part": "torso",
           "scale": [
-            1.079,
-            0.8082
+            1.05,
+            1.0
           ]
         },
         "head": {
@@ -5213,7 +5191,7 @@
           ],
           "z_order": 5,
           "offset": [
-            44.2,
+            14,
             61
           ]
         },
@@ -5251,56 +5229,56 @@
         },
         "upper_arm_right": {
           "offset": [
-            115.8,
-            8
+            40,
+            9
           ],
           "scale": [
-            1.6486,
-            1.3738
+            1.06,
+            1.06
           ],
           "z_order": 4
         },
         "upper_arm_left": {
           "offset": [
-            -91.4,
-            26
+            -86,
+            17
           ],
           "scale": [
-            1.462,
-            1.2182
+            0.94,
+            0.94
           ],
           "z_order": 1
         },
         "thigh_left": {
           "offset": [
-            -33.5,
-            286.9
+            -46,
+            172
           ],
           "scale": [
-            0.8696,
-            0.6811
+            0.9,
+            0.94
           ]
         },
         "shin_left": {
           "scale": [
-            1.0,
-            0.9369
+            0.9,
+            0.94
           ]
         },
         "thigh_right": {
           "offset": [
-            80.2,
-            286.9
+            27,
+            172
           ],
           "scale": [
-            0.8696,
-            0.7681
+            0.9,
+            1.06
           ]
         },
         "shin_right": {
           "scale": [
-            1.0,
-            1.0565
+            0.9,
+            1.06
           ]
         },
         "torso": {
@@ -5310,26 +5288,14 @@
           ]
         }
       }
-    },
-    "bez_predmetov": {
-      "name": "bez_predmetov",
-      "transition_duration": 0.0,
-      "bones": {
-        "hat": {
-          "part": "blank"
-        },
-        "cane": {
-          "part": "blank"
-        }
-      }
     }
   },
   "karta": {
-    "crown": -0.0513,
-    "eyes": -0.013,
-    "chin": 0.0526,
-    "feet": 0.4211,
-    "mask_dx": 0.0054,
-    "mask_w": 0.0682
+    "crown": -0.105,
+    "eyes": -0.0244,
+    "chin": 0.1127,
+    "feet": 0.4953,
+    "mask_dx": -0.029,
+    "mask_w": 0.1426
   }
 }

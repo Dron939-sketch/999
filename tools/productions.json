@@ -64,9 +64,16 @@
   },
   {
    "id": "kak-dumat-intro",
-   "desc": "Подводка к вводному курсу «Как думать»: попугай повторяет чужое — своих слов нет. Пустое поле (канон), режиссура по HOLLYWOOD, без сверхкрупных планов (растр сета).",
+   "desc": "Подводка к вводному курсу «Как думать»: попугай повторяет чужое — своих слов нет.",
    "anim": "examples/lektorij/kak-dumat-intro.anim",
    "vo": "examples/lektorij/kak-dumat-intro-VO.md",
+   "images": []
+  },
+  {
+   "id": "insight-proverka",
+   "desc": "ИНСАЙТ «Перечитал ≠ выучил»: 30 секунд, один приём — проверка себя вместо перечитывания. Финал не CTA, а задание зрителю.",
+   "anim": "examples/lektorij/insight-proverka.anim",
+   "vo": "examples/lektorij/insight-proverka-VO.md",
    "images": []
   }
  ]

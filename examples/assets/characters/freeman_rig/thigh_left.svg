@@ -1,19 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 298" width="72" height="298">
-  <defs>
-    <filter id="ink" x="-25%" y="-25%" width="150%" height="150%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="21" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs>
-  <!-- СНЯТО СО СКУЛЬПТУРЫ `source/mr_freeman.stl` инструментом tools/stl_to_rig.py.
-       Руками не править: правка сотрётся следующим прогоном. Форма меняется в
-       скульптуре, привязка — в tools/freeman_bones.json. Плоский двухтоновый
-       силуэт: объёма и полутонов у персонажа нет.
-       Пивот кости в этом viewBox: (26.2, 4.4).
-       Рисунок в этом viewBox: x 4..67, y 4..292. Строка читается
-       машинно (`apply_sculpt_proportions.py`): по ней центрируются маска и
-       ноги, потому что центр НАРИСОВАННОЙ ткани не совпадает с пивотом кости. -->
-  <g filter="url(#ink)">
-    <path d="M35.5 4.0 Q67.0 4.0 66.7 27.2 Q66.3 50.3 66.0 73.5 Q65.7 96.7 65.3 119.8 Q65.0 143.0 60.0 167.8 Q55.0 192.5 50.0 217.2 Q45.0 242.0 44.0 267.0 Q43.0 292.0 40.0 291.5 Q37.0 291.0 23.0 291.5 Q9.0 292.0 14.0 262.5 Q19.0 233.0 19.5 199.5 Q20.0 166.0 19.5 153.0 Q19.0 140.0 15.5 139.5 Q12.0 139.0 8.0 130.5 Q4.0 122.0 4.0 92.5 Q4.0 63.0 4.0 33.5 Z" fill="#0e0e0e" fill-rule="evenodd"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 112" width="38" height="112"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="21" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<!-- Бедро удлинено до 112 (было 66): колено стыковалось с голенью впритык и
+     при любом наклоне между ними открывался просвет. Длинное бедро с округлым
+     концом прячет стык при любом сгибе. Нога у оригинала — простая сужающаяся
+     палка, поэтому форма проще некуда. -->
+<g filter="url(#ink)"><path d="M14 4 Q11 50 13 100 Q19 108 25 100 Q26 50 24 4 Z" fill="#0e0e0e"/></g></svg>
