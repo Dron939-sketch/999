@@ -2090,8 +2090,33 @@ fn render_svg_to_pixmap(
     let final_scale_x = base_scale_x * scale_x * depth;
     let final_scale_y = base_scale_y * scale_y * depth;
 
-    let render_w = (svg_w * final_scale_x.abs()).ceil() as u32;
-    let render_h = (svg_h * final_scale_y.abs()).ceil() as u32;
+    // ПОТОЛОК РАСТРА СЕТА. Полный растр — svg × final_scale: на тесном плане
+    // он растёт квадратом зума, хотя в кадре из него видно окно canvas_w ×
+    // canvas_h. На сверхкрупном плане (зум ~18 по карте выросшей фигуры)
+    // растр выходил ~23000×13000 (≈1.2 ГБ), и рендер роликов с ECU-планами
+    // замедлялся на порядок — три прогона CI легли именно на этом.
+    //
+    // Почему потолок, а не «растрить только видимое окно»: у сетов ink-фильтр
+    // (feTurbulence + displacement), и resvg считает фильтр на ВСЕЙ площади
+    // растра независимо от того, какое окно из него рисуется — окно кадра
+    // было испробовано и не дало ничего. Поэтому выше потолка сет растится в
+    // уменьшенном масштабе, а до размера кадра доводится бикубикой при блите.
+    //
+    // Цена — мягкость линий сета на сверхкрупных планах. На деле в кадре ECU
+    // фон — почти плоский тон (см. golden эталона), линий поля там не видно.
+    // Порог 16 площадей кадра (зум ~4): обычные планы идут прежним путём с
+    // прежним растром, их golden-кадры не меняются байт в байт.
+    let full_w = svg_w * final_scale_x.abs();
+    let full_h = svg_h * final_scale_y.abs();
+    let canvas_area = cw * ch;
+    let upscale = if full_w * full_h > canvas_area * 16.0 {
+        (full_w * full_h / (canvas_area * 16.0)).sqrt()
+    } else {
+        1.0
+    };
+
+    let render_w = (svg_w * final_scale_x.abs() / upscale).ceil() as u32;
+    let render_h = (svg_h * final_scale_y.abs() / upscale).ceil() as u32;
 
     if render_w == 0 || render_h == 0 {
         return Ok(());
@@ -2114,8 +2139,10 @@ fn render_svg_to_pixmap(
         } else {
             let mut pm = Pixmap::new(render_w, render_h)
                 .ok_or_else(|| AnimError::Render("failed to create SVG pixmap".into()))?;
-            let render_transform =
-                Transform::from_scale(final_scale_x.abs() as f32, final_scale_y.abs() as f32);
+            let render_transform = Transform::from_scale(
+                (final_scale_x.abs() / upscale) as f32,
+                (final_scale_y.abs() / upscale) as f32,
+            );
             // Same resvg feDisplacementMap panic guard as the part renderer:
             // a set/background SVG's ink filter can trip the size assertion at
             // some scales — fall back to a filter-stripped render instead of
@@ -2148,19 +2175,22 @@ fn render_svg_to_pixmap(
             arc
         };
 
-    let dest_x = px - (render_w as f64 / 2.0);
+    // Габариты НА ЭКРАНЕ: растр × доувеличение (при потолке растр меньше).
+    let disp_w = render_w as f64 * upscale;
+    let disp_h = render_h as f64 * upscale;
+    let dest_x = px - (disp_w / 2.0);
     // Якорь пропа — центр его рисунка. Для стоящего на полу это значит, что
     // половина предмета уходит НИЖЕ точки опоры: крыса тонула в полу, а на
     // сиденье унитаза висела в воздухе. У `on floor` якорь внизу.
     let dest_y = if floor.is_some() {
-        py - render_h as f64
+        py - disp_h
     } else {
-        py - (render_h as f64 / 2.0)
+        py - (disp_h / 2.0)
     };
 
-    let transform = if rotation_deg.abs() > 0.01 {
-        let cx = dest_x + render_w as f64 / 2.0;
-        let cy = dest_y + render_h as f64 / 2.0;
+    let place = if rotation_deg.abs() > 0.01 {
+        let cx = dest_x + disp_w / 2.0;
+        let cy = dest_y + disp_h / 2.0;
         Transform::from_translate(cx as f32, cy as f32)
             .pre_concat(Transform::from_rotate(rotation_deg as f32))
             .pre_concat(Transform::from_translate(-(cx as f32), -(cy as f32)))
@@ -2168,6 +2198,8 @@ fn render_svg_to_pixmap(
     } else {
         Transform::from_translate(dest_x as f32, dest_y as f32)
     };
+    // Доувеличение капнутого растра до экранного размера — бикубикой блита.
+    let transform = place.pre_concat(Transform::from_scale(upscale as f32, upscale as f32));
 
     let paint = PixmapPaint {
         opacity: opacity as f32,
