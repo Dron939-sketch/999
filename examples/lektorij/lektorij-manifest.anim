@@ -1,14 +1,13 @@
 // =============================================================================
 //  «ИНФОЦЫГАНЕ КАК ВИД» — ВВОДНАЯ ПРЕЗЕНТАЦИЯ ЛЕКТОРИЯ.
-//  VO — lektorij-manifest-VO.md, //lip 1..12.
+//  VO — lektorij-manifest-VO.md, //lip 1..11.
 //
 //  ЧЕМ ЭТОТ РОЛИК ОТЛИЧАЕТСЯ ОТ ОСТАЛЬНЫХ
 //
 //  1. ФИГУРА ХОДИТ И ГОВОРИТ НА ХОДУ. Прежние ролики играли позами на месте:
-//     персонаж стоял и менял жесты. Здесь он РАСХАЖИВАЕТ и думает вслух, и
-//     ходьба несёт смысл: идёт на размышлении, ОСТАНАВЛИВАЕТСЯ НА УДАРАХ
-//     (остановка — знак препинания), разворачивается там, где поворачивает
-//     рассуждение.
+//     персонаж стоял и менял жесты. Здесь он думает вслух на ходу, и ходьба
+//     несёт смысл: идёт на размышлении, ОСТАНАВЛИВАЕТСЯ НА УДАРАХ (остановка —
+//     знак препинания).
 //     ХОДИТ ОН В ПРОФИЛЬ, а не анфасом вбок. Анфасная фигура, едущая по
 //     экрану, читается как скольжение декорации: ноги шагают, а тело плывёт.
 //     Профильные позы разворачивают корпус ТУДА, КУДА он идёт, и шаг сразу
@@ -25,25 +24,33 @@
 //     ПРОХОД ЗАКРЫВАЕТСЯ ПОЛНОЙ ПОЗОЙ — иначе брошенный слой шага висит на
 //     фигуре, и она доигрывает полушаг уже стоя (гейт: walk.py --check).
 //
-//  2. ЛОКАЦИЯ МЕНЯЕТСЯ ПОД МЫСЛЬ. Пять площадок, каждая — довод:
+//  2. ХРОНОМЕТРАЖ — ДО МИНУТЫ. Прежний монтаж шёл 98 секунд при 46 секундах
+//     речи: больше половины ролика зритель ждал. Резалось НЕ содержание, а
+//     простой — проходы без слов, добор кадра после реплики, холостые хвосты
+//     сцен. Плюс сама речь разогнана общим темпом ×1.12 (шапка VO). Отсюда
+//     правило для правок: `duration` сцены держим впритык к содержимому, а не
+//     «с запасом» — запас превращается в стоящий кадр.
+//
+//  3. ЛОКАЦИЯ МЕНЯЕТСЯ ПОД МЫСЛЬ. Семь площадок, каждая — довод:
 //     пустое поле (задача в вакууме) → камера с фамилиями на стене (сажали) →
-//     ярмарка обещаний (вышел — торговля идёт) → руины кафе (тупик) →
+//     ярмарка обещаний (вышел — торговля идёт) → улица (тупик) →
 //     двери (выход, который был рядом) → зал Лектория (полки вместо касс) →
 //     снова поле (ушёл, зритель остался с выбором).
 //     Каждая сцена — отдельный `scene`: сет задаётся сценой, и это
 //     единственный способ сменить его посреди ролика.
 //
-//  3. ФИНАЛ — КАССЕТНИК. Персонаж ставит магнитофон и жмёт клавишу; ролик
-//     уходит на песне. Музыку подмешивает сборщик звука (SFX-дорожка VO),
-//     здесь — только жест и предмет.
+//  4. ФИНАЛ — КАССЕТНИК. Персонаж жмёт клавишу; ролик уходит на песне.
+//     Музыку подмешивает сборщик звука, здесь — только жест и предмет.
 //
 //  ФИГУРА СТОИТ НА ЗЕМЛЕ: у каждой локации есть `*.surfaces.json`, и все
 //  `place` идут через `on floor` — заданная точка это СТУПНИ. Одной посадки
 //  мало: пока под ногами ничего нет, фигура всё равно читается наклеенной на
 //  фон. ТЕНЬ и есть то, что кладёт её на пол — `ground-shadow` даёт пятно
 //  контакта под ступнями, `cast-shadow` бросает силуэт по земле в сторону от
-//  света. На ходу тень едет вместе с фигурой, и шаг перестаёт быть
-//  скольжением.
+//  света.
+//  ФИГУРА НЕ ПРИСЕДАЕТ: любое сгибание коленей читается осадкой. Проверяется
+//  замером — tools/posture.py роняет прогон на позе, которая просаживает рост
+//  больше чем на 8% (так вылетела `gopnik`: 0.84 эталона).
 //  БЕЗ СВЕРХКРУПНЫХ ПЛАНОВ: растр сета на ECU-зуме взрывается (PR #15).
 // =============================================================================
 
@@ -51,7 +58,7 @@ import character freeman from "../assets/characters/freeman_rig"
 import set pole from "../assets/sets/field-empty.svg"
 import set tyurma from "../assets/sets/prison-infocygane.svg"
 import set yarmarka from "../assets/sets/bazaar-obeschanij.svg"
-import set ruiny from "../assets/sets/biznes-street.svg"
+import set ulica from "../assets/sets/biznes-street.svg"
 import set dveri from "../assets/sets/doors-empty.svg"
 import set zal from "../assets/sets/lektorij-zal.svg"
 import set titry from "../assets/sets/lektorij-final.svg"
@@ -80,33 +87,27 @@ config {
 }
 
 // ===================== СЦЕНА 1: ПОЛЕ — ЗАДАЧА В ВАКУУМЕ ======================
-scene "pole" (duration: 10s, set: pole) {
-    transition static 0.35s
+scene "pole" (duration: 5.5s, set: pole) {
+    transition static 0.2s
 
-    place freeman at (0.30, 0.88) facing front on floor
+    place freeman at (0.32, 0.88) facing front on floor
     freeman scales 0.8
     camera wide
 
-    // ── t=0..1.4 БЕЗ СЛОВ: два шага. Мысль началась до нас ────────────────
+    // ── t=0..0.6 БЕЗ СЛОВ: один шаг. Мысль началась до нас ────────────────
     freeman pose "bok_pravo_govorit"
-    freeman moves-to (0.40, 0.88) over 1.4s
+    freeman moves-to (0.40, 0.88) over 0.6s
     freeman overlays "shag_bok_levoj"
-    wait 0.45s
-    freeman overlays "shag_bok_pravoj"
-    wait 0.45s
+    wait 0.6s
 
     // ── ХУК (VO-1): ГОВОРИТ НА ХОДУ ───────────────────────────────────────
     //  «Инфоцыган решили извести. Как вид.» Он не останавливается, чтобы
     //  сообщить это: мысль идёт вместе с ним, и зритель входит в середину.
-    //  Корпус в профиль — шаг читается шагом; маска повёрнута к нам — речь
-    //  читается речью. Шаг идёт СЛОЕМ, поэтому липсинк держит рот сам.
     //lip 1
     together {
-        freeman speaks for 3.0s
+        freeman speaks for 2.2s
         do {
-            freeman moves-to (0.56, 0.88) over 2.6s
-            freeman overlays "shag_bok_levoj"
-            wait 0.5s
+            freeman moves-to (0.56, 0.88) over 2.0s
             freeman overlays "shag_bok_pravoj"
             wait 0.5s
             camera medium freeman
@@ -120,107 +121,99 @@ scene "pole" (duration: 10s, set: pole) {
     //  ОСТАНОВКА — ПОЛНОЙ ПОЗОЙ. Слой шага иначе остаётся висеть, и фигура
     //  стоит с разведёнными ногами: «доигрывает полушаг».
     freeman pose "calm"
-    // вспышка-морда на стыке реплик: ролик не должен ехать ровно
-    freeman overlays "flash_dead"
+    freeman overlays "flash_dead"          // вспышка-морда на стыке: ролик не едет ровно
     wait 0.08s
     // ── ХУК-добивка (VO-2): встал, развернулся к нам — и сказал ───────────
-    freeman pose "calm"
     freeman overlays "smug"
     //lip 2
     together {
-        freeman speaks for 2.4s
+        freeman speaks for 1.9s
         do {
-            wait 0.8s
+            wait 0.6s
             freeman overlays "hips"        // руки в боки: «прямо скажем»
-            wait 0.8s
+            wait 0.6s
             freeman overlays "no"          // «амбициозная», развёл руками
         }
     }
     camera wide
-    wait 0.4s
+    wait 0.2s
 }
 
 // ============ СЦЕНА 2: КАМЕРА — САЖАЛИ, НЕ ПОМОГАЛО ==========================
-scene "tyurma" (duration: 6s, set: tyurma) {
-    transition static 0.3s
+scene "tyurma" (duration: 4.5s, set: tyurma) {
+    transition static 0.2s
 
-    // Фамилии на стене видны РАНЬШЕ слов: сначала общий план камеры, потом
-    // персонаж идёт вдоль стены. Улика предъявлена, а не названа.
-    place freeman at (0.30, 0.92) facing front on floor
+    place freeman at (0.32, 0.92) facing front on floor
     freeman scales 0.62
     camera wide
     freeman pose "bok_pravo_govorit"
-    wait 0.4s
+    wait 0.25s
 
     // ── ПУЛЕМЁТ 1 (VO-3): «Их сажали. Штрафовали. Запрещали.» ─────────────
     //  ГОВОРИТ НА ХОДУ, ПРОХОДЯ ВДОЛЬ СТЕНЫ. Улика — три фамилии, нацарапанные
     //  на бетоне, — проезжает у него за спиной ровно в тот момент, когда он
     //  перечисляет, что с ними делали. Так она предъявлена походя, а не
     //  показана крупно: зритель находит её сам.
-    //  Ровный план на перечислении усыпляет — камера меняет крупность прямо
-    //  посреди реплики, шаг идёт слоем и липсинку не мешает.
     //lip 3
     together {
-        freeman speaks for 2.2s
+        freeman speaks for 1.9s
         do {
-            freeman moves-to (0.56, 0.92) over 2.0s
+            freeman moves-to (0.56, 0.92) over 1.7s
             freeman overlays "shag_bok_levoj"
-            wait 0.55s
+            wait 0.5s
             camera medium freeman
             freeman overlays "shag_bok_pravoj"
-            wait 0.55s
+            wait 0.5s
             camera wide
             freeman overlays "shag_bok_levoj"
-            wait 0.55s
+            wait 0.5s
             freeman overlays "shag_bok_pravoj"
         }
     }
     freeman pose "calm"                    // встал, повернулся к нам
-    camera shake 0.25s intensity 2
+    camera shake 0.2s intensity 2
     // ── ПУЛЕМЁТ 2 (VO-4): «Не помогало. Всплывали снова.» ─────────────────
     freeman overlays "stern"
     //lip 4
     together {
-        freeman speaks for 2.2s
+        freeman speaks for 1.7s
         do {
             camera medium freeman
-            wait 0.7s
+            wait 0.55s
             freeman overlays "hunch"       // ссутулился: «не помогало»
-            wait 0.7s
+            wait 0.55s
             freeman overlays "shrug"       // и развёл руками: «всплывали снова»
         }
     }
-    wait 0.5s
+    wait 0.25s
 }
 
 // ================ СЦЕНА 3: ЯРМАРКА — ВЫШЕЛ, А ТОРГОВЛЯ ИДЁТ ==================
-scene "yarmarka" (duration: 7s, set: yarmarka) {
+scene "yarmarka" (duration: 6.5s, set: yarmarka) {
     // Склейка без затемнения: лязг решётки обрывается базарным гулом, и
     // зритель обнаруживает персонажа в той же ярмарке, что была до посадок.
-    transition static 0.25s
+    transition static 0.2s
 
     place freeman at (0.62, 0.90) facing front on floor
     freeman scales 0.78
     camera wide
 
     //  ЗДЕСЬ ОН НЕ ХОДИТ. Смысл сцены — «вышел и попал в ту же ярмарку», и
-    //  он считывается в первом же кадре: те же вывески вокруг. Проход этого
-    //  не добавлял, только тянул время. Персонаж стоит посреди торговли —
-    //  и она работает фоном за ним.
+    //  он считывается в первом же кадре: те же вывески вокруг.
     freeman pose "calm"
     freeman overlays "hero_skeptic"
-    wait 0.5s
+    wait 0.3s
 
     // ── ПУЛЕМЁТ 3 (VO-5): те же вывески ───────────────────────────────────
     //lip 5
     together {
-        freeman speaks for 2.6s
+        freeman speaks for 2.3s
         do {
             camera medium freeman
-            wait 0.85s
+            wait 0.75s
             freeman overlays "otvraschenie"   // «Марафон желаний» — поморщился
             camera wide
-            wait 0.85s
+            wait 0.75s
             freeman overlays "no"             // «Наставник. Закрытый клуб.»
             camera medium freeman
         }
@@ -228,99 +221,87 @@ scene "yarmarka" (duration: 7s, set: yarmarka) {
     camera wide
     freeman overlays "flash_disgust"
     wait 0.08s
-    // ── ПУЛЕМЁТ финал (VO-6): ОСТАНОВИЛСЯ. «И ты платишь…» ────────────────
-    //  Остановка и есть знак препинания: до этого он ходил, теперь встал.
+    // ── ПУЛЕМЁТ финал (VO-6): В УПОР. «И ты платишь…» ─────────────────────
     freeman pose "v_upor"
     freeman overlays "stern"
     //lip 6
     together {
-        freeman speaks for 2.6s
+        freeman speaks for 3.3s
         do {
             camera medium freeman
-            wait 0.9s
-            freeman overlays "hips"           // «Три платежа» — счёт на пальцах не нужен, нужен упор
-            wait 0.9s
+            wait 1.1s
+            freeman overlays "hips"           // «Три платежа»
+            wait 1.1s
             freeman overlays "point"          // «и ты платишь» — в зрителя
         }
     }
     freeman overlays "flash_disgust"
     wait 0.08s
     freeman overlays "stern"
-    wait 1.0s
+    wait 0.3s                                 // пауза-удар после «жвачки»
 }
 
-// ==================== СЦЕНА 4: УЛИЦА — ТУПИК ================================
-//  ЛОКАЦИЯ СМЕНЕНА С РУИН НА УЛИЦУ. Замер сетов: cafe-ruins после
-//  монохромного прохода с контрастом 2.2 даёт среднюю яркость 1 из 255 —
-//  кадр чёрный целиком, и фигура висит в «космосе». Это не кадрирование, а
-//  сама локация: она рисовалась под мягкий контраст. Улица (210 из 255,
-//  90% светлого) держит тот же смысл — город, где всё продаётся, и тупик
-//  посреди него, — и при этом читается.
-scene "ruiny" (duration: 6s, set: ruiny) {
-    transition static 0.3s
+// ==================== СЦЕНА 4: УЛИЦА — ТУПИК И ПОВОРОТ ======================
+//  ЛОКАЦИЯ — УЛИЦА, А НЕ РУИНЫ. Замер сетов: cafe-ruins после монохромного
+//  прохода с контрастом 2.2 даёт среднюю яркость 1 из 255 — кадр чёрный
+//  целиком, и фигура висит в «космосе». Улица (210 из 255) держит тот же
+//  смысл — город, где всё продаётся, — и при этом читается.
+scene "ulica" (duration: 5s, set: ulica) {
+    transition static 0.2s
 
     place freeman at (0.42, 0.88) facing front on floor
     freeman scales 0.75
     camera wide
 
-    //  ТУПИК ИГРАЕТСЯ НЕПОДВИЖНОСТЬЮ. Хождение кругами тут спорило с самим
-    //  словом: «спрос никуда не денется» — это про то, что ничего не
-    //  меняется, и лучше всего это читается со стоящей фигуры.
-    // ── ТУПИК (VO-7): думает вслух ───────────────────────────────────────
-    //  ОБЩИЙ ПЛАН, А НЕ СРЕДНИЙ. У руин и дверей верх кадра — тёмное небо, и
-    //  на среднем плане камера уходит выше линии пола: в кадре остаётся
-    //  чернота с белой маской, «космос». Локация при этом пропадает вместе с
-    //  доводом, ради которого её и взяли. На общем видно и пол, и стены.
+    //  ТУПИК ИГРАЕТСЯ НЕПОДВИЖНОСТЬЮ. Здесь ролик поворачивается к зрителю:
+    //  «платят за право не думать» — и ходьба тут только помешала бы.
+    // ── ТУПИК (VO-7): думает вслух, к концу — в упор ──────────────────────
+    //  ОБЩИЙ ПЛАН, А НЕ СРЕДНИЙ: на среднем камера уходит выше линии пола, и
+    //  в кадре остаётся чернота с белой маской, «космос».
     freeman pose "think"
     //lip 7
     together {
-        freeman speaks for 4.0s
+        freeman speaks for 4.6s
         do {
-            wait 1.4s
-            freeman overlays "myslitel"    // «спрос никуда не денется»
-            wait 1.4s
-            freeman overlays "za_golovu"   // «продают надежду не думать самому»
+            wait 1.5s
+            freeman overlays "myslitel"    // «продавца кормит не жадность»
+            camera medium freeman
+            wait 1.5s
+            freeman overlays "point"       // «платят за право не думать» — в зрителя
+            camera wide
         }
     }
-    // и пошёл обратно — мысль повернула вместе с ним. Молча: тупик держится
-    // тишиной, а не словами.
-    freeman pose "bok_levo"
-    freeman moves-to (0.44, 0.88) over 1.0s
-    freeman overlays "shag_bok_levoj"
-    wait 0.5s
-    freeman overlays "shag_bok_pravoj"
-    wait 0.5s
-    // тупик повис: шаг. Ещё шаг. И — нашёл. Останавливает полная поза.
     freeman pose "calm"
-    wait 1.2s
+    wait 0.4s
 }
 
 // ============ СЦЕНА 5: ДВЕРИ — РАЗВОРОТ, ОТВЕТ БЫЛ РЯДОМ =====================
-scene "dveri" (duration: 7s, set: dveri) {
-    transition static 0.3s
+scene "dveri" (duration: 5s, set: dveri) {
+    transition static 0.2s
 
     place freeman at (0.5, 0.88) facing front on floor
     freeman scales 0.8
     let slovo = text("БЕСПЛАТНО", 150) at (0.5, -2.0) layer 6
     slovo scales 2.4
     camera wide
-    freeman pose "calm"
-    wait 0.7s
+    freeman pose "v_upor"
+    //  Добор перед разворотом срезан до 0.1с не для экономии, а по гейту
+    //  сценария: перелом обязан начаться в окне 14–28с (§5.0). На 0.3с он
+    //  уезжал на 28.2 — приём есть, а работать по правилу перестаёт.
+    wait 0.1s
 
-    // ── РАЗВОРОТ (VO-8): ОСТАНОВИЛСЯ и повернулся к зрителю ───────────────
+    // ── РАЗВОРОТ (VO-8): повернулся к зрителю ────────────────────────────
     //  Главный кадр ролика играется АНФАС и на ОБЩЕМ плане: зритель должен
     //  видеть и фигуру целиком, и светлый проём за ней — «выход, который был
-    //  рядом». Средний план здесь давал чёрный кадр (см. выше про небо) и
-    //  съедал сам довод.
-    freeman pose "v_upor"
+    //  рядом».
     //lip 8
     together {
-        freeman speaks for 4.5s
+        freeman speaks for 3.4s
         do {
-            wait 1.5s
-            freeman overlays "lunge"       // «забрать у них товар» — подался вперёд
-            wait 1.5s
-            freeman overlays "raskryl"     // «отдать то же самое» — раскрылся
+            wait 1.1s
+            freeman overlays "lunge"       // «забрать товар» — подался вперёд
+            wait 1.1s
+            freeman overlays "raskryl"     // «отдать всё то же самое» — раскрылся
         }
     }
     // ── СЛОВО-УДАР «БЕСПЛАТНО» + негатив-панч ─────────────────────────────
@@ -329,96 +310,79 @@ scene "dveri" (duration: 7s, set: dveri) {
     //  кромку дверного проёма, и слово читалось сквозь косяк. 0.20 — над
     //  притолокой, на чистом фоне.
     slovo moves-to (0.5, 0.20) over 0.01s
-    slovo scales 1.0 over 0.18s ease-in
-    transition invert 0.16s
-    camera shake 0.3s intensity 3
-    wait 0.9s
-    slovo moves-to (0.5, -2.0) over 0.22s ease-in
-    wait 0.4s
+    slovo scales 1.0 over 0.16s ease-in
+    transition invert 0.14s
+    camera shake 0.25s intensity 3
+    wait 0.55s
+    slovo moves-to (0.5, -2.0) over 0.2s ease-in
+    wait 0.1s
 }
 
 // ============= СЦЕНА 6: ЗАЛ ЛЕКТОРИЯ — ВЗЛЁТ И ПРЕЗЕНТАЦИЯ ==================
-scene "zal" (duration: 24s, set: zal) {
-    transition static 0.4s
+scene "zal" (duration: 9.5s, set: zal) {
+    transition static 0.2s
 
     place freeman at (0.34, 0.93) facing front on floor
     freeman scales 0.72
     camera wide
 
     // ── вошёл в зал и ГОВОРИТ НА ХОДУ, проходя вдоль по́лок ────────────────
-    //  Здесь проход работает буквально: он идёт мимо открытых полок и в этот
-    //  же момент говорит, что знание не убывает от раздачи. Довод и картинка
-    //  совпадают, поэтому останавливаться незачем.
+    //  Довод и картинка совпадают: он идёт мимо открытых полок и в этот же
+    //  момент говорит, что знание не убывает от раздачи.
     freeman pose "bok_pravo_govorit"
-    wait 0.4s
+    wait 0.25s
     // ── ВЗЛЁТ (VO-9): отдаёт мысль на ходу ───────────────────────────────
     //lip 9
     together {
-        freeman speaks for 5.5s
+        freeman speaks for 5.0s
         do {
-            freeman moves-to (0.58, 0.93) over 4.4s
+            freeman moves-to (0.58, 0.93) over 4.0s
             freeman overlays "shag_bok_levoj"
-            wait 0.55s
+            wait 0.5s
             freeman overlays "shag_bok_pravoj"
-            wait 0.55s
+            wait 0.5s
             camera medium freeman
             freeman overlays "shag_bok_levoj"
-            wait 0.55s
+            wait 0.5s
             freeman overlays "shag_bok_pravoj"
-            wait 0.55s
-            freeman overlays "shag_bok_levoj"
-            wait 0.55s
+            wait 0.5s
             camera wide
-            freeman overlays "shag_bok_pravoj"
-            wait 0.55s
             freeman overlays "shag_bok_levoj"
-            wait 0.55s
+            wait 0.5s
+            freeman overlays "shag_bok_pravoj"
+            wait 0.5s
+            freeman overlays "shag_bok_levoj"
+            wait 0.5s
             freeman overlays "shag_bok_pravoj"
         }
     }
     // остановка полной позой: слой шага снят, ноги приставлены
     freeman pose "raskryl"                 // повернулся к нам, раскрыл руки
     camera wide
-    wait 0.4s
+    wait 0.25s
 
-    //  Второй проход убран: зал уже показан, а перечисление курсов сильнее
-    //  звучит с места — зритель слушает, а не следит за фигурой.
-    // ── ПРЕЗЕНТАЦИЯ (VO-10): называет по делу, стоя ──────────────────────
+    // ── ПРЕЗЕНТАЦИЯ (VO-10): называет площадку, а не курс ────────────────
+    //  Отдельной рекламы курса здесь больше нет: достаточно назвать Лекторий
+    //  и сказать, что всё бесплатно, — конкретное направление зритель
+    //  выберет сам.
     //lip 10
     together {
-        freeman speaks for 6.5s
+        freeman speaks for 3.4s
         do {
             camera medium freeman
-            wait 2.1s
+            wait 1.1s
             freeman overlays "wave"        // «Лекторий. Университет Мейстера.»
-            wait 2.1s
-            freeman overlays "open"        // «Лекции — слушай или читай.»
-            wait 1.4s
-            freeman overlays "confident"   // «Ноль рублей. Без регистрации.»
+            wait 1.1s
+            freeman overlays "confident"   // «Всё бесплатно. Совсем.»
         }
     }
     camera wide
-    wait 0.6s
-
-    // ── ПОЛЬЗА СЕЙЧАС (VO-11): ОСТАНОВИЛСЯ у кафедры, ближе к камере ──────
-    freeman pose "calm"
-    //lip 11
-    together {
-        freeman speaks for 5.5s
-        do {
-            camera medium freeman
-            wait 1.8s
-            freeman overlays "point"       // «начни с „Как думать“»
-            wait 1.8s
-            freeman overlays "myslitel"    // «думать вслух и своими словами»
-        }
-    }
-    wait 0.8s
+    wait 0.25s
 }
 
 // ============== СЦЕНА 7: ПОЛЕ — ЖАЛО И КАССЕТНИК =============================
-scene "final" (duration: 20s, set: pole) {
-    transition static 0.35s
+scene "final" (duration: 9s, set: pole) {
+    transition static 0.2s
 
     place freeman at (0.5, 0.88) facing front on floor
     freeman scales 0.8
@@ -427,85 +391,78 @@ scene "final" (duration: 20s, set: pole) {
     deck hides
     camera wide
 
-    // ── ЖАЛО (VO-12): подколка в хвосте ───────────────────────────────────
+    // ── ЖАЛО (VO-11): подколка в хвосте ───────────────────────────────────
     freeman pose "v_upor"
     freeman overlays "smug"
-    camera zoom-to freeman over 0.5s ease-in     // наезд-удар перед подколкой
-    //lip 12
+    camera zoom-to freeman over 0.4s ease-in     // наезд-удар перед подколкой
+    //lip 11
     together {
-        freeman speaks for 5.5s
+        freeman speaks for 3.8s
         do {
             camera medium freeman
-            wait 1.8s
-            freeman overlays "hips"        // «или отдай сорок тысяч»
-            wait 1.8s
-            freeman overlays "gopnik"      // вразвалку: «тебе ведь важна бумажка?»
+            wait 1.25s
+            freeman overlays "hips"        // «или заплати сорок тысяч»
+            wait 1.25s
+            //  НЕ `gopnik`: гейт осанки меряет рост позы и роняет прогон на
+            //  всём, что просаживает фигуру больше чем на 8%. Вразвалку у
+            //  этого персонажа = присед (0.84 эталона), и в кадре это
+            //  читается «сел на корточки». Пожатие плечами держит рост и
+            //  говорит ровно то же: «ну как знаешь».
+            freeman overlays "shrug"       // «тебе ведь важна бумажка?»
         }
     }
     freeman overlays "hero_wink"
-    wait 0.8s
+    wait 0.25s
 
-    // ── КАССЕТНИК: поставил и нажал клавишу ───────────────────────────────
-    //  Последнее движение ролика. Магнитофон появляется у ног (он `on floor`,
-    //  якорь — низ рисунка, поэтому стоит на земле, а не парит), персонаж
-    //  наклоняется к нему — и уходит уже под музыку.
-    //  НЕ ПРИСЕДАЕТ И НЕ САДИТСЯ. Наклон (`bow`) читался как «сел на
-    //  корточки» — у фигуры с тонкими ногами и длинным балахоном любое
-    //  сгибание выглядит осадкой, а не движением. Магнитофон уже стоит на
-    //  земле, персонаж включает его стоя: тычок носком — жест, а не поза.
+    // ── КАССЕТНИК: нажал клавишу СТОЯ ─────────────────────────────────────
+    //  Магнитофон уже стоит на земле (он `on floor`, якорь — низ рисунка),
+    //  персонаж включает его стоя: тычок — жест, а не поза. НЕ ПРИСЕДАЕТ и
+    //  не садится (см. шапку про гейт осанки).
     camera wide
     deck shows
     freeman pose "point"                   // потянулся к клавише
-    wait 0.9s
-    camera shake 0.2s intensity 1          // щелчок клавиши
+    wait 0.5s
+    camera shake 0.18s intensity 1         // щелчок клавиши
     freeman pose "calm"
-    wait 1.3s
+    wait 0.35s
 
-    // ── УХОДИТ ПОД ПЕСНЮ: 12 секунд трека начинаются здесь ────────────────
+    // ── УХОДИТ ПОД ПЕСНЮ ──────────────────────────────────────────────────
     //  Уходит В ПРОФИЛЬ, влево, за кадр: спина к зрителю читалась бы обидой,
-    //  профиль — просто «мне туда».
-    //  Уходит МОЛЧА: слово кончилось, дальше говорит песня. Шаг идёт слоем —
-    //  тем же, что и в остальных проходах, чтобы походка была одна на весь
-    //  ролик.
+    //  профиль — просто «мне туда». Сумма ожиданий сведена с длиной проезда:
+    //  при расхождении фигура доезжает стоя, и это видно.
     freeman pose "bok_levo"
-    freeman moves-to (0.04, 0.88) over 6.0s
+    freeman moves-to (0.06, 0.88) over 2.0s
     freeman overlays "shag_bok_levoj"
-    wait 1.2s
+    wait 0.5s
     freeman overlays "shag_bok_pravoj"
-    wait 1.2s
+    wait 0.5s
     freeman overlays "shag_bok_levoj"
-    wait 1.2s
+    wait 0.5s
     freeman overlays "shag_bok_pravoj"
-    wait 1.2s
-    freeman overlays "shag_bok_levoj"
-    //  1.2s, а не 1.0: сумма ожиданий обязана сойтись с длиной проезда
-    //  (6.0s). При 5.8 фигура вставала за 0.2 секунды до конца движения и эти
-    //  два кадра ЕХАЛА СТОЯ — то самое «лишнее движение после хождения».
-    wait 1.2s
+    wait 0.5s
     //  Проход ЗАКАНЧИВАЕТСЯ СТОЙКОЙ, а не шаговым слоем: слои держатся до
-    //  полной позы, и последний кадр застывал на разведённых ногах — это
-    //  читалось как «раскидывает ногами». Полная поза приставляет ногу.
+    //  полной позы, и последний кадр застывал на разведённых ногах.
     freeman pose "bok_levo"
-    wait 1.2s
+    wait 0.3s
 }
 
 // ========================== СЦЕНА 8: ТИТРЫ ==================================
-scene "titry" (duration: 6s, set: titry) {
-    transition static 0.45s
+scene "titry" (duration: 2.8s, set: titry) {
+    transition static 0.2s
 
     place freeman at (0.5, 3.0) facing front
     let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
     stamp hides
-    wait 1.2s
+    wait 0.35s
 
     stamp moves-to (0.5, 0.80) over 0.01s
     stamp shows
     stamp scales 2.6
     stamp rotates -7
-    stamp scales 0.94 over 0.22s ease-in
+    stamp scales 0.94 over 0.2s ease-in
     stamp scales 1.0 over 0.1s ease-out
     stamp rotates -4 over 0.12s
 
-    wait 2.6s
-    transition fade-black 0.8s
+    wait 0.9s
+    transition fade-black 0.4s
 }

@@ -896,6 +896,46 @@ def lint_dinamika(prod, rig_dir=None):
     return [], soft
 
 
+def lint_hodba(prods):
+    """Приёмщик ХОДЬБЫ: проход обязан закрываться полной позой.
+
+    Слои накапливаются и живут до следующей ПОЛНОЙ позы, поэтому брошенный
+    слой шага остаётся висеть на фигуре: она стоит с разведёнными ногами и
+    «доигрывает полушаг». Разбор — в шапке tools/walk.py.
+    """
+    sys.path.insert(0, str(TOOLS))
+    import walk
+    files = [str(ROOT / p["anim"]) for p in prods if (ROOT / p["anim"]).exists()]
+    return [f"{Path(p).name}:{ln} — {msg}" for p, ln, msg in walk.check_anim(files)], []
+
+
+def lint_osanka(prods):
+    """Приёмщик ОСАНКИ: персонаж не приседает.
+
+    SOFT, и намеренно: гейт РЕНДЕРИТ каждую сыгранную позу на стенде, а это
+    десятки прогонов движка. На раннере это минуты, и ронять из-за них весь
+    завод дороже, чем один некрасивый кадр. Ловить всё равно надо — замечание
+    «на корточки не садится» приходило трижды. Разбор — в шапке
+    tools/posture.py.
+    """
+    sys.path.insert(0, str(TOOLS))
+    import posture
+    out = []
+    for prod in prods:
+        anim = ROOT / prod["anim"]
+        if not anim.exists():
+            continue
+        try:
+            _, bad = posture.check(str(anim))
+        except Exception as e:  # noqa: BLE001 — стенд может не собраться, это не повод падать
+            out.append(f"{anim.name}: осанка не измерена ({e})")
+            continue
+        for pose, r in bad:
+            out.append(f"{anim.name}: поза «{pose}» роняет рост до {r:.2f} "
+                       f"эталона — фигура приседает")
+    return [], out
+
+
 def lint_rech(prods):
     """Приёмщик РЕЧИ И ЛИЦА: рот обязан принадлежать озвучке.
 
@@ -1217,6 +1257,12 @@ def main(argv):
     rch, rcs = lint_rech(prods)           # приёмщик речи и лица (липсинк)
     all_hard += rch
     all_soft += rcs
+    hh, hs = lint_hodba(prods)            # приёмщик ходьбы (слой шага не брошен)
+    all_hard += hh
+    all_soft += hs
+    oh, os_ = lint_osanka(prods)          # приёмщик осанки (не приседает)
+    all_hard += oh
+    all_soft += os_
     for e in all_hard:
         log(f"  [LINT-HARD] {e}")
     for e in all_soft:

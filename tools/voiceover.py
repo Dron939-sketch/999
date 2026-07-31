@@ -24,6 +24,7 @@ import json
 import os
 import re
 import shutil
+from pathlib import Path
 import subprocess
 import sys
 import tempfile
@@ -225,14 +226,41 @@ def _mp3_duration(path):
         return 0.0
 
 
-def direct_line(mp3_bytes, remark):
+BASE_TEMPO = re.compile(r"^\s*(?:\*\*)?ТЕМП(?:\*\*)?\s*:?\s*\*?\*?\s*([\d.]+)",
+                        re.I | re.M)
+
+
+def script_tempo(md_path):
+    """Базовый темп ролика из шапки VO: строка «**ТЕМП:** 1.12».
+
+    ПОДАЧА — СВОЙСТВО СЦЕНАРИЯ, А НЕ НАСТРОЙКА СБОРЩИКА. Ремарки задают темп
+    ОТДЕЛЬНОЙ реплики относительно соседних, и общий разгон ими не выразить:
+    пришлось бы дописывать «быстрее» в каждую строку, а через ролик забыть в
+    одной. Одно число в шапке разгоняет весь монолог и живёт рядом с текстом,
+    к которому относится, — там же, где сквозная мысль и конфликт.
+    """
+    try:
+        m = BASE_TEMPO.search(Path(md_path).read_text(encoding="utf-8"))
+    except OSError:
+        return 1.0
+    return float(m.group(1)) if m else 1.0
+
+
+def direct_line(mp3_bytes, remark, base=1.0):
     """Режиссура реплики по ремарке из VO-таблицы: темп/громкость/шёпот.
 
     Обрабатываем готовый mp3 ffmpeg'ом — API не трогаем. Ключевые слова:
     шёпот/тихо → тише и мягче; медленно/с расстановкой → темп вниз;
     жёстко/в упор → чуть громче и плотнее; финал → медленно и весомо.
+
+    `base` — общий темп ролика из шапки сценария. Ремарка правит подачу
+    ОТНОСИТЕЛЬНО него: «медленно» на разогнанном ролике всё равно быстрее
+    обычного, и это верно — медленно тут значит «медленнее соседних», а не
+    «медленно вообще».
     """
-    if not remark or not shutil.which("ffmpeg"):
+    if not shutil.which("ffmpeg"):
+        return mp3_bytes
+    if not remark and abs(base - 1.0) < 0.005:
         return mp3_bytes
     af = []
     tempo = 1.0          # копим ОДИН множитель темпа (см. ниже про кламп)
@@ -249,10 +277,14 @@ def direct_line(mp3_bytes, remark):
     if any(k in r for k in ("жёстко", "жестко", "в упор", "оскал")):
         af += ["volume=1.18",
                "acompressor=threshold=-18dB:ratio=3:attack=5:release=80"]
-    # --- РУБЛЕНО / МЕХАНИЧЕСКИ (пулемёт): суше и ровнее ---------------------
+    # --- РУБЛЕНО / МЕХАНИЧЕСКИ (пулемёт): суше, ровнее и БЫСТРЕЕ ------------
+    # 1.04 был почти неслышен: перечисление шло тем же темпом, что и
+    # рассуждение, и приём пропадал. Пулемёт обязан отличаться на слух —
+    # 1.12 (потолок вклада ремарки) поверх базового темпа ролика даёт
+    # очередь, после которой пауза бьёт.
     if any(k in r for k in ("рублен", "механич", "пулемёт", "пулемет")):
         af.append("acompressor=threshold=-16dB:ratio=2.5")
-        tempo *= 1.04
+        tempo *= 1.12
     # --- ПРЕЗРЕНИЕ / УХМЫЛКА: медленнее, вальяжно ---------------------------
     if any(k in r for k in ("презрен", "ухмыл", "фамильярн", "дерзк")):
         tempo *= 0.96
@@ -268,7 +300,12 @@ def direct_line(mp3_bytes, remark):
         tempo *= 0.97
     # Кламп: несколько подсказок не должны складываться в кисель. Диапазон
     # ±12% — слышно как смена подачи, но дикция остаётся внятной.
-    tempo = min(1.12, max(0.88, tempo))
+    # Клампится ТОЛЬКО вклад ремарки; базовый темп ролика накладывается сверху,
+    # иначе разогнанный монолог упирался бы в потолок на каждой второй реплике
+    # и подача выравнивалась бы в одну доску.
+    tempo = min(1.12, max(0.88, tempo)) * base
+    # Общий потолок дикции: быстрее +35% синтез начинает глотать согласные.
+    tempo = min(1.35, max(0.75, tempo))
     if abs(tempo - 1.0) > 0.005:
         af.append(f"atempo={tempo:.3f}")
     if not af:
@@ -411,6 +448,9 @@ def main(argv):
     if not use_frederick:
         voice_id, voice_src = resolve_voice_id(api_key, voice_id)
 
+    base_tempo = script_tempo(args.script)
+    if abs(base_tempo - 1.0) > 0.005:
+        print(f"  темп ролика: ×{base_tempo:.2f} (шапка сценария)")
     rows = parse_vo_table(args.script)
     if not rows:
         sys.exit(f"В {args.script} не найдено реплик VO-таблицы.")
@@ -432,7 +472,7 @@ def main(argv):
         spoken = for_synthesis(text)
         audio = (tts_via_frederick(spoken) if use_frederick
                  else tts_fish_audio(spoken, api_key, voice_id, fish_model))
-        audio = direct_line(audio, remark)
+        audio = direct_line(audio, remark, base_tempo)
         replicas.append((start, audio))
         # Сохранить реплику отдельным файлом для липсинка (prep_lipsync).
         if args.parts_dir:
