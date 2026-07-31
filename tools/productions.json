@@ -61,6 +61,13 @@
    "anim": "examples/lektorij/myshlenie-intro.anim",
    "vo": "examples/lektorij/myshlenie-intro-VO.md",
    "images": []
+  },
+  {
+   "id": "kak-dumat-intro",
+   "desc": "Подводка к вводному курсу «Как думать»: попугай повторяет чужое — своих слов нет. Пустое поле (канон), режиссура по HOLLYWOOD, без сверхкрупных планов (растр сета).",
+   "anim": "examples/lektorij/kak-dumat-intro.anim",
+   "vo": "examples/lektorij/kak-dumat-intro-VO.md",
+   "images": []
   }
  ]
 }
