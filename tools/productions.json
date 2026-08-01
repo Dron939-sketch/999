@@ -1,97 +1,103 @@
 {
- "_comment": "Манифест завода Лектория. Каждый продакшен → готовый ролик в videos/. Поля: id (имя файлов), anim (сценарий движка), vo (VO-сценарий для Fish Audio, опц.), images (картинки для генерации Nano Banana, опц.), planka (эталон: гнать метрики Рубежа 2 через tools/qc_metrics.py, голдены в tests/golden/<id>). studio.py прогоняет: картинки → рендер → озвучка → сведение → (для planka) метрики.",
- "productions": [
-  {
-   "id": "etalon-15s",
-   "desc": "Эталон планки Фримена: контрольный 15-сек кусок для машинных метрик Рубежа 2 (длина плана/скорость/golden-frame/громкость). Не витрина — измеритель.",
-   "anim": "examples/lektorij/etalon-15s.anim",
-   "planka": true
-  },
-  {
-   "id": "pereproshivka-intro",
-   "desc": "Подводка к курсу «Перепрошивка»: камера-хук, книга, оживающая картинка",
-   "anim": "examples/lektorij/pereproshivka-intro.anim",
-   "vo": "examples/lektorij/pereproshivka-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "biznes-myshlenie-intro",
-   "desc": "Подводка к курсу «Бизнес-мышление»: толпа обходит красную «проблему», Фримен поднимает — это куш. Оптика. Свет/тень + ракурсы.",
-   "anim": "examples/lektorij/biznes-myshlenie-intro.anim",
-   "vo": "examples/lektorij/biznes-myshlenie-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "freeman-monologue",
-   "desc": "Мистер Фримен: монолог в камеру (витрина стиля)",
-   "anim": "examples/freeman-monologue.anim"
-  },
-  {
-   "id": "prison-intro",
-   "desc": "Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото). Три речевых удара, синхрон по //lip.",
-   "anim": "examples/lektorij/prison-intro.anim",
-   "vo": "examples/lektorij/prison-intro-VO.md"
-  },
-  {
-   "id": "fredi-expressions",
-   "desc": "Фреди: библиотека мимики",
-   "anim": "examples/lektorij/fredi-expressions-demo.anim"
-  },
-  {
-   "id": "lekciya-2-frejd",
-   "desc": "Пилот лекции (Фрейд, курс «Теории личности»)",
-   "anim": "examples/lektorij/lekciya-2-frejd-psihodinamika.anim"
-  },
-  {
-   "id": "snova-zhivoj-intro",
-   "desc": "Подводка к курсу «Снова живой»: выключенный человек — дышит, но не живёт. Пустое поле (канон), персонаж по SIMILARITY, режиссура по HOLLYWOOD.",
-   "anim": "examples/lektorij/snova-zhivoj-intro.anim",
-   "vo": "examples/lektorij/snova-zhivoj-intro-VO.md"
-  },
-  {
-   "id": "teorii-lichnosti-intro",
-   "desc": "Подводка к курсу «Теории личности»: чужие очки садятся на маску в первые 3 секунды и слетают на взлёте. 13 лекций — 20 линз.",
-   "anim": "examples/lektorij/teorii-lichnosti-intro.anim",
-   "vo": "examples/lektorij/teorii-lichnosti-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "myshlenie-intro",
-   "desc": "Подводка к курсу «Мышление и когнитивные искажения»: за тебя решили за полсекунды. 10 лекций, Канеман и Тверски.",
-   "anim": "examples/lektorij/myshlenie-intro.anim",
-   "vo": "examples/lektorij/myshlenie-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "kak-dumat-intro",
-   "desc": "Подводка к вводному курсу «Как думать»: попугай повторяет чужое — своих слов нет.",
-   "anim": "examples/lektorij/kak-dumat-intro.anim",
-   "vo": "examples/lektorij/kak-dumat-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "insight-proverka",
-   "desc": "ИНСАЙТ «Перечитал ≠ выучил»: 30 секунд, один приём — проверка себя вместо перечитывания. Финал не CTA, а задание зрителю.",
-   "anim": "examples/lektorij/insight-proverka.anim",
-   "vo": "examples/lektorij/insight-proverka-VO.md",
-   "images": []
-  },
-  {
-   "id": "lektorij-manifest",
-   "desc": "ВВОДНАЯ ПРЕЗЕНТАЦИЯ ЛЕКТОРИЯ: инфоцыган решили извести — сажали, не помогало; ответ лежал на поверхности: отдать то же самое бесплатно. Монолог с расхаживанием, пять локаций, финал под песню из кассетника.",
-   "anim": "examples/lektorij/lektorij-manifest.anim",
-   "vo": "examples/lektorij/lektorij-manifest-VO.md",
-   "music": {
-    "file": "Nikos_Band_-_GEORGIAN_DISCO_77079272.mp3",
-    "at": "after-voice",
-    "gap": 1.2,
-    "start": 0.0,
-    "duration": 12.0,
-    "volume": 0.9,
-    "fade_out": 1.5,
-    "_comment": "at=after-voice: сборщик сам берёт длину готовой озвучки и ставит песню через `gap` секунд после её конца — число устаревало при каждой правке хронометража."
-   },
-   "images": []
-  }
- ]
+  "_comment": "Манифест завода Лектория. Каждый продакшен → готовый ролик в videos/. Поля: id (имя файлов), anim (сценарий движка), vo (VO-сценарий для Fish Audio, опц.), images (картинки для генерации Nano Banana, опц.), planka (эталон: гнать метрики Рубежа 2 через tools/qc_metrics.py, голдены в tests/golden/<id>). studio.py прогоняет: картинки → рендер → озвучка → сведение → (для planka) метрики.",
+  "productions": [
+    {
+      "id": "etalon-15s",
+      "desc": "Эталон планки Фримена: контрольный 15-сек кусок для машинных метрик Рубежа 2 (длина плана/скорость/golden-frame/громкость). Не витрина — измеритель.",
+      "anim": "examples/lektorij/etalon-15s.anim",
+      "planka": true
+    },
+    {
+      "id": "pereproshivka-intro",
+      "desc": "Подводка к курсу «Перепрошивка»: камера-хук, книга, оживающая картинка",
+      "anim": "examples/lektorij/pereproshivka-intro.anim",
+      "vo": "examples/lektorij/pereproshivka-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "biznes-myshlenie-intro",
+      "desc": "Подводка к курсу «Бизнес-мышление»: толпа обходит красную «проблему», Фримен поднимает — это куш. Оптика. Свет/тень + ракурсы.",
+      "anim": "examples/lektorij/biznes-myshlenie-intro.anim",
+      "vo": "examples/lektorij/biznes-myshlenie-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "freeman-monologue",
+      "desc": "Мистер Фримен: монолог в камеру (витрина стиля)",
+      "anim": "examples/freeman-monologue.anim"
+    },
+    {
+      "id": "prison-intro",
+      "desc": "Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото). Три речевых удара, синхрон по //lip.",
+      "anim": "examples/lektorij/prison-intro.anim",
+      "vo": "examples/lektorij/prison-intro-VO.md"
+    },
+    {
+      "id": "fredi-expressions",
+      "desc": "Фреди: библиотека мимики",
+      "anim": "examples/lektorij/fredi-expressions-demo.anim"
+    },
+    {
+      "id": "lekciya-2-frejd",
+      "desc": "Пилот лекции (Фрейд, курс «Теории личности»)",
+      "anim": "examples/lektorij/lekciya-2-frejd-psihodinamika.anim"
+    },
+    {
+      "id": "snova-zhivoj-intro",
+      "desc": "Подводка к курсу «Снова живой»: выключенный человек — дышит, но не живёт. Пустое поле (канон), персонаж по SIMILARITY, режиссура по HOLLYWOOD.",
+      "anim": "examples/lektorij/snova-zhivoj-intro.anim",
+      "vo": "examples/lektorij/snova-zhivoj-intro-VO.md"
+    },
+    {
+      "id": "teorii-lichnosti-intro",
+      "desc": "Подводка к курсу «Теории личности»: чужие очки садятся на маску в первые 3 секунды и слетают на взлёте. 13 лекций — 20 линз.",
+      "anim": "examples/lektorij/teorii-lichnosti-intro.anim",
+      "vo": "examples/lektorij/teorii-lichnosti-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "myshlenie-intro",
+      "desc": "Подводка к курсу «Мышление и когнитивные искажения»: за тебя решили за полсекунды. 10 лекций, Канеман и Тверски.",
+      "anim": "examples/lektorij/myshlenie-intro.anim",
+      "vo": "examples/lektorij/myshlenie-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "kak-dumat-intro",
+      "desc": "Подводка к вводному курсу «Как думать»: попугай повторяет чужое — своих слов нет.",
+      "anim": "examples/lektorij/kak-dumat-intro.anim",
+      "vo": "examples/lektorij/kak-dumat-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "insight-proverka",
+      "desc": "ИНСАЙТ «Перечитал ≠ выучил»: 30 секунд, один приём — проверка себя вместо перечитывания. Финал не CTA, а задание зрителю.",
+      "anim": "examples/lektorij/insight-proverka.anim",
+      "vo": "examples/lektorij/insight-proverka-VO.md",
+      "images": []
+    },
+    {
+      "id": "lektorij-manifest",
+      "desc": "ВВОДНАЯ ПРЕЗЕНТАЦИЯ ЛЕКТОРИЯ: инфоцыган решили извести — сажали, не помогало; ответ лежал на поверхности: отдать то же самое бесплатно. Монолог с расхаживанием, пять локаций, финал под песню из кассетника.",
+      "anim": "examples/lektorij/lektorij-manifest.anim",
+      "vo": "examples/lektorij/lektorij-manifest-VO.md",
+      "music": {
+        "file": "Nikos_Band_-_GEORGIAN_DISCO_77079272.mp3",
+        "at": "after-voice",
+        "gap": 1.2,
+        "start": 0.0,
+        "duration": 12.0,
+        "volume": 0.9,
+        "fade_out": 1.5,
+        "_comment": "at=after-voice: сборщик сам берёт длину готовой озвучки и ставит песню через `gap` секунд после её конца — число устаревало при каждой правке хронометража."
+      },
+      "images": []
+    },
+    {
+      "id": "istoriya-religij",
+      "anim": "examples/lektorij/istoriya-religij.anim",
+      "vo": "examples/lektorij/istoriya-religij-VO.md",
+      "_comment": "Интро к курсу «История религий». Музыки нет намеренно: ролик заканчивается тишиной и велосипедом в кадре — песня забрала бы у финала паузу."
+    }
+  ]
 }

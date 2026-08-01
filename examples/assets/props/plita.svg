@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 300" width="220" height="300">
+  <defs>
+    <filter id="ink" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="41" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- ПЛИТА БЕЗ НАДПИСИ. Ни имени, ни креста, ни дат — потому что она про
+       ЗРИТЕЛЯ, а любая надпись сделала бы её про кого-то другого. Слегка
+       завалена: за ней давно никто не ходит.
+       Одна плита в чистом поле сильнее целого кладбища: кладбище про многих,
+       плита про одного. Якорь — низ рисунка, ставится через `on floor`. -->
+  <g filter="url(#ink)">
+    <path d="M46 296 L38 96 C 36 58, 62 34, 104 32 C 148 30, 176 54, 178 92
+             L184 292 Z" fill="#171714" stroke="#0e0e0e" stroke-width="6"/>
+    <!-- скол на кромке: камень старый -->
+    <path d="M38 118 L64 132 L38 146" fill="#c9cbc4"/>
+    <!-- земля у основания -->
+    <path d="M28 296 C 80 284, 150 284, 196 296" stroke="#0e0e0e" stroke-width="7" fill="none"/>
+  </g>
+</svg>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <filter id="ink" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="2" seed="23" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- ЧЕРДАК — ЛОКАЦИЯ-ВЕЩДОК. Здесь лежит всё, что оставили ДО нас, и
+       главное в ней — что ящики ЗАКРЫТЫ. Ни один не вскрыт: наследство
+       получено и не рассмотрено. На этом и стоит реплика-перечисление —
+       образование, знания, секреты, которых вам не сказали.
+
+       КОРОБКИ ИДУТ ВДОЛЬ ЛЕВОЙ СТЕНЫ, проход по центру свободен: персонаж
+       проходит мимо них на перечислении, и опись предъявляется походя, а не
+       выносится крупным планом. Тот же приём, что с фамилиями на стене
+       тюрьмы в прошлом ролике.
+
+       СКАТЫ КРЫШИ ДИАГОНАЛЯМИ — они и дают чердак с двух линий, без единой
+       детали сверх. Пол светлый: на нём должна читаться тень. -->
+  <rect width="1280" height="720" fill="#bcbeb7"/>
+  <g filter="url(#ink)">
+    <!-- скаты крыши -->
+    <path d="M0 0 L360 300 L920 296 L1280 0 Z" fill="#a9aba4"/>
+    <path d="M0 0 L360 300 M1280 0 L920 296" stroke="#0e0e0e" stroke-width="7" fill="none"/>
+    <!-- балки -->
+    <g stroke="#0e0e0e" stroke-width="6" fill="none" opacity="0.85">
+      <path d="M120 100 L300 250 M1160 96 L980 248 M360 300 L920 296"/>
+    </g>
+
+    <!-- пол на 63% высоты -->
+    <path d="M0 456 L1280 450 L1280 720 L0 720 Z" fill="#dedfd9"/>
+    <path d="M0 456 L1280 450" stroke="#0e0e0e" stroke-width="6" fill="none"/>
+    <g stroke="#9a9c95" stroke-width="2" opacity="0.5">
+      <path d="M-20 510 L1300 500 M-20 576 L1300 566 M-20 648 L1300 638 M-20 712 L1300 704
+               M150 460 L60 720 M430 456 L380 720 M860 456 L910 720 M1140 460 L1230 720"/>
+    </g>
+
+    <!-- СЛУХОВОЕ ОКНО в глубине: единственный свет -->
+    <path d="M596 300 L596 200 L684 200 L684 300 Z" fill="#f2f3ef" stroke="#0e0e0e" stroke-width="7"/>
+    <path d="M640 202 L640 298 M598 250 L682 250" stroke="#0e0e0e" stroke-width="5"/>
+
+    <!-- ЛАМПОЧКА на проводе -->
+    <path d="M760 296 L760 372" stroke="#0e0e0e" stroke-width="5" fill="none"/>
+    <circle cx="760" cy="392" r="22" fill="#f2f3ef" stroke="#0e0e0e" stroke-width="6"/>
+    <path d="M748 372 L772 372" stroke="#0e0e0e" stroke-width="7" stroke-linecap="round"/>
+
+    <!-- КОРОБКИ ВДОЛЬ ЛЕВОЙ СТЕНЫ: штабель, все закрыты, крест-накрест лентой -->
+    <g stroke="#0e0e0e" stroke-width="7" fill="#171714">
+      <path d="M40 456 L40 340 L200 336 L200 452 Z"/>
+      <path d="M56 336 L56 236 L188 232 L188 332 Z"/>
+      <path d="M216 452 L216 356 L370 352 L370 448 Z"/>
+    </g>
+    <g stroke="#f2f3ef" stroke-width="5" fill="none" opacity="0.9">
+      <path d="M40 398 L200 394 M120 340 L120 452"/>
+      <path d="M56 286 L188 282 M122 236 L122 332"/>
+      <path d="M216 404 L370 400 M293 356 L293 448"/>
+    </g>
+
+    <!-- СУНДУК СПРАВА: горбатая крышка, замок -->
+    <path d="M980 452 L980 372 C 1060 340, 1180 340, 1256 372 L1256 448 Z"
+          fill="#171714" stroke="#0e0e0e" stroke-width="7"/>
+    <path d="M980 396 C 1060 366, 1180 366, 1256 396" stroke="#f2f3ef" stroke-width="5" fill="none"/>
+    <rect x="1098" y="392" width="40" height="34" fill="#f2f3ef" stroke="#0e0e0e" stroke-width="5"/>
+
+    <!-- пыль в луче: три точки, больше не нужно -->
+    <g fill="#f2f3ef" opacity="0.55">
+      <circle cx="700" cy="330" r="4"/><circle cx="742" cy="292" r="3"/><circle cx="666" cy="372" r="3"/>
+    </g>
+  </g>
+</svg>
