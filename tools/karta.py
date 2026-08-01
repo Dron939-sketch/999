@@ -130,9 +130,19 @@ def render(rig_dir, pose, y, s):
     off = '    hero overlays "bez_predmetov"\n' if "bez_predmetov" in poses else ""
     src.write_text(STAND.format(rig=rel, pose=pose, y=y, s=s, props_off=off),
                    encoding="utf-8")
+    # ПРИЧИНА ПАДЕНИЯ ДОЛЖНА БЫТЬ ВИДНА. Стенд пишется во временный файл и
+    # удаляется в `finally`, поэтому при обрыве движка от него не остаётся
+    # ничего: гейт валился голым CalledProcessError, и по нему нельзя было
+    # отличить сломанную позу от отсутствующего в PATH ffmpeg. Обжигались
+    # ровно на этом. Достаём stderr движка и кладём его в текст ошибки.
     try:
         subprocess.run([str(ENGINE), "render", str(src), "--png-dir", str(d)],
                        check=True, capture_output=True)
+    except subprocess.CalledProcessError as e:
+        why = (e.stderr or b"").decode("utf-8", "replace").strip().splitlines()
+        head = why[0] if why else "движок не сказал ни слова"
+        raise SystemExit(
+            f"стенд не отрисовался: поза «{pose}», риг {rig_dir}\n  {head}") from None
     finally:
         src.unlink(missing_ok=True)
         (src.with_suffix(".mp4")).unlink(missing_ok=True)

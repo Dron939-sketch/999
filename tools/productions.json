@@ -98,6 +98,12 @@
       "anim": "examples/lektorij/istoriya-religij.anim",
       "vo": "examples/lektorij/istoriya-religij-VO.md",
       "_comment": "Интро к курсу «История религий». Музыки нет намеренно: ролик заканчивается тишиной и велосипедом в кадре — песня забрала бы у финала паузу."
+    },
+    {
+      "id": "privyazannost",
+      "anim": "examples/lektorij/privyazannost.anim",
+      "vo": "examples/lektorij/privyazannost-VO.md",
+      "_comment": "Интро к курсу «Привязанность и отношения». Музыки нет: ролик заканчивается двумя пустыми стульями в тишине — песня забрала бы у финала расстояние между ними."
     }
   ]
 }

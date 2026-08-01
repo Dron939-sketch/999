@@ -1,0 +1,349 @@
+// =============================================================================
+//  «ВЫ НЕ ВЛЮБЛЯЕТЕСЬ» — интро к курсу «Привязанность и отношения».
+//  VO — privyazannost-VO.md, //lip 1..9.
+//
+//  УСТРОЙСТВО РОЛИКА
+//
+//  1. КОЛЬЦО ИЗ ОДНОГО ОБВИНЕНИЯ. Ролик открывается и закрывается той же
+//     мыслью: «химия» — это не выбор хорошего, а узнавание знакомого. В
+//     начале она звучит холодной поправкой, в конце — вопросом, на который
+//     зритель уже знает ответ. Поэтому первая и последняя сцены — ОДНА И ТА
+//     ЖЕ комната с двумя стульями: вернулись туда же, но смотрят иначе.
+//
+//  2. ДВА ПУСТЫХ СТУЛА — ГЛАВНЫЙ ПРЕДМЕТ. Они стоят друг напротив друга, и
+//     пустое место между ними и есть тема ролика. Персонаж встаёт МЕЖДУ
+//     ними: он не занимает ни одну сторону, он показывает расстояние.
+//
+//  3. ЛОКАЦИЯ МЕНЯЕТСЯ ПОД МЫСЛЬ. Два стула (двоих нет) → ночная кухня (где
+//     пары не расстаются, а тухнут) → ПУСТОТА (приговор) → развилка двух троп
+//     (приговор отменяется) → зал Лектория → снова два стула.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · речь НА ХОДУ — поза `bok_*_govorit` (корпус в профиль, маска к
+//      зрителю) плюс шаг СЛОЕМ `shag_bok_*`. Полная поза сбрасывает липсинк,
+//      и рот прыгал бы на каждом шаге (tools/speech_lint.py);
+//    · проход закрывается ПОЛНОЙ ПОЗОЙ, иначе брошенный слой шага висит и
+//      фигура доигрывает полушаг стоя (tools/walk.py --check);
+//    · фигура НЕ ПРИСЕДАЕТ и НЕ САДИТСЯ — тем более здесь, где в кадре два
+//      стула: стоит ему сесть, и ролик про отсутствующих двоих становится
+//      роликом про одного сидящего. Поза, роняющая рост больше чем на 8%,
+//      валит прогон (tools/posture.py);
+//    · все `place` идут через `on floor`, у каждой локации есть
+//      `*.surfaces.json`. Исключение одно — сцена пустоты, объяснено там же;
+//    · тень: `ground-shadow` даёт пятно контакта, `cast-shadow` кладёт силуэт
+//      на пол. Без них фигура читается наклеенной на фон;
+//    · БЕЗ СВЕРХКРУПНЫХ ПЛАНОВ: растр сета на ECU-зуме взрывается (PR #15).
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set stulya from "../assets/sets/dva-stula.svg"
+import set kuhnya from "../assets/sets/kuhnya-noch.svg"
+import set void from "../assets/sets/void-black.svg"
+import set tropy from "../assets/sets/dve-tropy.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+import set titry from "../assets/sets/lektorij-final.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+// ============ СЦЕНА 1: ДВА СТУЛА — ДВОИХ НЕТ ================================
+scene "stulya" (duration: 9s, set: stulya) {
+    transition static 0.2s
+
+    //  ВСТАЁТ МЕЖДУ СТУЛЬЯМИ, а не рядом с одним из них: он не занимает
+    //  сторону, он показывает расстояние.
+    place freeman at (0.5, 0.92) facing front on floor
+    freeman scales 0.7
+    camera wide
+
+    //  Секунда без слов: два пустых стула друг напротив друга.
+    freeman pose "calm"
+    wait 0.4s
+
+    // ── ХУК (VO-1): «Вы не влюбляетесь. Вы узнаёте.» ─────────────────────
+    freeman pose "v_upor"
+    //lip 1
+    together {
+        freeman speaks for 2.6s
+        do {
+            camera medium freeman
+            wait 1.3s
+            freeman overlays "point"       // «вы» — в зрителя
+        }
+    }
+    camera wide
+    freeman overlays "flash_pupils"
+    wait 0.08s
+
+    // ── ХУК-добивка (VO-2): «искру называют химией. Это память.» ─────────
+    //  ВДОХ ПОСЛЕ ОБВИНЕНИЯ. Между «вы узнаёте» и объяснением нужен зазор:
+    //  без него две фразы слипаются в одну, и хук теряет удар — зритель не
+    //  успевает возразить, а возражение здесь и есть работа.
+    freeman pose "calm"
+    freeman overlays "smug"
+    wait 0.5s
+    //lip 2
+    together {
+        freeman speaks for 4.6s
+        do {
+            wait 1.5s
+            freeman overlays "no"          // «на самом деле» — развёл руками
+            camera medium freeman
+            wait 1.5s
+            freeman overlays "hips"        // руки в боки: «это память»
+            camera wide
+        }
+    }
+    //  Пауза: зритель успевает не согласиться — и тут же получает всадников.
+    wait 0.5s
+}
+
+// ============ СЦЕНА 2: НОЧНАЯ КУХНЯ — ЧЕТЫРЕ ВСАДНИКА =======================
+scene "kuhnya" (duration: 13s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.26, 0.94) facing front on floor
+    freeman scales 0.66
+    camera wide
+    freeman pose "bok_pravo_govorit"
+    wait 0.15s
+
+    // ── ПУЛЕМЁТ (VO-3): четыре всадника, НА ХОДУ вдоль стола ─────────────
+    //  Стол с двумя тарелками и двумя кружками проезжает мимо, пока он
+    //  перечисляет, от чего разваливаются пары. Улика предъявляется походя.
+    //lip 3
+    together {
+        freeman speaks for 2.3s
+        do {
+            freeman moves-to (0.56, 0.94) over 2.0s
+            freeman overlays "shag_bok_levoj"
+            wait 0.5s
+            freeman overlays "shag_bok_pravoj"
+            wait 0.5s
+            camera medium freeman
+            freeman overlays "shag_bok_levoj"
+            wait 0.5s
+            freeman overlays "shag_bok_pravoj"
+        }
+    }
+    //  Остановка полной позой: слой шага снят, ноги приставлены.
+    freeman pose "calm"
+    camera wide
+    wait 0.15s
+
+    // ── ПУЛЕМЁТ-добивка (VO-4): цифры Готтмана ──────────────────────────
+    //  Ролик перестаёт быть мнением и становится измерением, поэтому подача
+    //  ровная, как зачитывают протокол, а тело почти не двигается.
+    freeman overlays "stern"
+    //lip 4
+    together {
+        freeman speaks for 6.5s
+        do {
+            camera medium freeman
+            wait 2.2s
+            freeman overlays "hips"
+            wait 2.2s
+            freeman overlays "point"       // «девять раз из десяти»
+        }
+    }
+    camera wide
+    //  ПАУЗА-УДАР: цифры повисли.
+    wait 0.6s
+
+    // ── РАЗВОРОТ (VO-5): «убивают закатанные глаза» ─────────────────────
+    freeman pose "v_upor"
+    //lip 5
+    together {
+        freeman speaks for 6.7s
+        do {
+            wait 2.2s
+            freeman overlays "otvraschenie" // «чаще тухнут» — поморщился
+            camera medium freeman
+            wait 2.2s
+            freeman overlays "v_upor"       // «закатанные глаза» — в упор
+            camera wide
+        }
+    }
+    freeman pose "calm"
+    wait 0.1s
+}
+
+// ================== СЦЕНА 3: ПУСТОТА — ПРИГОВОР =============================
+//  ЧЁРНЫЙ КАДР, БЕЛАЯ МАСКА. Балахон сливается с фоном целиком — остаётся
+//  только лицо. Отговорок больше нет: ни кухни, ни стульев, ни обстоятельств.
+scene "temnota" (duration: 5.5s, set: void) {
+    //  Резкая склейка: между кухней и пустотой должен быть обрыв.
+    transition static 0.12s
+
+    //  ЕДИНСТВЕННЫЙ `place` БЕЗ `on floor`. Пола нет, кадр держит МАСКА:
+    //  посадка по ступням увела бы её в верхнюю четверть кадра (карта фигуры:
+    //  ступни +0.495 от якоря, центр маски +0.004). Точка задаётся по якорю и
+    //  целится в центр, ноги уходят за нижнюю кромку. План ОБЩИЙ: на нём зум
+    //  равен единице и маска встаёт ровно туда, куда посажена.
+    place freeman at (0.5, 0.44) facing front
+    freeman scales 2.2
+    camera wide
+
+    freeman pose "v_upor"
+    wait 0.5s
+    // ── УДАР В ЧЁРНОМ (VO-6) ────────────────────────────────────────────
+    //lip 6
+    together {
+        freeman speaks for 6.7s
+        do {
+            wait 3.2s
+            freeman overlays "point"       // «и зовёте это судьбой»
+        }
+    }
+    freeman overlays "flash_pupils"
+    wait 0.08s
+}
+
+// ============ СЦЕНА 4: ДВЕ ТРОПЫ — ПРИГОВОР ОТМЕНЯЕТСЯ ======================
+scene "tropy" (duration: 8s, set: tropy) {
+    transition static 0.2s
+
+    //  ВСТАЁТ НА РАЗВИЛКЕ: старая колея уходит прямо, свежий след — вправо.
+    //  Оба варианта по бокам от него, решать зрителю. Сцена играется ТОЛЬКО
+    //  общим планом: средний выбрасывает тропы из кадра, и остаётся говорящая
+    //  фигура на пустом фоне — ровно то, ради чего локация и рисовалась.
+    place freeman at (0.46, 0.90) facing front on floor
+    freeman scales 0.7
+    camera wide
+
+    //  ДРАМАТИЧЕСКАЯ ПАУЗА ПЕРЕД ОТМЕНОЙ ПРИГОВОРА: только что прозвучало,
+    //  что человек выбирает знакомую боль. Реплика, начатая сразу после
+    //  склейки, читалась бы продолжением; пауза делает её возражением.
+    freeman pose "think"
+    wait 1.2s
+
+    // ── ВЗЛЁТ (VO-7): «протоптанная не значит единственная» ─────────────
+    freeman pose "calm"
+    //lip 7
+    together {
+        freeman speaks for 5.7s
+        do {
+            wait 2.0s
+            freeman overlays "open"        // ладонь к старой колее
+            wait 2.0s
+            freeman overlays "confident"   // и к свежему следу
+        }
+    }
+    wait 0.2s
+}
+
+// ============ СЦЕНА 5: ЗАЛ ЛЕКТОРИЯ — ПРЕЗЕНТАЦИЯ ===========================
+scene "zal" (duration: 8s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.46, 0.93) facing front on floor
+    freeman scales 0.72
+    camera wide
+    freeman pose "raskryl"
+    wait 0.15s
+
+    // ── ПРЕЗЕНТАЦИЯ (VO-8): называет курс ───────────────────────────────
+    //lip 8
+    together {
+        freeman speaks for 5.8s
+        do {
+            camera medium freeman
+            wait 1.9s
+            freeman overlays "wave"        // «Привязанность и отношения»
+            wait 1.9s
+            freeman overlays "open"        // «бесплатно»
+        }
+    }
+    camera wide
+    wait 0.15s
+}
+
+// ============ СЦЕНА 6: СНОВА ДВА СТУЛА — ЖАЛО ===============================
+scene "final" (duration: 10s, set: stulya) {
+    transition static 0.2s
+
+    place freeman at (0.5, 0.92) facing front on floor
+    freeman scales 0.7
+    camera wide
+    freeman pose "calm"
+    freeman overlays "smug"
+    wait 0.2s
+
+    // ── ЖАЛО (VO-9): «это ведь она вас сюда привела?» ───────────────────
+    //  Кольцо замкнулось: та же комната, те же пустые стулья — и то же
+    //  обвинение, только теперь зритель знает ответ.
+    //lip 9
+    together {
+        freeman speaks for 6.3s
+        do {
+            camera medium freeman
+            wait 2.1s
+            freeman overlays "no"          // «верьте дальше» — развёл руками
+            wait 2.1s
+            freeman overlays "shrug"       // «ну как знаете»
+        }
+    }
+    freeman overlays "hero_wink"
+    wait 0.3s
+
+    // ── УХОДИТ, СТУЛЬЯ ОСТАЮТСЯ ─────────────────────────────────────────
+    //  Уходит В ПРОФИЛЬ, влево, за кадр: спина к зрителю читалась бы обидой,
+    //  профиль — просто «мне туда». Два пустых стула остаются в кадре, и
+    //  последнее, что видит зритель, — расстояние между ними.
+    camera wide
+    freeman pose "bok_levo"
+    freeman moves-to (0.04, 0.92) over 1.8s
+    freeman overlays "shag_bok_levoj"
+    wait 0.45s
+    freeman overlays "shag_bok_pravoj"
+    wait 0.45s
+    freeman overlays "shag_bok_levoj"
+    wait 0.45s
+    freeman overlays "shag_bok_pravoj"
+    wait 0.45s
+    //  Проход заканчивается СТОЙКОЙ: слои держатся до полной позы, и последний
+    //  кадр застывал бы на разведённых ногах.
+    freeman pose "bok_levo"
+    wait 0.3s
+}
+
+// ========================== СЦЕНА 7: ТИТРЫ ==================================
+scene "titry" (duration: 3s, set: titry) {
+    transition static 0.25s
+
+    place freeman at (0.5, 3.0) facing front
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 0.35s
+
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6
+    stamp rotates -7
+    stamp scales 0.94 over 0.2s ease-in
+    stamp scales 1.0 over 0.1s ease-out
+    stamp rotates -4 over 0.12s
+
+    wait 0.9s
+    transition fade-black 0.35s
+}
