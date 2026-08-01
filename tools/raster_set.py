@@ -59,9 +59,27 @@ def strip_frame(im, thr=110, share=0.6):
     return im.crop((left, top, right, bot))
 
 
-def to_169(im, drop=0.55):
-    """Полоса 16:9. `drop` — доля запаса, уходящая наверх (пола нужно больше)."""
+def to_169(im, drop=0.55, fit="width"):
+    """Кадр 16:9 из квадрата. Два разных способа, и выбор между ними — смысловой.
+
+    `fit="width"` — берём горизонтальную полосу во всю ширину. Годится, когда
+    композиция лежит в середине по высоте: комната, поле, склон.
+
+    `fit="height"` — вписываем ВСЮ высоту и режем бока. Нужен, когда картинка
+    построена по вертикали и её края несут смысл: у ночной кухни сверху лампа,
+    снизу пол, и полоса во всю ширину выбрасывает либо источник света, либо
+    место, где стоит персонаж. Из квадрата 16:9 забирает 44% высоты — это
+    слишком много, чтобы решать вслепую.
+    """
     w, h = im.size
+    if fit == "height":
+        tw = int(h * 16 / 9)
+        if tw <= w:
+            return im.crop(((w - tw) // 2, 0, (w - tw) // 2 + tw, h))
+        # картинка у́же нужного — добираем полосой сверху/снизу, иначе никак
+        th = int(w * 9 / 16)
+        top = int((h - th) * drop)
+        return im.crop((0, top, w, top + th))
     th = int(w * 9 / 16)
     if th <= h:
         top = int((h - th) * drop)
@@ -88,6 +106,8 @@ def main(argv):
     ap.add_argument("--no-frame-strip", action="store_true")
     ap.add_argument("--drop", type=float, default=0.55,
                     help="доля запаса по высоте, уходящая наверх (0 — прижать к верху)")
+    ap.add_argument("--fit", choices=("width", "height"), default="width",
+                    help="width — полоса во всю ширину; height — вписать всю высоту, срезать бока")
     ap.add_argument("--colors", type=int, default=12)
     ap.add_argument("--note", default="")
     a = ap.parse_args(argv)
@@ -96,7 +116,7 @@ def main(argv):
     if not a.no_frame_strip:
         im = strip_frame(im)
     if not a.no_crop:
-        im = to_169(im, a.drop)
+        im = to_169(im, a.drop, a.fit)
     im = im.resize((1280, 720), Image.LANCZOS)
     q = im.quantize(colors=a.colors, method=Image.MEDIANCUT)
     buf = io.BytesIO()
