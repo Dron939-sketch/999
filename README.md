@@ -134,3 +134,9 @@ scene "epilogue" (duration: 16s, set: cafe-ruins) {
 ## License
 
 This project is an experiment. Use it however you want.
+
+## Работа над ошибками
+
+Реестр дефектов, которые поймала студия, а не завод: причина, правило и гейт, который теперь его держит. Плюс честный список того, что машина не проверяет. — `RABOTA-NAD-OSHIBKAMI.md`
+
+Перед отправкой на завод: `python3 tools/pered_renderom.py <id>` — все гейты одной командой.

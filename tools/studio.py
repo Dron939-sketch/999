@@ -936,6 +936,25 @@ def lint_osanka(prods):
     return [], out
 
 
+def lint_sverka(prods):
+    """Приёмщик СООТВЕТСТВИЯ: номера реплик и маркеров совпадают.
+
+    HARD. Реплика `| VO-4 |` и маркер `//lip 4` связаны ТОЛЬКО номером; другой
+    связи между сценарием и раскадровкой нет. Сдвиг на один слот собирается без
+    единой ошибки — липсинк сходится, длина совпадает, — и слышен лишь на
+    готовом файле. Разбор — в шапке tools/sverka.py.
+    """
+    sys.path.insert(0, str(TOOLS))
+    import sverka
+    out = []
+    for prod in prods:
+        anim = ROOT / prod["anim"]
+        if not anim.exists():
+            continue
+        out += [f"{anim.name}: {b}" for b in sverka.check(str(anim))]
+    return out, []
+
+
 def lint_rekvizit(prods):
     """Приёмщик РЕКВИЗИТА: вещь не появляется на персонаже сама.
 
@@ -1312,6 +1331,9 @@ def main(argv):
     rkh, rks = lint_rekvizit(prods)       # приёмщик реквизита (шляпа не сама)
     all_hard += rkh
     all_soft += rks
+    svh, svs = lint_sverka(prods)         # приёмщик соответствия (номера реплик)
+    all_hard += svh
+    all_soft += svs
     for e in all_hard:
         log(f"  [LINT-HARD] {e}")
     for e in all_soft:
