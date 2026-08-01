@@ -41,7 +41,7 @@
 import character freeman from "../assets/characters/freeman_rig"
 import set detskaya from "../assets/sets/detskaya.svg"
 import set cherdak from "../assets/sets/cherdak.svg"
-import set pole from "../assets/sets/field-empty.svg"
+import set kamen from "../assets/sets/kamen-memento.svg"
 import set void from "../assets/sets/void-black.svg"
 import set sklon from "../assets/sets/derevo-pen.svg"
 import set zal from "../assets/sets/lektorij-zal.svg"
@@ -194,19 +194,18 @@ scene "cherdak" (duration: 9s, set: cherdak) {
 //  Одна плита без надписи сильнее целого кладбища: кладбище про многих, плита
 //  про одного — и этот один зритель. Надписи нет намеренно: любая надпись
 //  сделала бы её про кого-то другого.
-scene "plita" (duration: 7s, set: pole) {
+scene "plita" (duration: 7s, set: kamen) {
     transition static 0.2s
 
-    place freeman at (0.42, 0.88) facing front on floor
-    freeman scales 0.76
-    //  ПЛИТА КРУПНЕЕ И БЛИЖЕ К ФИГУРЕ: на общем плане она читается только
-    //  тогда, когда сопоставима с человеком. Мелкий камень у горизонта глаз
-    //  принимает за кочку, и вся сцена теряет вещдок. А после того как на
-    //  камне появилась резьба MEMENTO MORI, размер стал вопросом не заметности,
-    //  а ЧИТАЕМОСТИ: надпись обязана прочитаться с одного взгляда, иначе она
-    //  превращается в текстуру и работает как грязь на камне.
-    let plita = prop("plita", "../assets/props/plita.svg") at (0.72, 0.94) on floor
-    plita scales 2.2
+    //  КАМЕНЬ ТЕПЕРЬ ЧАСТЬ ЛОКАЦИИ, А НЕ ПРЕДМЕТ. Студия прислала готовый
+    //  рисунок надгробия, и он сильнее вектора: камень нарисован крупно, с
+    //  землёй и осыпью у основания. Надпись MEMENTO MORI впечатана прямо в
+    //  картинку — так она гарантированно того же размера и той же руки, что и
+    //  сам камень, а не наклеена поверх.
+    //  Фигура стоит СЛЕВА от камня и мельче него: надгробие крупнее человека —
+    //  это и есть отношение, ради которого сцена снята.
+    place freeman at (0.22, 0.93) facing front on floor
+    freeman scales 0.62
     camera wide
     freeman pose "think"
     wait 0.15s
