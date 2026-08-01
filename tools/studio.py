@@ -936,6 +936,33 @@ def lint_osanka(prods):
     return [], out
 
 
+def lint_tishina(prods):
+    """Приёмщик ТИШИНЫ: между репликами не должно быть дыр.
+
+    SOFT, и намеренно. Гейт меряет ТАЙМЛАЙН СЦЕНАРИЯ, а в ролик уходит
+    таймлайн после липсинка: `speaks for` подменяется реальной длиной mp3, и
+    дыра может как вырасти, так и схлопнуться. Ронять из-за расчётной оценки
+    весь завод нельзя — но и не считать её нельзя тоже: замечание «слишком
+    длинные паузы после реплик» пришло с готового ролика, где дыра в пять
+    секунд набежала сама. Разбор — в шапке tools/pauses.py.
+    """
+    sys.path.insert(0, str(TOOLS))
+    import pauses
+    out = []
+    for prod in prods:
+        anim = ROOT / prod["anim"]
+        if not anim.exists():
+            continue
+        try:
+            bad, _ = pauses.check(str(anim))
+        except Exception as e:  # noqa: BLE001 — таймлайн может не собраться
+            out.append(f"{anim.name}: тишина не измерена ({e})")
+            continue
+        for idx, gap, why in bad:
+            out.append(f"{anim.name}: после реплики {idx} — {gap:.1f} с тишины ({why})")
+    return [], out
+
+
 def lint_rech(prods):
     """Приёмщик РЕЧИ И ЛИЦА: рот обязан принадлежать озвучке.
 
@@ -1263,6 +1290,9 @@ def main(argv):
     oh, os_ = lint_osanka(prods)          # приёмщик осанки (не приседает)
     all_hard += oh
     all_soft += os_
+    tih, tis = lint_tishina(prods)        # приёмщик тишины (дыры между репликами)
+    all_hard += tih
+    all_soft += tis
     for e in all_hard:
         log(f"  [LINT-HARD] {e}")
     for e in all_soft:
