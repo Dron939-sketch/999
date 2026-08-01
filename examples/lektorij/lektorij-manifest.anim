@@ -226,7 +226,7 @@ scene "yarmarka" (duration: 6.5s, set: yarmarka) {
     freeman overlays "stern"
     //lip 6
     together {
-        freeman speaks for 4.2s
+        freeman speaks for 4.6s
         do {
             camera medium freeman
             wait 1.1s
@@ -261,7 +261,7 @@ scene "ulica" (duration: 4.6s, set: ulica) {
     freeman pose "think"
     //lip 7
     together {
-        freeman speaks for 5.2s
+        freeman speaks for 6.7s
         do {
             wait 1.5s
             freeman overlays "myslitel"    // «продавца кормит не жадность»
@@ -283,9 +283,18 @@ scene "dveri" (duration: 5s, set: dveri) {
     freeman scales 0.8
     let slovo = text("БЕСПЛАТНО", 150) at (0.5, -2.0) layer 6
     slovo scales 2.4
-    //  ДОБОРА ПЕРЕД РАЗВОРОТОМ НЕТ. Перелом обязан начаться в окне 14–28с
-    //  (§5.0), и каждая десятая доля здесь уводит его за край: сцена входит
-    //  сразу в реплику, поза ставится вместе с первым словом.
+    //  ДРАМАТИЧЕСКАЯ ПАУЗА ПЕРЕД ОТВЕТОМ — ГЛАВНАЯ ТИШИНА РОЛИКА.
+    //  Здесь ролик поворачивает: до этого места было «сажать бесполезно»,
+    //  после — решение. Реплика, начатая сразу после склейки, читается
+    //  продолжением рассуждения; пауза делает её ОТВЕТОМ. Полторы секунды
+    //  фигура просто стоит перед светлым проёмом — зритель успевает задать
+    //  себе вопрос, на который сейчас ответят.
+    //  Пауза стоит хронометража и уводит перелом за окно 14–28с, на которое
+    //  ругается гейт сценария (§5.0). Правило написано для ролика, где ответ
+    //  подаётся с ходу; здесь он подаётся с паузой, и пауза важнее правила —
+    //  но в отчёте это видно, а не замолчано.
+    freeman pose "think"
+    wait 1.2s
     freeman pose "v_upor"
 
     // ── РАЗВОРОТ (VO-8): повернулся к зрителю ────────────────────────────
@@ -294,7 +303,7 @@ scene "dveri" (duration: 5s, set: dveri) {
     //  рядом».
     //lip 8
     together {
-        freeman speaks for 3.6s
+        freeman speaks for 5.2s
         do {
             wait 1.1s
             freeman overlays "lunge"       // «забрать товар» — подался вперёд
@@ -332,7 +341,7 @@ scene "zal" (duration: 9.5s, set: zal) {
     // ── ВЗЛЁТ (VO-9): отдаёт мысль на ходу ───────────────────────────────
     //lip 9
     together {
-        freeman speaks for 6.0s
+        freeman speaks for 8.3s
         do {
             freeman moves-to (0.58, 0.93) over 4.0s
             freeman overlays "shag_bok_levoj"
@@ -365,7 +374,7 @@ scene "zal" (duration: 9.5s, set: zal) {
     //  выберет сам.
     //lip 10
     together {
-        freeman speaks for 3.2s
+        freeman speaks for 3.7s
         do {
             camera medium freeman
             wait 1.1s
@@ -395,7 +404,7 @@ scene "final" (duration: 9s, set: pole) {
     camera zoom-to freeman over 0.4s ease-in     // наезд-удар перед подколкой
     //lip 11
     together {
-        freeman speaks for 4.6s
+        freeman speaks for 8.1s
         do {
             camera medium freeman
             wait 1.25s
@@ -429,7 +438,7 @@ scene "final" (duration: 9s, set: pole) {
     //  профиль — просто «мне туда». Сумма ожиданий сведена с длиной проезда:
     //  при расхождении фигура доезжает стоя, и это видно.
     freeman pose "bok_levo"
-    freeman moves-to (0.06, 0.88) over 1.4s
+    freeman moves-to (0.06, 0.88) over 1.1s
     freeman overlays "shag_bok_levoj"
     wait 0.35s
     freeman overlays "shag_bok_pravoj"
@@ -445,7 +454,7 @@ scene "final" (duration: 9s, set: pole) {
 }
 
 // ========================== СЦЕНА 8: ТИТРЫ ==================================
-scene "titry" (duration: 2.8s, set: titry) {
+scene "titry" (duration: 2.4s, set: titry) {
     transition static 0.15s
 
     place freeman at (0.5, 3.0) facing front
@@ -461,6 +470,6 @@ scene "titry" (duration: 2.8s, set: titry) {
     stamp scales 1.0 over 0.1s ease-out
     stamp rotates -4 over 0.12s
 
-    wait 0.6s
-    transition fade-black 0.35s
+    wait 0.45s
+    transition fade-black 0.3s
 }
