@@ -355,17 +355,17 @@ scene "final" (duration: 1s, set: stulya) {
     freeman overlays "smug"
     wait 0.2s
 
-    // ── ЖАЛО (VO-10): «Попробуйте неделю ни разу не закатить глаза.» ────
+    // ── ЖАЛО (VO-10): «…ни разу не закатить глаза. Спорим, не выйдет?» ──
     //  ИЗМЕРИМЫЙ ЧЕЛЛЕНДЖ, а не мысль на прощание: у оригинала финал —
     //  «помолчать хотя бы недельку», проверяемое действие. Зритель уходит с
     //  пари, и проверить его можно уже сегодня вечером.
     //lip 10
     together {
-        freeman speaks for 3.8s
+        freeman speaks for 5.3s
         do {
             camera medium freeman
-            wait 2.2s
-            freeman overlays "shrug"         // «слабо?» — ну как знаете
+            wait 3.0s
+            freeman overlays "shrug"         // «спорим?» — ну как знаете
         }
     }
     freeman overlays "hero_wink"
