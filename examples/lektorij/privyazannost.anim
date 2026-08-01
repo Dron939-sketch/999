@@ -101,19 +101,19 @@ scene "stulya" (duration: 1s, set: stulya) {
     freeman pose "calm"
     wait 0.3s
 
-    // ── ХУК (VO-1): «Он сидит напротив. Жуёт. И вам скучно.» ────────────
+    // ── ХУК (VO-1): «Он сидит напротив, жуёт и рассказывает…» ──────────
     //  Подача БУДНИЧНАЯ, будто подглядел в чужое окно. Обвинения тут ещё нет,
     //  есть бытовая деталь — и зритель уже узнал свой вечер.
     freeman pose "calm"
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 5.3s
+        freeman speaks for 6.2s
         do {
             camera medium freeman
-            wait 1.6s
+            wait 2.4s
             freeman overlays "no"          // «жуёт» — кивок в пустой стул
-            wait 1.8s
+            wait 2.4s
             freeman overlays "hips"        // «и вам скучно»
         }
     }
@@ -121,24 +121,24 @@ scene "stulya" (duration: 1s, set: stulya) {
     //  Зазор перед приговором: без него две фразы слипаются в одну.
     wait 0.5s
 
-    // ── ХУК-ДОБИВКА (VO-2): «Дело не в нём. Дело в вас.» ────────────────
+    // ── ХУК-ДОБИВКА (VO-2): «Рядом с ним вам ничего не угрожает.» ──────
     //  Приговор НЕ КРИЧАТ. Поза в упор, голос тише — от этого страшнее, чем
     //  от нажима.
     freeman pose "v_upor"
     //lip 2
     together {
-        freeman speaks for 4.5s
+        freeman speaks for 6.2s
         do {
             wait 2.1s
             camera medium freeman
-            freeman overlays "point"       // «дело в вас» — в зрителя
+            freeman overlays "point"       // «ничего не угрожает» — в зрителя
         }
     }
     camera wide
     freeman overlays "flash_pupils"
     wait 0.4s
 
-    // ── ПРИТЧА-ОБМАНКА (VO-3): «Собаку били. Она идёт к хозяину.» ───────
+    // ── ПРИТЧА-ОБМАНКА (VO-3): «Собаку можно бить годами…» ─────────────
     //  РУЖЬЁ ЧЕХОВА. Подаётся как факт про животных, ровно и без нажима —
     //  ни намёка, что это про зрителя. Выстрелит на развороте, через восемь
     //  секунд. Поэтому здесь ни взгляда в упор, ни указующего жеста: любая
@@ -147,9 +147,9 @@ scene "stulya" (duration: 1s, set: stulya) {
     freeman overlays "open"
     //lip 3
     together {
-        freeman speaks for 6.0s
+        freeman speaks for 5.3s
         do {
-            wait 3.0s
+            wait 2.6s
             freeman overlays "think"       // отвёл взгляд: думает вслух
         }
     }
@@ -172,6 +172,11 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  в своей кухне, а эти четыре фразы узнает мгновенно: он их вчера
     //  говорил. Стол с двумя тарелками проезжает мимо, как улика.
     //
+    //  ЕДИНСТВЕННОЕ МЕСТО, ГДЕ ФРАЗА РУБЛЕНАЯ. Остальной монолог ведётся
+    //  периодами со связками: студия услышала, что сплошные короткие удары
+    //  плохо звучат, и была права — рубленость это приём, собранный в одну
+    //  точку, а не манера речи (tools/script_lint.py считает их долю).
+    //
     //  ВЕТКА `do{}` НЕ ДЛИННЕЕ РЕПЛИКИ. `together` идёт по самой длинной
     //  ветке, и здесь на это уже наступили: `moves-to over 6.4s` плюс семь
     //  `wait 0.8s` дали ветку в двенадцать секунд против семи секунд речи —
@@ -180,18 +185,18 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  переход камеры, всего 3.4 с при 7.5 с реплики (tools/pauses.py).
     //lip 4
     together {
-        freeman speaks for 7.5s
+        freeman speaks for 4.8s
         do {
-            freeman moves-to (0.58, 0.94) over 3.4s
+            freeman moves-to (0.58, 0.94) over 2.2s
             freeman overlays "shag_bok_levoj"
-            wait 0.85s
+            wait 0.55s
             freeman overlays "shag_bok_pravoj"
-            wait 0.85s
+            wait 0.55s
             camera medium freeman
             freeman overlays "shag_bok_levoj"
-            wait 0.85s
+            wait 0.55s
             freeman overlays "shag_bok_pravoj"
-            wait 0.85s
+            wait 0.55s
         }
     }
     //  Остановка полной позой: слой шага снят, ноги приставлены.
@@ -200,7 +205,7 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  Тишина на месте пятого голоса — его нет, и это слышно.
     wait 0.4s
 
-    // ── РАЗВОРОТ (VO-5): «Рушит не измена. Рушит вот это.» ──────────────
+    // ── РАЗВОРОТ (VO-5): «Рушит пару не измена, а вот эта секунда.» ─────
     //  ЗДЕСЬ ВЫСТРЕЛИВАЕТ ПРИТЧА: хозяин оказывается своим. Впервые за сцену
     //  взгляд в упор, и он же означает «это про тебя».
     //
@@ -212,12 +217,12 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     freeman pose "v_upor"
     //lip 5
     together {
-        freeman speaks for 9.0s
+        freeman speaks for 8.2s
         do {
-            wait 2.6s
+            wait 2.4s
             camera medium freeman
-            freeman overlays "otvraschenie"  // «вот это» — закатил глаза
-            wait 3.4s
+            freeman overlays "otvraschenie"  // «вот эта секунда» — закатил глаза
+            wait 3.2s
             freeman overlays "point"         // «девять пар из десяти»
         }
     }
@@ -248,18 +253,18 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     wait 0.5s
 
-    // ── УДАР В ЧЁРНОМ (VO-6): «Мозг ищет не счастье» ────────────────────
+    // ── УДАР В ЧЁРНОМ (VO-6): «Мозг ищет не счастье, а привычное» ───────
     //lip 6
     together {
-        freeman speaks for 8.3s
+        freeman speaks for 7.7s
         do {
-            wait 5.4s
-            freeman overlays "point"         // «вы зовёте это судьбой»
+            wait 5.0s
+            freeman overlays "point"         // «вы называете это судьбой»
         }
     }
     wait 0.4s
 
-    // ── ДНО (VO-7): «Скучно не потому, что нет любви» ───────────────────
+    // ── ДНО (VO-7): «Просто нет тревоги, к которой вы привыкли» ─────────
     //  САМАЯ ВАЖНАЯ ФРАЗА РОЛИКА, и потому она играется почти неподвижно:
     //  любой жест здесь отвлекает. Внутри реплики — только `ugryumo`, накладка
     //  без рта: и зрачки, и `stern` трогают рот и перебили бы липсинк до
@@ -268,7 +273,7 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     //lip 7
     together {
-        freeman speaks for 8.3s
+        freeman speaks for 8.2s
         do {
             wait 4.8s
             freeman overlays "ugryumo"
@@ -297,10 +302,14 @@ scene "tropy" (duration: 1s, set: tropy) {
     wait 1.2s
 
     // ── ВЗЛЁТ (VO-8): «Эту дорожку вы протоптали сами.» ─────────────────
+    //  Накладка `confident` БЕЗ ЦИЛИНДРА: раньше она среди прочих костей
+    //  ставила `hat` и `cane`, и на этой реплике персонаж молча надевал
+    //  шляпу, а на следующей полной позе снимал. Реквизит вынесен в
+    //  отдельную позу `confident_cilindr` (tools/rekvizit.py).
     freeman pose "calm"
     //lip 8
     together {
-        freeman speaks for 6.0s
+        freeman speaks for 6.2s
         do {
             wait 3.0s
             freeman overlays "confident"     // ладонь к свежему следу
@@ -322,7 +331,7 @@ scene "zal" (duration: 1s, set: zal) {
     // ── ПРЕЗЕНТАЦИЯ (VO-9): называет курс ───────────────────────────────
     //lip 9
     together {
-        freeman speaks for 5.3s
+        freeman speaks for 5.8s
         do {
             camera medium freeman
             wait 1.8s
@@ -346,7 +355,7 @@ scene "final" (duration: 1s, set: stulya) {
     freeman overlays "smug"
     wait 0.2s
 
-    // ── ЖАЛО (VO-10): «Неделю не закатывайте глаза. Слабо?» ─────────────
+    // ── ЖАЛО (VO-10): «Попробуйте неделю ни разу не закатить глаза.» ────
     //  ИЗМЕРИМЫЙ ЧЕЛЛЕНДЖ, а не мысль на прощание: у оригинала финал —
     //  «помолчать хотя бы недельку», проверяемое действие. Зритель уходит с
     //  пари, и проверить его можно уже сегодня вечером.

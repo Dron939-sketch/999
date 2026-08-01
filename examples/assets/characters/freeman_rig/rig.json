@@ -464,6 +464,58 @@
         },
         "eye_left": {
           "part": "eye_squint"
+        }
+      }
+    },
+    "confident_cilindr": {
+      "name": "confident_cilindr",
+      "transition_duration": 0.35,
+      "bones": {
+        "torso": {
+          "rotation": 7
+        },
+        "head": {
+          "offset": [
+            -8,
+            48
+          ],
+          "rotation": -16
+        },
+        "upper_arm_left": {
+          "rotation": 132,
+          "z_order": 8
+        },
+        "forearm_left": {
+          "rotation": 30,
+          "z_order": 8
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 9
+        },
+        "upper_arm_right": {
+          "rotation": -16
+        },
+        "forearm_right": {
+          "rotation": -6
+        },
+        "hand_right": {
+          "part": "hand_fist_r"
+        },
+        "thigh_left": {
+          "rotation": 6
+        },
+        "shin_left": {
+          "rotation": -4
+        },
+        "thigh_right": {
+          "rotation": -14
+        },
+        "shin_right": {
+          "rotation": 20
+        },
+        "eye_left": {
+          "part": "eye_squint"
         },
         "hat": {
           "part": "hat",
@@ -6077,5 +6129,10 @@
     "feet": 0.4953,
     "mask_dx": -0.029,
     "mask_w": 0.1426
+  },
+  "props": {
+    "hat": "cilindr",
+    "cane": "cilindr",
+    "glasses": "ochki"
   }
 }

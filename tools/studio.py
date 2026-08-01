@@ -936,6 +936,22 @@ def lint_osanka(prods):
     return [], out
 
 
+def lint_rekvizit(prods):
+    """Приёмщик РЕКВИЗИТА: вещь не появляется на персонаже сама.
+
+    HARD. Цилиндр, возникающий на одну реплику и пропадающий, — брак, который
+    зритель замечает мгновенно, а автор сценария не видит вовсе: позу выбирают
+    по названию, а не по списку костей. Проверка идёт по ригу, поэтому одна на
+    все ролики. Разбор — в шапке tools/rekvizit.py.
+    """
+    sys.path.insert(0, str(TOOLS))
+    import rekvizit
+    rig = json.loads((ROOT / "examples/assets/characters/freeman_rig/rig.json")
+                     .read_text(encoding="utf-8"))
+    return [f"риг: поза «{n}» надевает «{b}», не объявив это именем "
+            f"(нужен суффикс «{m}»)" for n, b, m in rekvizit.offenders(rig)], []
+
+
 def lint_tishina(prods):
     """Приёмщик ТИШИНЫ: между репликами не должно быть дыр.
 
@@ -1293,6 +1309,9 @@ def main(argv):
     tih, tis = lint_tishina(prods)        # приёмщик тишины (дыры между репликами)
     all_hard += tih
     all_soft += tis
+    rkh, rks = lint_rekvizit(prods)       # приёмщик реквизита (шляпа не сама)
+    all_hard += rkh
+    all_soft += rks
     for e in all_hard:
         log(f"  [LINT-HARD] {e}")
     for e in all_soft:
