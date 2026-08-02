@@ -6120,6 +6120,156 @@
           "rotation": -16.9
         }
       }
+    },
+    "vdal": {
+      "transition_duration": 0.35,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -84,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": -12,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_point_r",
+          "z_order": 7
+        },
+        "upper_arm_left": {
+          "rotation": 32
+        },
+        "forearm_left": {
+          "rotation": -16
+        }
+      },
+      "name": "vdal"
+    },
+    "otmahnulsya": {
+      "transition_duration": 0.25,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 56,
+          "z_order": 5
+        },
+        "forearm_left": {
+          "rotation": -26,
+          "z_order": 5
+        },
+        "hand_left": {
+          "part": "hand_relax",
+          "z_order": 6
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        }
+      },
+      "name": "otmahnulsya"
+    },
+    "k_sebe": {
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 76,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": -86,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        }
+      },
+      "name": "k_sebe"
+    },
+    "zatylok": {
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -122,
+          "z_order": 8
+        },
+        "forearm_right": {
+          "rotation": -116,
+          "z_order": 8
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 9
+        },
+        "upper_arm_left": {
+          "rotation": 26
+        },
+        "forearm_left": {
+          "rotation": -12
+        }
+      },
+      "name": "zatylok"
+    },
+    "vzves": {
+      "transition_duration": 0.35,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 98,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": -18,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -72,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": 6,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 7
+        }
+      },
+      "name": "vzves"
+    },
+    "ruka_vverh": {
+      "name": "ruka_vverh",
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 124,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": 34,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        }
+      }
     }
   },
   "karta": {

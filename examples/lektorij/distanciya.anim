@@ -4,8 +4,8 @@
 //
 //  УСТРОЙСТВО РОЛИКА
 //
-//  1. ОБМАНКА ВЕДЁТ ОТ СОСЕДА К СЕБЕ. Ролик открывается ДВУМЯ ОДИНАКОВЫМИ
-//     МЕСТАМИ: двое с одинаковым доходом и разной жизнью через десять лет.
+//  1. ОБМАНКА ВЕДЁТ ОТ СОСЕДА К СЕБЕ. Ролик открывается ЛЕСТНИЧНОЙ ПЛОЩАДКОЙ
+//     с двумя одинаковыми дверями: двое с одинаковым доходом и разной жизнью.
 //     Одиннадцать секунд зритель слушает про чужих и соглашается легко. Ровно в
 //     этот момент звучит вопрос, на который придётся отвечать себе: сколько
 //     месяцев вы продержитесь, если доход прекратится завтра. Дальше разговор
@@ -25,13 +25,13 @@
 //     оборот запрещён гейтом, и правильно.
 //
 //  4. ЛОКАЦИЯ ДОКАЗЫВАЕТ РЕПЛИКУ, А НЕ СТОИТ ФОНОМ. Два одинаковых стула
-//     (двое) → кухня (там считают месяц) → ПУСТОТА (механизм и цифры) →
-//     пустое поле (горизонт видно до края) → зал Лектория → снова стулья.
-//     Три локации взяты чужие — стулья, кухня и поле; ни одна не доказывает
-//     свою реплику. Промты на три собственные написаны в distanciya-VO.md, и в
-//     каждой есть ОДИН красный предмет: цвет переживает монохромный проход
-//     (проверено рендером), и красным помечено то, что держит горизонт
-//     коротким, — счета, штамп на квитанции, а в финале дальний столб.
+//     (двое) → кухня со счётом (там считают месяц) → ПУСТОТА (механизм и
+//     цифры) → дорога со столбами (длина отмерена) → зал Лектория → снова
+//     площадка. Все три сюжетные локации сняты ПОД ЭТОТ РОЛИК, и в каждой
+//     ровно один красный предмет: цвет переживает монохромный проход движка.
+//     Красным помечено то, что держит горизонт коротким, — счета у двери и
+//     штамп на квитанции; в финале тот же красный меняет знак и становится
+//     дальним столбом, до которого надо дожить.
 //
 //  5. ТЕМП ИДЁТ ПО БИТАМ: хук 1.42, измерение 1.31, пулемёт 1.59, сразу за ним
 //     разворот 1.25. Самое медленное место — не дно, а ВОПРОС: зритель должен
@@ -50,10 +50,10 @@
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
-import set dvoe from "../assets/sets/dva-stula.svg"
-import set kuhnya from "../assets/sets/kuhnya-noch.svg"
+import set ploschadka from "../assets/sets/ploschadka-dve-dveri.svg"
+import set kuhnya from "../assets/sets/kuhnya-schet.svg"
 import set void from "../assets/sets/void-black.svg"
-import set pole from "../assets/sets/field-empty.svg"
+import set doroga from "../assets/sets/doroga-stolby.svg"
 import set zal from "../assets/sets/lektorij-zal.svg"
 import set titry from "../assets/sets/lektorij-final.svg"
 
@@ -80,24 +80,22 @@ config {
     cast-shadow: 0.32
 }
 
-// ============ СЦЕНА 1: ДВА СТУЛА — ХУК И ДОБИВКА ============================
-//  ДВА ОДИНАКОВЫХ МЕСТА И НИ ОДНОГО ЧЕЛОВЕКА, КРОМЕ НЕГО. Ролик не показывает
-//  ни соседа, ни его квартиру: он показывает два места, с которых стартовали
-//  одинаково. Разница возникла не здесь, а в решениях, которых никто не
-//  заметил.
+// ============ СЦЕНА 1: ПЛОЩАДКА С ДВУМЯ ДВЕРЯМИ — ХУК И ДОБИВКА =============
+//  ДВЕ ОДИНАКОВЫЕ ДВЕРИ, И ВСЯ РАЗНИЦА — В ТОМ, ЧТО У НИХ НА ПОЛУ. Слева
+//  аккуратная стопка писем, справа счета лезут из ящика и валяются по полу.
+//  Ролик не показывает ни соседа, ни его квартиру: снаружи двери одинаковые,
+//  разница возникла в решениях, которых никто не заметил.
 //
-//  ЛОКАЦИЯ ВРЕМЕННАЯ. Просится лестничная площадка с двумя ОДИНАКОВЫМИ дверями:
-//  у одной аккуратная стопка писем, у другой счета торчат из ящика. Промт на
-//  неё написан в distanciya-VO.md; замена стоит одной строки импорта. Пробовал
-//  `doors-empty` — там одна дверь и полкадра пустой стены, хук на ней не
-//  держится: «двоих» в кадре нет вообще.
-scene "dvoe" (duration: 1s, set: dvoe) {
+//  ЕДИНСТВЕННОЕ ЦВЕТНОЕ ПЯТНО КАДРА — красная печать на счёте у правой двери.
+//  Цвет переживает монохромный проход (движок пропускает насыщенный пиксель),
+//  и красным помечено ровно то, что держит горизонт коротким.
+scene "ploschadka" (duration: 1s, set: ploschadka) {
     transition static 0.2s
 
-    //  Стоит МЕЖДУ ДВУМЯ СТУЛЬЯМИ, не заняв ни одного: разговор про двоих,
+    //  Стоит МЕЖДУ ДВЕРЯМИ, ни к одной не прислонившись: разговор про двоих,
     //  и сам он пока ни один из них.
-    place freeman at (0.5, 0.95) facing front on floor
-    freeman scales 0.95
+    place freeman at (0.5, 0.94) facing front on floor
+    freeman scales 0.92
     camera wide
 
     freeman pose "calm"
@@ -113,7 +111,10 @@ scene "dvoe" (duration: 1s, set: dvoe) {
         freeman speaks for 6.1s
         do {
             camera medium freeman
-            wait 2.6s
+            wait 1.8s
+            freeman overlays "vzves"       // «у него жильё и запас» — две ладони
+                                           // на разной высоте: сравнение двоих
+            wait 1.6s
             freeman overlays "no"          // «у вас кредиты» — развёл руками
         }
     }
@@ -129,7 +130,9 @@ scene "dvoe" (duration: 1s, set: dvoe) {
     together {
         freeman speaks for 3.6s
         do {
-            wait 2.2s
+            wait 1.4s
+            freeman overlays "zatylok"     // «то же трудолюбие» — рука за голову
+            wait 1.0s
             freeman overlays "shrug"       // «разница в другом» — плечами
         }
     }
@@ -143,11 +146,11 @@ scene "dvoe" (duration: 1s, set: dvoe) {
 scene "kuhnya" (duration: 1s, set: kuhnya) {
     transition static 0.2s
 
-    //  Стоит СЛЕВА ОТ СТОЛА, у стула. Пробовал по центру в глубине (0.5, 0.80
-    //  при 0.42) — стол закрывал фигуру по грудь, и человек читался ребёнком
-    //  за столом. Левая половина пола свободна, там он и виден целиком.
-    place freeman at (0.32, 0.84) facing front on floor
-    freeman scales 0.55
+    //  Стоит В ПРОХОДЕ, в глубине. Пробовал левее, у стола (0.32 при 0.55) —
+    //  столешница срезала фигуру по грудь, оставалась одна голова над столом.
+    //  Свободен ровно центр кадра: по нему он потом и идёт на камеру.
+    place freeman at (0.46, 0.82) facing front on floor
+    freeman scales 0.52
     camera wide
 
     // ── ИЗМЕРЕНИЕ (VO-3): «Сколько месяцев вы продержитесь?» ───────────
@@ -159,8 +162,10 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     together {
         freeman speaks for 5.0s
         do {
-            wait 3.0s
-            freeman overlays "point"       // «сколько месяцев» — ткнул в счёт
+            wait 1.8s
+            freeman overlays "point"       // «измерить» — ткнул в счёт на столе
+            wait 1.6s
+            freeman overlays "k_sebe"      // «вы продержитесь» — ладонь к груди
         }
     }
     wait 0.4s
@@ -179,17 +184,19 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
         freeman speaks for 5.0s
         do {
             freeman overlays "shag_levoj"
-            freeman moves-to (0.38, 0.89) over 1.2s
+            freeman moves-to (0.48, 0.89) over 1.2s
             freeman overlays "shag_pravoj"
-            freeman scales 0.64 over 1.2s
+            freeman scales 0.63 over 1.2s
             freeman overlays "shag_levoj"
-            freeman moves-to (0.46, 0.95) over 1.2s
+            freeman moves-to (0.50, 0.95) over 1.2s
             freeman overlays "shag_pravoj"
-            freeman scales 0.78 over 1.2s
+            freeman scales 0.80 over 1.2s
         }
     }
-    //  Остановка полной позой: слои шага сняты, ноги приставлены.
-    freeman pose "calm"
+    //  Остановка полной позой: слои шага сняты, ноги приставлены. Поза не
+    //  нейтральная, а СМЫСЛОВАЯ — `otmahnulsya`: пять отговорок кончились ровно
+    //  тем движением, которым от них и отмахиваются.
+    freeman pose "otmahnulsya"
     //  Тишина на месте шестой отговорки — её нет, и это слышно.
     wait 0.5s
 
@@ -202,7 +209,9 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     together {
         freeman speaks for 5.8s
         do {
-            wait 3.4s
+            wait 2.2s
+            freeman overlays "k_sebe"      // «не слабоволие» — про зрителя
+            wait 1.4s
             camera medium freeman
             freeman overlays "ugryumo"     // «доживать» — лицо жёстче. НЕ
                                            // `stern`: та трогает рот и
@@ -237,10 +246,12 @@ scene "temnota" (duration: 1s, set: void) {
     together {
         freeman speaks for 9.0s
         do {
-            wait 4.4s
-            freeman overlays "think"       // «пересчитали заново» — отвёл взгляд
-            wait 2.6s
-            freeman overlays "v_upor"      // цифры — снова в упор
+            wait 3.6s
+            freeman overlays "zatylok"     // «пересчитали заново» — неловкость
+            wait 2.2s
+            freeman overlays "think"       // цифры — отвёл взгляд
+            wait 1.8s
+            freeman overlays "v_upor"      // и снова в упор
         }
     }
     wait 0.4s
@@ -261,12 +272,15 @@ scene "temnota" (duration: 1s, set: void) {
     wait 0.2s
 }
 
-// ============ СЦЕНА 4: ПУСТОЕ ПОЛЕ — ВЗЛЁТ ==================================
-scene "pole" (duration: 1s, set: pole) {
+// ============ СЦЕНА 4: ДОРОГА СО СТОЛБАМИ — ВЗЛЁТ ===========================
+scene "doroga" (duration: 1s, set: doroga) {
     transition static 0.2s
 
     //  ГОРИЗОНТ ВИДНО ДО КРАЯ. Ни развилки, ни знака: выбор здесь ни при чём,
-    //  важна ДЛИНА. Так выглядит дистанция, когда она есть.
+    //  важна ДЛИНА — и она отмерена столбами, от крупного ближнего до точек у
+    //  горизонта. Красная верхушка САМОГО ДАЛЬНЕГО столба — второе и последнее
+    //  цветное пятно ролика: в первой сцене красным были счета, здесь — то, до
+    //  чего надо дожить. Жест `vdal` показывает ровно туда.
     place freeman at (0.5, 0.90) facing front on floor
     freeman scales 0.80
     camera wide
@@ -284,10 +298,13 @@ scene "pole" (duration: 1s, set: pole) {
     together {
         freeman speaks for 7.6s
         do {
-            wait 2.4s
-            freeman overlays "open"        // «запас»
-            wait 2.0s
-            freeman overlays "raskryl"     // «люди»
+            wait 1.8s
+            freeman overlays "open"        // «запас, который держит месяц»
+            wait 1.8s
+            freeman overlays "vdal"        // «горизонт длиннее» — рука вдаль,
+                                           // ровно туда, куда уходит дорога
+            wait 1.9s
+            freeman overlays "raskryl"     // «вещь, которая работает без вас»
         }
     }
     wait 0.2s
@@ -320,11 +337,11 @@ scene "zal" (duration: 1s, set: zal) {
 }
 
 // ============ СЦЕНА 6: СНОВА ПЛОЩАДКА — ЖАЛО ================================
-scene "final" (duration: 1s, set: dvoe) {
+scene "final" (duration: 1s, set: ploschadka) {
     transition static 0.2s
 
-    place freeman at (0.5, 0.95) facing front on floor
-    freeman scales 0.95
+    place freeman at (0.5, 0.94) facing front on floor
+    freeman scales 0.92
     camera wide
     freeman pose "calm"
     freeman overlays "smug"
@@ -339,22 +356,25 @@ scene "final" (duration: 1s, set: dvoe) {
         freeman speaks for 4.7s
         do {
             camera medium freeman
-            wait 2.8s
+            wait 1.6s
+            freeman overlays "ruka_vverh"  // «без округления вверх» — рука вверх
+            wait 1.4s
             freeman overlays "point"       // «сколько месяцев?»
         }
     }
     freeman overlays "hero_wink"
     wait 0.1s
 
-    // ── УХОДИТ, СТУЛЬЯ ОСТАЮТСЯ ────────────────────────────────────────
+    // ── УХОДИТ, ДВЕРИ ОСТАЮТСЯ ─────────────────────────────────────────
     //  Уходит В ПРОФИЛЬ, влево, за кадр: спина к зрителю читалась бы обидой.
     //  Кольцо замыкается на ПРЕДМЕТЕ: последнее, что видит зритель, — те же
-    //  два одинаковых места, с которых ролик начался. Снаружи они и через
-    //  десять лет одинаковые; разница — в числе, которого не видно.
+    //  две одинаковые двери, с которых ролик начался. Снаружи они и через
+    //  десять лет одинаковые; разница — в счетах на полу и в числе, которого
+    //  не видно.
     //  Молчаливый хвост держится под тремя секундами (tools/pauses.py).
     camera wide
     freeman pose "bok_levo"
-    freeman moves-to (0.04, 0.95) over 0.6s
+    freeman moves-to (0.04, 0.94) over 0.6s
     freeman overlays "shag_bok_levoj"
     wait 0.35s
     freeman overlays "shag_bok_pravoj"

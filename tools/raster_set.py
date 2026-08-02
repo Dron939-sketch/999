@@ -98,6 +98,48 @@ def wrap(png_bytes, w=1280, h=720, note=""):
             f'xlink:href="data:image/png;base64,{b64}"/>\n</svg>\n')
 
 
+# Порог «цветного» пикселя — ТОТ ЖЕ, что в движке (`apply_monochrome`,
+# src/main.rs): разброс каналов больше 55 при максимуме выше 90. Держать эти
+# числа в одном месте нельзя (Rust и Python), поэтому они продублированы с
+# явной ссылкой: поменяется там — поменять здесь.
+ACCENT_SPREAD = 55
+ACCENT_MAX = 90
+
+
+def keep_accent(src, quantized):
+    """Вернуть цветные пиксели исходника поверх квантованной картинки.
+
+    ЗАЧЕМ. Квантование в 12 цветов — это про рисунок в две краски, и оно
+    честно экономит втрое. Но акцентное пятно занимает доли процента кадра
+    (красная печать на счёте — 0.03%), и MEDIANCUT сливает такой кластер с
+    ближайшим серым: студия положила три локации с красным, и после конвертера
+    красного не осталось НИ ОДНОГО пикселя во всех трёх. Проверено замером, а
+    не на глаз.
+
+    Поэтому цвет вырезается из исходника ДО квантования и кладётся обратно
+    ПОСЛЕ. Палитра от этого перестаёт быть ровно 12-цветной, но прибавка идёт
+    только на те пиксели, ради которых локацию и рисовали.
+    """
+    src_rgb = src.convert("RGB")
+    out = quantized.convert("RGB")
+    px_src, px_out = src_rgb.load(), out.load()
+    w, h = src_rgb.size
+    kept = 0
+    for y in range(h):
+        for x in range(w):
+            r, g, b = px_src[x, y]
+            mx, mn = max(r, g, b), min(r, g, b)
+            if mx - mn > ACCENT_SPREAD and mx > ACCENT_MAX:
+                px_out[x, y] = (r, g, b)
+                kept += 1
+    if kept:
+        print(f"  цветное пятно сохранено: {kept} пикс "
+              f"({kept / (w * h) * 100:.3f}% кадра) — квантование их не тронуло")
+    else:
+        print("  цветных пикселей в исходнике нет — локация полностью ч/б")
+    return out
+
+
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("src")
@@ -118,7 +160,7 @@ def main(argv):
     if not a.no_crop:
         im = to_169(im, a.drop, a.fit)
     im = im.resize((1280, 720), Image.LANCZOS)
-    q = im.quantize(colors=a.colors, method=Image.MEDIANCUT)
+    q = keep_accent(im, im.quantize(colors=a.colors, method=Image.MEDIANCUT))
     buf = io.BytesIO()
     q.save(buf, format="PNG", optimize=True)
 
