@@ -1,6 +1,6 @@
 // =============================================================================
 //  «СКОЛЬКО МЕСЯЦЕВ ВЫ ПРОДЕРЖИТЕСЬ» — интро к курсу «Дистанция».
-//  VO — distanciya-VO.md, //lip 1..10.
+//  VO — distanciya-VO.md, //lip 1..11.
 //
 //  УСТРОЙСТВО РОЛИКА
 //
@@ -96,6 +96,14 @@ scene "ploschadka" (duration: 1s, set: ploschadka) {
     //  и сам он пока ни один из них.
     place freeman at (0.5, 0.94) facing front on floor
     freeman scales 0.92
+
+    //  ВЕЛОСИПЕД ПОСАЖЕН МОЛЧА и стоит у правой двери, среди счетов, с первой
+    //  секунды. Его никто не называет — он просто есть. Выстрелит на взлёте
+    //  («велосипед не подойдёт») и вернётся в жале. Приём из «Истории религий»,
+    //  но там он был нарисован ВНУТРИ сета детской; здесь вынут в отдельный
+    //  предмет и потому может стоять где угодно.
+    let bike = prop("bike", "../assets/props/velosiped.svg") at (0.82, 0.70) layer 3
+    bike scales 1.15
     camera wide
 
     freeman pose "calm"
@@ -296,17 +304,40 @@ scene "doroga" (duration: 1s, set: doroga) {
     freeman pose "calm"
     //lip 8
     together {
-        freeman speaks for 7.6s
+        freeman speaks for 7.9s
         do {
-            wait 1.8s
+            wait 1.6s
             freeman overlays "open"        // «запас, который держит месяц»
-            wait 1.8s
+            wait 1.7s
             freeman overlays "vdal"        // «горизонт длиннее» — рука вдаль,
                                            // ровно туда, куда уходит дорога
-            wait 1.9s
+            wait 1.7s
             freeman overlays "raskryl"     // «вещь, которая работает без вас»
+            wait 1.9s
+            //  ШУТКА ИГРАЕТСЯ СУХО. «Велосипед не подойдёт» — единственная
+            //  шутка ролика, и подавать её жестом нельзя: подмигнёшь — станет
+            //  номером. Поэтому не хохма, а отмашка: мол, и говорить не о чем.
+            freeman overlays "otmahnulsya"
         }
     }
+    wait 0.4s
+
+    // ── ПОДЪЁМ (VO-9): «Первый отложенный месяц даёт вам выбор.» ───────
+    //  РОЛИК НЕ ДОЛЖЕН КОНЧИТЬСЯ ПРИГОВОРОМ. Мотивация здесь не обещанием, а
+    //  масштабом задачи: не капитал, а ОДИН месяц — планка, которую человек в
+    //  дефиците может взять, не поверив ни в одно обещание. Камера ближе:
+    //  единственное место ролика, где он говорит по-доброму.
+    freeman pose "calm"
+    //lip 9
+    together {
+        freeman speaks for 4.3s
+        do {
+            camera medium freeman
+            wait 2.4s
+            freeman overlays "k_sebe"      // «даёт вам выбор» — к зрителю
+        }
+    }
+    camera wide
     wait 0.2s
 }
 
@@ -321,7 +352,7 @@ scene "zal" (duration: 1s, set: zal) {
     wait 0.15s
 
     // ── ПРЕЗЕНТАЦИЯ (VO-9): называет курс ──────────────────────────────
-    //lip 9
+    //lip 10
     together {
         freeman speaks for 3.6s
         do {
@@ -342,6 +373,11 @@ scene "final" (duration: 1s, set: ploschadka) {
 
     place freeman at (0.5, 0.94) facing front on floor
     freeman scales 0.92
+    //  ТОТ ЖЕ ВЕЛОСИПЕД НА ТОМ ЖЕ МЕСТЕ. Кольцо замыкается не фразой, а
+    //  предметом: он стоял тут с первой секунды, и последнее, что делает
+    //  Фримен, — поправляет его.
+    let bike = prop("bike", "../assets/props/velosiped.svg") at (0.82, 0.70) layer 3
+    bike scales 1.15
     camera wide
     freeman pose "calm"
     freeman overlays "smug"
@@ -351,15 +387,22 @@ scene "final" (duration: 1s, set: ploschadka) {
     //  ИЗМЕРИМОЕ ЗАДАНИЕ, а не мысль на прощание: число можно посчитать
     //  сегодня вечером и провалить сегодня же. «Без округления вверх» — про
     //  то, как считать будут на самом деле.
-    //lip 10
+    //lip 11
     together {
-        freeman speaks for 4.7s
+        freeman speaks for 5.4s
         do {
             camera medium freeman
-            wait 1.6s
+            wait 1.5s
             freeman overlays "ruka_vverh"  // «без округления вверх» — рука вверх
             wait 1.4s
-            freeman overlays "point"       // «сколько месяцев?»
+            camera wide
+            freeman overlays "point"       // «и велосипед всё-таки оставьте» —
+                                           // показал на него, не оборачиваясь
+            //  ПОДХОД ИДЁТ ПОД РЕЧЬ, А НЕ ПОСЛЕ НЕЁ. Первая версия отправляла
+            //  его к велосипеду в тишине, и гейт пауз честно поймал 4.7 с
+            //  молчаливого хвоста: движение занимает время наравне с `wait`.
+            //  Теперь два шага укладываются в последние секунды реплики.
+            freeman moves-to (0.66, 0.94) over 1.1s
         }
     }
     freeman overlays "hero_wink"
@@ -372,13 +415,25 @@ scene "final" (duration: 1s, set: ploschadka) {
     //  десять лет одинаковые; разница — в счетах на полу и в числе, которого
     //  не видно.
     //  Молчаливый хвост держится под тремя секундами (tools/pauses.py).
+    //  ПОДХОДИТ К ВЕЛОСИПЕДУ И ПОПРАВЛЯЕТ ЕГО — стоя. Фигура НЕ приседает:
+    //  поза, роняющая рост больше чем на 8%, валит прогон (tools/posture.py),
+    //  поэтому к предмету он тянется рукой, а не садится над ним. Ни слова:
+    //  предмет играет сам, комментировать его нельзя.
+    //  Поправил — и ушёл. Весь хвост укладывается в полторы секунды: гейт
+    //  пауз считает молчание после последнего слова, и три секунды там уже
+    //  дыра, а не приём.
     camera wide
+    freeman pose "vdal"
+    bike rotates -4 over 0.12s
+    bike rotates 0 over 0.12s
+
+    //  Уходит В ПРОФИЛЬ, влево, за кадр: спина к зрителю читалась бы обидой.
     freeman pose "bok_levo"
-    freeman moves-to (0.04, 0.94) over 0.6s
+    freeman moves-to (0.04, 0.94) over 0.5s
     freeman overlays "shag_bok_levoj"
-    wait 0.35s
+    wait 0.25s
     freeman overlays "shag_bok_pravoj"
-    wait 0.35s
+    wait 0.25s
     //  Проход заканчивается СТОЙКОЙ: слои держатся до полной позы.
     freeman pose "bok_levo"
 }
