@@ -164,10 +164,12 @@ scene "ryady" (duration: 1s, set: ryady) {
     freeman overlays "open"
     //lip 3
     together {
-        freeman speaks for 6.9s
+        freeman speaks for 8.3s
         do {
-            wait 3.6s
-            freeman overlays "think"       // отвёл взгляд: рассказывает
+            wait 3.2s
+            freeman overlays "think"       // байка: отвёл взгляд
+            wait 2.2s
+            freeman overlays "open"        // «это кнопка» — вернулся к зрителю
         }
     }
     wait 0.4s
@@ -232,9 +234,9 @@ scene "stol" (duration: 1s, set: stol) {
     freeman pose "v_upor"
     //lip 5
     together {
-        freeman speaks for 4.7s
+        freeman speaks for 5.8s
         do {
-            wait 2.6s
+            wait 4.3s
             camera medium freeman
             freeman overlays "ugryumo"     // «а тот, кто рядом» — лицо
                                            // жёстче. НЕ `stern`: та трогает
@@ -261,6 +263,18 @@ scene "temnota" (duration: 1s, set: void) {
     freeman scales 2.2
     camera wide
 
+    //  ПАЛЕЦ — ТРЕТЬЯ СТУПЕНЬ ОБЪЯСНЕНИЯ КНОПКИ. Притча говорит, что кнопка
+    //  делает; разворот — что кнопки это те четыре фразы; здесь показано, где
+    //  они. Палец входит в кадр и нажимает НА НЕГО: кнопка не на продавце и не
+    //  в воздухе — она на тебе. Жест уместен только в чёрном кадре: быта,
+    //  который он сломал бы, здесь нет. Стоит за кадром, пока не нужен.
+    //  РУКА БЕЛАЯ (`hand-point-belaya.svg`), не обычная чёрная: в чёрном кадре
+    //  чёрная тушь пропадает начисто — проверено рендером, палец не виден
+    //  вообще. У белой копии есть тёмный контур, иначе она наезжает на белую
+    //  маску и сливается с ней в одно пятно ровно в момент нажатия.
+    let hand = prop("hand", "../assets/props/hand-point-belaya.svg") at (-1.5, 1.5) layer 5
+    hand scales 1.8
+
     freeman pose "v_upor"
     wait 0.5s
 
@@ -270,9 +284,17 @@ scene "temnota" (duration: 1s, set: void) {
     //  того, чтобы узнавать себя.
     //lip 6
     together {
-        freeman speaks for 7.9s
+        freeman speaks for 9.7s
         do {
-            wait 4.6s
+            //  НАЖАТИЕ на «эти кнопки» — палец, тряска кадра, палец ушёл.
+            //  Позу не трогаем: `puppet_jerk` был бы вырази­тельнее, но это
+            //  полная поза со ртом, а рот принадлежит липсинку.
+            wait 3.4s
+            hand moves-to (0.40, 0.66) over 0.01s
+            camera shake 0.25s intensity 2
+            wait 0.7s
+            hand moves-to (-1.5, 1.5) over 0.01s
+            wait 0.5s
             freeman overlays "open"        // «нужны вам самим» — ладони
         }
     }
