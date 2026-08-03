@@ -146,12 +146,12 @@ scene "ploschadka" (duration: 1s, set: ploschadka) {
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 4.0s
+        freeman speaks for 5.09s
         do {
             camera medium freeman
-            wait 1.3s
+            wait 1.66s
             freeman overlays "vdal"        // «две двери» — показал на них
-            wait 1.2s
+            wait 1.53s
             freeman overlays "poimal"      // «и проиграли» — перекос, поймал
         }
     }
@@ -163,13 +163,13 @@ scene "ploschadka" (duration: 1s, set: ploschadka) {
     freeman overlays "hips"
     //lip 2
     together {
-        freeman speaks for 3.94s
+        freeman speaks for 4.52s
         do {
-            wait 1.17s
+            wait 1.34s
             freeman overlays "ostyl"       // диагноз ставят холодно, не зло
-            wait 1.09s
+            wait 1.25s
             freeman overlays "k_sebe"      // «не потому, что были неправы»
-            wait 1.17s
+            wait 1.34s
             freeman overlays "razvel"      // «дверей было больше» — а их нет
         }
     }
@@ -246,14 +246,14 @@ scene "bazar" (duration: 1s, set: bazar) {
     freeman pose "v_upor"
     //lip 5
     together {
-        freeman speaks for 6.1s
+        freeman speaks for 6.56s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает, и
             //  поднятая `v_upor`-ом рука висела бы всю реплику забытой.
             freeman overlays "zakrylsya"   // «все пять — про одно»: закрылся
-            wait 1.8s
+            wait 1.93s
             freeman overlays "obvinil"     // «ни один не спорит» — всем телом
-            wait 1.9s
+            wait 2.04s
             camera medium freeman
             freeman overlays "klin"        // «каждый меняет вопрос» — приговор
         }
@@ -284,14 +284,14 @@ scene "temnota" (duration: 1s, set: void) {
     //  чтобы узнавать себя.
     //lip 6
     together {
-        freeman speaks for 6.79s
+        freeman speaks for 6.06s
         do {
             freeman overlays "calm"        // руку назвать: дальше идёт лицо
-            wait 2.17s
+            wait 1.94s
             freeman overlays "ostyl"       // «может следовать безупречно»
-            wait 2.04s
+            wait 1.82s
             freeman overlays "doshlo"      // «и всё равно быть ложью» — шар
-            wait 1.9s
+            wait 1.7s
             freeman overlays "vniz_l"      // «вход был кривой» — вот сюда
         }
     }
@@ -304,14 +304,14 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     //lip 7
     together {
-        freeman speaks for 6.56s
+        freeman speaks for 7.68s
         do {
             freeman overlays "calm"
-            wait 1.92s
+            wait 2.25s
             freeman overlays "vzglyad"     // «не говорит, где истина» — ровно
-            wait 2.03s
+            wait 2.38s
             freeman overlays "dve_storony_l" // «это разные вопросы» — вот и вот
-            wait 1.81s
+            wait 2.12s
             freeman overlays "poimal"      // «путают их постоянно» — перекос
         }
     }
@@ -342,20 +342,20 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     freeman pose "calm"
     //lip 8
     together {
-        freeman speaks for 8.15s
+        freeman speaks for 9.14s
         do {
-            wait 1.27s
+            wait 1.42s
             freeman overlays "vzves"       // «в двух местах» — две чаши
             freeman overlays "raspahnul"   // список начат
-            wait 1.36s
+            wait 1.53s
             freeman overlays "palec_vverh" // «верны ли посылки» — первое
-            wait 1.36s
+            wait 1.53s
             freeman overlays "rubit"       // «следует ли вывод» — отрезал
-            wait 1.36s
+            wait 1.53s
             freeman overlays "oba_vverh"   // «все ли варианты названы»
-            wait 1.27s
+            wait 1.42s
             freeman overlays "manit_l"     // «кто задал вопрос» — а ну-ка
-            wait 1.27s
+            wait 1.42s
             freeman overlays "vniz"        // «если ответить иначе» — вот сюда
             freeman overlays "teplo"       // и тепло: это выполнимо
         }
@@ -430,13 +430,13 @@ scene "final" (duration: 1s, set: ploschadka) {
     //  который можно задать сегодня же вечером, как только покажут две двери.
     //lip 11
     together {
-        freeman speaks for 5.59s
+        freeman speaks for 4.36s
         do {
             camera medium freeman
-            wait 1.69s
+            wait 1.32s
             freeman overlays "stop_ladon_l" // «не выбирайте» — стоп
             freeman overlays "klin"        // с вызовом, а не с советом
-            wait 1.56s
+            wait 1.22s
             freeman overlays "vozzvanie"   // «где остальные?» — рука к небу
             freeman overlays "doshlo"      // и вопрос повисает: шар в глазах
         }
