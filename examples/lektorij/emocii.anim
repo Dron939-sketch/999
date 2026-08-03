@@ -111,7 +111,7 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  Размер и высота — по замечанию студии: выше и на 30% мельче (0.30 →
     //  0.21, y 0.70 → 0.65). Метка должна читаться как нашивка на груди, а не
     //  как эмблема во весь балахон.
-    let nomer = prop("nomer", "../assets/props/nomer-06.svg") at (0.645, 0.65) layer 9
+    let nomer = prop("nomer", "../assets/props/nomer-03.svg") at (0.645, 0.65) layer 9
     nomer scales 0.21
     nomer hides
 
@@ -466,7 +466,7 @@ scene "final" (duration: 1s, set: tiho) {
     //  Подпись обязана повторять ПЕРВЫЙ кадр, иначе кольцо не сходится: там
     //  общий план, значит и здесь общий.
     camera wide
-    let nomer2 = prop("nomer", "../assets/props/nomer-06.svg") at (0.425, 0.66) layer 9
+    let nomer2 = prop("nomer", "../assets/props/nomer-03.svg") at (0.425, 0.66) layer 9
     nomer2 scales 0.21
     nomer2 hides
     //lip 12
