@@ -254,21 +254,16 @@ ESCHO = {
     "forearm_right": {"rotation": -46, "z_order": 5},
     "hand_right": {"part": "hand_relax_r", "z_order": 6}}),
   "razmer": (0.3, {                            # «вот столько» — величина
-    "upper_arm_left": {"rotation": 76, "z_order": 6},
-    "forearm_left": {"rotation": -50, "z_order": 6},
-    "hand_left": {"part": "hand_relax", "z_order": 7},
-    "upper_arm_right": {"rotation": -102, "z_order": 6},
-    "forearm_right": {"rotation": 46, "z_order": 6},
-    "hand_right": {"part": "hand_relax_r", "z_order": 7},
+    # ОБЕ КИСТИ НА ОДНОЙ ВЫСОТЕ И ШИРОКО. Первая версия была асимметричной и на
+    # листе читалась как случайный жест: величину показывают ДВУМЯ точками на
+    # одном уровне, иначе это не мерка, а взмах.
+    "upper_arm_left": {"rotation": 88, "z_order": 6},
+    "forearm_left": {"rotation": -26, "z_order": 6},
+    "hand_left": {"part": "hand_relax", "z_order": 7, "rotation": -40},
+    "upper_arm_right": {"rotation": -88, "z_order": 6},
+    "forearm_right": {"rotation": 26, "z_order": 6},
+    "hand_right": {"part": "hand_relax_r", "z_order": 7, "rotation": 40},
     "head": {"rotation": -3}}),
-  "kulaki": (0.2, {                            # решимость, «взялись»
-    "upper_arm_left": {"rotation": 54, "z_order": 5},
-    "forearm_left": {"rotation": -62, "z_order": 5},
-    "hand_left": {"part": "hand_fist", "z_order": 6},
-    "upper_arm_right": {"rotation": -54, "z_order": 5},
-    "forearm_right": {"rotation": 62, "z_order": 5},
-    "hand_right": {"part": "hand_fist_r", "z_order": 6},
-    "head": {"rotation": -4}}),
   "smel": (0.24, {                             # смёл в сторону: «это в сторону»
     "upper_arm_left": {"rotation": 96, "z_order": 6},
     "forearm_left": {"rotation": -20, "z_order": 6},
@@ -289,14 +284,6 @@ ESCHO = {
     "hand_left": {"part": "hand_relax", "z_order": 8, "rotation": -30},
     "upper_arm_right": {"rotation": -28}, "forearm_right": {"rotation": 12},
     "head": {"rotation": -4}}),
-  "oba_tuda": (0.28, {                         # обе указывают в одну точку
-    "upper_arm_left": {"rotation": 92, "z_order": 6},
-    "forearm_left": {"rotation": -8, "z_order": 6},
-    "hand_left": {"part": "hand_point", "z_order": 7, "rotation": 66},
-    "upper_arm_right": {"rotation": 40, "z_order": 5},
-    "forearm_right": {"rotation": -46, "z_order": 5},
-    "hand_right": {"part": "hand_point_r", "z_order": 6, "rotation": 60},
-    "head": {"rotation": 6}}),
   "lokti": (0.32, {                            # локти в стороны, кисти вниз
     "upper_arm_left": {"rotation": 92, "z_order": 4},
     "forearm_left": {"rotation": -134, "z_order": 4},
@@ -312,20 +299,99 @@ ESCHO = {
     "forearm_right": {"rotation": 28, "z_order": 6},
     "hand_right": {"part": "hand_relax_r", "z_order": 6},
     "head": {"rotation": 4}}),
-  "vpered_nizko": (0.28, {                     # «вот оно, здесь» — вперёд-вниз
-    "upper_arm_left": {"rotation": 40, "z_order": 6},
-    "forearm_left": {"rotation": 52, "z_order": 6},
-    "hand_left": {"part": "hand_offer", "z_order": 7},
-    "upper_arm_right": {"rotation": -40, "z_order": 6},
-    "forearm_right": {"rotation": -52, "z_order": 6},
-    "hand_right": {"part": "hand_offer_r", "z_order": 7},
-    "head": {"rotation": -6}}),
   "odna_v_bok": (0.3, {                        # одна в бок, вторая свободна
     "upper_arm_left": {"rotation": 86, "z_order": 4},
     "forearm_left": {"rotation": -98, "z_order": 4},
     "hand_left": {"part": "hand_relax", "z_order": 4},
     "upper_arm_right": {"rotation": -30}, "forearm_right": {"rotation": 14},
     "head": {"rotation": 4}}),
+}
+
+
+# ============================================================================
+#  ТАНЕЦ: шесть кадров, которые складываются в пять секунд.
+# ============================================================================
+#  Замысел студии: пусть он хотя бы пять секунд умеет танцевать. Танец в этом
+#  движке — не отдельная сущность, а ПОСЛЕДОВАТЕЛЬНОСТЬ поз с долями секунды;
+#  всё, что нужно, — набор кадров, между которыми движок сам проложит дугу.
+#
+#  ТРИ ОГРАНИЧЕНИЯ, ИЗ КОТОРЫХ ВЫШЕЛ ИМЕННО ТАКОЙ ТАНЕЦ:
+#
+#  1. ФИГУРА НЕ ПРИСЕДАЕТ (tools/posture.py, порог 8% роста). Значит ни
+#     присядки, ни глубоких сгибов колена: пляшут РУКИ и ПЕРЕНОС ВЕСА, а таз
+#     остаётся на месте. Это, кстати, ровно то, как танцует твист.
+#  2. ЖЕСТ ЧИТАЕТСЯ ТОЛЬКО ТЕМ, ЧТО ТОРЧИТ ИЗ ПЛАЩА. Значит руки идут ШИРОКО и
+#     на разной высоте: два кадра с руками у корпуса подряд дадут не танец, а
+#     дёрганье чёрного пятна.
+#  3. ТАНЕЦ ИДЁТ МЕЖДУ РЕПЛИКАМИ, а не внутри: это ПОЛНЫЕ позы, они трогают
+#     ноги и корпус и сбросили бы липсинк. Поэтому кадры и названы позами, а
+#     не накладками.
+#
+#  РИСУНОК ТАНЦА — ТВИСТ-ЧАРЛЬСТОН: диагональ рук качается крест-накрест, вес
+#  переносится с ноги на ногу, голова кивает в противофазе к рукам. Диагональ
+#  выбрана не для красоты: две руки на РАЗНОЙ высоте дают несимметричный
+#  силуэт, и смена сторон читается как движение даже на двенадцати рисунках в
+#  секунду. Симметричные кадры (обе вверх, обе вниз) стоят через один — они
+#  работают как доля счёта, к которой возвращается качание.
+TANEC = {
+  "tanec_1": (0.12, {                          # диагональ: правая вверх
+    "upper_arm_right": {"rotation": -126, "z_order": 6},
+    "forearm_right": {"rotation": -34, "z_order": 6},
+    "hand_right": {"part": "hand_open_r", "z_order": 7},
+    "upper_arm_left": {"rotation": 38, "z_order": 4},
+    "forearm_left": {"rotation": 40, "z_order": 4},
+    "hand_left": {"part": "hand_open", "z_order": 5},
+    "torso": {"rotation": -5}, "head": {"rotation": 6},
+    "thigh_left": {"rotation": 7}, "shin_left": {"rotation": -6},
+    "thigh_right": {"rotation": -3}, "shin_right": {"rotation": 3}}),
+  "tanec_2": (0.12, {                          # диагональ: левая вверх
+    "upper_arm_left": {"rotation": 126, "z_order": 6},
+    "forearm_left": {"rotation": 34, "z_order": 6},
+    "hand_left": {"part": "hand_open", "z_order": 7},
+    "upper_arm_right": {"rotation": -38, "z_order": 4},
+    "forearm_right": {"rotation": -40, "z_order": 4},
+    "hand_right": {"part": "hand_open_r", "z_order": 5},
+    "torso": {"rotation": 5}, "head": {"rotation": -6},
+    "thigh_right": {"rotation": -7}, "shin_right": {"rotation": 6},
+    "thigh_left": {"rotation": 3}, "shin_left": {"rotation": -3}}),
+  "tanec_3": (0.1, {                           # доля счёта: обе вверх, локти в стороны
+    "upper_arm_left": {"rotation": 104, "z_order": 6},
+    "forearm_left": {"rotation": 62, "z_order": 6},
+    "hand_left": {"part": "hand_open", "z_order": 7},
+    "upper_arm_right": {"rotation": -104, "z_order": 6},
+    "forearm_right": {"rotation": -62, "z_order": 6},
+    "hand_right": {"part": "hand_open_r", "z_order": 7},
+    "head": {"rotation": 3},
+    "thigh_left": {"rotation": 5}, "thigh_right": {"rotation": -5}}),
+  "tanec_4": (0.12, {                          # раскрытие вбок, вес влево
+    "upper_arm_left": {"rotation": 84, "z_order": 5},
+    "forearm_left": {"rotation": -16, "z_order": 5},
+    "hand_left": {"part": "hand_open", "z_order": 6},
+    "upper_arm_right": {"rotation": -52, "z_order": 5},
+    "forearm_right": {"rotation": 58, "z_order": 5},
+    "hand_right": {"part": "hand_relax_r", "z_order": 6},
+    "torso": {"rotation": 6}, "head": {"rotation": -4},
+    "thigh_left": {"rotation": 9}, "shin_left": {"rotation": -8},
+    "thigh_right": {"rotation": -4}, "shin_right": {"rotation": 4}}),
+  "tanec_5": (0.12, {                          # раскрытие вбок, вес вправо
+    "upper_arm_right": {"rotation": -84, "z_order": 5},
+    "forearm_right": {"rotation": 16, "z_order": 5},
+    "hand_right": {"part": "hand_open_r", "z_order": 6},
+    "upper_arm_left": {"rotation": 52, "z_order": 5},
+    "forearm_left": {"rotation": -58, "z_order": 5},
+    "hand_left": {"part": "hand_relax", "z_order": 6},
+    "torso": {"rotation": -6}, "head": {"rotation": 4},
+    "thigh_right": {"rotation": -9}, "shin_right": {"rotation": 8},
+    "thigh_left": {"rotation": 4}, "shin_left": {"rotation": -4}}),
+  "tanec_6": (0.1, {                           # сведение: руки вниз крест-накрест
+    "upper_arm_left": {"rotation": 26, "z_order": 5},
+    "forearm_left": {"rotation": -54, "z_order": 5},
+    "hand_left": {"part": "hand_relax", "z_order": 6},
+    "upper_arm_right": {"rotation": -26, "z_order": 6},
+    "forearm_right": {"rotation": 54, "z_order": 6},
+    "hand_right": {"part": "hand_relax_r", "z_order": 7},
+    "head": {"rotation": -3},
+    "thigh_left": {"rotation": 3}, "thigh_right": {"rotation": -3}}),
 }
 
 
@@ -349,10 +415,17 @@ def main():
     # Позу, которая на листе повторяет соседнюю, класть в риг нельзя: она не
     # добавляет разнообразия, а пополняет кладбище неиспользуемых имён — их в
     # риге и так 36.
-    for snyato in ("tychok", "schet", "potiraet"):
+    #   kulaki       — кисти уходят вдоль тела и тонут в плаще: на листе видно
+    #                  две палки-руки и ни одного кулака.
+    #   vpered_nizko — предплечья выпрямились наружу, и поза повторила `open`.
+    #   oba_tuda     — вторая рука пошла ПОПЕРЁК корпуса и вылезла поверх
+    #                  плаща: на листе силуэт читается сломанным, а не
+    #                  указывающим. В этом риге рука не пересекает торс.
+    for snyato in ("tychok", "schet", "potiraet", "kulaki", "vpered_nizko",
+                   "oba_tuda"):
         poses.pop(snyato, None)
     added, upd = [], []
-    for group in (RUKI, GLAZA, ESCHO):
+    for group in (RUKI, GLAZA, ESCHO, TANEC):
         for name, (td, bones) in group.items():
             (upd if name in poses else added).append(name)
             poses[name] = {"name": name, "transition_duration": td, "bones": bones}
@@ -373,9 +446,15 @@ def main():
                         > abs(b.get("upper_arm_right", {}).get("rotation", 0)))
         imya = name + ("_r" if vedet_levaya else "_l")
         (upd if imya in poses else added).append(imya)
+        # ЗЕРКАЛО НЕ ТАЩИТ ГЛАЗА. Старый `think` ставит `eye_angry` вместе с
+        # жестом — это ровно то сцепление, от которого новые слои избавлены:
+        # жест и эмоция обязаны накладываться независимо. Отражение — повод не
+        # тиражировать старую связку, а не оправдание.
+        bones = {k: v for k, v in zerkalo(src["bones"]).items()
+                 if not k.startswith(("eye_", "brow_", "mouth"))}
         poses[imya] = {"name": imya,
                        "transition_duration": src.get("transition_duration", 0.3),
-                       "bones": zerkalo(src["bones"])}
+                       "bones": bones}
     RIG.write_text(json.dumps(rig, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"новых: {len(added)} — {', '.join(added)}")
     if upd:

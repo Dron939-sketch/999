@@ -6879,64 +6879,33 @@
       "transition_duration": 0.3,
       "bones": {
         "upper_arm_left": {
-          "rotation": 76,
+          "rotation": 88,
           "z_order": 6
         },
         "forearm_left": {
-          "rotation": -50,
+          "rotation": -26,
           "z_order": 6
         },
         "hand_left": {
           "part": "hand_relax",
-          "z_order": 7
+          "z_order": 7,
+          "rotation": -40
         },
         "upper_arm_right": {
-          "rotation": -102,
+          "rotation": -88,
           "z_order": 6
         },
         "forearm_right": {
-          "rotation": 46,
+          "rotation": 26,
           "z_order": 6
         },
         "hand_right": {
           "part": "hand_relax_r",
-          "z_order": 7
+          "z_order": 7,
+          "rotation": 40
         },
         "head": {
           "rotation": -3
-        }
-      }
-    },
-    "kulaki": {
-      "name": "kulaki",
-      "transition_duration": 0.2,
-      "bones": {
-        "upper_arm_left": {
-          "rotation": 54,
-          "z_order": 5
-        },
-        "forearm_left": {
-          "rotation": -62,
-          "z_order": 5
-        },
-        "hand_left": {
-          "part": "hand_fist",
-          "z_order": 6
-        },
-        "upper_arm_right": {
-          "rotation": -54,
-          "z_order": 5
-        },
-        "forearm_right": {
-          "rotation": 62,
-          "z_order": 5
-        },
-        "hand_right": {
-          "part": "hand_fist_r",
-          "z_order": 6
-        },
-        "head": {
-          "rotation": -4
         }
       }
     },
@@ -7029,41 +6998,6 @@
         }
       }
     },
-    "oba_tuda": {
-      "name": "oba_tuda",
-      "transition_duration": 0.28,
-      "bones": {
-        "upper_arm_left": {
-          "rotation": 92,
-          "z_order": 6
-        },
-        "forearm_left": {
-          "rotation": -8,
-          "z_order": 6
-        },
-        "hand_left": {
-          "part": "hand_point",
-          "z_order": 7,
-          "rotation": 66
-        },
-        "upper_arm_right": {
-          "rotation": 40,
-          "z_order": 5
-        },
-        "forearm_right": {
-          "rotation": -46,
-          "z_order": 5
-        },
-        "hand_right": {
-          "part": "hand_point_r",
-          "z_order": 6,
-          "rotation": 60
-        },
-        "head": {
-          "rotation": 6
-        }
-      }
-    },
     "lokti": {
       "name": "lokti",
       "transition_duration": 0.32,
@@ -7124,39 +7058,6 @@
         },
         "head": {
           "rotation": 4
-        }
-      }
-    },
-    "vpered_nizko": {
-      "name": "vpered_nizko",
-      "transition_duration": 0.28,
-      "bones": {
-        "upper_arm_left": {
-          "rotation": 40,
-          "z_order": 6
-        },
-        "forearm_left": {
-          "rotation": 52,
-          "z_order": 6
-        },
-        "hand_left": {
-          "part": "hand_offer",
-          "z_order": 7
-        },
-        "upper_arm_right": {
-          "rotation": -40,
-          "z_order": 6
-        },
-        "forearm_right": {
-          "rotation": -52,
-          "z_order": 6
-        },
-        "hand_right": {
-          "part": "hand_offer_r",
-          "z_order": 7
-        },
-        "head": {
-          "rotation": -6
         }
       }
     },
@@ -7599,12 +7500,276 @@
         },
         "hand_right": {
           "part": "hand_relax_r"
+        }
+      }
+    },
+    "tanec_1": {
+      "name": "tanec_1",
+      "transition_duration": 0.12,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -126,
+          "z_order": 6
         },
-        "eye_right": {
-          "part": "eye_angry_left"
+        "forearm_right": {
+          "rotation": -34,
+          "z_order": 6
         },
-        "eye_left": {
-          "part": "eye_angry_right"
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 7
+        },
+        "upper_arm_left": {
+          "rotation": 38,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": 40,
+          "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 5
+        },
+        "torso": {
+          "rotation": -5
+        },
+        "head": {
+          "rotation": 6
+        },
+        "thigh_left": {
+          "rotation": 7
+        },
+        "shin_left": {
+          "rotation": -6
+        },
+        "thigh_right": {
+          "rotation": -3
+        },
+        "shin_right": {
+          "rotation": 3
+        }
+      }
+    },
+    "tanec_2": {
+      "name": "tanec_2",
+      "transition_duration": 0.12,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 126,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": 34,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -38,
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": -40,
+          "z_order": 4
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 5
+        },
+        "torso": {
+          "rotation": 5
+        },
+        "head": {
+          "rotation": -6
+        },
+        "thigh_right": {
+          "rotation": -7
+        },
+        "shin_right": {
+          "rotation": 6
+        },
+        "thigh_left": {
+          "rotation": 3
+        },
+        "shin_left": {
+          "rotation": -3
+        }
+      }
+    },
+    "tanec_3": {
+      "name": "tanec_3",
+      "transition_duration": 0.1,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 104,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": 62,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -104,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": -62,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 7
+        },
+        "head": {
+          "rotation": 3
+        },
+        "thigh_left": {
+          "rotation": 5
+        },
+        "thigh_right": {
+          "rotation": -5
+        }
+      }
+    },
+    "tanec_4": {
+      "name": "tanec_4",
+      "transition_duration": 0.12,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 84,
+          "z_order": 5
+        },
+        "forearm_left": {
+          "rotation": -16,
+          "z_order": 5
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 6
+        },
+        "upper_arm_right": {
+          "rotation": -52,
+          "z_order": 5
+        },
+        "forearm_right": {
+          "rotation": 58,
+          "z_order": 5
+        },
+        "hand_right": {
+          "part": "hand_relax_r",
+          "z_order": 6
+        },
+        "torso": {
+          "rotation": 6
+        },
+        "head": {
+          "rotation": -4
+        },
+        "thigh_left": {
+          "rotation": 9
+        },
+        "shin_left": {
+          "rotation": -8
+        },
+        "thigh_right": {
+          "rotation": -4
+        },
+        "shin_right": {
+          "rotation": 4
+        }
+      }
+    },
+    "tanec_5": {
+      "name": "tanec_5",
+      "transition_duration": 0.12,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -84,
+          "z_order": 5
+        },
+        "forearm_right": {
+          "rotation": 16,
+          "z_order": 5
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 6
+        },
+        "upper_arm_left": {
+          "rotation": 52,
+          "z_order": 5
+        },
+        "forearm_left": {
+          "rotation": -58,
+          "z_order": 5
+        },
+        "hand_left": {
+          "part": "hand_relax",
+          "z_order": 6
+        },
+        "torso": {
+          "rotation": -6
+        },
+        "head": {
+          "rotation": 4
+        },
+        "thigh_right": {
+          "rotation": -9
+        },
+        "shin_right": {
+          "rotation": 8
+        },
+        "thigh_left": {
+          "rotation": 4
+        },
+        "shin_left": {
+          "rotation": -4
+        }
+      }
+    },
+    "tanec_6": {
+      "name": "tanec_6",
+      "transition_duration": 0.1,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 26,
+          "z_order": 5
+        },
+        "forearm_left": {
+          "rotation": -54,
+          "z_order": 5
+        },
+        "hand_left": {
+          "part": "hand_relax",
+          "z_order": 6
+        },
+        "upper_arm_right": {
+          "rotation": -26,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": 54,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_relax_r",
+          "z_order": 7
+        },
+        "head": {
+          "rotation": -3
+        },
+        "thigh_left": {
+          "rotation": 3
+        },
+        "thigh_right": {
+          "rotation": -3
         }
       }
     }
