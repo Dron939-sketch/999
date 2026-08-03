@@ -11,8 +11,7 @@
   <g filter="url(#ink)">
     <circle cx="120" cy="120" r="86" fill="none" stroke="#f2f2ec" stroke-width="9"
             stroke-linecap="round" stroke-dasharray="470 60" transform="rotate(-24 120 120)"/>
-    <text x="120" y="120" fill="#f2f2ec" font-family="Georgia, 'Times New Roman', serif"
-          font-size="132" font-weight="700" text-anchor="middle"
-          dominant-baseline="central">6</text>
+    <g transform="translate(77.0 59.8) scale(0.86)" fill="none" stroke="#f2f2ec"
+       stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><path d="M84 12 C74 6 62 4 52 4 C24 4 10 30 10 76 C10 116 26 136 52 136 C76 136 92 118 92 96 C92 74 76 58 52 58 C32 58 14 70 10 88" transform="translate(0 0)"/></g>
   </g>
 </svg>
