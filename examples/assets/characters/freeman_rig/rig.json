@@ -6270,6 +6270,54 @@
           "rotation": 13
         }
       }
+    },
+    "gladit_grud": {
+      "name": "gladit_grud",
+      "transition_duration": 0.22,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 70,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": -92,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        }
+      }
+    },
+    "gladit_grud_niz": {
+      "name": "gladit_grud_niz",
+      "transition_duration": 0.22,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 58,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": -74,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        }
+      }
     }
   },
   "karta": {
