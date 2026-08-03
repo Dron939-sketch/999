@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <defs>
+    <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="1" seed="49" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- НОМЕР КУРСА «7» на балахон, справа на груди. Белая тушь: балахон —
+       сплошное чёрное пятно, чёрная цифра на нём не читается вообще.
+       Круг рваный и незамкнутый — метка от руки, а не печать. -->
+  <g filter="url(#ink)">
+    <circle cx="120" cy="120" r="86" fill="none" stroke="#f2f2ec" stroke-width="9"
+            stroke-linecap="round" stroke-dasharray="470 60" transform="rotate(-24 120 120)"/>
+    <g transform="translate(77.0 59.8) scale(0.86)" fill="none" stroke="#f2f2ec"
+       stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6 L94 6 L44 136" transform="translate(0 0)"/></g>
+  </g>
+</svg>
