@@ -7772,6 +7772,165 @@
           "rotation": -3
         }
       }
+    },
+    "yorik": {
+      "name": "yorik",
+      "transition_duration": 0.34,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -78,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": 22,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_offer_r",
+          "z_order": 7
+        },
+        "upper_arm_left": {
+          "rotation": 26
+        },
+        "forearm_left": {
+          "rotation": -12
+        },
+        "head": {
+          "rotation": -12,
+          "offset": [
+            4,
+            30
+          ]
+        }
+      }
+    },
+    "vozzvanie": {
+      "name": "vozzvanie",
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 152,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": 12,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -34
+        },
+        "forearm_right": {
+          "rotation": 16
+        },
+        "head": {
+          "rotation": 8,
+          "offset": [
+            0,
+            18
+          ]
+        }
+      }
+    },
+    "obvinil": {
+      "name": "obvinil",
+      "transition_duration": 0.16,
+      "bones": {
+        "torso": {
+          "rotation": 8
+        },
+        "upper_arm_right": {
+          "rotation": -102,
+          "z_order": 8
+        },
+        "forearm_right": {
+          "rotation": -6,
+          "z_order": 8
+        },
+        "hand_right": {
+          "part": "hand_point_r",
+          "z_order": 9,
+          "rotation": -18
+        },
+        "upper_arm_left": {
+          "rotation": 22
+        },
+        "forearm_left": {
+          "rotation": -40
+        },
+        "head": {
+          "rotation": -8
+        }
+      }
+    },
+    "chelo": {
+      "name": "chelo",
+      "transition_duration": 0.36,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 138,
+          "z_order": 7
+        },
+        "forearm_left": {
+          "rotation": -74,
+          "z_order": 7
+        },
+        "hand_left": {
+          "part": "hand_relax",
+          "z_order": 8,
+          "rotation": 40
+        },
+        "upper_arm_right": {
+          "rotation": -20
+        },
+        "forearm_right": {
+          "rotation": -48
+        },
+        "head": {
+          "rotation": 14,
+          "offset": [
+            -6,
+            34
+          ]
+        }
+      }
+    },
+    "otverg": {
+      "name": "otverg",
+      "transition_duration": 0.28,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -94,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": 14,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 7
+        },
+        "upper_arm_left": {
+          "rotation": 20
+        },
+        "forearm_left": {
+          "rotation": -52
+        },
+        "torso": {
+          "rotation": -6
+        },
+        "head": {
+          "rotation": 16,
+          "offset": [
+            -10,
+            22
+          ]
+        }
+      }
     }
   },
   "karta": {

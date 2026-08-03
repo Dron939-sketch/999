@@ -395,6 +395,67 @@ TANEC = {
 }
 
 
+# ============================================================================
+#  СОЛИЛОКВИЙ: сценические позы шекспировского монолога.
+# ============================================================================
+#  Фримен — монологист, обращающийся ПРЯМО В ЗАЛ. Это ровно форма солилоквия, и
+#  брать риторические позы оттуда честнее, чем изобретать: они отобраны четырьмя
+#  веками сцены по одному признаку — читаются с галёрки, то есть силуэтом. Наш
+#  случай тот же: плоская чёрная фигура на светлом поле, и всё, что не попало в
+#  контур, не существует.
+#
+#  Взято ПЯТЬ фигур, которых в библиотеке не было ни на одну сторону. Каждая
+#  названа по тому, что делает, а не по цитате: имя `yorik` в раскадровке
+#  должно говорить режиссёру «предъявляет на ладони», а не отсылать к пьесе.
+SHEKSPIR = {
+  "yorik": (0.34, {                            # «Бедный Йорик»: предъявляет на ладони
+    # Рука вперёд-вбок, ладонь раскрыта вверх, ГОЛОВА СКЛОНЕНА К НЕЙ. Голова и
+    # делает жест высказыванием: без наклона это просто протянутая рука, с
+    # наклоном — «вот это, посмотрите, я на это смотрю вместе с вами».
+    "upper_arm_right": {"rotation": -78, "z_order": 6},
+    "forearm_right": {"rotation": 22, "z_order": 6},
+    "hand_right": {"part": "hand_offer_r", "z_order": 7},
+    "upper_arm_left": {"rotation": 26}, "forearm_left": {"rotation": -12},
+    "head": {"rotation": -12, "offset": [4, 30]}}),
+  "vozzvanie": (0.3, {                         # «О!» — рука к небу
+    # Почти вертикаль, ладонь раскрыта. От `ruka_vverh` (124°) отличается на
+    # 28°: на длине всей руки это другой силуэт, и мерка это подтверждает.
+    "upper_arm_left": {"rotation": 152, "z_order": 6},
+    "forearm_left": {"rotation": 12, "z_order": 6},
+    "hand_left": {"part": "hand_open", "z_order": 7},
+    "upper_arm_right": {"rotation": -34}, "forearm_right": {"rotation": 16},
+    "head": {"rotation": 8, "offset": [0, 18]}}),
+  "obvinil": (0.16, {                          # обвиняющий перст: «ты — тот самый»
+    # Рука ПРЯМАЯ и высокая, корпус подан вперёд. Отличие от `vdal` (та же
+    # высота, но рука расслаблена и показывает вдаль) — в прямизне и в наклоне
+    # торса: обвинение идёт всем телом, указание только рукой.
+    "torso": {"rotation": 8},
+    "upper_arm_right": {"rotation": -102, "z_order": 8},
+    "forearm_right": {"rotation": -6, "z_order": 8},
+    "hand_right": {"part": "hand_point_r", "z_order": 9, "rotation": -18},
+    "upper_arm_left": {"rotation": 22}, "forearm_left": {"rotation": -40},
+    "head": {"rotation": -8}}),
+  "chelo": (0.36, {                            # тыльная сторона ладони ко лбу
+    # Театральное отчаяние. От `kozyrek` (та же зона) отличается тем, что рука
+    # идёт НАД головой и заваливается назад, а не козырьком вперёд.
+    "upper_arm_left": {"rotation": 138, "z_order": 7},
+    "forearm_left": {"rotation": -74, "z_order": 7},
+    "hand_left": {"part": "hand_relax", "z_order": 8, "rotation": 40},
+    "upper_arm_right": {"rotation": -20}, "forearm_right": {"rotation": -48},
+    "head": {"rotation": 14, "offset": [-6, 34]}}),
+  "otverg": (0.28, {                           # отвернулся и отстранил
+    # Голова в одну сторону, рука в другую. Единственная фигура набора, где
+    # работает ПРОТИВОХОД: две части тела спорят, и это читается отказом
+    # смотреть, а не просто жестом в сторону.
+    "upper_arm_right": {"rotation": -94, "z_order": 6},
+    "forearm_right": {"rotation": 14, "z_order": 6},
+    "hand_right": {"part": "hand_open_r", "z_order": 7},
+    "upper_arm_left": {"rotation": 20}, "forearm_left": {"rotation": -52},
+    "torso": {"rotation": -6},
+    "head": {"rotation": 16, "offset": [-10, 22]}}),
+}
+
+
 def main():
     rig = json.loads(RIG.read_text(encoding="utf-8"))
     poses = rig["poses"]
@@ -425,7 +486,7 @@ def main():
                    "oba_tuda"):
         poses.pop(snyato, None)
     added, upd = [], []
-    for group in (RUKI, GLAZA, ESCHO, TANEC):
+    for group in (RUKI, GLAZA, ESCHO, TANEC, SHEKSPIR):
         for name, (td, bones) in group.items():
             (upd if name in poses else added).append(name)
             poses[name] = {"name": name, "transition_duration": td, "bones": bones}
