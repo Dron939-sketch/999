@@ -185,7 +185,7 @@ scene "ploschadka" (duration: 1s, set: ploschadka) {
         freeman speaks for 5.0s
         do {
             wait 1.5s
-            freeman overlays "dve_storony" // «две двери» — вот одна, вот другая
+            freeman overlays "yorik"       // «две двери» — предъявил на ладони
             freeman overlays "vzglyad"     // очевидность подают ровно
             wait 1.7s
             freeman overlays "stop_ladon"  // «это не выбор» — стоп
@@ -252,7 +252,7 @@ scene "bazar" (duration: 1s, set: bazar) {
             //  поднятая `v_upor`-ом рука висела бы всю реплику забытой.
             freeman overlays "zakrylsya"   // «все пять — про одно»: закрылся
             wait 1.8s
-            freeman overlays "rubit"       // «ни один не спорит» — отрезал
+            freeman overlays "obvinil"     // «ни один не спорит» — всем телом
             wait 1.9s
             camera medium freeman
             freeman overlays "klin"        // «каждый меняет вопрос» — приговор
@@ -292,7 +292,7 @@ scene "temnota" (duration: 1s, set: void) {
             wait 2.04s
             freeman overlays "doshlo"      // «и всё равно быть ложью» — шар
             wait 1.9s
-            freeman overlays "vniz"        // «вход был кривой» — вот сюда
+            freeman overlays "vniz_l"      // «вход был кривой» — вот сюда
         }
     }
     wait 0.5s
@@ -310,7 +310,7 @@ scene "temnota" (duration: 1s, set: void) {
             wait 1.92s
             freeman overlays "vzglyad"     // «не говорит, где истина» — ровно
             wait 2.03s
-            freeman overlays "dve_storony" // «это разные вопросы» — вот и вот
+            freeman overlays "dve_storony_l" // «это разные вопросы» — вот и вот
             wait 1.81s
             freeman overlays "poimal"      // «путают их постоянно» — перекос
         }
@@ -345,16 +345,16 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
         freeman speaks for 8.15s
         do {
             wait 1.27s
-            freeman overlays "dve_storony" // «в двух местах» — вот и вот
+            freeman overlays "vzves"       // «в двух местах» — две чаши
             freeman overlays "raspahnul"   // список начат
             wait 1.36s
             freeman overlays "palec_vverh" // «верны ли посылки» — первое
             wait 1.36s
             freeman overlays "rubit"       // «следует ли вывод» — отрезал
             wait 1.36s
-            freeman overlays "razvel"      // «все ли варианты названы»
+            freeman overlays "oba_vverh"   // «все ли варианты названы»
             wait 1.27s
-            freeman overlays "manit"       // «кто задал вопрос» — а ну-ка
+            freeman overlays "manit_l"     // «кто задал вопрос» — а ну-ка
             wait 1.27s
             freeman overlays "vniz"        // «если ответить иначе» — вот сюда
             freeman overlays "teplo"       // и тепло: это выполнимо
@@ -375,9 +375,9 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
             freeman overlays "otmahnulsya" // «разбираться не хочет» — отмашка
             freeman overlays "prishchur"   // с ухмылкой: приём известный
             wait 1.7s
-            freeman overlays "dengi"       // «брать побольше» — вот такую
+            freeman overlays "razmer"      // «брать побольше» — вот такую, во!
             wait 1.8s
-            freeman overlays "u_viska"     // «до первого почему» — серьёзно?
+            freeman overlays "u_viska_l"   // «до первого почему» — серьёзно?
         }
     }
     camera wide
@@ -434,10 +434,10 @@ scene "final" (duration: 1s, set: ploschadka) {
         do {
             camera medium freeman
             wait 1.69s
-            freeman overlays "stop_ladon"  // «не выбирайте» — стоп
+            freeman overlays "stop_ladon_l" // «не выбирайте» — стоп
             freeman overlays "klin"        // с вызовом, а не с советом
             wait 1.56s
-            freeman overlays "razvel"      // «где остальные?» — а где же
+            freeman overlays "vozzvanie"   // «где остальные?» — рука к небу
             freeman overlays "doshlo"      // и вопрос повисает: шар в глазах
         }
     }
