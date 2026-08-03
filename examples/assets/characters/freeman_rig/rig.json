@@ -6318,6 +6318,495 @@
           "rotation": 13
         }
       }
+    },
+    "palec_vverh": {
+      "name": "palec_vverh",
+      "transition_duration": 0.28,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -58,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": -104,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_point_r",
+          "z_order": 7,
+          "rotation": 8
+        },
+        "upper_arm_left": {
+          "rotation": 28
+        },
+        "forearm_left": {
+          "rotation": -12
+        },
+        "head": {
+          "rotation": 2
+        }
+      }
+    },
+    "vniz": {
+      "name": "vniz",
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -58,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": 62,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_point_r",
+          "z_order": 7,
+          "rotation": -46
+        },
+        "upper_arm_left": {
+          "rotation": 30
+        },
+        "forearm_left": {
+          "rotation": -14
+        },
+        "head": {
+          "rotation": -7
+        }
+      }
+    },
+    "manit": {
+      "name": "manit",
+      "transition_duration": 0.26,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -68,
+          "z_order": 7
+        },
+        "forearm_right": {
+          "rotation": -78,
+          "z_order": 7
+        },
+        "hand_right": {
+          "part": "hand_point_r",
+          "z_order": 8,
+          "rotation": 96
+        },
+        "upper_arm_left": {
+          "rotation": 28
+        },
+        "forearm_left": {
+          "rotation": -12
+        }
+      }
+    },
+    "rubit": {
+      "name": "rubit",
+      "transition_duration": 0.16,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -116,
+          "z_order": 7
+        },
+        "forearm_right": {
+          "rotation": 48,
+          "z_order": 7
+        },
+        "hand_right": {
+          "part": "hand_relax_r",
+          "z_order": 8,
+          "rotation": -24
+        },
+        "upper_arm_left": {
+          "rotation": 30
+        },
+        "forearm_left": {
+          "rotation": -14
+        },
+        "head": {
+          "rotation": -4
+        }
+      }
+    },
+    "stop_ladon": {
+      "name": "stop_ladon",
+      "transition_duration": 0.22,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -82,
+          "z_order": 7
+        },
+        "forearm_right": {
+          "rotation": -30,
+          "z_order": 7
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 8,
+          "scale": [
+            1.12,
+            1.12
+          ]
+        },
+        "upper_arm_left": {
+          "rotation": 28
+        },
+        "forearm_left": {
+          "rotation": -12
+        }
+      }
+    },
+    "dengi": {
+      "name": "dengi",
+      "transition_duration": 0.28,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -74,
+          "z_order": 7
+        },
+        "forearm_right": {
+          "rotation": -72,
+          "z_order": 7
+        },
+        "hand_right": {
+          "part": "hand_fist_r",
+          "z_order": 8
+        },
+        "upper_arm_left": {
+          "rotation": 28
+        },
+        "forearm_left": {
+          "rotation": -12
+        },
+        "head": {
+          "rotation": 3
+        }
+      }
+    },
+    "dve_storony": {
+      "name": "dve_storony",
+      "transition_duration": 0.34,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 34,
+          "z_order": 5
+        },
+        "forearm_left": {
+          "rotation": 44,
+          "z_order": 5
+        },
+        "hand_left": {
+          "part": "hand_offer",
+          "z_order": 6
+        },
+        "upper_arm_right": {
+          "rotation": -104,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": -22,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_offer_r",
+          "z_order": 7
+        },
+        "head": {
+          "rotation": 4
+        }
+      }
+    },
+    "zakrylsya": {
+      "name": "zakrylsya",
+      "transition_duration": 0.36,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 46,
+          "z_order": 5
+        },
+        "forearm_left": {
+          "rotation": -118,
+          "z_order": 5
+        },
+        "hand_left": {
+          "part": "hand_relax",
+          "z_order": 5
+        },
+        "upper_arm_right": {
+          "rotation": -46,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": 118,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_relax_r",
+          "z_order": 6
+        }
+      }
+    },
+    "ruki_za_spinu": {
+      "name": "ruki_za_spinu",
+      "transition_duration": 0.4,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": -16,
+          "z_order": 1
+        },
+        "forearm_left": {
+          "rotation": -54,
+          "z_order": 1
+        },
+        "hand_left": {
+          "part": "hand_relax",
+          "z_order": 1
+        },
+        "upper_arm_right": {
+          "rotation": 16,
+          "z_order": 1
+        },
+        "forearm_right": {
+          "rotation": 54,
+          "z_order": 1
+        },
+        "hand_right": {
+          "part": "hand_relax_r",
+          "z_order": 1
+        },
+        "head": {
+          "rotation": 3
+        }
+      }
+    },
+    "razvel": {
+      "name": "razvel",
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 44,
+          "z_order": 4
+        },
+        "forearm_left": {
+          "rotation": 24,
+          "z_order": 4
+        },
+        "hand_left": {
+          "part": "hand_offer",
+          "z_order": 5
+        },
+        "upper_arm_right": {
+          "rotation": -44,
+          "z_order": 4
+        },
+        "forearm_right": {
+          "rotation": -24,
+          "z_order": 4
+        },
+        "hand_right": {
+          "part": "hand_offer_r",
+          "z_order": 5
+        }
+      }
+    },
+    "u_viska": {
+      "name": "u_viska",
+      "transition_duration": 0.26,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -96,
+          "z_order": 7
+        },
+        "forearm_right": {
+          "rotation": -84,
+          "z_order": 7
+        },
+        "hand_right": {
+          "part": "hand_point_r",
+          "z_order": 8,
+          "rotation": 54
+        },
+        "upper_arm_left": {
+          "rotation": 28
+        },
+        "forearm_left": {
+          "rotation": -12
+        },
+        "head": {
+          "rotation": 6
+        }
+      }
+    },
+    "vzglyad": {
+      "name": "vzglyad",
+      "transition_duration": 0.3,
+      "bones": {
+        "eye_left": {
+          "part": "eye_left"
+        },
+        "eye_right": {
+          "part": "eye_right"
+        },
+        "brow_left": {
+          "part": "blank"
+        },
+        "brow_right": {
+          "part": "blank"
+        }
+      }
+    },
+    "prishchur": {
+      "name": "prishchur",
+      "transition_duration": 0.26,
+      "bones": {
+        "eye_left": {
+          "part": "eye_squint"
+        },
+        "eye_right": {
+          "part": "eye_squint"
+        },
+        "head": {
+          "rotation": -3
+        }
+      }
+    },
+    "poimal": {
+      "name": "poimal",
+      "transition_duration": 0.24,
+      "bones": {
+        "eye_left": {
+          "part": "eye_angry_left"
+        },
+        "eye_right": {
+          "part": "eye_squint"
+        },
+        "head": {
+          "rotation": -4
+        }
+      }
+    },
+    "klin": {
+      "name": "klin",
+      "transition_duration": 0.2,
+      "bones": {
+        "eye_left": {
+          "part": "eye_angry_left"
+        },
+        "eye_right": {
+          "part": "eye_angry_right"
+        },
+        "brow_left": {
+          "part": "brow"
+        },
+        "brow_right": {
+          "part": "brow"
+        },
+        "head": {
+          "rotation": -5
+        }
+      }
+    },
+    "teplo": {
+      "name": "teplo",
+      "transition_duration": 0.34,
+      "bones": {
+        "eye_left": {
+          "part": "eye_arc"
+        },
+        "eye_right": {
+          "part": "eye_arc"
+        },
+        "head": {
+          "rotation": 3
+        }
+      }
+    },
+    "doshlo": {
+      "name": "doshlo",
+      "transition_duration": 0.16,
+      "bones": {
+        "eye_left": {
+          "part": "eye_shock"
+        },
+        "eye_right": {
+          "part": "eye_shock"
+        },
+        "head": {
+          "rotation": 2
+        }
+      }
+    },
+    "gorech": {
+      "name": "gorech",
+      "transition_duration": 0.36,
+      "bones": {
+        "eye_left": {
+          "part": "eye_sad"
+        },
+        "eye_right": {
+          "part": "eye_sad"
+        },
+        "head": {
+          "rotation": 6
+        }
+      }
+    },
+    "somnenie": {
+      "name": "somnenie",
+      "transition_duration": 0.28,
+      "bones": {
+        "eye_left": {
+          "part": "eye_squint"
+        },
+        "eye_right": {
+          "part": "eye_right"
+        },
+        "brow_left": {
+          "part": "brow"
+        },
+        "head": {
+          "rotation": -2
+        }
+      }
+    },
+    "ostyl": {
+      "name": "ostyl",
+      "transition_duration": 0.3,
+      "bones": {
+        "eye_left": {
+          "scale": [
+            0.729,
+            0.62
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            0.689,
+            0.58
+          ]
+        }
+      }
+    },
+    "raspahnul": {
+      "name": "raspahnul",
+      "transition_duration": 0.14,
+      "bones": {
+        "eye_left": {
+          "scale": [
+            0.82,
+            1.3
+          ]
+        },
+        "eye_right": {
+          "scale": [
+            0.78,
+            1.24
+          ]
+        },
+        "head": {
+          "rotation": 1
+        }
+      }
     }
   },
   "karta": {

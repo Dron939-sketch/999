@@ -908,6 +908,34 @@ DISTINCT_BODIES_MIN = 9
 DEFAULT_BODY_SHARE_MAX = 0.35
 
 
+def hronometrazh_anim(anim, engine=None):
+    """Фактическая длина таймлайна сценария в секундах (`animdsl timing`).
+
+    СУММА `duration:` — НЕ ХРОНОМЕТРАЖ, И ЭТО НЕ МЕЛОЧЬ. У говорящей сцены
+    объявленная длительность — ПОЛ, а не цель: с тех пор как это стало
+    правилом (`pauses.py`), она равна `1s` независимо от того, сколько сцена
+    идёт на самом деле. Ролик на 78 секунд объявляет шесть.
+
+    Любая мерка, делящая на эту сумму, врёт во столько же раз. Ровно это и
+    случилось с приёмщиком динамики: на четырёх новейших роликах знаменатель
+    занижен в десять-тринадцать раз, и «смены силуэта в минуту» выходили за
+    400 при норме 18 — гейт не мог провалиться в принципе.
+
+    Длину берём у движка тем же способом, что `pauses.py`: он единственный
+    знает, сколько сцена идёт по содержимому. Движка нет — возвращаем None,
+    и звать нас будут с честной оговоркой, а не с выдуманным числом.
+    """
+    eng = Path(engine or DEFAULT_ENGINE)
+    if not eng.exists():
+        return None
+    try:
+        out = subprocess.run([str(eng), "timing", str(anim)],
+                             capture_output=True, check=True).stdout
+        return float(json.loads(out)["total"])
+    except Exception:                                        # noqa: BLE001
+        return None
+
+
 def lint_dinamika(prod, rig_dir=None):
     """Приёмщик ДИНАМИКИ: меняется ли СИЛУЭТ ТЕЛА, а не только лицо. (hard, soft)."""
     anim = ROOT / prod.get("anim", "")
@@ -916,8 +944,11 @@ def lint_dinamika(prod, rig_dir=None):
         return [], []
     text = anim_code(anim.read_text(encoding="utf-8"))
     seq = re.findall(r'(pose|overlays)\s+"([a-z_0-9]+)"', text)
-    secs = sum(float(x) for x in re.findall(r"duration:\s*(\d+)s", text))
-    if secs < 5 or not seq:
+    # ХРОНОМЕТРАЖ У ДВИЖКА, А НЕ ИЗ ОБЪЯВЛЕНИЙ. Разбор — в шапке
+    # hronometrazh_anim. Без движка мерить нечем: считать по `duration:`
+    # значит печатать зелёное там, где не измерено.
+    secs = hronometrazh_anim(anim)
+    if secs is None or secs < 5 or not seq:
         return [], []
 
     # Проигрываем сценарий так же, как движок: `pose` задаёт тело целиком
