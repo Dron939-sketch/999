@@ -300,8 +300,19 @@ fn interpolate_bone(
     let from_scale = from_bt.and_then(|bt| bt.scale).unwrap_or(bone.scale);
     let to_scale = to_bt.and_then(|bt| bt.scale).unwrap_or(bone.scale);
 
-    // Smooth interpolation using ease-in-out
-    let t_smooth = smooth_step(t);
+    // КРИВУЮ ВЫБИРАЕТ ВЫЗЫВАЮЩИЙ, А НЕ МЫ. Здесь стояло `smooth_step(t)` —
+    // второе сглаживание поверх того, что рендерер уже посчитал, и с клампом
+    // в [0,1]. Оно молча съедало ровно то, ради чего рендерер и считает
+    // кривую: `anticipate_back` уходит в МИНУС на замахе, `ease_out_back`
+    // перелетает за единицу на выбеге, и оба конца отрезались. То есть
+    // размах — замах, удар, перелёт, осадка — был написан, задокументирован
+    // («Extrapolation past [0,1] is intentional here») и не работал ни одного
+    // кадра: первые 30% любого жеста фигура просто стояла, потом смазывалась
+    // в середину. Отсюда и «кукла, а не живой человек».
+    //
+    // Два места спорили об одной вещи — та же болезнь, что уже стоила нам
+    // разъехавшихся гейтов. Теперь кривая одна и живёт у рендерера.
+    let t_smooth = t;
 
     // Cel swap: drawings don't tween — snap to the target pose's part past the
     // midpoint, else the source pose's part, else the bone's default drawing.
@@ -642,8 +653,3 @@ fn lerp_angle(a: f64, b: f64, t: f64) -> f64 {
     a + diff * t
 }
 
-/// Smooth step (ease-in-out).
-fn smooth_step(t: f64) -> f64 {
-    let t = t.clamp(0.0, 1.0);
-    t * t * (3.0 - 2.0 * t)
-}
