@@ -141,12 +141,12 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 4.57s
+        freeman speaks for 4.49s
         do {
             camera medium freeman
-            wait 1.500s
+            wait 1.47s
             freeman overlays "prishchur"   // «вы дышали» — снисхождение, глазами
-            wait 1.290s
+            wait 1.27s
             freeman overlays "shrug"       // «и всё равно сорвались» — плечами
             freeman overlays "poimal"      // и перекос: клин слева, щель справа
         }
@@ -159,13 +159,13 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     freeman overlays "hips"
     //lip 2
     together {
-        freeman speaks for 4.08s
+        freeman speaks for 3.74s
         do {
-            wait 1.180s
+            wait 1.08s
             freeman overlays "ostyl"       // диагноз ставят холодно, не зло
-            wait 1.110s
+            wait 1.02s
             freeman overlays "k_sebe"      // «дело не в выдержке» — про зрителя
-            wait 1.100s
+            wait 1.01s
             freeman overlays "vzglyad"     // «слишком поздно» — ровно, в упор
         }
     }
@@ -178,15 +178,15 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     freeman pose "calm"
     //lip 3
     together {
-        freeman speaks for 5.28s
+        freeman speaks for 5.77s
         do {
-            wait 1.56s
+            wait 1.71s
             freeman overlays "point"       // «чайник на плите» — показал на него
             freeman overlays "vzglyad"     // очевидность подают ровно, без нажима
-            wait 1.95s
+            wait 2.13s
             freeman overlays "otmahnulsya" // «свисток можно заткнуть» — отмашка
             freeman overlays "prishchur"   // …и снисхождение: приём-то известный
-            wait 1.10s
+            wait 1.2s
             freeman overlays "dve_storony" // «вода не остынет» — а толку-то
         }
     }
@@ -215,18 +215,18 @@ scene "vannaya" (duration: 1s, set: vannaya) {
     freeman pose "calm"
     //lip 4
     together {
-        freeman speaks for 5.88s
+        freeman speaks for 6.35s
         do {
             freeman overlays "shag_levoj"
             freeman overlays "vzglyad"     // чужие советы слушают ровно
-            freeman moves-to (0.5, 0.86) over 1.22s
+            freeman moves-to (0.5, 0.86) over 1.32s
             freeman overlays "shag_pravoj"
-            freeman scales 0.62 over 1.22s
+            freeman scales 0.62 over 1.32s
             freeman overlays "shag_levoj"
             freeman overlays "somnenie"    // на третьем совете бровь пошла вверх
-            freeman moves-to (0.5, 0.95) over 1.22s
+            freeman moves-to (0.5, 0.95) over 1.32s
             freeman overlays "shag_pravoj"
-            freeman scales 0.80 over 1.22s
+            freeman scales 0.80 over 1.32s
             freeman overlays "prishchur"   // «просто не думай» — ну-ну
         }
     }
@@ -242,11 +242,11 @@ scene "vannaya" (duration: 1s, set: vannaya) {
     freeman pose "v_upor"
     //lip 5
     together {
-        freeman speaks for 3.66s
+        freeman speaks for 4.70s
         do {
-            wait 1.10s
+            wait 1.41s
             freeman overlays "zakrylsya"   // «все пять — про одно»: закрылся
-            wait 1.11s
+            wait 1.43s
             camera medium freeman
             //  ЛИЦО ЖЁСТЧЕ — ТЕПЕРЬ ЛИЦОМ. Здесь стоял `ugryumo` с ремаркой
             //  «НЕ stern: та трогает рот»: автор хотел мимический удар и брал
@@ -281,21 +281,21 @@ scene "temnota" (duration: 1s, set: void) {
     //  чтобы узнавать себя.
     //lip 6
     together {
-        freeman speaks for 7.16s
+        freeman speaks for 7.03s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ. Слой из одних глаз рук не трогает, и
             //  поднятая `v_upor`-ом рука висела бы всю реплику забытой
             //  (`studio.lint_arms`). Здесь это ещё и по смыслу: подавление —
             //  это закрыться.
             freeman overlays "zakrylsya"   // закрылся: «подавление»
-            wait 1.90s
+            wait 1.86s
             freeman overlays "ostyl"       // «не выключает» — сузил, без злости
-            wait 1.18s
+            wait 1.16s
             freeman overlays "think"       // «оно её прячет» — отвёл взгляд
-            wait 2.64s
+            wait 2.59s
             freeman overlays "v_upor"      // «собеседник всё видит» — в упор
             freeman overlays "poimal"      // …и перекос: он-то знает
-            wait 1.40s
+            wait 1.37s
             freeman overlays "razvel"      // «внутри всё то же самое»
         }
     }
@@ -307,18 +307,18 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     //lip 7
     together {
-        freeman speaks for 6.01s
+        freeman speaks for 5.80s
         do {
             //  ГЛАВНАЯ ФРАЗА ИДЁТ ПОЧТИ БЕЗ ЖЕСТА — но рука обязана быть
             //  НАЗВАНА, иначе она остаётся поднятой от `v_upor` на всю реплику.
             //  `calm` опускает руки в покой: это и есть «почти неподвижно»,
             //  только сказанное явно.
             freeman overlays "calm"
-            wait 1.80s
+            wait 1.74s
             freeman overlays "vzglyad"     // «не помеха» — снял приговор с лица
-            wait 1.83s
+            wait 1.77s
             freeman overlays "ugryumo"
-            wait 1.60s
+            wait 1.54s
             freeman overlays "teplo"       // «что для вас имеет смысл» — дуга
         }
     }
@@ -348,21 +348,21 @@ scene "vozvrat" (duration: 1s, set: kuhnya) {
     freeman pose "calm"
     //lip 8
     together {
-        freeman speaks for 8.78s
+        freeman speaks for 7.29s
         do {
             //  ПЯТЬ ТОЧЕК — ПЯТЬ РАЗНЫХ ЖЕСТОВ, а не три. Перечисление, где
             //  рука повторяется, слышно как один пункт, растянутый на пять:
             //  зритель считает ДВИЖЕНИЯ, а не слова.
-            wait 1.42s
+            wait 1.18s
             freeman overlays "palec_vverh" // «куда пойти» — первая точка
             freeman overlays "raspahnul"   // и глаза открылись: список начат
-            wait 1.36s
+            wait 1.13s
             freeman overlays "dve_storony" // «что изменить» — взвесил
-            wait 1.44s
+            wait 1.2s
             freeman overlays "vdal"        // «куда смотреть» — рука вдаль
-            wait 1.38s
+            wait 1.15s
             freeman overlays "rubit"       // «как назвать» — назвал, отрезал
-            wait 1.42s
+            wait 1.18s
             freeman overlays "otmahnulsya" // «держать лицо» — отмашка
             freeman overlays "prishchur"   // …и цена этой точки уже видна
         }
@@ -375,15 +375,15 @@ scene "vozvrat" (duration: 1s, set: kuhnya) {
     freeman pose "calm"
     //lip 9
     together {
-        freeman speaks for 6.87s
+        freeman speaks for 5.98s
         do {
             camera medium freeman
-            wait 1.60s
+            wait 1.39s
             freeman overlays "dengi"       // «тем дешевле» — цена, кулак у груди
             freeman overlays "ostyl"       // считают спокойно, это арифметика
-            wait 1.24s
+            wait 1.08s
             freeman overlays "point"       // «снять с огня» — показал на плиту
-            wait 2.37s
+            wait 2.06s
             freeman overlays "k_sebe"      // «стоит вечера» — про зрителя
             freeman overlays "poimal"      // …и перекос: вечер-то знакомый
         }
@@ -471,7 +471,7 @@ scene "final" (duration: 1s, set: tiho) {
     nomer2 hides
     //lip 12
     together {
-        freeman speaks for 4.10s
+        freeman speaks for 3.55s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает (tools/speech_lint.py). Обе
@@ -479,13 +479,13 @@ scene "final" (duration: 1s, set: tiho) {
             //  накладкой без единой потери.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"       // подпись объявляют тепло, не бьют
-            wait 1.53s
+            wait 1.33s
             nomer2 shows
             nomer2 scales 0.02
-            nomer2 scales 0.23 over 0.19s ease-out
-            nomer2 scales 0.21 over 0.1s
+            nomer2 scales 0.23 over 0.16s ease-out
+            nomer2 scales 0.21 over 0.09s
             freeman overlays "gladit_grud_niz"
-            wait 0.57s
+            wait 0.49s
             freeman overlays "gladit_grud"
         }
     }
