@@ -63,10 +63,11 @@
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
-import set ploschadka from "../assets/sets/ploschadka-dve-dveri.svg"
-import set bazar from "../assets/sets/bazaar-obeschanij.svg"
+import set dveri from "../assets/sets/logika-dve-dveri.svg"
+import set dveri_vse from "../assets/sets/logika-dve-dveri-vse.svg"
+import set rupory from "../assets/sets/logika-hor-golosov.svg"
 import set void from "../assets/sets/void-black.svg"
-import set perekrestok from "../assets/sets/perekrestok-bez-znakov.svg"
+import set veer from "../assets/sets/logika-veer-dorog.svg"
 import set zal from "../assets/sets/lektorij-zal.svg"
 
 config {
@@ -103,7 +104,7 @@ config {
 //  бумагами, и слова расходились с картинкой (реестр, «локация не та»).
 //  Пробовал `doors-empty.svg`: там дверь ОДНА, и чёрная фигура в неё
 //  проваливается — оба пятна чёрные. Сет оставлен, поправлены СЛОВА.
-scene "ploschadka" (duration: 1s, set: ploschadka) {
+scene "dveri" (duration: 1s, set: dveri) {
     transition static 0.2s
 
     //  Стоит МЕЖДУ дверями, но не у них: он пока рассказывает про положение, а
@@ -200,13 +201,13 @@ scene "ploschadka" (duration: 1s, set: ploschadka) {
 //  МЕСТО, ГДЕ СКЛАДНОЕ ЗВУЧИТ ОЧЕРЕДЬЮ. Пять уловок произносятся ровно там,
 //  где их и произносят: в проходе между рядами, каждым встречным и каждая
 //  по-своему убедительно.
-scene "bazar" (duration: 1s, set: bazar) {
+scene "rupory" (duration: 1s, set: rupory) {
     transition static 0.2s
 
     //  Пол базара начинается высоко (карта: back_y 0.33) — фигура ставится
     //  вглубь прохода и идёт НА КАМЕРУ.
-    place freeman at (0.5, 0.72) facing front on floor
-    freeman scales 0.44
+    place freeman at (0.5, 0.70) facing front on floor
+    freeman scales 0.40
     camera wide
 
     // ── ПУЛЕМЁТ (VO-4): пять уловок, ИДЁТ НА КАМЕРУ ───────────────────
@@ -322,11 +323,11 @@ scene "temnota" (duration: 1s, set: void) {
 // ============ СЦЕНА 4: ПЕРЕКРЁСТОК БЕЗ ЗНАКОВ — ВЗЛЁТ И ПОДЪЁМ ==============
 //  РОВНО ТО, ЧТО СКРЫВАЛИ ДВЕ ДВЕРИ: дорог много и ни одна не подписана. Пять
 //  проверок называются в том самом месте, где их видно ногами.
-scene "perekrestok" (duration: 1s, set: perekrestok) {
+scene "veer" (duration: 1s, set: veer) {
     transition static 0.2s
 
-    place freeman at (0.42, 0.93) facing front on floor
-    freeman scales 0.88
+    place freeman at (0.44, 0.95) facing front on floor
+    freeman scales 0.86
     camera wide
 
     //  ДРАМАТИЧЕСКАЯ ПАУЗА ПОСЛЕ ДНА: различие названо, сейчас скажут, что с
@@ -415,7 +416,7 @@ scene "zal" (duration: 1s, set: zal) {
 //  ТОТ ЖЕ КАДР, ЧТО И В НАЧАЛЕ, И ТЕ ЖЕ ДВЕ ДВЕРИ. Кольцо замыкается не только
 //  жестом, но и МЕСТОМ: на втором круге зритель видит ту же прихожую и уже с
 //  другим вопросом к ней.
-scene "final" (duration: 1s, set: ploschadka) {
+scene "final" (duration: 1s, set: dveri_vse) {
     transition static 0.2s
 
     place freeman at (0.5, 0.94) facing front on floor
