@@ -172,7 +172,7 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 5.09s
+        freeman speaks for 6.84s
         do {
             camera medium freeman
             wait 1.66s
@@ -189,7 +189,7 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "hips"
     //lip 2
     together {
-        freeman speaks for 4.52s
+        freeman speaks for 4.68s
         do {
             wait 1.34s
             freeman overlays "ostyl"       // диагноз ставят холодно, не зло
@@ -208,7 +208,7 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman pose "calm"
     //lip 3
     together {
-        freeman speaks for 5.0s
+        freeman speaks for 4.68s
         do {
             wait 1.5s
             freeman overlays "yorik"       // «две двери» — предъявил на ладони
@@ -245,7 +245,7 @@ scene "rupory" (duration: 1s, set: rupory) {
     freeman pose "calm"
     //lip 4
     together {
-        freeman speaks for 6.35s
+        freeman speaks for 7.2s
         do {
             //  ШАГ И НАЕЗД — ОДНОВРЕМЕННО, ПО ОДНОМУ НА КАЖДЫЙ ШАГ.
             //
@@ -305,7 +305,7 @@ scene "rupory" (duration: 1s, set: rupory) {
     freeman pose "v_upor"
     //lip 5
     together {
-        freeman speaks for 6.56s
+        freeman speaks for 5.76s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает, и
             //  поднятая `v_upor`-ом рука висела бы всю реплику забытой.
@@ -351,7 +351,7 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     //lip 6
     together {
-        freeman speaks for 7.2s
+        freeman speaks for 6.48s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает.
             //  Здесь она уходит в покой — главную фразу играют почти
@@ -395,7 +395,7 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 7
     together {
-        freeman speaks for 9.14s
+        freeman speaks for 10.8s
         do {
             //  ЧЕТЫРЕ ДВИЖЕНИЯ НА ЧЕТЫРЕ ХОДА МЫСЛИ, а не пять на два.
             //  Реплика больше не обещает «дважды» и не выдаёт следом пятерых:
@@ -424,7 +424,7 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 8
     together {
-        freeman speaks for 6.1s
+        freeman speaks for 7.92s
         do {
             camera medium freeman
             wait 1.6s
@@ -453,7 +453,7 @@ scene "zal" (duration: 1s, set: zal) {
     // ── ПРЕЗЕНТАЦИЯ (VO-10): называет курс ────────────────────────────
     //lip 9
     together {
-        freeman speaks for 4.73s
+        freeman speaks for 3.6s
         do {
             camera medium freeman
             wait 1.44s
@@ -491,7 +491,7 @@ scene "vopros" (duration: 1s, set: dveri_vse) {
     //  который можно задать сегодня же вечером, как только покажут две двери.
     //lip 10
     together {
-        freeman speaks for 4.36s
+        freeman speaks for 3.96s
         do {
             camera medium freeman
             wait 1.32s
@@ -537,7 +537,7 @@ scene "final" (duration: 1s, set: dveri) {
 
     //lip 11
     together {
-        freeman speaks for 3.6s
+        freeman speaks for 3.24s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Обе позы поглаживания
