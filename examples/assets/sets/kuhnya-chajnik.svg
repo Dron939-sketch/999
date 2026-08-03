@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- ЗАГЛУШКА, А НЕ ЛОКАЦИЯ. Пустая комната с линией пола: ролик собирается и
+       все гейты проходят, но снимать на этом нельзя. Ждём картинку студии —
+       промт лежит в examples/lektorij/emocii-VO.md. Как придёт: положить сюда
+       через `python3 tools/raster_set.py <png> <этот файл>` и снять карту пола
+       по картинке (сейчас в surfaces.json стоит примерная 0.65). -->
+  <rect width="1280" height="720" fill="#d4d7cf"/>
+  <rect x="0" y="470" width="1280" height="250" fill="#b0b3ab"/>
+  <rect x="0" y="466" width="1280" height="8" fill="#141410"/>
+</svg>
