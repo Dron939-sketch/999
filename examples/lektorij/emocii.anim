@@ -215,18 +215,18 @@ scene "vannaya" (duration: 1s, set: vannaya) {
     freeman pose "calm"
     //lip 4
     together {
-        freeman speaks for 6.35s
+        freeman speaks for 6.82s
         do {
             freeman overlays "shag_levoj"
             freeman overlays "vzglyad"     // чужие советы слушают ровно
-            freeman moves-to (0.5, 0.86) over 1.32s
+            freeman moves-to (0.5, 0.86) over 1.42s
             freeman overlays "shag_pravoj"
-            freeman scales 0.62 over 1.32s
+            freeman scales 0.62 over 1.42s
             freeman overlays "shag_levoj"
             freeman overlays "somnenie"    // на третьем совете бровь пошла вверх
-            freeman moves-to (0.5, 0.95) over 1.32s
+            freeman moves-to (0.5, 0.95) over 1.42s
             freeman overlays "shag_pravoj"
-            freeman scales 0.80 over 1.32s
+            freeman scales 0.80 over 1.42s
             freeman overlays "prishchur"   // «просто не думай» — ну-ну
         }
     }
@@ -307,18 +307,18 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     //lip 7
     together {
-        freeman speaks for 5.80s
+        freeman speaks for 6.37s
         do {
             //  ГЛАВНАЯ ФРАЗА ИДЁТ ПОЧТИ БЕЗ ЖЕСТА — но рука обязана быть
             //  НАЗВАНА, иначе она остаётся поднятой от `v_upor` на всю реплику.
             //  `calm` опускает руки в покой: это и есть «почти неподвижно»,
             //  только сказанное явно.
             freeman overlays "calm"
-            wait 1.74s
+            wait 1.91s
             freeman overlays "vzglyad"     // «не помеха» — снял приговор с лица
-            wait 1.77s
+            wait 1.95s
             freeman overlays "ugryumo"
-            wait 1.54s
+            wait 1.69s
             freeman overlays "teplo"       // «что для вас имеет смысл» — дуга
         }
     }
@@ -348,21 +348,21 @@ scene "vozvrat" (duration: 1s, set: kuhnya) {
     freeman pose "calm"
     //lip 8
     together {
-        freeman speaks for 7.29s
+        freeman speaks for 9.06s
         do {
             //  ПЯТЬ ТОЧЕК — ПЯТЬ РАЗНЫХ ЖЕСТОВ, а не три. Перечисление, где
             //  рука повторяется, слышно как один пункт, растянутый на пять:
             //  зритель считает ДВИЖЕНИЯ, а не слова.
-            wait 1.18s
+            wait 1.47s
             freeman overlays "palec_vverh" // «куда пойти» — первая точка
             freeman overlays "raspahnul"   // и глаза открылись: список начат
-            wait 1.13s
+            wait 1.41s
             freeman overlays "dve_storony" // «что изменить» — взвесил
-            wait 1.2s
+            wait 1.49s
             freeman overlays "vdal"        // «куда смотреть» — рука вдаль
-            wait 1.15s
+            wait 1.43s
             freeman overlays "rubit"       // «как назвать» — назвал, отрезал
-            wait 1.18s
+            wait 1.47s
             freeman overlays "otmahnulsya" // «держать лицо» — отмашка
             freeman overlays "prishchur"   // …и цена этой точки уже видна
         }
