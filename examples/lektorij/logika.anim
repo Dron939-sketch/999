@@ -231,11 +231,11 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman pose "calm"
     //lip 3
     together {
-        freeman speaks for 5.74s
+        freeman speaks for 5.15s
         do {
-            wait 1.9s
+            wait 1.7s
             freeman overlays "ostyl"       // «устаёте»
-            wait 1.9s
+            wait 1.7s
             freeman overlays "vniz"        // «клиенты уходят»
         }
     }
@@ -250,9 +250,9 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "hips"
     //lip 4
     together {
-        freeman speaks for 4.13s
+        freeman speaks for 5.33s
         do {
-            wait 2.1s
+            wait 2.71s
             freeman overlays "razvel"      // «прибавилась только ненависть»
         }
     }
@@ -269,11 +269,11 @@ scene "dveri" (duration: 1s, set: dveri) {
     //  Проверяемо, произносимо вслух, помещается в одну секунду.
     //lip 5
     together {
-        freeman speaks for 5.41s
+        freeman speaks for 4.81s
         do {
-            wait 2.2s
+            wait 1.95s
             freeman overlays "vzglyad"     // «переходы верны — проверьте»
-            wait 1.9s
+            wait 1.69s
             freeman overlays "obvinil"     // «нет слова: кому» — в зрителя
         }
     }
@@ -402,15 +402,15 @@ scene "rupory" (duration: 1s, set: rupory) {
     //  на самом панче. Тело при этом неподвижно — жест на панче крадёт слово.
     //lip 8
     together {
-        freeman speaks for 6.90s
+        freeman speaks for 7.47s
         do {
             freeman overlays "raspahnul"   // «волк в восторге забрал книжку»
-            wait 2.0s
+            wait 2.17s
             freeman overlays "k_sebe"      // «спички есть?» — тот же жест, тот же вопрос
-            wait 2.0s
+            wait 2.17s
             camera medium freeman
             freeman overlays "klin"        // «нет» — и волк уже не остановится
-            wait 1.6s
+            wait 1.73s
             freeman overlays "poimal"      // ПАНЧ: «ну ты и заднеприводный»
         }
     }
@@ -481,12 +481,12 @@ scene "temnota" (duration: 1s, set: void) {
     //  Перепад в полтора раза стоит ровно на обрыве в чёрное.
     //lip 10
     together {
-        freeman speaks for 4.57s
+        freeman speaks for 5.72s
         do {
             freeman overlays "calm"
-            wait 1.9s
+            wait 2.38s
             freeman overlays "klin"        // «приговор вы вынесли сами»
-            wait 1.6s
+            wait 2.0s
             freeman overlays "doshlo"      // и повисло
         }
     }
@@ -519,12 +519,12 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 11
     together {
-        freeman speaks for 4.93s
+        freeman speaks for 4.10s
         do {
-            wait 1.8s
+            wait 1.5s
             freeman overlays "vzves"       // «ошибка не в выводе»
             freeman overlays "raspahnul"   // ход открыт
-            wait 1.8s
+            wait 1.5s
             freeman overlays "palec_vverh" // «в первой строке. В ней и сомневайтесь»
         }
     }
@@ -571,13 +571,13 @@ scene "zal" (duration: 1s, set: zal) {
     //  в момент, а не через два дня в душе.
     //lip 13
     together {
-        freeman speaks for 4.80s
+        freeman speaks for 5.41s
         do {
             camera medium freeman
-            wait 2.2s
+            wait 2.48s
             freeman overlays "ruki_za_spinu" // курс называют по-лекторски
             freeman overlays "teplo"       // и тепло: это приглашение
-            wait 2.4s
+            wait 2.7s
             freeman overlays "open"        // «замечать подмену и проверять начало»
         }
     }
