@@ -181,10 +181,10 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 4.39s
+        freeman speaks for 6.13s
         do {
             camera medium freeman
-            wait 2.19s
+            wait 3.06s
             freeman overlays "yorik"       // «тем больше знаешь»
         }
     }
@@ -195,9 +195,9 @@ scene "dveri" (duration: 1s, set: dveri) {
     // ── ХУК-ДОБИВКА (VO-2): второй и третий шаг цепочки ───────────────
     //lip 2
     together {
-        freeman speaks for 5.30s
+        freeman speaks for 6.10s
         do {
-            wait 2.55s
+            wait 2.93s
             freeman overlays "poimal"      // «тем меньше знаешь»
         }
     }
@@ -212,9 +212,9 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "hips"
     //lip 3
     together {
-        freeman speaks for 5.36s
+        freeman speaks for 5.67s
         do {
-            wait 2.57s
+            wait 2.72s
             freeman overlays "vzglyad"     // «проверьте переходы»
         }
     }
@@ -227,9 +227,9 @@ scene "dveri" (duration: 1s, set: dveri) {
     //  зрителя. Обратный порядок разрушил бы фокус.
     //lip 4
     together {
-        freeman speaks for 3.63s
+        freeman speaks for 4.76s
         do {
-            wait 1.43s
+            wait 1.88s
             freeman overlays "obvinil"     // «и вы мыслите так же» — в зрителя
         }
     }
@@ -264,7 +264,7 @@ scene "rupory" (duration: 1s, set: rupory) {
     freeman pose "calm"
     //lip 5
     together {
-        freeman speaks for 2.68s
+        freeman speaks for 4.73s
         do {
             //  ШАГ И НАЕЗД — ОДНОВРЕМЕННО, ПО ОДНОМУ НА КАЖДЫЙ ШАГ.
             //
@@ -290,24 +290,24 @@ scene "rupory" (duration: 1s, set: rupory) {
             freeman overlays "shag_levoj"
             freeman overlays "vzglyad"     // чужие доводы слушают ровно
             together {
-                freeman moves-to (0.5, 0.7575) over 0.45s
-                freeman scales 0.565 over 0.45s
+                freeman moves-to (0.5, 0.7575) over 0.79s
+                freeman scales 0.565 over 0.79s
             }
             freeman overlays "shag_pravoj"
             together {
-                freeman moves-to (0.5, 0.815) over 0.45s
-                freeman scales 0.67 over 0.45s
+                freeman moves-to (0.5, 0.815) over 0.79s
+                freeman scales 0.67 over 0.79s
             }
             freeman overlays "shag_levoj"
             freeman overlays "somnenie"    // на третьей уловке взгляд поехал
             together {
-                freeman moves-to (0.5, 0.8725) over 0.45s
-                freeman scales 0.775 over 0.45s
+                freeman moves-to (0.5, 0.8725) over 0.79s
+                freeman scales 0.775 over 0.79s
             }
             freeman overlays "shag_pravoj"
             together {
-                freeman moves-to (0.5, 0.93) over 0.45s
-                freeman scales 0.88 over 0.45s
+                freeman moves-to (0.5, 0.93) over 0.79s
+                freeman scales 0.88 over 0.79s
             }
             freeman overlays "prishchur"   // «а сам-то ты кто?» — ну-ну
         }
@@ -326,14 +326,14 @@ scene "rupory" (duration: 1s, set: rupory) {
     freeman pose "v_upor"
     //lip 6
     together {
-        freeman speaks for 7.21s
+        freeman speaks for 8.18s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает, и
             //  поднятая `v_upor`-ом рука висела бы всю реплику забытой.
             freeman overlays "zakrylsya"   // «все пять — про одно»: закрылся
-            wait 2.76s
+            wait 3.13s
             freeman overlays "obvinil"     // «ни один не спорит» — всем телом
-            wait 2.91s
+            wait 3.3s
             camera medium freeman
             freeman overlays "klin"        // «каждый меняет вопрос» — приговор
         }
@@ -372,20 +372,20 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     //lip 7
     together {
-        freeman speaks for 4.52s
+        freeman speaks for 4.84s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает.
             //  Здесь она уходит в покой — главную фразу играют почти
             //  неподвижно, любой жест отвлекает.
             freeman overlays "calm"
-            wait 1.01s
+            wait 1.09s
             freeman overlays "vzglyad"     // «вывод безупречный»
-            wait 1.06s
+            wait 1.13s
             freeman overlays "dve_storony" // «а начало вы выбрали сами»
-            wait 1.01s
+            wait 1.09s
             freeman overlays "obvinil"     // «и вы уже кивнули» — в зрителя
             freeman overlays "poimal"      // и перекос: вам сообщают
-            wait 0.89s
+            wait 0.95s
             freeman overlays "razvel"      // «из чего выбирать»
         }
     }
@@ -453,14 +453,14 @@ scene "veer" (duration: 1s, set: veer) {
     //  нужен прямо сейчас.
     //lip 10
     together {
-        freeman speaks for 1.57s
+        freeman speaks for 2.38s
         do {
-            wait 0.53s
+            wait 0.8s
             freeman overlays "rubit"       // «крокодил больше зелёный»
-            wait 0.5s
+            wait 0.76s
             freeman overlays "vniz"        // «чем длинный»
             freeman overlays "poimal"      // и перекос: место знакомое
-            wait 0.4s
+            wait 0.61s
             freeman overlays "oba_vverh"   // «и вы уже сравниваете»
             freeman overlays "teplo"       // и тепло: это не упрёк
         }
@@ -473,15 +473,15 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 11
     together {
-        freeman speaks for 6.14s
+        freeman speaks for 7.08s
         do {
             camera medium freeman
-            wait 1.19s
+            wait 1.37s
             freeman overlays "otmahnulsya" // «разбираться не хочет» — отмашка
             freeman overlays "prishchur"   // с ухмылкой: приём известный
-            wait 1.26s
+            wait 1.45s
             freeman overlays "razmer"      // «брать побольше» — вот такую, во!
-            wait 1.33s
+            wait 1.53s
             freeman overlays "u_viska_l"   // «до первого почему» — серьёзно?
         }
     }
@@ -505,13 +505,13 @@ scene "zal" (duration: 1s, set: zal) {
     //  в момент, а не через два дня в душе.
     //lip 12
     together {
-        freeman speaks for 6.48s
+        freeman speaks for 7.16s
         do {
             camera medium freeman
-            wait 2.7s
+            wait 2.98s
             freeman overlays "ruki_za_spinu" // курс называют по-лекторски
             freeman overlays "teplo"       // и тепло: это приглашение
-            wait 3.01s
+            wait 3.33s
             freeman overlays "open"        // «и все бесплатно»
         }
     }
@@ -591,20 +591,20 @@ scene "final" (duration: 1s, set: dveri) {
 
     //lip 14
     together {
-        freeman speaks for 3.58s
+        freeman speaks for 5.11s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Обе позы поглаживания
             //  трогают только руку — значит ложатся накладкой без потерь.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"       // подпись объявляют тепло, не бьют
-            wait 2.0s
+            wait 2.85s
             nomer2 shows
             nomer2 scales 0.02
-            nomer2 scales 0.23 over 0.29s ease-out
-            nomer2 scales 0.21 over 0.15s
+            nomer2 scales 0.23 over 0.41s ease-out
+            nomer2 scales 0.21 over 0.21s
             freeman overlays "gladit_grud_niz"
-            wait 0.71s
+            wait 1.02s
             freeman overlays "gladit_grud"
         }
     }
