@@ -180,10 +180,10 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 6.13s
+        freeman speaks for 5.02s
         do {
             camera medium freeman
-            wait 3.07s
+            wait 2.51s
             freeman overlays "yorik"       // «чего вы давно собираетесь»
             //  ТЫЧКА «не всё — одно» идёт вскользь, без подачи: мини-панч
             //  внутри длинного сетапа, чтобы зритель не заскучал до первого
@@ -197,9 +197,9 @@ scene "dveri" (duration: 1s, set: dveri) {
     // ── ХУК-ДОБИВКА (VO-2): причина хорошая — иначе не сработала бы ───
     //lip 2
     together {
-        freeman speaks for 5.39s
+        freeman speaks for 4.65s
         do {
-            wait 2.6s
+            wait 2.24s
             freeman overlays "poimal"      // «иначе дверь пришлось бы открыть»
         }
     }
@@ -365,20 +365,20 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     //lip 6
     together {
-        freeman speaks for 5.11s
+        freeman speaks for 5.59s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает.
             //  Здесь она уходит в покой — главную фразу играют почти
             //  неподвижно, любой жест отвлекает.
             freeman overlays "calm"
-            wait 1.15s
+            wait 1.26s
             freeman overlays "vzglyad"     // «вывод безупречный»
-            wait 1.2s
+            wait 1.31s
             freeman overlays "dve_storony" // «а начало вы выбрали сами»
-            wait 1.15s
+            wait 1.26s
             freeman overlays "obvinil"     // «и вы уже кивнули» — в зрителя
             freeman overlays "poimal"      // и перекос: вам сообщают
-            wait 1.0s
+            wait 1.09s
             freeman overlays "razvel"      // «из чего выбирать»
         }
     }
@@ -427,12 +427,12 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 8
     together {
-        freeman speaks for 4.63s
+        freeman speaks for 3.81s
         do {
-            wait 1.67s
+            wait 1.38s
             freeman overlays "vzves"       // «проверять надо не вывод»
             freeman overlays "raspahnul"   // ход открыт
-            wait 1.67s
+            wait 1.38s
             freeman overlays "palec_vverh" // «а то, с чего вы начали»
         }
     }
@@ -446,14 +446,14 @@ scene "veer" (duration: 1s, set: veer) {
     //  нужен прямо сейчас.
     //lip 9
     together {
-        freeman speaks for 6.58s
+        freeman speaks for 5.96s
         do {
-            wait 2.22s
+            wait 2.01s
             freeman overlays "rubit"       // «крокодил больше зелёный»
-            wait 2.09s
+            wait 1.89s
             freeman overlays "vniz"        // «чем длинный»
             freeman overlays "poimal"      // и перекос: место знакомое
-            wait 1.7s
+            wait 1.54s
             freeman overlays "oba_vverh"   // «и вы уже сравниваете»
             freeman overlays "teplo"       // и тепло: это не упрёк
         }
@@ -498,13 +498,13 @@ scene "zal" (duration: 1s, set: zal) {
     //  в момент, а не через два дня в душе.
     //lip 11
     together {
-        freeman speaks for 7.88s
+        freeman speaks for 6.03s
         do {
             camera medium freeman
-            wait 3.28s
+            wait 2.51s
             freeman overlays "ruki_za_spinu" // курс называют по-лекторски
             freeman overlays "teplo"       // и тепло: это приглашение
-            wait 3.66s
+            wait 2.8s
             freeman overlays "open"        // «и все бесплатно»
         }
     }
@@ -584,20 +584,20 @@ scene "final" (duration: 1s, set: dveri) {
 
     //lip 13
     together {
-        freeman speaks for 5.11s
+        freeman speaks for 3.24s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Обе позы поглаживания
             //  трогают только руку — значит ложатся накладкой без потерь.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"       // подпись объявляют тепло, не бьют
-            wait 2.85s
+            wait 1.81s
             nomer2 shows
             nomer2 scales 0.02
-            nomer2 scales 0.23 over 0.41s ease-out
-            nomer2 scales 0.21 over 0.21s
+            nomer2 scales 0.23 over 0.26s ease-out
+            nomer2 scales 0.21 over 0.13s
             freeman overlays "gladit_grud_niz"
-            wait 1.02s
+            wait 0.65s
             freeman overlays "gladit_grud"
         }
     }
