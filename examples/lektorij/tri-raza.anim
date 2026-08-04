@@ -1,0 +1,753 @@
+// =============================================================================
+//  «ТРИ РАЗА» — интро к курсу «Логика».
+//  VO — tri-raza-VO.md, маркеры 1..32.
+//
+//  ЧТО ЭТОТ РОЛИК ДЕЛАЕТ И ЧЕГО НЕ ДЕЛАЮТ ДВА ДРУГИХ
+//
+//  1. ОН ЗАКРЫВАЕТ ВТОРУЮ СТОРОНУ ПРОВЕРКИ. «Теорема» и «Станок» держат
+//     дедуктивный конец цепи: посылку вам дали, а вывод из неё безупречен.
+//     Здесь конец индуктивный — ПОСЫЛКУ ВЫ СДЕЛАЛИ СЕБЕ САМИ, из нескольких
+//     случаев, и она такая же непроверенная. Дедукция ломается на входе,
+//     индукция — на СКАЧКЕ: из «было три раза» в «так всегда».
+//
+//  2. И ЭТО ОДНА ЦЕПЬ, А НЕ ДВЕ ТЕМЫ. Посылка любой дедукции есть чей-то
+//     индуктивный вывод. В «Станке» заготовку кладёт кто-то другой; здесь её
+//     кладёт сам зритель — и потому этот ролик самый личный из трёх.
+//
+//  3. ОДИН РОЛИК — ОДИН РЕФЛЕКС: за каждым «я такой» стоит ЧИСЛО, и его можно
+//     назвать. Ни «индукция», ни «выборка», ни «репрезентативность» в тексте
+//     не звучат — их даёт курс, а ролик даёт привычку считать.
+//
+//  4. ПЕРВАЯ РЕПЛИКА — ЦИТАТА, А НЕ РЕЧЬ РАССКАЗЧИКА. «Три раза не вышло.
+//     Значит, не моё» человек говорит себе сам, ночью, на кухне, никому.
+//     Отсюда и локация: не улица и не зал, а место и время, когда такие вещи
+//     произносят. Читается ровно и устало; любая краска превращает цитату в
+//     передразнивание, и зритель отскочит от собственной фразы.
+//
+//  5. ВОЛК ЗДЕСЬ РАБОТАЕТ ТОЧНЕЕ, ЧЕМ В ДРУГИХ ДВУХ РОЛИКАХ. Он вывел человека
+//     целиком из ОДНОГО наблюдения — отсутствия спичек. Зритель делает то же
+//     самое, только наблюдений у него три. Разница в счёте, а не в способе.
+//
+//  6. РАЗВЯЗКИ АНЕКДОТА НЕТ. Что сделал медведь — не говорится ни словом: пока
+//     в кадре волк, зритель смотрит на волка. Вместо развязки полторы секунды
+//     тишины и обрыв в чёрное (`SMESHNO.md` §XII).
+//
+//  7. ВОСЕМЬ ЛОКАЦИЙ, и каждая смена совпадает со сменой мысли: приговор на
+//     ночной кухне, счёт в чёрном, четыре пожизненных у камня в поле, ход на
+//     перекрёстке. Зритель видит, что мысль сменилась, до того, как услышит
+//     слова.
+//
+//  8. ТЕМП ПО БИТАМ, В СЛОГАХ В СЕКУНДУ (`tools/podacha.py`): приговор 4.4,
+//     перечисление и анекдот 6.3–6.6, дно 4.4. Перепад в полтора раза стоит на
+//     обрыве в чёрное после панча.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · речь НА ХОДУ — фронтальный шаг слоем, полная поза сбрасывает липсинк;
+//    · проход закрывается ПОЛНОЙ ПОЗОЙ, иначе слой шага висит на фигуре;
+//    · в длинной реплике первым слоем называется РУКА (lint_arms);
+//    · фигура НЕ ПРИСЕДАЕТ (tools/posture.py);
+//    · реквизит носит только поза, объявившая его именем (tools/rekvizit.py);
+//    · `duration:` ГОВОРЯЩЕЙ СЦЕНЫ — ПОЛ, А НЕ ЦЕЛЬ, и потому равен 1s;
+//      ветка `do{}` не длиннее `speaks for` (tools/pauses.py);
+//    · `moves-to ... over` и `scales ... over` ЗАНИМАЮТ ВРЕМЯ наравне с `wait`;
+//    · голый `scales` стоит 0.5с таймлайна — всегда `over 0.01s`;
+//    · номера реплик и маркеров сходятся (tools/sverka.py);
+//    · БЕЗ СВЕРХКРУПНЫХ ПЛАНОВ: растр сета на ECU-зуме взрывается.
+//
+//  ЧИСЛА `speaks for` РАСЧЁТНЫЕ — ролик новый. Модель «0.59 с на внутренний
+//  знак», поправленная коэффициентом 0.93 с прошлого прогона завода.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set kuhnya from "../assets/sets/kuhnya-noch.svg"
+import set void from "../assets/sets/void-black.svg"
+import set kamen from "../assets/sets/kamen-memento.svg"
+import set rupory from "../assets/sets/logika-hor-golosov.svg"
+import set les from "../assets/sets/derevo-pen.svg"
+import set perekrestok from "../assets/sets/perekrestok-bez-znakov.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+import set dveri_vse from "../assets/sets/logika-dve-dveri-vse.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+// ============ СЦЕНА 1: НОЧНАЯ КУХНЯ — ПРИГОВОР =============================
+//  МЕСТО И ВРЕМЯ, КОГДА ЧЕЛОВЕК ГОВОРИТ СЕБЕ ТАКИЕ ВЕЩИ. Не кабинет, не улица,
+//  не зал: кухня ночью, когда день кончился и никто не слышит. Первая реплика
+//  ролика — цитата из этой кухни, и локация обязана её опознать раньше слов.
+scene "kuhnya" (duration: 1s, set: kuhnya) {
+    place freeman at (0.48, 0.93) facing front on floor
+    freeman scales 0.76 over 0.01s
+
+    //  НОМЕР КУРСА НА БАЛАХОНЕ — СЛЕДУЮЩЕГО, а не этого: подпись говорит «идём
+    //  дальше», и метка обязана говорить то же.
+    let nomer = prop("nomer", "../assets/props/nomer-07.svg") at (0.505, 0.68) layer 9
+    nomer scales 0.19 over 0.01s
+    nomer hides
+
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ: голый
+    //  `scales` на пропе без предшествующей АНИМИРОВАННОЙ смены масштаба не
+    //  применяется, метка встаёт в натуральную величину и закрывает торс.
+    //  Рабочий рисунок один: спрятать, показать, вырастить с 0.02.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.21 over 0.05s ease-out
+    nomer scales 0.19 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+
+    // ── ХУК (VO-1): цитата, а не речь рассказчика ─────────────────────
+    //  САМАЯ МЕДЛЕННАЯ РЕПЛИКА РОЛИКА — 4.4 слог/с. Две первые фразы чужие:
+    //  так зритель говорит себе сам. Третья («вы это себе уже говорили») —
+    //  уже своя, и на ней взгляд поднимается в камеру.
+    //lip 1
+    together {
+        freeman speaks for 6.30s
+        do {
+            freeman overlays "zakrylsya"   // сложился: это не поза оратора
+            wait 3.0s
+            freeman overlays "obvinil"     // «вы это себе говорили» — в зрителя
+        }
+    }
+    wait 0.9s
+
+    // ── ОБРАЗ (VO-2): «это закон» ─────────────────────────────────────
+    //  ПЕРЕИМЕНОВАНИЕ — ВЕСЬ ПРИЁМ РОЛИКА. Зритель считал сказанное
+    //  воспоминанием; ему сообщают, что это ЗАКОН, то есть утверждение обо
+    //  всех будущих случаях. Одно слово, и фраза меняет вес.
+    //lip 2
+    together {
+        freeman speaks for 5.21s
+        do {
+            camera medium freeman
+            wait 2.5s
+            freeman overlays "klin"        // «это закон»
+        }
+    }
+    wait 0.5s
+
+    // ── ОБРАЗ (VO-3): «пожизненный» ───────────────────────────────────
+    //lip 3
+    together {
+        freeman speaks for 4.30s
+        do {
+            wait 2.1s
+            freeman overlays "ostyl"       // «обжалованию не подлежащий»
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+// ============ СЦЕНА 2: ПУСТОТА — СЧЁТ ======================================
+//  СЧИТАЮТ ТАМ, ГДЕ НЕЧЕМ ОТВЛЕЧЬСЯ. Перелом ролика на 16-й секунде: зрителя
+//  просят посчитать, на чём стоит его пожизненный приговор.
+scene "schet" (duration: 1s, set: void) {
+    transition static 0.15s
+
+    //  ЕДИНСТВЕННЫЕ `place` БЕЗ `on floor`: пола нет, кадр держит МАСКА.
+    place freeman at (0.5, 0.44) facing front
+    freeman scales 2.2
+    camera wide
+    freeman pose "v_upor"
+
+    // ── РАЗВОРОТ (VO-4): «на трёх случаях» ────────────────────────────
+    //  УДАРНОЕ СЛОВО ПОСЛЕДНЕЕ И СТОИТ ОТДЕЛЬНОЙ ФРАЗОЙ. У синтеза точка
+    //  вместо запятой опускает интонацию и ставит паузу — это и есть весь
+    //  инструмент подачи панча.
+    //lip 4
+    together {
+        freeman speaks for 4.46s
+        do {
+            freeman overlays "calm"
+            wait 2.1s
+            freeman overlays "klin"        // «на трёх случаях»
+        }
+    }
+    wait 0.6s
+
+    // ── ОБРАЗ (VO-5): «выходит три случая» ────────────────────────────
+    //lip 5
+    together {
+        freeman speaks for 3.95s
+        do {
+            freeman overlays "razvel"
+            wait 1.9s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.5s
+
+    // ── ЦЕПОЧКА (VO-6): условия, которых нет в приговоре ──────────────
+    //  ПЕРЕЧИСЛЕНИЕ ОЧЕРЕДЬЮ. Четыре условия подряд, все конкретные: тот год,
+    //  тот город, те деньги, та голова. Зритель подставляет свои, и это
+    //  единственный способ показать, что выборка была не про него вообще, а
+    //  про него тогдашнего.
+    //lip 6
+    together {
+        freeman speaks for 3.90s
+        do {
+            freeman overlays "palec_vverh"
+            wait 1.9s
+            freeman overlays "somnenie"
+        }
+    }
+    wait 0.5s
+
+    // ── УДАР (VO-7): «в приговоре не записано» ────────────────────────
+    //lip 7
+    together {
+        freeman speaks for 3.80s
+        do {
+            freeman overlays "vniz"
+            wait 1.8s
+            freeman overlays "doshlo"
+        }
+    }
+    freeman overlays "flash_pupils"
+    wait 1.1s
+}
+
+// ============ СЦЕНА 3: КАМЕНЬ В ПОЛЕ — ЧЕТЫРЕ ПРИГОВОРА ====================
+//  ПУСТО, И ПОСРЕДИ — ТО, ЧТО СТОИТ И НЕ СДВИГАЕТСЯ. Приговор себе выглядит
+//  именно так: его обходят годами и не трогают.
+scene "kamen" (duration: 1s, set: kamen) {
+    transition static 0.2s
+
+    //  Пол начинается высоко (карта: back_y 0.44) — фигура ставится вглубь и
+    //  идёт НА КАМЕРУ на четырёх приговорах.
+    place freeman at (0.42, 0.72) facing front on floor
+    freeman scales 0.48 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── ОТРИЦАНИЕ (VO-8): «тогда давайте посчитаем» ───────────────────
+    //lip 8
+    together {
+        freeman speaks for 4.07s
+        do {
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.6s
+
+    // ── ПУЛЕМЁТ (VO-9): четыре приговора, ИДЁТ НА КАМЕРУ ──────────────
+    //  ШАГ И НАЕЗД ОДНОВРЕМЕННО, ПО ОДНОМУ НА ПРИГОВОР. Записанные подряд,
+    //  `moves-to` и `scales` и выполняются подряд — в кадре это «подъехал, а
+    //  потом раздулся». `together` внутри `do` связывает их в один отрезок.
+    //lip 9
+    together {
+        freeman speaks for 4.75s
+        do {
+            freeman overlays "shag_levoj"
+            freeman overlays "vzglyad"     // «не моё»
+            together {
+                freeman moves-to (0.44, 0.79) over 1.1s
+                freeman scales 0.60 over 1.1s
+            }
+            freeman overlays "shag_pravoj"
+            freeman overlays "ostyl"       // «не дано»
+            together {
+                freeman moves-to (0.46, 0.86) over 1.1s
+                freeman scales 0.72 over 1.1s
+            }
+            freeman overlays "shag_levoj"
+            freeman overlays "klin"        // «не судьба»
+            together {
+                freeman moves-to (0.48, 0.93) over 1.1s
+                freeman scales 0.84 over 1.1s
+            }
+            freeman overlays "shag_pravoj"
+        }
+    }
+    //  Остановка ПОЛНОЙ ПОЗОЙ: слои шага сняты.
+    freeman pose "calm"
+    wait 0.5s
+
+    // ── ДОБИВКА (VO-10): опись ────────────────────────────────────────
+    //lip 10
+    together {
+        freeman speaks for 3.90s
+        do {
+            freeman overlays "hips"
+            wait 1.9s
+            freeman overlays "vzves"       // «каждый по трём случаям»
+        }
+    }
+    wait 1.1s
+
+    // ── ОБРАЗ (VO-11): «кто был судьёй. Вы сами» ──────────────────────
+    //  САМОЕ ВАЖНОЕ ОТЛИЧИЕ ОТ ДВУХ ДРУГИХ РОЛИКОВ. Там заготовку кладёт
+    //  кто-то посторонний, и на него можно рассердиться. Здесь сердиться не
+    //  на кого, и потому реплика идёт БЕЗ упрёка: не «вы виноваты», а «вот
+    //  кто это сделал».
+    //lip 11
+    together {
+        freeman speaks for 4.41s
+        do {
+            camera medium freeman
+            wait 2.1s
+            freeman overlays "obvinil"     // «вы сами» — в зрителя
+            freeman overlays "poimal"
+        }
+    }
+    wait 0.5s
+
+    // ── ЦЕНА (VO-12): «вы сделали её сами — и поверили» ───────────────
+    //lip 12
+    together {
+        freeman speaks for 3.78s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+    camera wide
+    wait 1.2s
+}
+
+// ============ СЦЕНА 4: КОРИДОР РУПОРОВ — ВОЗРАЖЕНИЕ СНЯТО ==================
+scene "rupory" (duration: 1s, set: rupory) {
+    transition static 0.15s
+
+    place freeman at (0.5, 0.92) facing front on floor
+    freeman scales 0.84 over 0.01s
+    camera wide
+    freeman pose "v_upor"
+
+    // ── ОТРИЦАНИЕ (VO-13): «тогда анекдот» ────────────────────────────
+    //  Возражение снимается не спором, а сменой жанра.
+    //lip 13
+    together {
+        freeman speaks for 6.59s
+        do {
+            freeman overlays "zakrylsya"
+            wait 3.2s
+            freeman overlays "prishchur"   // козырь
+        }
+    }
+    wait 0.6s
+}
+
+// ============ СЦЕНА 5: ЛЕС — ЗАЯЦ НА ПОЛЯНЕ ================================
+scene "les" (duration: 1s, set: les) {
+    transition static 0.2s
+
+    place freeman at (0.44, 0.90) facing front on floor
+    freeman scales 0.70 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── ЗАВЯЗКА (VO-14) ───────────────────────────────────────────────
+    //lip 14
+    together {
+        freeman speaks for 4.82s
+        do {
+            freeman overlays "vdal"
+            wait 2.3s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.35s
+
+    // ── ДВА ГОЛОСА (VO-15) ────────────────────────────────────────────
+    //  РАЗНИЦА ГОЛОСОВ ДЕЛАЕТСЯ ПУНКТУАЦИЕЙ И ДЛИНОЙ ФРАЗЫ, а не актёрством.
+    //lip 15
+    together {
+        freeman speaks for 4.25s
+        do {
+            camera medium freeman
+            wait 2.0s
+            freeman overlays "smel"
+        }
+    }
+    camera wide
+    wait 0.35s
+}
+
+// ============ СЦЕНА 6: КОРИДОР РУПОРОВ — ЦЕПОЧКА ЗАЙЦА =====================
+scene "cepochka" (duration: 1s, set: rupory) {
+    transition static 0.12s
+
+    place freeman at (0.5, 0.66) facing front on floor
+    freeman scales 0.44 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── ПУЛЕМЁТ 1 (VO-16) ─────────────────────────────────────────────
+    //lip 16
+    together {
+        freeman speaks for 3.92s
+        do {
+            freeman overlays "shag_levoj"
+            freeman overlays "vzglyad"
+            together {
+                freeman moves-to (0.5, 0.73) over 0.9s
+                freeman scales 0.55 over 0.9s
+            }
+            freeman overlays "shag_pravoj"
+            freeman overlays "k_sebe"      // «спички есть?» — рука за ответом
+            together {
+                freeman moves-to (0.5, 0.80) over 0.9s
+                freeman scales 0.66 over 0.9s
+            }
+            freeman overlays "shag_levoj"
+        }
+    }
+    wait 0.3s
+
+    // ── ПУЛЕМЁТ 2 (VO-17): «значит, куришь. ну да.» ───────────────────
+    //  ВСТАВКИ ВОЛКА ЗАМЕДЛЯЮТ ОЧЕРЕДЬ — и это работа, а не помеха: каждое
+    //  согласие волка есть согласие зрителя.
+    //lip 17
+    together {
+        freeman speaks for 4.87s
+        do {
+            freeman overlays "palec_vverh"
+            together {
+                freeman moves-to (0.5, 0.87) over 1.1s
+                freeman scales 0.77 over 1.1s
+            }
+            freeman overlays "shag_pravoj"
+            freeman overlays "poimal"      // «ну да»
+            together {
+                freeman moves-to (0.5, 0.93) over 1.1s
+                freeman scales 0.88 over 1.1s
+            }
+            freeman overlays "shag_levoj"
+            freeman overlays "razvel"
+        }
+    }
+    freeman pose "calm"
+    wait 0.3s
+
+    // ── ПУЛЕМЁТ 3 (VO-18) ─────────────────────────────────────────────
+    //lip 18
+    together {
+        freeman speaks for 6.38s
+        do {
+            camera medium freeman
+            wait 3.1s
+            freeman overlays "oba_vverh"
+            freeman overlays "prishchur"
+        }
+    }
+    camera wide
+    wait 0.6s
+}
+
+// ============ СЦЕНА 7: ЛЕС — ВОЛК, МЕДВЕДЬ, ПАНЧ ===========================
+scene "medved" (duration: 1s, set: les) {
+    transition static 0.2s
+
+    place freeman at (0.52, 0.92) facing front on floor
+    freeman scales 0.80 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── ДОБИВКА 1 (VO-19) ─────────────────────────────────────────────
+    //lip 19
+    together {
+        freeman speaks for 5.28s
+        do {
+            freeman overlays "raspahnul"
+            wait 2.5s
+            freeman overlays "vdal"
+        }
+    }
+    wait 0.4s
+
+    // ── ПАНЧ (VO-20) ──────────────────────────────────────────────────
+    //  ПАНЧ НЕ ТЕРПИТ ХВОСТА И НЕ ТЕРПИТ ЖЕСТА. Тело почти неподвижно: любое
+    //  движение на ударном слове крадёт слово. Играют лицом.
+    //  РАЗВЯЗКИ НЕТ: что сделал медведь, не говорится ни словом.
+    freeman pose "v_upor"
+    //lip 20
+    together {
+        freeman speaks for 3.71s
+        do {
+            freeman overlays "k_sebe"      // «спички есть?» — ТОТ ЖЕ ЖЕСТ
+            wait 1.7s
+            freeman overlays "klin"        // «нет»
+            wait 1.6s
+            freeman overlays "poimal"      // ПАНЧ
+        }
+    }
+    wait 1.6s
+}
+
+// ============ СЦЕНА 8: ПУСТОТА — ПОВОРОТ И ДНО =============================
+//  СМЕХ ГАСНЕТ ЗДЕСЬ. Обрыв в чёрное сразу после панча: между «смешно» и «это
+//  про меня» должна быть не связка, а разрыв.
+scene "povorot" (duration: 1s, set: void) {
+    transition static 0.12s
+
+    place freeman at (0.5, 0.44) facing front
+    freeman scales 2.2
+    camera wide
+    freeman pose "v_upor"
+
+    // ── ПОВОРОТ (VO-21): «волк видел ровно один случай» ───────────────
+    //  ВЕСЬ АНЕКДОТ СВОДИТСЯ К СЧЁТУ ОДНОЙ ФРАЗОЙ. Волк не дурак: он сделал
+    //  ровно то же, что делает зритель, только наблюдение у него было одно.
+    //lip 21
+    together {
+        freeman speaks for 5.38s
+        do {
+            freeman overlays "calm"
+            wait 2.6s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.5s
+
+    // ── ДНО (VO-22): «вы видели три» ──────────────────────────────────
+    //  ДВА ЧИСЛА РЯДОМ, И БОЛЬШЕ НИЧЕГО. Один и три. Разница в счёте, а не в
+    //  способе — вот и весь ролик, в одной строке.
+    //lip 22
+    together {
+        freeman speaks for 4.65s
+        do {
+            wait 2.2s
+            freeman overlays "obvinil"     // «вы вывели из них себя целиком»
+            freeman overlays "doshlo"
+        }
+    }
+    freeman overlays "flash_pupils"
+    //  САМАЯ ДЛИННАЯ ПАУЗА РОЛИКА. Диагноз поставлен; сейчас скажут, что с
+    //  ним делать, и зритель должен успеть этого захотеть.
+    wait 1.8s
+}
+
+// ============ СЦЕНА 9: ПЕРЕКРЁСТОК БЕЗ ЗНАКОВ — ХОД ========================
+//  ДОРОГ МНОГО, И ТРИ ПРОЙДЕННЫЕ НИЧЕГО НЕ ГОВОРЯТ ПРО ОСТАЛЬНЫЕ. Здесь
+//  впервые за ролик светло и впервые звучит тепло.
+scene "perekrestok" (duration: 1s, set: perekrestok) {
+    transition static 0.25s
+
+    place freeman at (0.44, 0.94) facing front on floor
+    freeman scales 0.84 over 0.01s
+    camera wide
+    freeman pose "think"
+    wait 0.4s
+
+    // ── ВЗЛЁТ 1 (VO-23): «логика не запрещает обобщать» ───────────────
+    //  РАЗРЕШЕНИЕ ИДЁТ ПЕРЕД ТРЕБОВАНИЕМ, И ЭТО ВАЖНО. Если начать с «вы
+    //  обобщаете неправильно», зритель услышит запрет на то, чем живёт
+    //  каждый день, и закроется. Сначала «без этого мы бы не выжили».
+    freeman pose "calm"
+    //lip 23
+    together {
+        freeman speaks for 3.93s
+        do {
+            freeman overlays "raspahnul"
+            wait 1.9s
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.4s
+
+    // ── ВЗЛЁТ 2 (VO-24): «сколько случаев под выводом» ────────────────
+    //lip 24
+    together {
+        freeman speaks for 4.38s
+        do {
+            camera medium freeman
+            wait 2.1s
+            freeman overlays "vzves"
+        }
+    }
+    wait 0.5s
+
+    // ── ВЗЛЁТ 3 (VO-25): «три — это не закон» ─────────────────────────
+    //lip 25
+    together {
+        freeman speaks for 4.56s
+        do {
+            freeman overlays "palec_vverh"
+            wait 2.2s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.4s
+
+    // ── ВЗЛЁТ 4 (VO-26): вопрос, который уносят ───────────────────────
+    //  ХОД ОТДАЁТСЯ ОДНИМ ВОПРОСОМ. Список проверок не запоминает никто;
+    //  «сколько раз, и в тех ли условиях» помещается в голову целиком.
+    //lip 26
+    together {
+        freeman speaks for 4.56s
+        do {
+            freeman overlays "vozzvanie"
+            wait 2.2s
+            freeman overlays "klin"
+        }
+    }
+    camera wide
+    wait 0.8s
+
+    // ── ПОДЪЁМ (VO-27): «живите с ним, листайте ленту» ────────────────
+    //  ЦЕНА ВМЕСТО МОРАЛИ. Ролик не уговаривает считать — он называет цену
+    //  отказа считать, и называет её буднично.
+    //lip 27
+    together {
+        freeman speaks for 7.11s
+        do {
+            freeman overlays "otmahnulsya"
+            freeman overlays "prishchur"
+            wait 3.4s
+            freeman overlays "razmer"      // «листайте ленту»
+        }
+    }
+    wait 0.5s
+
+    // ── ПРЕДЕЛ (VO-28): «до первого человека, который смог» ───────────
+    //  ШУТКА ОБЯЗАНА НАЗЫВАТЬ ПРЕДЕЛ, ИНАЧЕ ЭТО НАСМЕШКА. Способ работает —
+    //  ровно до того дня, когда кто-то другой сделает то, что вам «не дано».
+    //  Тогда приговор придётся пересматривать, а инструмента для этого нет.
+    //lip 28
+    together {
+        freeman speaks for 4.78s
+        do {
+            freeman overlays "u_viska_l"
+            wait 2.3s
+            freeman overlays "poimal"
+        }
+    }
+    wait 1.2s
+}
+
+// ============ СЦЕНА 10: ЗАЛ ЛЕКТОРИЯ — ПРЕЗЕНТАЦИЯ =========================
+scene "zal" (duration: 1s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.46, 0.93) facing front on floor
+    freeman scales 0.72 over 0.01s
+    camera wide
+    freeman pose "raskryl"
+    wait 0.2s
+
+    // ── ПРЕЗЕНТАЦИЯ 1 (VO-29) ─────────────────────────────────────────
+    //lip 29
+    together {
+        freeman speaks for 5.16s
+        do {
+            freeman overlays "ruki_za_spinu"
+            wait 2.5s
+            freeman overlays "open"
+        }
+    }
+    wait 0.4s
+
+    // ── ПРЕЗЕНТАЦИЯ 2 (VO-30): «хотя бы по делу» ──────────────────────
+    //  ОБЕЩАНИЕ СКРОМНОЕ И ПРОВЕРЯЕМОЕ. Не «вы всё сможете», а «приговоры
+    //  себе выносить хотя бы по делу». Обещай больше — и зритель не поверит
+    //  ни одному слову.
+    //lip 30
+    together {
+        freeman speaks for 4.61s
+        do {
+            camera medium freeman
+            wait 2.2s
+            freeman overlays "teplo"
+        }
+    }
+    camera wide
+    wait 1.0s
+}
+
+// ============ СЦЕНА 11: КОРИДОР ВСЕХ ДВЕРЕЙ — ЖАЛО =========================
+//  ВОПРОС ЗАДАН ТАМ, ГДЕ ОТВЕТ УЖЕ ВИДЕН: помеченных дверей две, а дверей в
+//  коридоре двадцать. Три попытки — это три двери из двадцати.
+scene "vopros" (duration: 1s, set: dveri_vse) {
+    transition static 0.2s
+
+    place freeman at (0.5, 0.94) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    freeman overlays "smug"
+    wait 0.3s
+
+    // ── ЖАЛО (VO-31): «сколько раз вы пробовали?» ─────────────────────
+    //  ИЗМЕРИМОЕ ДЕЙСТВИЕ, а не мысль на прощание: на этот вопрос есть точный
+    //  ответ, и зритель его знает. Обычно он меньше трёх.
+    //lip 31
+    together {
+        freeman speaks for 3.91s
+        do {
+            camera medium freeman
+            wait 1.9s
+            freeman overlays "vozzvanie"
+            freeman overlays "doshlo"
+        }
+    }
+    camera wide
+    freeman overlays "hero_wink"
+    wait 1.5s
+}
+
+// ============ СЦЕНА 12: ПОДПИСЬ — ТОТ ЖЕ КАДР, ЧТО И ПЕРВЫЙ ================
+//  ПОСЛЕДНИЙ КАДР ТОЖДЕСТВЕН ПЕРВОМУ: та же кухня, тот же `place`, тот же
+//  масштаб, та же поза, тот же номер того же размера. Отличается только то,
+//  чего не видно, — звучащая реплика.
+scene "final" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.48, 0.93) facing front on floor
+    //  `over 0.01s` НА ОБОИХ МАСШТАБАХ: голый `scales` стоит полсекунды
+    //  таймлайна, и два подряд дают дыру перед подписью (гейт `pauses.py`).
+    freeman scales 0.76 over 0.01s
+    camera wide
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-07.svg") at (0.505, 0.68) layer 9
+    nomer2 scales 0.19 over 0.01s
+    nomer2 hides
+
+    //lip 32
+    together {
+        freeman speaks for 5.75s
+        do {
+            //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
+            //  сбрасывает липсинк и рот прыгает.
+            freeman overlays "gladit_grud"
+            freeman overlays "teplo"
+            wait 2.8s
+            nomer2 shows
+            nomer2 scales 0.02
+            nomer2 scales 0.21 over 0.35s ease-out
+            nomer2 scales 0.19 over 0.18s
+            freeman overlays "gladit_grud_niz"
+            wait 1.2s
+            freeman overlays "gladit_grud"
+        }
+    }
+    nomer2 hides
+    freeman pose "gladit_grud"
+    wait 0.4s
+}
