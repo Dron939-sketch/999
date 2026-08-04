@@ -181,10 +181,10 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 5.77s
+        freeman speaks for 4.39s
         do {
             camera medium freeman
-            wait 2.88s
+            wait 2.19s
             freeman overlays "yorik"       // «тем больше знаешь»
         }
     }
@@ -195,9 +195,9 @@ scene "dveri" (duration: 1s, set: dveri) {
     // ── ХУК-ДОБИВКА (VO-2): второй и третий шаг цепочки ───────────────
     //lip 2
     together {
-        freeman speaks for 6.88s
+        freeman speaks for 5.30s
         do {
-            wait 3.31s
+            wait 2.55s
             freeman overlays "poimal"      // «тем меньше знаешь»
         }
     }
@@ -212,9 +212,9 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "hips"
     //lip 3
     together {
-        freeman speaks for 7.03s
+        freeman speaks for 5.36s
         do {
-            wait 3.37s
+            wait 2.57s
             freeman overlays "vzglyad"     // «проверьте переходы»
         }
     }
@@ -227,9 +227,9 @@ scene "dveri" (duration: 1s, set: dveri) {
     //  зрителя. Обратный порядок разрушил бы фокус.
     //lip 4
     together {
-        freeman speaks for 4.31s
+        freeman speaks for 3.63s
         do {
-            wait 1.70s
+            wait 1.43s
             freeman overlays "obvinil"     // «и вы мыслите так же» — в зрителя
         }
     }
@@ -326,14 +326,14 @@ scene "rupory" (duration: 1s, set: rupory) {
     freeman pose "v_upor"
     //lip 6
     together {
-        freeman speaks for 9.67s
+        freeman speaks for 7.21s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает, и
             //  поднятая `v_upor`-ом рука висела бы всю реплику забытой.
             freeman overlays "zakrylsya"   // «все пять — про одно»: закрылся
-            wait 3.7s
+            wait 2.76s
             freeman overlays "obvinil"     // «ни один не спорит» — всем телом
-            wait 3.9s
+            wait 2.91s
             camera medium freeman
             freeman overlays "klin"        // «каждый меняет вопрос» — приговор
         }
@@ -372,20 +372,20 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     //lip 7
     together {
-        freeman speaks for 5.04s
+        freeman speaks for 4.52s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает.
             //  Здесь она уходит в покой — главную фразу играют почти
             //  неподвижно, любой жест отвлекает.
             freeman overlays "calm"
-            wait 1.13s
+            wait 1.01s
             freeman overlays "vzglyad"     // «вывод безупречный»
-            wait 1.18s
+            wait 1.06s
             freeman overlays "dve_storony" // «а начало вы выбрали сами»
-            wait 1.13s
+            wait 1.01s
             freeman overlays "obvinil"     // «и вы уже кивнули» — в зрителя
             freeman overlays "poimal"      // и перекос: вам сообщают
-            wait 0.99s
+            wait 0.89s
             freeman overlays "razvel"      // «из чего выбирать»
         }
     }
@@ -453,14 +453,14 @@ scene "veer" (duration: 1s, set: veer) {
     //  нужен прямо сейчас.
     //lip 10
     together {
-        freeman speaks for 2.38s
+        freeman speaks for 1.57s
         do {
-            wait 0.8s
+            wait 0.53s
             freeman overlays "rubit"       // «крокодил больше зелёный»
-            wait 0.76s
+            wait 0.5s
             freeman overlays "vniz"        // «чем длинный»
             freeman overlays "poimal"      // и перекос: место знакомое
-            wait 0.61s
+            wait 0.4s
             freeman overlays "oba_vverh"   // «и вы уже сравниваете»
             freeman overlays "teplo"       // и тепло: это не упрёк
         }
@@ -473,15 +473,15 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 11
     together {
-        freeman speaks for 7.08s
+        freeman speaks for 6.14s
         do {
             camera medium freeman
-            wait 1.37s
+            wait 1.19s
             freeman overlays "otmahnulsya" // «разбираться не хочет» — отмашка
             freeman overlays "prishchur"   // с ухмылкой: приём известный
-            wait 1.45s
+            wait 1.26s
             freeman overlays "razmer"      // «брать побольше» — вот такую, во!
-            wait 1.53s
+            wait 1.33s
             freeman overlays "u_viska_l"   // «до первого почему» — серьёзно?
         }
     }
@@ -505,13 +505,13 @@ scene "zal" (duration: 1s, set: zal) {
     //  в момент, а не через два дня в душе.
     //lip 12
     together {
-        freeman speaks for 7.16s
+        freeman speaks for 6.48s
         do {
             camera medium freeman
-            wait 2.98s
+            wait 2.7s
             freeman overlays "ruki_za_spinu" // курс называют по-лекторски
             freeman overlays "teplo"       // и тепло: это приглашение
-            wait 3.33s
+            wait 3.01s
             freeman overlays "open"        // «и все бесплатно»
         }
     }
@@ -591,20 +591,20 @@ scene "final" (duration: 1s, set: dveri) {
 
     //lip 14
     together {
-        freeman speaks for 5.11s
+        freeman speaks for 3.58s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Обе позы поглаживания
             //  трогают только руку — значит ложатся накладкой без потерь.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"       // подпись объявляют тепло, не бьют
-            wait 2.85s
+            wait 2.0s
             nomer2 shows
             nomer2 scales 0.02
-            nomer2 scales 0.23 over 0.41s ease-out
-            nomer2 scales 0.21 over 0.21s
+            nomer2 scales 0.23 over 0.29s ease-out
+            nomer2 scales 0.21 over 0.15s
             freeman overlays "gladit_grud_niz"
-            wait 1.02s
+            wait 0.71s
             freeman overlays "gladit_grud"
         }
     }
