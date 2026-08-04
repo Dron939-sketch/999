@@ -214,13 +214,13 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "hips"
     //lip 3
     together {
-        freeman speaks for 7.40s
+        freeman speaks for 6.84s
         do {
-            wait 1.93s
+            wait 1.79s
             freeman overlays "ostyl"       // «скажете, она настоящая?»
-            wait 1.77s
+            wait 1.64s
             freeman overlays "k_sebe"      // «настоящая»
-            wait 1.93s
+            wait 1.79s
             freeman overlays "razvel"      // «и удобная, как диван»
         }
     }
@@ -421,12 +421,12 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 8
     together {
-        freeman speaks for 4.63s
+        freeman speaks for 3.92s
         do {
-            wait 1.67s
+            wait 1.41s
             freeman overlays "vzves"       // «проверять надо не вывод»
             freeman overlays "raspahnul"   // ход открыт
-            wait 1.67s
+            wait 1.41s
             freeman overlays "palec_vverh" // «а то, с чего вы начали»
         }
     }
@@ -440,14 +440,14 @@ scene "veer" (duration: 1s, set: veer) {
     //  нужен прямо сейчас.
     //lip 9
     together {
-        freeman speaks for 6.58s
+        freeman speaks for 5.09s
         do {
-            wait 2.22s
+            wait 1.72s
             freeman overlays "rubit"       // «крокодил больше зелёный»
-            wait 2.09s
+            wait 1.62s
             freeman overlays "vniz"        // «чем длинный»
             freeman overlays "poimal"      // и перекос: место знакомое
-            wait 1.7s
+            wait 1.32s
             freeman overlays "oba_vverh"   // «и вы уже сравниваете»
             freeman overlays "teplo"       // и тепло: это не упрёк
         }
@@ -460,15 +460,15 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 10
     together {
-        freeman speaks for 7.47s
+        freeman speaks for 6.82s
         do {
             camera medium freeman
-            wait 1.44s
+            wait 1.31s
             freeman overlays "otmahnulsya" // «разбираться не хочет» — отмашка
             freeman overlays "prishchur"   // с ухмылкой: приём известный
-            wait 1.53s
+            wait 1.4s
             freeman overlays "razmer"      // «брать побольше» — вот такую, во!
-            wait 1.62s
+            wait 1.48s
             freeman overlays "u_viska_l"   // «до первого почему» — серьёзно?
         }
     }
@@ -492,13 +492,13 @@ scene "zal" (duration: 1s, set: zal) {
     //  в момент, а не через два дня в душе.
     //lip 11
     together {
-        freeman speaks for 7.88s
+        freeman speaks for 6.48s
         do {
             camera medium freeman
-            wait 3.28s
+            wait 2.7s
             freeman overlays "ruki_za_spinu" // курс называют по-лекторски
             freeman overlays "teplo"       // и тепло: это приглашение
-            wait 3.66s
+            wait 3.01s
             freeman overlays "open"        // «и все бесплатно»
         }
     }
