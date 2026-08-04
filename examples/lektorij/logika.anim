@@ -356,20 +356,20 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     //lip 6
     together {
-        freeman speaks for 6.17s
+        freeman speaks for 4.96s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает.
             //  Здесь она уходит в покой — главную фразу играют почти
             //  неподвижно, любой жест отвлекает.
             freeman overlays "calm"
-            wait 1.38s
+            wait 1.11s
             freeman overlays "vzglyad"     // «вопрос — это не вопрос»
-            wait 1.46s
+            wait 1.17s
             freeman overlays "dve_storony" // «утверждение со знаком вопроса»
-            wait 1.38s
+            wait 1.11s
             freeman overlays "obvinil"     // «и вы уже кивнули» — в зрителя
             freeman overlays "poimal"      // и перекос: вам сообщают
-            wait 1.22s
+            wait 0.98s
             freeman overlays "razvel"      // «из чего выбирать»
         }
     }
@@ -418,12 +418,12 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 8
     together {
-        freeman speaks for 4.43s
+        freeman speaks for 3.40s
         do {
-            wait 1.60s
+            wait 1.23s
             freeman overlays "vzves"       // «слушайте не вопрос»
             freeman overlays "raspahnul"   // ход открыт
-            wait 1.60s
+            wait 1.23s
             freeman overlays "palec_vverh" // «а то, что в нём уже сказано»
         }
     }
@@ -457,15 +457,15 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 10
     together {
-        freeman speaks for 7.46s
+        freeman speaks for 6.50s
         do {
             camera medium freeman
-            wait 1.43s
+            wait 1.25s
             freeman overlays "otmahnulsya" // «разбираться не хочет» — отмашка
             freeman overlays "prishchur"   // с ухмылкой: приём известный
-            wait 1.53s
+            wait 1.33s
             freeman overlays "razmer"      // «брать побольше» — вот такую, во!
-            wait 1.62s
+            wait 1.41s
             freeman overlays "u_viska_l"   // «до первого почему» — серьёзно?
         }
     }
@@ -486,13 +486,13 @@ scene "zal" (duration: 1s, set: zal) {
     // ── ПРЕЗЕНТАЦИЯ (VO-10): называет курс ────────────────────────────
     //lip 11
     together {
-        freeman speaks for 5.47s
+        freeman speaks for 4.52s
         do {
             camera medium freeman
-            wait 2.28s
+            wait 1.88s
             freeman overlays "ruki_za_spinu" // курс называют по-лекторски
             freeman overlays "teplo"       // и тепло: это приглашение
-            wait 2.54s
+            wait 2.1s
             freeman overlays "open"        // «и все бесплатно»
         }
     }
@@ -524,13 +524,13 @@ scene "vopros" (duration: 1s, set: dveri_vse) {
     //  который можно задать сегодня же вечером, как только покажут две двери.
     //lip 12
     together {
-        freeman speaks for 6.75s
+        freeman speaks for 8.33s
         do {
             camera medium freeman
-            wait 2.15s
+            wait 2.65s
             freeman overlays "stop_ladon_l" // «их больше тридцати» — стоп
             freeman overlays "klin"        // с вызовом, а не с советом
-            wait 1.98s
+            wait 2.44s
             freeman overlays "vozzvanie"   // «сколько дверей вам показали?»
             freeman overlays "doshlo"      // и вопрос повисает: шар в глазах
         }
