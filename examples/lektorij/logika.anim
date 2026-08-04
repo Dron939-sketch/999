@@ -193,10 +193,10 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 5.59s
+        freeman speaks for 5.02s
         do {
             camera medium freeman
-            wait 2.75s
+            wait 2.47s
             freeman overlays "yorik"       // «знаете вы столько, сколько помните»
         }
     }
@@ -239,9 +239,9 @@ scene "dveri" (duration: 1s, set: dveri) {
     //  зрителя. Обратный порядок разрушил бы фокус.
     //lip 4
     together {
-        freeman speaks for 4.76s
+        freeman speaks for 3.79s
         do {
-            wait 1.88s
+            wait 1.5s
             freeman overlays "obvinil"     // «и вы мыслите так же» — в зрителя
         }
     }
@@ -300,7 +300,7 @@ scene "rupory" (duration: 1s, set: rupory) {
     freeman pose "calm"
     //lip 6
     together {
-        freeman speaks for 8.85s
+        freeman speaks for 9.53s
         do {
             //  ШАГ И НАЕЗД — ОДНОВРЕМЕННО, ПО ОДНОМУ НА КАЖДОЕ «ЗНАЧИТ».
             //
@@ -326,32 +326,32 @@ scene "rupory" (duration: 1s, set: rupory) {
             freeman overlays "shag_levoj"
             freeman overlays "vzglyad"     // «заяц учит волка логике»
             together {
-                freeman moves-to (0.5, 0.746) over 1.5s
-                freeman scales 0.544 over 1.5s
+                freeman moves-to (0.5, 0.746) over 1.62s
+                freeman scales 0.544 over 1.62s
             }
             freeman overlays "shag_pravoj"
             freeman overlays "k_sebe"      // «спички есть?» — рука за ответом
             together {
-                freeman moves-to (0.5, 0.792) over 1.5s
-                freeman scales 0.628 over 1.5s
+                freeman moves-to (0.5, 0.792) over 1.62s
+                freeman scales 0.628 over 1.62s
             }
             freeman overlays "shag_levoj"
             freeman overlays "palec_vverh" // «значит, куришь»
             together {
-                freeman moves-to (0.5, 0.838) over 1.5s
-                freeman scales 0.712 over 1.5s
+                freeman moves-to (0.5, 0.838) over 1.62s
+                freeman scales 0.712 over 1.62s
             }
             freeman overlays "shag_pravoj"
             freeman overlays "razvel"      // «значит, есть компания»
             together {
-                freeman moves-to (0.5, 0.884) over 1.5s
-                freeman scales 0.796 over 1.5s
+                freeman moves-to (0.5, 0.884) over 1.62s
+                freeman scales 0.796 over 1.62s
             }
             freeman overlays "shag_levoj"
             freeman overlays "oba_vverh"   // «значит, интересный человек»
             together {
-                freeman moves-to (0.5, 0.93) over 1.5s
-                freeman scales 0.88 over 1.5s
+                freeman moves-to (0.5, 0.93) over 1.62s
+                freeman scales 0.88 over 1.62s
             }
             freeman overlays "prishchur"   // и всё сошлось
         }
@@ -370,15 +370,15 @@ scene "rupory" (duration: 1s, set: rupory) {
     //  на самом панче. Тело при этом неподвижно — жест на панче крадёт слово.
     //lip 7
     together {
-        freeman speaks for 5.47s
+        freeman speaks for 6.32s
         do {
             freeman overlays "raspahnul"   // «волк в восторге забрал книжку»
-            wait 1.6s
+            wait 1.85s
             freeman overlays "k_sebe"      // «спички есть?» — тот же жест, тот же вопрос
-            wait 1.6s
+            wait 1.85s
             camera medium freeman
             freeman overlays "klin"        // «нет» — и волк уже не остановится
-            wait 1.35s
+            wait 1.56s
             freeman overlays "poimal"      // ПАНЧ: «ну ты и мудак»
         }
     }
@@ -441,17 +441,17 @@ scene "temnota" (duration: 1s, set: void) {
     //  подписался на чужом примере, теперь стоит под его собственным.
     //lip 9
     together {
-        freeman speaks for 7.42s
+        freeman speaks for 6.90s
         do {
             freeman overlays "calm"
-            wait 1.9s
+            wait 1.77s
             freeman overlays "vzglyad"     // «половина метода»
-            wait 1.9s
+            wait 1.77s
             freeman overlays "dve_storony" // «опаснее, чем ничего»
-            wait 1.8s
+            wait 1.67s
             freeman overlays "obvinil"     // «ошибка не в выводе» — в зрителя
             freeman overlays "poimal"      // и перекос: вам сообщают
-            wait 1.7s
+            wait 1.58s
             freeman overlays "klin"        // «— в первой строке»
         }
     }
@@ -504,15 +504,15 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 11
     together {
-        freeman speaks for 8.25s
+        freeman speaks for 6.43s
         do {
             camera medium freeman
-            wait 1.35s
+            wait 1.05s
             freeman overlays "otmahnulsya" // «можно и не проверять» — отмашка
             freeman overlays "prishchur"   // с ухмылкой: приём известный
-            wait 1.4s
+            wait 1.09s
             freeman overlays "razmer"      // «в душе вы правы» — вот настолько
-            wait 1.45s
+            wait 1.13s
             freeman overlays "u_viska_l"   // «до первого медведя» — серьёзно?
         }
     }
