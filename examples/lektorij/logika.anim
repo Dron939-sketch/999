@@ -214,9 +214,9 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "hips"
     //lip 3
     together {
-        freeman speaks for 5.67s
+        freeman speaks for 4.91s
         do {
-            wait 2.72s
+            wait 2.36s
             freeman overlays "vzglyad"     // «проверьте переходы»
         }
     }
@@ -290,7 +290,7 @@ scene "rupory" (duration: 1s, set: rupory) {
     freeman pose "calm"
     //lip 6
     together {
-        freeman speaks for 10.12s
+        freeman speaks for 7.68s
         do {
             //  ШАГ И НАЕЗД — ОДНОВРЕМЕННО, ПО ОДНОМУ НА КАЖДОЕ «ЗНАЧИТ».
             //
@@ -316,32 +316,32 @@ scene "rupory" (duration: 1s, set: rupory) {
             freeman overlays "shag_levoj"
             freeman overlays "vzglyad"     // «заяц учит волка логике»
             together {
-                freeman moves-to (0.5, 0.746) over 0.9s
-                freeman scales 0.544 over 0.9s
+                freeman moves-to (0.5, 0.746) over 0.68s
+                freeman scales 0.544 over 0.68s
             }
             freeman overlays "shag_pravoj"
             freeman overlays "k_sebe"      // «спички есть?» — рука за ответом
             together {
-                freeman moves-to (0.5, 0.792) over 0.9s
-                freeman scales 0.628 over 0.9s
+                freeman moves-to (0.5, 0.792) over 0.68s
+                freeman scales 0.628 over 0.68s
             }
             freeman overlays "shag_levoj"
             freeman overlays "palec_vverh" // «значит, куришь»
             together {
-                freeman moves-to (0.5, 0.838) over 0.9s
-                freeman scales 0.712 over 0.9s
+                freeman moves-to (0.5, 0.838) over 0.68s
+                freeman scales 0.712 over 0.68s
             }
             freeman overlays "shag_pravoj"
             freeman overlays "razvel"      // «значит, есть компания»
             together {
-                freeman moves-to (0.5, 0.884) over 0.9s
-                freeman scales 0.796 over 0.9s
+                freeman moves-to (0.5, 0.884) over 0.68s
+                freeman scales 0.796 over 0.68s
             }
             freeman overlays "shag_levoj"
             freeman overlays "oba_vverh"   // «значит, интересный человек»
             together {
-                freeman moves-to (0.5, 0.93) over 0.9s
-                freeman scales 0.88 over 0.9s
+                freeman moves-to (0.5, 0.93) over 0.68s
+                freeman scales 0.88 over 0.68s
             }
             freeman overlays "prishchur"   // и всё сошлось
         }
@@ -358,15 +358,15 @@ scene "rupory" (duration: 1s, set: rupory) {
     //  мультик, названный медведь — это его собственная картинка.
     //lip 7
     together {
-        freeman speaks for 7.62s
+        freeman speaks for 6.40s
         do {
             freeman overlays "raspahnul"   // «волк в восторге забрал книжку»
-            wait 2.3s
+            wait 1.93s
             freeman overlays "k_sebe"      // «спички есть?» — тот же жест, тот же вопрос
-            wait 2.3s
+            wait 1.93s
             camera medium freeman
             freeman overlays "klin"        // «нет» — и волк уже не остановится
-            wait 1.9s
+            wait 1.6s
             freeman overlays "poimal"      // «понятно, скучный ты»
         }
     }
@@ -426,17 +426,17 @@ scene "temnota" (duration: 1s, set: void) {
     //  подписался на чужом примере, теперь стоит под его собственным.
     //lip 9
     together {
-        freeman speaks for 8.18s
+        freeman speaks for 7.42s
         do {
             freeman overlays "calm"
-            wait 1.9s
+            wait 1.72s
             freeman overlays "vzglyad"     // «половина метода»
-            wait 1.9s
+            wait 1.72s
             freeman overlays "dve_storony" // «опаснее, чем ничего»
-            wait 1.8s
+            wait 1.63s
             freeman overlays "obvinil"     // «ошибка не в выводе» — в зрителя
             freeman overlays "poimal"      // и перекос: вам сообщают
-            wait 1.7s
+            wait 1.54s
             freeman overlays "klin"        // «— в первой строке»
         }
     }
@@ -489,15 +489,15 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 11
     together {
-        freeman speaks for 6.88s
+        freeman speaks for 8.25s
         do {
             camera medium freeman
-            wait 1.35s
+            wait 1.62s
             freeman overlays "otmahnulsya" // «можно и не проверять» — отмашка
             freeman overlays "prishchur"   // с ухмылкой: приём известный
-            wait 1.4s
+            wait 1.68s
             freeman overlays "razmer"      // «в душе вы правы» — вот настолько
-            wait 1.45s
+            wait 1.74s
             freeman overlays "u_viska_l"   // «до первого медведя» — серьёзно?
         }
     }
@@ -521,13 +521,13 @@ scene "zal" (duration: 1s, set: zal) {
     //  в момент, а не через два дня в душе.
     //lip 12
     together {
-        freeman speaks for 5.79s
+        freeman speaks for 5.20s
         do {
             camera medium freeman
-            wait 2.4s
+            wait 2.15s
             freeman overlays "ruki_za_spinu" // курс называют по-лекторски
             freeman overlays "teplo"       // и тепло: это приглашение
-            wait 2.6s
+            wait 2.33s
             freeman overlays "open"        // «замечать подмену и проверять начало»
         }
     }
@@ -608,20 +608,20 @@ scene "final" (duration: 1s, set: dveri) {
 
     //lip 14
     together {
-        freeman speaks for 5.11s
+        freeman speaks for 3.50s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Обе позы поглаживания
             //  трогают только руку — значит ложатся накладкой без потерь.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"       // подпись объявляют тепло, не бьют
-            wait 2.85s
+            wait 1.95s
             nomer2 shows
             nomer2 scales 0.02
-            nomer2 scales 0.23 over 0.41s ease-out
-            nomer2 scales 0.21 over 0.21s
+            nomer2 scales 0.23 over 0.28s ease-out
+            nomer2 scales 0.21 over 0.14s
             freeman overlays "gladit_grud_niz"
-            wait 1.02s
+            wait 0.7s
             freeman overlays "gladit_grud"
         }
     }
