@@ -297,7 +297,7 @@ scene "kamen" (duration: 1s, set: kamen) {
         do {
             freeman overlays "hips"
             wait 1.9s
-            freeman overlays "vzves"       // «каждый по трём случаям»
+            freeman overlays "vzves"       // «сколько случаев под каждым»
         }
     }
     wait 1.1s
