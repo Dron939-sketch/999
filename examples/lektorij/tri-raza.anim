@@ -250,7 +250,7 @@ scene "kamen" (duration: 1s, set: kamen) {
     // ── ОТРИЦАНИЕ (VO-8): «тогда давайте посчитаем» ───────────────────
     //lip 8
     together {
-        freeman speaks for 4.17s
+        freeman speaks for 3.50s
         do {
             freeman overlays "prishchur"
         }
@@ -263,25 +263,25 @@ scene "kamen" (duration: 1s, set: kamen) {
     //  потом раздулся». `together` внутри `do` связывает их в один отрезок.
     //lip 9
     together {
-        freeman speaks for 3.90s
+        freeman speaks for 5.25s
         do {
             freeman overlays "shag_levoj"
             freeman overlays "vzglyad"     // «не моё»
             together {
-                freeman moves-to (0.44, 0.79) over 1.1s
-                freeman scales 0.60 over 1.1s
+                freeman moves-to (0.44, 0.79) over 1.48s
+                freeman scales 0.60 over 1.48s
             }
             freeman overlays "shag_pravoj"
             freeman overlays "ostyl"       // «не дано»
             together {
-                freeman moves-to (0.46, 0.86) over 1.1s
-                freeman scales 0.72 over 1.1s
+                freeman moves-to (0.46, 0.86) over 1.48s
+                freeman scales 0.72 over 1.48s
             }
             freeman overlays "shag_levoj"
             freeman overlays "klin"        // «не судьба»
             together {
-                freeman moves-to (0.48, 0.93) over 1.1s
-                freeman scales 0.84 over 1.1s
+                freeman moves-to (0.48, 0.93) over 1.48s
+                freeman scales 0.84 over 1.48s
             }
             freeman overlays "shag_pravoj"
         }
@@ -322,7 +322,7 @@ scene "kamen" (duration: 1s, set: kamen) {
     // ── ЦЕНА (VO-12): «вы сделали её сами — и поверили» ───────────────
     //lip 12
     together {
-        freeman speaks for 6.83s
+        freeman speaks for 8.12s
         do {
             freeman overlays "ostyl"
         }
@@ -426,18 +426,18 @@ scene "cepochka" (duration: 1s, set: rupory) {
     //  согласие волка есть согласие зрителя.
     //lip 17
     together {
-        freeman speaks for 6.38s
+        freeman speaks for 4.60s
         do {
             freeman overlays "palec_vverh"
             together {
-                freeman moves-to (0.5, 0.87) over 1.1s
-                freeman scales 0.77 over 1.1s
+                freeman moves-to (0.5, 0.87) over 0.79s
+                freeman scales 0.77 over 0.79s
             }
             freeman overlays "shag_pravoj"
             freeman overlays "poimal"      // «ну да»
             together {
-                freeman moves-to (0.5, 0.93) over 1.1s
-                freeman scales 0.88 over 1.1s
+                freeman moves-to (0.5, 0.93) over 0.79s
+                freeman scales 0.88 over 0.79s
             }
             freeman overlays "shag_levoj"
             freeman overlays "razvel"
@@ -449,10 +449,10 @@ scene "cepochka" (duration: 1s, set: rupory) {
     // ── ПУЛЕМЁТ 3 (VO-18) ─────────────────────────────────────────────
     //lip 18
     together {
-        freeman speaks for 5.28s
+        freeman speaks for 4.13s
         do {
             camera medium freeman
-            wait 3.1s
+            wait 2.42s
             freeman overlays "oba_vverh"
             freeman overlays "prishchur"
         }
@@ -489,12 +489,12 @@ scene "medved" (duration: 1s, set: les) {
     freeman pose "v_upor"
     //lip 20
     together {
-        freeman speaks for 5.46s
+        freeman speaks for 4.08s
         do {
             freeman overlays "k_sebe"      // «спички есть?» — ТОТ ЖЕ ЖЕСТ
-            wait 1.7s
+            wait 1.27s
             freeman overlays "klin"        // «нет»
-            wait 1.6s
+            wait 1.19s
             freeman overlays "poimal"      // ПАНЧ
         }
     }
@@ -567,10 +567,10 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     freeman pose "calm"
     //lip 23
     together {
-        freeman speaks for 4.45s
+        freeman speaks for 5.64s
         do {
             freeman overlays "raspahnul"
-            wait 1.9s
+            wait 2.41s
             freeman overlays "teplo"
         }
     }
@@ -579,10 +579,10 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     // ── ВЗЛЁТ 2 (VO-24): «сколько случаев под выводом» ────────────────
     //lip 24
     together {
-        freeman speaks for 4.63s
+        freeman speaks for 3.84s
         do {
             camera medium freeman
-            wait 2.1s
+            wait 1.74s
             freeman overlays "vzves"
         }
     }
@@ -605,10 +605,10 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     //  «сколько раз, и в тех ли условиях» помещается в голову целиком.
     //lip 26
     together {
-        freeman speaks for 3.70s
+        freeman speaks for 3.03s
         do {
             freeman overlays "vozzvanie"
-            wait 2.2s
+            wait 1.8s
             freeman overlays "klin"
         }
     }
@@ -620,11 +620,11 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     //  отказа считать, и называет её буднично.
     //lip 27
     together {
-        freeman speaks for 7.26s
+        freeman speaks for 6.19s
         do {
             freeman overlays "otmahnulsya"
             freeman overlays "prishchur"
-            wait 3.4s
+            wait 2.9s
             freeman overlays "razmer"      // «листайте ленту»
         }
     }
@@ -636,10 +636,10 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     //  Тогда приговор придётся пересматривать, а инструмента для этого нет.
     //lip 28
     together {
-        freeman speaks for 4.90s
+        freeman speaks for 4.26s
         do {
             freeman overlays "u_viska_l"
-            wait 2.3s
+            wait 2.0s
             freeman overlays "poimal"
         }
     }
@@ -659,10 +659,10 @@ scene "zal" (duration: 1s, set: zal) {
     // ── ПРЕЗЕНТАЦИЯ 1 (VO-29) ─────────────────────────────────────────
     //lip 29
     together {
-        freeman speaks for 5.16s
+        freeman speaks for 4.55s
         do {
             freeman overlays "ruki_za_spinu"
-            wait 2.5s
+            wait 2.2s
             freeman overlays "open"
         }
     }
@@ -735,19 +735,19 @@ scene "final" (duration: 1s, set: kuhnya) {
 
     //lip 32
     together {
-        freeman speaks for 5.75s
+        freeman speaks for 4.52s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"
-            wait 2.8s
+            wait 2.2s
             nomer2 shows
             nomer2 scales 0.02
-            nomer2 scales 0.21 over 0.35s ease-out
-            nomer2 scales 0.19 over 0.18s
+            nomer2 scales 0.21 over 0.28s ease-out
+            nomer2 scales 0.19 over 0.14s
             freeman overlays "gladit_grud_niz"
-            wait 1.2s
+            wait 0.94s
             freeman overlays "gladit_grud"
         }
     }
