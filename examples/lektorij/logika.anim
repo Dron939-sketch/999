@@ -180,11 +180,14 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 4.23s
+        freeman speaks for 6.13s
         do {
             camera medium freeman
-            wait 2.12s
+            wait 3.07s
             freeman overlays "yorik"       // «чего вы давно собираетесь»
+            //  ТЫЧКА «не всё — одно» идёт вскользь, без подачи: мини-панч
+            //  внутри длинного сетапа, чтобы зритель не заскучал до первого
+            //  настоящего слома (SMESHNO.md §0).
         }
     }
     //  ПАУЗА ЗДЕСЬ — ЭТО ТАЙМИНГ ШУТКИ, а не дыра. Обещание прозвучало,
@@ -214,14 +217,14 @@ scene "dveri" (duration: 1s, set: dveri) {
     freeman overlays "hips"
     //lip 3
     together {
-        freeman speaks for 6.84s
+        freeman speaks for 5.94s
         do {
-            wait 1.79s
+            wait 1.55s
             freeman overlays "ostyl"       // «скажете, она настоящая?»
-            wait 1.64s
+            wait 1.42s
             freeman overlays "k_sebe"      // «настоящая»
-            wait 1.79s
-            freeman overlays "razvel"      // «и удобная, как диван»
+            wait 1.55s
+            freeman overlays "razvel"      // «подобраны идеально» — панч
         }
     }
     wait 0.5s
@@ -307,20 +310,23 @@ scene "rupory" (duration: 1s, set: rupory) {
     //  Тишина на месте шестой уловки — её нет, и это слышно.
     wait 0.5s
 
-    // ── РАЗВОРОТ (VO-5): «Ни одна не ложь. Каждую выбрали вы.» ────────
+    // ── РАЗВОРОТ (VO-5): «Это не отговорки. Это заготовки.» ───────────
+    //  ПОВОРОТ И ПАНЧ В ОДНОЙ РЕПЛИКЕ: ждали «отговорки», получили
+    //  повышение в звании. Ударное слово стоит последним — после него
+    //  не говорится ничего.
     //  ВПЕРВЫЕ В УПОР. До этой секунды он ни разу не смотрел в камеру: пока
     //  шли чужие голоса, взгляд в упор был бы преждевременным.
     freeman pose "v_upor"
     //lip 5
     together {
-        freeman speaks for 4.98s
+        freeman speaks for 6.97s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает, и
             //  поднятая `v_upor`-ом рука висела бы всю реплику забытой.
             freeman overlays "zakrylsya"   // «все пять — про одно»: закрылся
-            wait 1.91s
+            wait 2.67s
             freeman overlays "obvinil"     // «ни один не спорит» — всем телом
-            wait 2.01s
+            wait 2.81s
             camera medium freeman
             freeman overlays "klin"        // «каждый меняет вопрос» — приговор
         }
@@ -359,20 +365,20 @@ scene "temnota" (duration: 1s, set: void) {
     freeman pose "v_upor"
     //lip 6
     together {
-        freeman speaks for 4.63s
+        freeman speaks for 5.11s
         do {
             //  РУКА НАЗЫВАЕТСЯ ПЕРВОЙ: слой из одних глаз её не трогает.
             //  Здесь она уходит в покой — главную фразу играют почти
             //  неподвижно, любой жест отвлекает.
             freeman overlays "calm"
-            wait 1.04s
+            wait 1.15s
             freeman overlays "vzglyad"     // «вывод безупречный»
-            wait 1.09s
+            wait 1.2s
             freeman overlays "dve_storony" // «а начало вы выбрали сами»
-            wait 1.04s
+            wait 1.15s
             freeman overlays "obvinil"     // «и вы уже кивнули» — в зрителя
             freeman overlays "poimal"      // и перекос: вам сообщают
-            wait 0.91s
+            wait 1.0s
             freeman overlays "razvel"      // «из чего выбирать»
         }
     }
@@ -385,12 +391,12 @@ scene "temnota" (duration: 1s, set: void) {
     //  расписанию». Первый убыток служит доказательством, что будет второй.
     //lip 7
     together {
-        freeman speaks for 3.39s
+        freeman speaks for 6.07s
         do {
-            wait 1.13s
-            freeman overlays "ostyl"       // «тот год не вернуть»
-            wait 1.13s
-            freeman overlays "obvinil"     // «а дверь стоит там же»
+            wait 2.03s
+            freeman overlays "ostyl"       // «понедельников было пятьдесят два»
+            wait 2.03s
+            freeman overlays "obvinil"     // «дверь там же, диван тоже» — тег
         }
     }
     wait 0.2s
@@ -421,12 +427,12 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 8
     together {
-        freeman speaks for 3.92s
+        freeman speaks for 4.63s
         do {
-            wait 1.41s
+            wait 1.67s
             freeman overlays "vzves"       // «проверять надо не вывод»
             freeman overlays "raspahnul"   // ход открыт
-            wait 1.41s
+            wait 1.67s
             freeman overlays "palec_vverh" // «а то, с чего вы начали»
         }
     }
@@ -440,14 +446,14 @@ scene "veer" (duration: 1s, set: veer) {
     //  нужен прямо сейчас.
     //lip 9
     together {
-        freeman speaks for 5.09s
+        freeman speaks for 6.58s
         do {
-            wait 1.72s
+            wait 2.22s
             freeman overlays "rubit"       // «крокодил больше зелёный»
-            wait 1.62s
+            wait 2.09s
             freeman overlays "vniz"        // «чем длинный»
             freeman overlays "poimal"      // и перекос: место знакомое
-            wait 1.32s
+            wait 1.7s
             freeman overlays "oba_vverh"   // «и вы уже сравниваете»
             freeman overlays "teplo"       // и тепло: это не упрёк
         }
@@ -460,15 +466,15 @@ scene "veer" (duration: 1s, set: veer) {
     freeman pose "calm"
     //lip 10
     together {
-        freeman speaks for 6.82s
+        freeman speaks for 5.32s
         do {
             camera medium freeman
-            wait 1.31s
+            wait 1.03s
             freeman overlays "otmahnulsya" // «разбираться не хочет» — отмашка
             freeman overlays "prishchur"   // с ухмылкой: приём известный
-            wait 1.4s
+            wait 1.09s
             freeman overlays "razmer"      // «брать побольше» — вот такую, во!
-            wait 1.48s
+            wait 1.15s
             freeman overlays "u_viska_l"   // «до первого почему» — серьёзно?
         }
     }
@@ -492,13 +498,13 @@ scene "zal" (duration: 1s, set: zal) {
     //  в момент, а не через два дня в душе.
     //lip 11
     together {
-        freeman speaks for 6.48s
+        freeman speaks for 7.88s
         do {
             camera medium freeman
-            wait 2.7s
+            wait 3.28s
             freeman overlays "ruki_za_spinu" // курс называют по-лекторски
             freeman overlays "teplo"       // и тепло: это приглашение
-            wait 3.01s
+            wait 3.66s
             freeman overlays "open"        // «и все бесплатно»
         }
     }
@@ -525,19 +531,21 @@ scene "vopros" (duration: 1s, set: dveri_vse) {
     freeman overlays "smug"
     wait 0.3s
 
-    // ── ЖАЛО (VO-12): «Сколько дверей вы сегодня не открыли?» ─────────
+    // ── ЖАЛО (VO-12): «Ну что — в понедельник?» ───────────────────────
+    //  КАЛЛБЭК: его собственная фраза из пулемёта возвращается к нему же.
+    //  Коротко намеренно — панч не терпит хвоста.
     //  ИЗМЕРИМОЕ ДЕЙСТВИЕ, а не мысль на прощание: у зрителя есть один вопрос,
     //  который можно задать сегодня же вечером, как только покажут две двери.
     //lip 12
     together {
-        freeman speaks for 2.80s
+        freeman speaks for 1.75s
         do {
             camera medium freeman
-            wait 0.89s
-            freeman overlays "stop_ladon_l" // «сколько дверей» — стоп
+            wait 0.56s
+            freeman overlays "stop_ladon_l" // «ну что» — стоп
             freeman overlays "klin"        // с вызовом, а не с советом
-            wait 0.82s
-            freeman overlays "vozzvanie"   // «сколько дверей вы не открыли?»
+            wait 0.51s
+            freeman overlays "vozzvanie"   // «ну что — в понедельник?»
             freeman overlays "doshlo"      // и вопрос повисает: шар в глазах
         }
     }
