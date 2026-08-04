@@ -29,9 +29,13 @@
 //     получает опись: ни одна не доказана, каждая кому-то выгодна, и это не он.
 //     Перечисление доказывает тезис само, без единого термина.
 //
-//  5. АНЕКДОТ ВСТАЛ НА СВОЁ МЕСТО. Волк не ошибается ни в одном переходе —
-//     станок у него отличный. Заготовку ему положил заяц. Это ровно тезис
-//     ролика, рассказанный анекдотом, а не украшение к нему.
+//  5. АНЕКДОТ ВСТАЛ НА СВОЁ МЕСТО, НО НАЗЫВАТЬ ЕГО НАДО ТОЧНО. Волк ломает ОБА
+//     конца: первую строку взял с чужих слов и не проверил, а на медведе ещё и
+//     вывернул её наизнанку («спичек нет — значит, не куришь»), чего из «А → Б»
+//     не следует. Ролику нужна первая половина — чужая непроверенная
+//     заготовка, — и ровно она звучит в реплике. Ранняя версия говорила «станок
+//     у волка отличный»: неправда, и в ролике про логику она стоит дороже
+//     прочих.
 //
 //  6. РАЗВЯЗКИ АНЕКДОТА НЕТ. Что сделал медведь — не говорится ни словом: пока
 //     в кадре волк, зритель смотрит на волка. Вместо развязки полторы секунды
@@ -139,7 +143,7 @@ scene "doroga" (duration: 1s, set: doroga) {
     //  комплиментом продавца.
     //lip 1
     together {
-        freeman speaks for 3.93s
+        freeman speaks for 3.31s
         do {
             freeman overlays "hips"
             wait 1.9s
@@ -166,7 +170,7 @@ scene "doroga" (duration: 1s, set: doroga) {
     //  вывод сам и убеждается, что станок у него правда есть.
     //lip 3
     together {
-        freeman speaks for 6.18s
+        freeman speaks for 6.49s
         do {
             wait 2.0s
             freeman overlays "somnenie"    // «а берёт всегда»
@@ -217,7 +221,7 @@ scene "vhod" (duration: 1s, set: void) {
     // ── РАЗВОРОТ (VO-5): «он не спрашивает, откуда заготовка» ─────────
     //lip 5
     together {
-        freeman speaks for 5.45s
+        freeman speaks for 5.63s
         do {
             freeman overlays "calm"
             wait 2.6s
@@ -229,7 +233,7 @@ scene "vhod" (duration: 1s, set: void) {
     // ── УДАР (VO-6): «мусор — деталь из мусора» ───────────────────────
     //lip 6
     together {
-        freeman speaks for 6.30s
+        freeman speaks for 6.49s
         do {
             freeman overlays "dve_storony" // хорошая и плохая — две стороны
             wait 3.0s
@@ -245,7 +249,7 @@ scene "vhod" (duration: 1s, set: void) {
     //  нечего проверять: он сходится.
     //lip 7
     together {
-        freeman speaks for 4.90s
+        freeman speaks for 5.73s
         do {
             wait 2.3s
             freeman overlays "obvinil"     // «по детали не видно» — в зрителя
@@ -273,7 +277,7 @@ scene "bazar" (duration: 1s, set: bazar) {
     // ── ОТРИЦАНИЕ (VO-8): «кладёт не всегда тот, кто у станка» ────────
     //lip 8
     together {
-        freeman speaks for 3.34s
+        freeman speaks for 3.42s
         do {
             freeman overlays "prishchur"
         }
@@ -318,7 +322,7 @@ scene "bazar" (duration: 1s, set: bazar) {
     // ── ДОБИВКА (VO-10): опись ────────────────────────────────────────
     //lip 10
     together {
-        freeman speaks for 6.01s
+        freeman speaks for 6.16s
         do {
             freeman overlays "hips"
             wait 2.9s
@@ -333,7 +337,7 @@ scene "bazar" (duration: 1s, set: bazar) {
     freeman pose "v_upor"
     //lip 11
     together {
-        freeman speaks for 1.06s
+        freeman speaks for 1.10s
         do {
             freeman overlays "klin"
         }
@@ -356,7 +360,7 @@ scene "ryady" (duration: 1s, set: ryady) {
     // ── ОБРАЗ (VO-12): «как они входят» ───────────────────────────────
     //lip 12
     together {
-        freeman speaks for 5.94s
+        freeman speaks for 7.92s
         do {
             freeman overlays "k_sebe"      // «заметьте, как они входят»
             wait 2.9s
@@ -370,7 +374,7 @@ scene "ryady" (duration: 1s, set: ryady) {
     //  они лежат. Их не говорят зрителю — их берут с полки.
     //lip 13
     together {
-        freeman speaks for 3.75s
+        freeman speaks for 3.63s
         do {
             freeman overlays "shag_levoj"
             freeman moves-to (0.60, 0.86) over 1.7s
@@ -387,7 +391,7 @@ scene "ryady" (duration: 1s, set: ryady) {
     //  значит «доказательства не будет».
     //lip 14
     together {
-        freeman speaks for 7.56s
+        freeman speaks for 7.82s
         do {
             freeman overlays "calm"
             wait 2.5s
@@ -427,7 +431,7 @@ scene "kamen" (duration: 1s, set: kamen) {
     // ── УДАР (VO-16): «выводом, у которого забыли начало» ─────────────
     //lip 16
     together {
-        freeman speaks for 5.75s
+        freeman speaks for 5.95s
         do {
             camera medium freeman
             wait 2.8s
@@ -439,7 +443,7 @@ scene "kamen" (duration: 1s, set: kamen) {
     // ── ЦЕНА (VO-17): «заготовку не помнит уже никто» ─────────────────
     //lip 17
     together {
-        freeman speaks for 6.30s
+        freeman speaks for 5.95s
         do {
             freeman overlays "razvel"      // «стоит, работает, все кивают»
             wait 3.0s
@@ -464,7 +468,7 @@ scene "rupory" (duration: 1s, set: rupory) {
     //  сторону, за которую можно держаться.
     //lip 18
     together {
-        freeman speaks for 3.70s
+        freeman speaks for 3.78s
         do {
             freeman overlays "zakrylsya"   // передразнивает: «я-то проверяю»
             wait 1.8s
@@ -486,7 +490,7 @@ scene "les" (duration: 1s, set: les) {
     // ── ЗАВЯЗКА (VO-19) ───────────────────────────────────────────────
     //lip 19
     together {
-        freeman speaks for 4.25s
+        freeman speaks for 4.50s
         do {
             freeman overlays "vdal"        // «идёт волк по лесу»
             wait 2.1s
@@ -500,7 +504,7 @@ scene "les" (duration: 1s, set: les) {
     //  у волка вопрос коротким предложением, у зайца ответ с оборотом.
     //lip 20
     together {
-        freeman speaks for 3.92s
+        freeman speaks for 4.14s
         do {
             camera medium freeman
             wait 1.9s
@@ -597,7 +601,7 @@ scene "medved" (duration: 1s, set: les) {
     // ── ДОБИВКА 1 (VO-24) ─────────────────────────────────────────────
     //lip 24
     together {
-        freeman speaks for 3.71s
+        freeman speaks for 3.81s
         do {
             freeman overlays "raspahnul"   // «волк в восторге»
             wait 1.8s
@@ -615,7 +619,7 @@ scene "medved" (duration: 1s, set: les) {
     freeman pose "v_upor"
     //lip 25
     together {
-        freeman speaks for 5.38s
+        freeman speaks for 5.46s
         do {
             freeman overlays "k_sebe"      // «спички есть?» — ТОТ ЖЕ ЖЕСТ
             wait 2.0s
@@ -640,13 +644,14 @@ scene "povorot" (duration: 1s, set: void) {
     camera wide
     freeman pose "v_upor"
 
-    // ── ПОВОРОТ (VO-26): «заготовку ему положил заяц» ─────────────────
-    //  ВЕСЬ АНЕКДОТ СВОДИТСЯ К ОБРАЗУ РОЛИКА ОДНОЙ ФРАЗОЙ. Волк не дурак —
-    //  станок у него отличный. Ошибка не в нём и не в его голове: ему
-    //  положили чужую заготовку, а проверять вход не научили.
+    // ── ПОВОРОТ (VO-26): «волк не спросил, откуда она» ────────────────
+    //  ВЕСЬ АНЕКДОТ СВОДИТСЯ К ОБРАЗУ РОЛИКА ОДНОЙ ФРАЗОЙ, И ФРАЗА ГОВОРИТ
+    //  РОВНО ТО, ЧТО БЫЛО: заготовку волку положил заяц, а волк не спросил,
+    //  откуда она. Про переходы волка здесь не сказано ни слова — и правильно,
+    //  потому что переход он тоже сломал, а это тема соседнего ролика.
     //lip 26
     together {
-        freeman speaks for 4.56s
+        freeman speaks for 4.82s
         do {
             freeman overlays "calm"
             wait 2.2s
@@ -658,7 +663,7 @@ scene "povorot" (duration: 1s, set: void) {
     // ── ДНО (VO-27): «и то же самое происходит с вами» ────────────────
     //lip 27
     together {
-        freeman speaks for 5.96s
+        freeman speaks for 6.17s
         do {
             wait 1.9s
             freeman overlays "obvinil"     // «с вами» — в зрителя
@@ -689,7 +694,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     freeman pose "calm"
     //lip 28
     together {
-        freeman speaks for 4.56s
+        freeman speaks for 4.63s
         do {
             freeman overlays "raspahnul"
             wait 2.2s
@@ -701,7 +706,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     // ── ВЗЛЁТ 2 (VO-29): «она про то, как проверять» ──────────────────
     //lip 29
     together {
-        freeman speaks for 4.93s
+        freeman speaks for 4.99s
         do {
             camera medium freeman
             wait 2.4s
@@ -716,7 +721,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     //  между ними, уносят.
     //lip 30
     together {
-        freeman speaks for 5.29s
+        freeman speaks for 5.37s
         do {
             freeman overlays "palec_vverh" // «а это откуда?»
             wait 2.5s
@@ -728,7 +733,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     // ── ВЗЛЁТ 4 (VO-31): второй вопрос ────────────────────────────────
     //lip 31
     together {
-        freeman speaks for 4.02s
+        freeman speaks for 4.07s
         do {
             freeman overlays "obvinil"     // «кому станет хорошо»
             wait 1.9s
@@ -744,7 +749,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     //  назад, теперь это его собственная мерка.
     //lip 32
     together {
-        freeman speaks for 7.26s
+        freeman speaks for 7.44s
         do {
             freeman overlays "otmahnulsya" // «можно и не спрашивать»
             freeman overlays "prishchur"
@@ -784,7 +789,7 @@ scene "zal" (duration: 1s, set: zal) {
     //  здесь становится обещанием: он останется вашим.
     //lip 34
     together {
-        freeman speaks for 4.65s
+        freeman speaks for 4.72s
         do {
             camera medium freeman
             wait 2.2s

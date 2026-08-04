@@ -128,7 +128,7 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  уже своя, и на ней взгляд поднимается в камеру.
     //lip 1
     together {
-        freeman speaks for 6.30s
+        freeman speaks for 5.45s
         do {
             freeman overlays "zakrylsya"   // сложился: это не поза оратора
             wait 3.0s
@@ -155,7 +155,7 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     // ── ОБРАЗ (VO-3): «пожизненный» ───────────────────────────────────
     //lip 3
     together {
-        freeman speaks for 4.30s
+        freeman speaks for 4.46s
         do {
             wait 2.1s
             freeman overlays "ostyl"       // «обжалованию не подлежащий»
@@ -183,7 +183,7 @@ scene "schet" (duration: 1s, set: void) {
     //  инструмент подачи панча.
     //lip 4
     together {
-        freeman speaks for 4.46s
+        freeman speaks for 4.60s
         do {
             freeman overlays "calm"
             wait 2.1s
@@ -195,7 +195,7 @@ scene "schet" (duration: 1s, set: void) {
     // ── ОБРАЗ (VO-5): «выходит три случая» ────────────────────────────
     //lip 5
     together {
-        freeman speaks for 3.95s
+        freeman speaks for 4.09s
         do {
             freeman overlays "razvel"
             wait 1.9s
@@ -223,7 +223,7 @@ scene "schet" (duration: 1s, set: void) {
     // ── УДАР (VO-7): «в приговоре не записано» ────────────────────────
     //lip 7
     together {
-        freeman speaks for 3.80s
+        freeman speaks for 3.97s
         do {
             freeman overlays "vniz"
             wait 1.8s
@@ -250,7 +250,7 @@ scene "kamen" (duration: 1s, set: kamen) {
     // ── ОТРИЦАНИЕ (VO-8): «тогда давайте посчитаем» ───────────────────
     //lip 8
     together {
-        freeman speaks for 4.07s
+        freeman speaks for 4.17s
         do {
             freeman overlays "prishchur"
         }
@@ -263,7 +263,7 @@ scene "kamen" (duration: 1s, set: kamen) {
     //  потом раздулся». `together` внутри `do` связывает их в один отрезок.
     //lip 9
     together {
-        freeman speaks for 4.75s
+        freeman speaks for 3.90s
         do {
             freeman overlays "shag_levoj"
             freeman overlays "vzglyad"     // «не моё»
@@ -293,7 +293,7 @@ scene "kamen" (duration: 1s, set: kamen) {
     // ── ДОБИВКА (VO-10): опись ────────────────────────────────────────
     //lip 10
     together {
-        freeman speaks for 3.90s
+        freeman speaks for 5.44s
         do {
             freeman overlays "hips"
             wait 1.9s
@@ -309,7 +309,7 @@ scene "kamen" (duration: 1s, set: kamen) {
     //  кто это сделал».
     //lip 11
     together {
-        freeman speaks for 4.41s
+        freeman speaks for 3.78s
         do {
             camera medium freeman
             wait 2.1s
@@ -322,7 +322,7 @@ scene "kamen" (duration: 1s, set: kamen) {
     // ── ЦЕНА (VO-12): «вы сделали её сами — и поверили» ───────────────
     //lip 12
     together {
-        freeman speaks for 3.78s
+        freeman speaks for 6.83s
         do {
             freeman overlays "ostyl"
         }
@@ -344,7 +344,7 @@ scene "rupory" (duration: 1s, set: rupory) {
     //  Возражение снимается не спором, а сменой жанра.
     //lip 13
     together {
-        freeman speaks for 6.59s
+        freeman speaks for 4.93s
         do {
             freeman overlays "zakrylsya"
             wait 3.2s
@@ -366,7 +366,7 @@ scene "les" (duration: 1s, set: les) {
     // ── ЗАВЯЗКА (VO-14) ───────────────────────────────────────────────
     //lip 14
     together {
-        freeman speaks for 4.82s
+        freeman speaks for 4.50s
         do {
             freeman overlays "vdal"
             wait 2.3s
@@ -379,7 +379,7 @@ scene "les" (duration: 1s, set: les) {
     //  РАЗНИЦА ГОЛОСОВ ДЕЛАЕТСЯ ПУНКТУАЦИЕЙ И ДЛИНОЙ ФРАЗЫ, а не актёрством.
     //lip 15
     together {
-        freeman speaks for 4.25s
+        freeman speaks for 4.14s
         do {
             camera medium freeman
             wait 2.0s
@@ -402,7 +402,7 @@ scene "cepochka" (duration: 1s, set: rupory) {
     // ── ПУЛЕМЁТ 1 (VO-16) ─────────────────────────────────────────────
     //lip 16
     together {
-        freeman speaks for 3.92s
+        freeman speaks for 4.87s
         do {
             freeman overlays "shag_levoj"
             freeman overlays "vzglyad"
@@ -426,7 +426,7 @@ scene "cepochka" (duration: 1s, set: rupory) {
     //  согласие волка есть согласие зрителя.
     //lip 17
     together {
-        freeman speaks for 4.87s
+        freeman speaks for 6.38s
         do {
             freeman overlays "palec_vverh"
             together {
@@ -449,7 +449,7 @@ scene "cepochka" (duration: 1s, set: rupory) {
     // ── ПУЛЕМЁТ 3 (VO-18) ─────────────────────────────────────────────
     //lip 18
     together {
-        freeman speaks for 6.38s
+        freeman speaks for 5.28s
         do {
             camera medium freeman
             wait 3.1s
@@ -473,7 +473,7 @@ scene "medved" (duration: 1s, set: les) {
     // ── ДОБИВКА 1 (VO-19) ─────────────────────────────────────────────
     //lip 19
     together {
-        freeman speaks for 5.28s
+        freeman speaks for 3.81s
         do {
             freeman overlays "raspahnul"
             wait 2.5s
@@ -489,7 +489,7 @@ scene "medved" (duration: 1s, set: les) {
     freeman pose "v_upor"
     //lip 20
     together {
-        freeman speaks for 3.71s
+        freeman speaks for 5.46s
         do {
             freeman overlays "k_sebe"      // «спички есть?» — ТОТ ЖЕ ЖЕСТ
             wait 1.7s
@@ -512,12 +512,14 @@ scene "povorot" (duration: 1s, set: void) {
     camera wide
     freeman pose "v_upor"
 
-    // ── ПОВОРОТ (VO-21): «волк видел ровно один случай» ───────────────
-    //  ВЕСЬ АНЕКДОТ СВОДИТСЯ К СЧЁТУ ОДНОЙ ФРАЗОЙ. Волк не дурак: он сделал
-    //  ровно то же, что делает зритель, только наблюдение у него было одно.
+    // ── ПОВОРОТ (VO-21): «посмотрел один раз — выдал приговор» ────────
+    //  ВЕСЬ АНЕКДОТ СВОДИТСЯ К СЧЁТУ ОДНОЙ ФРАЗОЙ, и фраза описывает ровно то,
+    //  что было: одно наблюдение — приговор на всю жизнь. Про форму вывода
+    //  здесь не сказано ни слова, и это намеренно: форму волк тоже сломал, но
+    //  разбирать её — работа соседнего ролика серии.
     //lip 21
     together {
-        freeman speaks for 5.38s
+        freeman speaks for 3.53s
         do {
             freeman overlays "calm"
             wait 2.6s
@@ -526,15 +528,17 @@ scene "povorot" (duration: 1s, set: void) {
     }
     wait 0.5s
 
-    // ── ДНО (VO-22): «вы видели три» ──────────────────────────────────
-    //  ДВА ЧИСЛА РЯДОМ, И БОЛЬШЕ НИЧЕГО. Один и три. Разница в счёте, а не в
-    //  способе — вот и весь ролик, в одной строке.
+    // ── ДНО (VO-22): «посчитайте, сколько раз смотрели вы» ────────────
+    //  ВОПРОС, А НЕ УТВЕРЖДЕНИЕ, И ЭТО ПРИНЦИПИАЛЬНО. Ранняя версия говорила
+    //  «вы видели три» — то есть рассказчик обобщал по нулю проверенных
+    //  случаев в ролике, единственный тезис которого «считайте случаи». Теперь
+    //  число называет сам зритель, и назвать его он может честно.
     //lip 22
     together {
-        freeman speaks for 4.65s
+        freeman speaks for 3.96s
         do {
             wait 2.2s
-            freeman overlays "obvinil"     // «вы вывели из них себя целиком»
+            freeman overlays "obvinil"     // «посчитайте, сколько раз смотрели вы»
             freeman overlays "doshlo"
         }
     }
@@ -563,7 +567,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     freeman pose "calm"
     //lip 23
     together {
-        freeman speaks for 3.93s
+        freeman speaks for 4.45s
         do {
             freeman overlays "raspahnul"
             wait 1.9s
@@ -575,7 +579,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     // ── ВЗЛЁТ 2 (VO-24): «сколько случаев под выводом» ────────────────
     //lip 24
     together {
-        freeman speaks for 4.38s
+        freeman speaks for 4.63s
         do {
             camera medium freeman
             wait 2.1s
@@ -587,7 +591,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     // ── ВЗЛЁТ 3 (VO-25): «три — это не закон» ─────────────────────────
     //lip 25
     together {
-        freeman speaks for 4.56s
+        freeman speaks for 4.62s
         do {
             freeman overlays "palec_vverh"
             wait 2.2s
@@ -601,7 +605,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     //  «сколько раз, и в тех ли условиях» помещается в голову целиком.
     //lip 26
     together {
-        freeman speaks for 4.56s
+        freeman speaks for 3.70s
         do {
             freeman overlays "vozzvanie"
             wait 2.2s
@@ -616,7 +620,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     //  отказа считать, и называет её буднично.
     //lip 27
     together {
-        freeman speaks for 7.11s
+        freeman speaks for 7.26s
         do {
             freeman overlays "otmahnulsya"
             freeman overlays "prishchur"
@@ -632,7 +636,7 @@ scene "perekrestok" (duration: 1s, set: perekrestok) {
     //  Тогда приговор придётся пересматривать, а инструмента для этого нет.
     //lip 28
     together {
-        freeman speaks for 4.78s
+        freeman speaks for 4.90s
         do {
             freeman overlays "u_viska_l"
             wait 2.3s
@@ -670,7 +674,7 @@ scene "zal" (duration: 1s, set: zal) {
     //  ни одному слову.
     //lip 30
     together {
-        freeman speaks for 4.61s
+        freeman speaks for 4.52s
         do {
             camera medium freeman
             wait 2.2s
