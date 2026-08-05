@@ -224,10 +224,10 @@ scene "perelom" (duration: 1s, set: void) {
     //  зритель начнёт защищаться вместо того, чтобы узнавать себя.
     //lip 5
     together {
-        freeman speaks for 3.51s
+        freeman speaks for 4.44s
         do {
             freeman overlays "calm"
-            wait 2.0s
+            wait 2.53s
             freeman overlays "ostyl"       // «он выносил мусор»
         }
     }
@@ -238,10 +238,10 @@ scene "perelom" (duration: 1s, set: void) {
     //  превосходства: зрителю становится некому возражать, кроме себя.
     //lip 6
     together {
-        freeman speaks for 5.94s
+        freeman speaks for 6.45s
         do {
             freeman overlays "ladoni_vniz" // «я вообще молчу»
-            wait 3.2s
+            wait 3.48s
             freeman overlays "klin"        // «это вы написали»
         }
     }
@@ -268,10 +268,10 @@ scene "perelom" (duration: 1s, set: void) {
     //  как отсутствие; вещью она станет в седьмой сцене.
     //lip 8
     together {
-        freeman speaks for 5.65s
+        freeman speaks for 4.88s
         do {
             freeman overlays "dve_storony" // «своей черты нет»
-            wait 3.0s
+            wait 2.59s
             freeman overlays "klin"        // «стена против вас»
         }
     }
@@ -283,10 +283,10 @@ scene "perelom" (duration: 1s, set: void) {
     //  варианту, и он уйдёт.
     //lip 9
     together {
-        freeman speaks for 4.48s
+        freeman speaks for 3.66s
         do {
             camera medium freeman
-            wait 2.5s
+            wait 2.04s
             freeman overlays "vozzvanie"   // «может, считать надо не их?»
         }
     }
@@ -311,10 +311,10 @@ scene "detskaya" (duration: 1s, set: detskaya) {
     // ── ОТРИЦАНИЕ (VO-10): это не навязчивость ────────────────────────
     //lip 10
     together {
-        freeman speaks for 3.71s
+        freeman speaks for 4.31s
         do {
             freeman overlays "otmahnulsya" // «не навязчивость»
-            wait 2.0s
+            wait 2.32s
             freeman overlays "teplo"
         }
     }
@@ -325,10 +325,10 @@ scene "detskaya" (duration: 1s, set: detskaya) {
     //  одном курсе не был. Это единственное доказательство, что ход возможен.
     //lip 11
     together {
-        freeman speaks for 3.87s
+        freeman speaks for 5.25s
         do {
             camera medium freeman
-            wait 2.1s
+            wait 2.85s
             freeman overlays "palec_vverh" // «потом вас переучили»
         }
     }
@@ -389,10 +389,10 @@ scene "cherta" (duration: 1s, set: cherta) {
     //  проверяется «диваном».
     //lip 14
     together {
-        freeman speaks for 3.37s
+        freeman speaks for 4.83s
         do {
             freeman overlays "otmahnulsya" // «вычеркнуть всех»
-            wait 1.8s
+            wait 2.58s
             freeman overlays "prishchur"
         }
     }
