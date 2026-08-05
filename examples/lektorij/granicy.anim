@@ -138,10 +138,10 @@ scene "stol" (duration: 1s, set: stol) {
     //  секунде. Здесь сообщают результат подсчёта, а не обвиняют.
     //lip 1
     together {
-        freeman speaks for 5.75s
+        freeman speaks for 4.83s
         do {
             freeman overlays "hips"
-            wait 2.3s
+            wait 1.93s
             freeman overlays "vzglyad"     // «и так все двадцать лет»
         }
     }
@@ -153,10 +153,10 @@ scene "stol" (duration: 1s, set: stol) {
     //  продолжение (`PRODAZHA.md`).
     //lip 2
     together {
-        freeman speaks for 5.74s
+        freeman speaks for 4.78s
         do {
             camera medium freeman
-            wait 2.5s
+            wait 2.08s
             freeman overlays "obvinil"     // «запомните это слово» — в зрителя
         }
     }
@@ -215,10 +215,10 @@ scene "prosby" (duration: 1s, set: rupory) {
     // ── ЦЕПОЧКА, ЗВЕНО 2 (VO-4): «ответ один и тот же» ────────────────
     //lip 4
     together {
-        freeman speaks for 4.05s
+        freeman speaks for 3.58s
         do {
             freeman overlays "vzglyad"
-            wait 1.9s
+            wait 1.68s
             freeman overlays "ostyl"
         }
     }
@@ -229,10 +229,10 @@ scene "prosby" (duration: 1s, set: rupory) {
     //  поймёт, что его ведут. Спуск обязан идти скоростью подъёма.
     //lip 5
     together {
-        freeman speaks for 2.62s
+        freeman speaks for 3.16s
         do {
             camera medium freeman
-            wait 2.1s
+            wait 2.53s
             freeman overlays "dve_storony" // «вы предсказуемы»
         }
     }
@@ -279,10 +279,10 @@ scene "opredelenie" (duration: 1s, set: void) {
     // ── QED (VO-8): «ни одно не считается» ────────────────────────────
     //lip 8
     together {
-        freeman speaks for 5.96s
+        freeman speaks for 8.05s
         do {
             freeman overlays "vzglyad"
-            wait 3.3s
+            wait 4.45s
             freeman overlays "ostyl"       // «а не за вас»
         }
     }
@@ -305,7 +305,7 @@ scene "vsegda" (duration: 1s, set: stol) {
     // ── ЦЕНА (VO-9): «теперь про то самое слово» ──────────────────────
     //lip 9
     together {
-        freeman speaks for 2.87s
+        freeman speaks for 4.36s
         do {
             freeman overlays "k_sebe"      // «теперь про то самое слово»
         }
@@ -358,10 +358,10 @@ scene "scenka" (duration: 1s, set: ulica) {
     freeman pose "calm"
     //lip 12
     together {
-        freeman speaks for 3.76s
+        freeman speaks for 4.62s
         do {
             camera medium freeman
-            wait 1.8s
+            wait 2.21s
             freeman overlays "poimal"      // «да» — второй раз подряд
         }
     }
@@ -372,7 +372,7 @@ scene "scenka" (duration: 1s, set: ulica) {
     //  жестом: подчеркнёшь — приём объявлен, и панча не будет.
     //lip 13
     together {
-        freeman speaks for 2.66s
+        freeman speaks for 4.00s
         do {
             freeman overlays "razvel"      // «мне путёвка горит»
         }
@@ -415,10 +415,10 @@ scene "dno" (duration: 1s, set: void) {
     // ── ПРИГОВОР (VO-15) ──────────────────────────────────────────────
     //lip 15
     together {
-        freeman speaks for 5.11s
+        freeman speaks for 5.83s
         do {
             freeman overlays "calm"
-            wait 2.4s
+            wait 2.74s
             freeman overlays "obvinil"     // «чего не выбирали» — в зрителя
         }
     }
@@ -490,10 +490,10 @@ scene "tropy" (duration: 1s, set: tropy) {
     // ── ВЗЛЁТ 3 (VO-19): «их согласие настоящее» ──────────────────────
     //lip 19
     together {
-        freeman speaks for 5.48s
+        freeman speaks for 4.44s
         do {
             freeman overlays "vzves"       // «каждым „да" что-то выбирает»
-            wait 3.0s
+            wait 2.43s
             freeman overlays "palec_vverh"
         }
     }
@@ -559,10 +559,10 @@ scene "zal" (duration: 1s, set: zal) {
     // ── ПРЕЗЕНТАЦИЯ 1 (VO-22) ─────────────────────────────────────────
     //lip 22
     together {
-        freeman speaks for 4.14s
+        freeman speaks for 3.50s
         do {
             freeman overlays "ruki_za_spinu" // курс называют по-лекторски
-            wait 2.0s
+            wait 1.69s
             freeman overlays "open"
         }
     }
@@ -573,10 +573,10 @@ scene "zal" (duration: 1s, set: zal) {
     //  «ваше слово снова будет весить». Обещай больше — не поверят ничему.
     //lip 23
     together {
-        freeman speaks for 5.03s
+        freeman speaks for 4.05s
         do {
             camera medium freeman
-            wait 2.4s
+            wait 1.93s
             freeman overlays "teplo"       // приглашение, а не продажа
         }
     }
@@ -602,10 +602,10 @@ scene "zhalo" (duration: 1s, set: stulya) {
     //  дата, и зритель её знает. Обычно она давняя.
     //lip 24
     together {
-        freeman speaks for 3.36s
+        freeman speaks for 3.84s
         do {
             camera medium freeman
-            wait 1.6s
+            wait 1.83s
             freeman overlays "vozzvanie"   // вопрос повисает
             freeman overlays "doshlo"
         }
@@ -633,20 +633,20 @@ scene "final" (duration: 1s, set: stol) {
 
     //lip 25
     together {
-        freeman speaks for 5.91s
+        freeman speaks for 4.83s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Позы поглаживания трогают
             //  только руку — значит ложатся накладкой без потерь.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"
-            wait 2.4s
+            wait 1.96s
             nomer2 shows
             nomer2 scales 0.02
-            nomer2 scales 0.21 over 0.35s ease-out
-            nomer2 scales 0.19 over 0.18s
+            nomer2 scales 0.21 over 0.29s ease-out
+            nomer2 scales 0.19 over 0.15s
             freeman overlays "gladit_grud_niz"
-            wait 1.0s
+            wait 0.82s
             freeman overlays "gladit_grud"
         }
     }
