@@ -149,12 +149,12 @@ scene "koridor" (duration: 1s, set: koridor) {
     //  Тело почти неподвижно: жест на просьбе выдал бы, что просят не его.
     //lip 1
     together {
-        freeman speaks for 6.32s
+        freeman speaks for 5.77s
         do {
             freeman overlays "hips"
-            wait 2.6s
+            wait 2.37s
             freeman overlays "k_sebe"      // «Да, конечно» — рука уже согласилась
-            wait 1.9s
+            wait 1.74s
             freeman overlays "ostyl"
         }
     }
@@ -227,10 +227,10 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  спорить с человеком, который ещё ни с чем не согласился.
     //lip 5
     together {
-        freeman speaks for 2.66s
+        freeman speaks for 4.00s
         do {
             camera medium freeman
-            wait 1.5s
+            wait 2.25s
             freeman overlays "vozzvanie"   // «Знакомо?» — вопрос повисает
         }
     }
@@ -324,10 +324,10 @@ scene "zerkalo" (duration: 1s, set: ekran) {
     //  и мерить нечем.
     //lip 9
     together {
-        freeman speaks for 4.14s
+        freeman speaks for 4.83s
         do {
             freeman overlays "vzglyad"
-            wait 2.3s
+            wait 2.68s
             freeman overlays "ostyl"       // «ты мне не нужен»
         }
     }
@@ -352,10 +352,10 @@ scene "mehanizm" (duration: 1s, set: void) {
     //  начнёт защищаться вместо того, чтобы узнавать себя.
     //lip 10
     together {
-        freeman speaks for 5.54s
+        freeman speaks for 4.52s
         do {
             freeman overlays "dve_storony"  // «там продавили вас»
-            wait 2.7s
+            wait 2.2s
             freeman overlays "obvinil"      // «здесь продавливаете вы»
         }
     }
@@ -367,10 +367,10 @@ scene "mehanizm" (duration: 1s, set: void) {
     //  работает сразу в обе стороны, либо не работает ни в одну.
     //lip 11
     together {
-        freeman speaks for 5.75s
+        freeman speaks for 7.73s
         do {
             freeman overlays "vzves"        // «не умеете сказать»
-            wait 3.1s
+            wait 4.17s
             freeman overlays "klin"         // «не умеете и услышать»
         }
     }
@@ -399,10 +399,10 @@ scene "detskaya" (duration: 1s, set: detskaya) {
     //  курс покупают. Диагноз здесь снимается, а не подтверждается.
     //lip 12
     together {
-        freeman speaks for 2.97s
+        freeman speaks for 3.50s
         do {
             freeman overlays "otmahnulsya" // «не характер»
-            wait 1.6s
+            wait 1.89s
             freeman overlays "teplo"
         }
     }
@@ -414,10 +414,10 @@ scene "detskaya" (duration: 1s, set: detskaya) {
     //  ход вообще возможен.
     //lip 13
     together {
-        freeman speaks for 3.16s
+        freeman speaks for 3.97s
         do {
             camera medium freeman
-            wait 1.7s
+            wait 2.14s
             freeman overlays "palec_vverh" // «без всяких курсов»
         }
     }
@@ -465,10 +465,10 @@ scene "cherta" (duration: 1s, set: cherta) {
     //  повсюду, и оно даже работает.
     //lip 15
     together {
-        freeman speaks for 2.87s
+        freeman speaks for 3.76s
         do {
             freeman overlays "otmahnulsya" // «вычеркнуть всех»
-            wait 1.5s
+            wait 1.97s
             freeman overlays "prishchur"
         }
     }
@@ -480,10 +480,10 @@ scene "cherta" (duration: 1s, set: cherta) {
     //  ролика. Подчеркнёшь предел голосом — станет насмешкой над зрителем.
     //lip 16
     together {
-        freeman speaks for 3.23s
+        freeman speaks for 4.02s
         do {
             camera medium freeman
-            wait 1.8s
+            wait 2.24s
             freeman overlays "poimal"      // «тот же круг»
         }
     }
@@ -507,10 +507,10 @@ scene "zal" (duration: 1s, set: zal) {
     freeman pose "calm"
     //lip 17
     together {
-        freeman speaks for 4.14s
+        freeman speaks for 3.47s
         do {
             freeman overlays "ruki_za_spinu" // курс называют по-лекторски
-            wait 2.2s
+            wait 1.85s
             freeman overlays "open"          // «десять лекций»
         }
     }
