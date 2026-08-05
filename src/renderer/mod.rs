@@ -216,7 +216,7 @@ pub fn render_frame(
     let set_floor = set_name
         .and_then(|n| assets.sets.get(n))
         .and_then(|s| s.surfaces.as_ref())
-        .map(|s| s.floor);
+        .and_then(|s| s.floor);
     // Карты фигур — чтобы `on floor` у персонажа переводил ступни в якорь.
     let kartas = assets.kartas();
 

@@ -226,7 +226,7 @@ fn cmd_render(
                 .as_deref()
                 .and_then(|n| assets.sets.get(n))
                 .and_then(|s| s.surfaces.as_ref())
-                .map(|s| s.floor),
+                .and_then(|s| s.floor),
         )?;
 
         // Check for character overlaps before rendering.
@@ -760,7 +760,7 @@ fn cmd_check(input: &Path) -> Result<()> {
                 .as_deref()
                 .and_then(|n| assets.sets.get(n))
                 .and_then(|s| s.surfaces.as_ref())
-                .map(|s| s.floor),
+                .and_then(|s| s.floor),
         )?;
 
         let character_names: Vec<String> = resolved
@@ -834,7 +834,7 @@ fn cmd_timing(input: &Path) -> Result<()> {
                 .as_deref()
                 .and_then(|n| assets.sets.get(n))
                 .and_then(|s| s.surfaces.as_ref())
-                .map(|s| s.floor),
+                .and_then(|s| s.floor),
         )?;
             for (s0, e0) in &tl.speech_blocks {
                 blocks.push((offset + s0, offset + e0));
