@@ -150,12 +150,12 @@ scene "zerkalo" (duration: 1s, set: vannaya) {
     //  жертве вместо того, чтобы узнавать себя.
     //lip 2
     together {
-        freeman speaks for 3.84s
+        freeman speaks for 2.66s
         do {
             freeman overlays "rubit"       // «идиот»
-            wait 1.28s
+            wait 0.89s
             freeman overlays "obvinil"     // «куда полез»
-            wait 1.28s
+            wait 0.89s
             freeman overlays "otverg"      // «так и знал»
         }
     }
@@ -208,12 +208,12 @@ scene "zerkalo" (duration: 1s, set: vannaya) {
     //  появится в нём только в жале.
     //lip 5
     together {
-        freeman speaks for 5.28s
+        freeman speaks for 5.88s
         do {
             freeman overlays "razvel"      // «вы вставали к зеркалу»
-            wait 1.75s
+            wait 1.95s
             freeman overlays "raskryl"     // «вы писали список достоинств»
-            wait 1.75s
+            wait 1.95s
             freeman overlays "palec_vverh" // «вы повторяли, что достойны»
         }
     }
@@ -255,10 +255,10 @@ scene "vspomnite" (duration: 1s, set: void) {
     //  реплика ложится на уже найденное им.
     //lip 7
     together {
-        freeman speaks for 5.36s
+        freeman speaks for 6.30s
         do {
             freeman overlays "vzves"
-            wait 3.19s
+            wait 3.75s
             freeman overlays "vozzvanie"   // «что вы тогда делали?»
         }
     }
@@ -361,11 +361,11 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  Спокойно, с достоинством; повтор «потом» — не нажим, а точка.
     //lip 12
     together {
-        freeman speaks for 4.74s
+        freeman speaks for 5.25s
         do {
             camera medium freeman
             freeman overlays "dve_storony" // «сначала делают»
-            wait 3.4s
+            wait 3.77s
             freeman overlays "point"       // «всегда потом»
         }
     }
@@ -378,10 +378,10 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  проповедью. Это же и девятая лекция курса, сказанная без терминов.
     //lip 13
     together {
-        freeman speaks for 7.03s
+        freeman speaks for 6.53s
         do {
             freeman overlays "razvel"      // «в ленте не показывают первые сто попыток»
-            wait 3.9s
+            wait 3.62s
             freeman overlays "teplo"       // «а достоинство берётся ровно оттуда»
         }
     }
@@ -457,7 +457,7 @@ scene "kurs" (duration: 1s, set: zal) {
     //  подвох, и зритель начинает искать, где его обманут.
     //lip 17
     together {
-        freeman speaks for 2.48s
+        freeman speaks for 1.52s
         do {
             freeman overlays "razvel"      // «все десять — бесплатно»
         }
@@ -484,11 +484,11 @@ scene "zhalo" (duration: 1s, set: vannaya) {
     //  жало превратится в очередное «начни новую жизнь».
     //lip 18
     together {
-        freeman speaks for 7.03s
+        freeman speaks for 7.65s
         do {
             camera medium freeman
             freeman overlays "palec_vverh" // «сделайте самую мелкую вещь»
-            wait 4.0s
+            wait 4.35s
             freeman overlays "k_sebe"      // «и впишите её в тот список»
         }
     }
@@ -528,16 +528,16 @@ scene "final" (duration: 1s, set: vannaya) {
 
     //lip 20
     together {
-        freeman speaks for 4.73s
+        freeman speaks for 5.36s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Поза поглаживания трогает
             //  только руку — значит ложится накладкой без потерь.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"
-            wait 2.35s
+            wait 2.66s
             freeman overlays "gladit_grud_niz"
-            wait 1.35s
+            wait 1.53s
             freeman overlays "palec_vverh" // «Поехали!»
         }
     }
