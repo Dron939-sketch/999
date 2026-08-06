@@ -151,10 +151,10 @@ scene "ekran" (duration: 1s, set: ekran) {
     //  передразниванием, и зритель отскочит от собственной фразы.
     //lip 1
     together {
-        freeman speaks for 3.06s
+        freeman speaks for 2.43s
         do {
             freeman overlays "hips"
-            wait 1.7s
+            wait 1.35s
             freeman overlays "prishchur"   // «обиделся, что ли?»
         }
     }
@@ -180,10 +180,10 @@ scene "ekran" (duration: 1s, set: ekran) {
     //  предыдущей — сообщения идут всё чаще.
     //lip 3
     together {
-        freeman speaks for 5.44s
+        freeman speaks for 4.62s
         do {
             freeman overlays "razvel"      // «понял, не буду мешать»
-            wait 2.8s
+            wait 2.38s
             freeman overlays "somnenie"    // «ну и ладно»
         }
     }
@@ -224,10 +224,10 @@ scene "perelom" (duration: 1s, set: void) {
     //  зритель начнёт защищаться вместо того, чтобы узнавать себя.
     //lip 5
     together {
-        freeman speaks for 4.44s
+        freeman speaks for 3.58s
         do {
             freeman overlays "calm"
-            wait 2.53s
+            wait 2.04s
             freeman overlays "ostyl"       // «он выносил мусор»
         }
     }
@@ -238,10 +238,10 @@ scene "perelom" (duration: 1s, set: void) {
     //  превосходства: зрителю становится некому возражать, кроме себя.
     //lip 6
     together {
-        freeman speaks for 6.45s
+        freeman speaks for 5.93s
         do {
             freeman overlays "ladoni_vniz" // «я вообще молчу»
-            wait 3.48s
+            wait 3.2s
             freeman overlays "klin"        // «это вы написали»
         }
     }
@@ -274,10 +274,10 @@ scene "perelom" (duration: 1s, set: void) {
     //  Читается РОВНО, как читают счёт; дальше пауза 1.2 — он проверяет.
     //lip 8
     together {
-        freeman speaks for 6.20s
+        freeman speaks for 6.84s
         do {
             freeman overlays "vzves"       // «вы помните всех, кто вам не ответил»
-            wait 3.4s
+            wait 3.75s
             freeman overlays "klin"        // «и никого, кому не ответили вы»
         }
     }
@@ -336,10 +336,10 @@ scene "detskaya" (duration: 1s, set: detskaya) {
     //  «черты», которую нельзя ни увидеть, ни измерить.
     //lip 11
     together {
-        freeman speaks for 4.78s
+        freeman speaks for 5.51s
         do {
             freeman overlays "dve_storony" // две цитаты рядом
-            wait 2.6s
+            wait 3.0s
             freeman overlays "klin"        // «это разные вещи»
         }
     }
@@ -350,10 +350,10 @@ scene "detskaya" (duration: 1s, set: detskaya) {
     //  Единственное доказательство, что ход возможен.
     //lip 12
     together {
-        freeman speaks for 3.70s
+        freeman speaks for 4.23s
         do {
             camera medium freeman
-            wait 2.0s
+            wait 2.29s
             freeman overlays "palec_vverh" // «вас не убивало»
         }
     }
@@ -384,10 +384,10 @@ scene "cherta" (duration: 1s, set: cherta) {
     freeman pose "calm"
     //lip 13
     together {
-        freeman speaks for 3.65s
+        freeman speaks for 3.16s
         do {
             freeman overlays "raspahnul"   // «этому учат обратно»
-            wait 2.0s
+            wait 1.73s
             freeman overlays "teplo"
         }
     }
@@ -416,10 +416,10 @@ scene "cherta" (duration: 1s, set: cherta) {
     //  проверяется «диваном».
     //lip 15
     together {
-        freeman speaks for 4.83s
+        freeman speaks for 5.51s
         do {
             freeman overlays "otmahnulsya" // «вычеркнуть всех»
-            wait 2.58s
+            wait 2.94s
             freeman overlays "prishchur"
         }
     }
@@ -526,20 +526,20 @@ scene "final" (duration: 1s, set: ekran) {
 
     //lip 20
     together {
-        freeman speaks for 5.91s
+        freeman speaks for 5.04s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Позы поглаживания трогают
             //  только руку — значит ложатся накладкой без потерь.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"
-            wait 2.4s
+            wait 2.05s
             nomer2 shows
             nomer2 scales 0.02 over 0.01s
-            nomer2 scales 0.32 over 0.29s ease-out
-            nomer2 scales 0.29 over 0.15s
+            nomer2 scales 0.32 over 0.25s ease-out
+            nomer2 scales 0.29 over 0.13s
             freeman overlays "gladit_grud_niz"
-            wait 1.4s
+            wait 1.19s
             freeman overlays "gladit_grud"
         }
     }
