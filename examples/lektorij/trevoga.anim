@@ -120,10 +120,10 @@ scene "stol" (duration: 1s, set: stol) {
     //  сообщение, не говорится ни разу: каждый достроит своё.
     //lip 1
     together {
-        freeman speaks for 3.41s
+        freeman speaks for 4.05s
         do {
             freeman overlays "hips"
-            wait 1.9s
+            wait 2.26s
             freeman overlays "vzglyad"     // «вы прочитали это в среду»
         }
     }
@@ -151,10 +151,10 @@ scene "stol" (duration: 1s, set: stol) {
     //  выйдет издёвка.
     //lip 3
     together {
-        freeman speaks for 6.12s
+        freeman speaks for 6.87s
         do {
             freeman overlays "ladoni_vniz" // «я не говорю, что вы трус»
-            wait 3.2s
+            wait 3.59s
             freeman overlays "prishchur"   // «особенно бессрочную»
         }
     }
@@ -182,23 +182,23 @@ scene "potom" (duration: 1s, set: koridor) {
     //  Персонаж идёт НА КАМЕРУ: отсрочки не отдаляются, они копятся.
     //lip 4
     together {
-        freeman speaks for 7.13s
+        freeman speaks for 5.49s
         do {
             freeman overlays "shag_levoj"
             freeman overlays "razvel"      // «позвонить врачу — потом»
             together {
-                freeman moves-to (0.46, 0.93) over 1.6s
-                freeman scales 0.78 over 1.6s
+                freeman moves-to (0.46, 0.93) over 1.23s
+                freeman scales 0.78 over 1.23s
             }
             freeman overlays "shag_pravoj"
             freeman overlays "somnenie"    // «открыть письмо из банка — потом»
             together {
-                freeman moves-to (0.46, 0.96) over 1.6s
-                freeman scales 0.86 over 1.6s
+                freeman moves-to (0.46, 0.96) over 1.23s
+                freeman scales 0.86 over 1.23s
             }
             freeman overlays "shag_levoj"
             freeman overlays "k_sebe"      // «спросить, что он имел в виду»
-            wait 1.6s
+            wait 1.23s
             freeman overlays "shag_pravoj"
         }
     }
@@ -226,10 +226,10 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  который ещё ни с чем не согласился.
     //lip 5
     together {
-        freeman speaks for 4.35s
+        freeman speaks for 5.67s
         do {
             camera medium freeman
-            wait 2.4s
+            wait 3.13s
             freeman overlays "vozzvanie"   // «Знакомо?» — вопрос повисает
         }
     }
@@ -270,10 +270,10 @@ scene "schet" (duration: 1s, set: void) {
     //  пропадёт: узнавание живёт ровно в зазоре между ними.
     //lip 7
     together {
-        freeman speaks for 6.30s
+        freeman speaks for 5.83s
         do {
             freeman overlays "vzglyad"
-            wait 3.4s
+            wait 3.14s
             freeman overlays "klin"        // «не спали в четверг»
         }
     }
@@ -285,10 +285,10 @@ scene "schet" (duration: 1s, set: void) {
     //  дальше ролик пойдёт вверх.
     //lip 8
     together {
-        freeman speaks for 5.62s
+        freeman speaks for 6.11s
         do {
             freeman overlays "dve_storony" // «взяли её в рассрочку»
-            wait 3.0s
+            wait 3.26s
             freeman overlays "ostyl"       // «дышите в темноту до утра»
         }
     }
@@ -312,10 +312,10 @@ scene "krug" (duration: 1s, set: kuhnya) {
     //  раньше счёта, и потому опыт не спорит с привычкой.
     //lip 9
     together {
-        freeman speaks for 6.49s
+        freeman speaks for 7.21s
         do {
             freeman overlays "otmahnulsya" // «не слабость и не судьба»
-            wait 3.4s
+            wait 3.78s
             freeman overlays "teplo"
         }
     }
@@ -327,10 +327,10 @@ scene "krug" (duration: 1s, set: kuhnya) {
     //  зритель унесёт с собой.
     //lip 10
     together {
-        freeman speaks for 5.45s
+        freeman speaks for 6.61s
         do {
             camera medium freeman
-            wait 3.0s
+            wait 3.64s
             freeman overlays "klin"        // «и просит ещё»
         }
     }
@@ -374,7 +374,7 @@ scene "storozh" (duration: 1s, set: okno) {
     //  выключают — ей меняют порог, и это принципиально другое обещание.
     //lip 12
     together {
-        freeman speaks for 3.10s
+        freeman speaks for 4.05s
         do {
             freeman overlays "raspahnul"   // «его учат смотреть»
         }
@@ -387,10 +387,10 @@ scene "storozh" (duration: 1s, set: okno) {
     //  откуда взялась привычка.
     //lip 13
     together {
-        freeman speaks for 4.66s
+        freeman speaks for 4.13s
         do {
             camera medium freeman
-            wait 2.6s
+            wait 2.3s
             freeman overlays "teplo"       // «трусу всё равно»
         }
     }
@@ -455,7 +455,7 @@ scene "zal" (duration: 1s, set: zal) {
     //  ГОЛОСОМ НЕ НАЖИМАТЬ: бесплатное с нажимом читается как подвох.
     //lip 17
     together {
-        freeman speaks for 1.82s
+        freeman speaks for 2.30s
         do {
             freeman overlays "razvel"        // «все десять — бесплатно»
         }
@@ -481,10 +481,10 @@ scene "zhalo" (duration: 1s, set: stol) {
     //  зритель знает, и добивка спрашивает его об этом прямо.
     //lip 18
     together {
-        freeman speaks for 4.31s
+        freeman speaks for 4.91s
         do {
             camera medium freeman
-            wait 2.4s
+            wait 2.73s
             freeman overlays "vozzvanie"   // «догадываетесь какое?»
         }
     }
