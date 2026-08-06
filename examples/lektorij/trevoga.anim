@@ -166,10 +166,10 @@ scene "stol" (duration: 1s, set: stol) {
     //  начнёт оправдываться и перестанет считать.
     //lip 2
     together {
-        freeman speaks for 2.92s
+        freeman speaks for 3.81s
         do {
             camera medium freeman
-            wait 1.6s
+            wait 2.09s
             freeman overlays "ostyl"       // «вы не ответили»
         }
     }
@@ -258,10 +258,10 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  который ещё ни с чем не согласился.
     //lip 5
     together {
-        freeman speaks for 3.94s
+        freeman speaks for 4.86s
         do {
             camera medium freeman
-            wait 3.13s
+            wait 3.86s
             freeman overlays "vozzvanie"   // «Знакомо?» — вопрос повисает
         }
     }
@@ -317,10 +317,10 @@ scene "schet" (duration: 1s, set: void) {
     //  дальше ролик пойдёт вверх.
     //lip 8
     together {
-        freeman speaks for 6.11s
+        freeman speaks for 6.84s
         do {
             freeman overlays "dve_storony" // «взяли её в рассрочку»
-            wait 3.26s
+            wait 3.65s
             freeman overlays "ostyl"       // «дышите в темноту до утра»
         }
     }
@@ -359,10 +359,10 @@ scene "krug" (duration: 1s, set: kuhnya) {
     //  зритель унесёт с собой.
     //lip 10
     together {
-        freeman speaks for 6.61s
+        freeman speaks for 5.22s
         do {
             camera medium freeman
-            wait 3.64s
+            wait 2.88s
             freeman overlays "klin"        // «и просит ещё»
         }
     }
@@ -406,7 +406,7 @@ scene "storozh" (duration: 1s, set: okno) {
     //  выключают — ей меняют порог, и это принципиально другое обещание.
     //lip 12
     together {
-        freeman speaks for 4.05s
+        freeman speaks for 3.06s
         do {
             freeman overlays "raspahnul"   // «его учат смотреть»
         }
@@ -434,7 +434,7 @@ scene "storozh" (duration: 1s, set: okno) {
     //  человеком: не открывать письма советуют себе все и бесплатно.
     //lip 14
     together {
-        freeman speaks for 3.04s
+        freeman speaks for 3.58s
         do {
             freeman overlays "otmahnulsya" // «не открывать письма вообще»
         }
@@ -487,7 +487,7 @@ scene "zal" (duration: 1s, set: zal) {
     //  ГОЛОСОМ НЕ НАЖИМАТЬ: бесплатное с нажимом читается как подвох.
     //lip 17
     together {
-        freeman speaks for 2.30s
+        freeman speaks for 1.38s
         do {
             freeman overlays "razvel"        // «все десять — бесплатно»
         }
@@ -513,10 +513,10 @@ scene "zhalo" (duration: 1s, set: stol) {
     //  зритель знает, и добивка спрашивает его об этом прямо.
     //lip 18
     together {
-        freeman speaks for 4.91s
+        freeman speaks for 5.49s
         do {
             camera medium freeman
-            wait 2.73s
+            wait 3.05s
             freeman overlays "vozzvanie"   // «догадываетесь какое?»
         }
     }
@@ -542,20 +542,20 @@ scene "final" (duration: 1s, set: stol) {
 
     //lip 19
     together {
-        freeman speaks for 5.91s
+        freeman speaks for 4.70s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Позы поглаживания трогают
             //  только руку — значит ложатся накладкой без потерь.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"
-            wait 2.6s
+            wait 2.07s
             nomer2 shows
             nomer2 scales 0.02 over 0.01s
-            nomer2 scales 0.285 over 0.29s ease-out
-            nomer2 scales 0.26 over 0.15s
+            nomer2 scales 0.285 over 0.23s ease-out
+            nomer2 scales 0.26 over 0.12s
             freeman overlays "gladit_grud_niz"
-            wait 1.5s
+            wait 1.19s
             freeman overlays "palec_vverh" // «Поехали!»
         }
     }
