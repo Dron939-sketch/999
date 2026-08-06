@@ -240,12 +240,12 @@ scene "znakomyj" (duration: 1s, set: void) {
     //  зритель уже дал себе сам, и его только подтверждают.
     //lip 7
     together {
-        freeman speaks for 5.50s
+        freeman speaks for 6.24s
         do {
             freeman overlays "otverg"      // «ни разу»
-            wait 2.2s
+            wait 2.5s
             freeman overlays "k_sebe"      // «живой человек переспрашивает»
-            wait 2.0s
+            wait 2.27s
             //  ПРИЩУР, А НЕ УХМЫЛКА: `smug` трогает рот и перебил бы липсинк
             //  до следующего флэпа. Ту же лукавую ноту здесь несут глаза.
             freeman overlays "prishchur"   // «даже официант»
@@ -281,10 +281,10 @@ scene "razgadka" (duration: 1s, set: stol) {
     //  ставит диагноз: понять с первого раза ВСЕГДА не может никто.
     //lip 8
     together {
-        freeman speaks for 2.76s
+        freeman speaks for 3.34s
         do {
             freeman overlays "razmer"      // «понял вас с первого раза»
-            wait 2.0s
+            wait 2.42s
             freeman overlays "prishchur"   // «всегда»
         }
     }
@@ -311,12 +311,12 @@ scene "razgadka" (duration: 1s, set: stol) {
     //  ошибка, губит интонация, с которой её приносят.
     //lip 10
     together {
-        freeman speaks for 7.16s
+        freeman speaks for 6.48s
         do {
             freeman overlays "razvel"      // «где в вашей строке не хватило слова»
-            wait 3.2s
+            wait 2.9s
             freeman overlays "vniz"        // «он поставил самое вероятное»
-            wait 2.4s
+            wait 2.17s
             freeman overlays "confident"   // «и принёс уверенно»
         }
     }
@@ -375,11 +375,11 @@ scene "stulya" (duration: 1s, set: stulya) {
     //  раньше, чем зритель успевает начать спорить.
     //lip 13
     together {
-        freeman speaks for 4.20s
+        freeman speaks for 3.66s
         do {
             camera medium freeman
             freeman overlays "dve_storony" // «человек переспросит, а он достроит»
-            wait 3.1s
+            wait 2.7s
             freeman overlays "point"       // «вся разница здесь»
         }
     }
@@ -521,12 +521,12 @@ scene "zhalo" (duration: 1s, set: stol) {
     //  и потому оно не звучит обещанием.
     //lip 20
     together {
-        freeman speaks for 5.65s
+        freeman speaks for 5.09s
         do {
             freeman overlays "vozzvanie"   // «и он переспросит»
-            wait 2.4s
+            wait 2.16s
             freeman overlays "teplo"       // «за всё ваше знакомство»
-            wait 2.0s
+            wait 1.8s
             freeman overlays "v_upor"      // «проверите сегодня?»
         }
     }
