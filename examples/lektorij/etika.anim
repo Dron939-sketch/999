@@ -131,10 +131,10 @@ scene "sdacha" (duration: 1s, set: prilavok) {
     //  нужна, чтобы он согласился прежде, чем поймёт, с чем согласился.
     //lip 1
     together {
-        freeman speaks for 3.30s
+        freeman speaks for 2.66s
         do {
             freeman overlays "hips"        // «сегодня вы поступили плохо»
-            wait 2.2s
+            wait 1.78s
             freeman overlays "vzglyad"     // «по мелочи»
         }
     }
@@ -146,12 +146,12 @@ scene "sdacha" (duration: 1s, set: prilavok) {
     //  перестанет вспоминать.
     //lip 2
     together {
-        freeman speaks for 5.46s
+        freeman speaks for 4.13s
         do {
             freeman overlays "rubit"       // «никто не видел»
-            wait 1.8s
+            wait 1.36s
             freeman overlays "rubit_l"     // «никто не узнает»
-            wait 1.8s
+            wait 1.36s
             freeman overlays "razvel"      // «никому не хуже»
         }
     }
@@ -208,12 +208,12 @@ scene "detskaya" (duration: 1s, set: detskaya) {
     //  секундой раньше. Поймано вычиткой.
     //lip 5
     together {
-        freeman speaks for 6.73s
+        freeman speaks for 7.18s
         do {
             freeman overlays "razvel"      // «это тараканы»
-            wait 2.2s
+            wait 2.35s
             freeman overlays "raskryl"     // «их поселила мать»
-            wait 2.2s
+            wait 2.35s
             freeman overlays "vniz"        // «чужой дядя, который вас не помнит»
         }
     }
@@ -253,10 +253,10 @@ scene "kto_glavnyj" (duration: 1s, set: void) {
     //  падает на готовое.
     //lip 7
     together {
-        freeman speaks for 5.44s
+        freeman speaks for 3.34s
         do {
             freeman overlays "dve_storony" // «вы с ними договариваетесь»
-            wait 3.4s
+            wait 2.09s
             freeman overlays "otverg"      // «значит, не вы»
         }
     }
@@ -281,10 +281,10 @@ scene "schet" (duration: 1s, set: kuhnya) {
     //  и тяжелее всего.
     //lip 8
     together {
-        freeman speaks for 6.50s
+        freeman speaks for 4.86s
         do {
             freeman overlays "razvel"      // «они шумят, вы объясняете»
-            wait 3.6s
+            wait 2.69s
             freeman overlays "ugryumo"     // «и так каждый раз»
         }
     }
@@ -330,10 +330,10 @@ scene "cherta" (duration: 1s, set: porog) {
     //  только в ремарке для озвучки. Поймано вычиткой; теперь он в тексте.
     //lip 10
     together {
-        freeman speaks for 7.29s
+        freeman speaks for 5.07s
         do {
             freeman overlays "ladoni_vniz" // «и вот что страшно»
-            wait 3.8s
+            wait 2.64s
             freeman overlays "vzves"       // «тот просто делает»
         }
     }
@@ -474,7 +474,7 @@ scene "zhalo" (duration: 1s, set: prilavok) {
     //  отговорится.
     //lip 17
     together {
-        freeman speaks for 4.89s
+        freeman speaks for 4.08s
         do {
             camera medium freeman
             freeman overlays "stop_ladon"  // «когда они зашумят, не уговаривайте»
@@ -511,15 +511,15 @@ scene "final" (duration: 1s, set: prilavok) {
 
     //lip 19
     together {
-        freeman speaks for 5.50s
+        freeman speaks for 3.47s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"
-            wait 2.7s
+            wait 1.71s
             freeman overlays "gladit_grud_niz"
-            wait 1.5s
+            wait 0.95s
             freeman overlays "palec_vverh" // «Поехали!»
         }
     }
