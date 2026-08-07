@@ -483,11 +483,7 @@ fn render_rigged_character(
     // Determine current and previous pose events, and interpolation progress.
     // Overlay events (speech mouth flaps) merge onto the last held body pose,
     // so a gesture — or a lying character — keeps its posture while talking.
-    let events: Vec<&PoseEvent> = timeline
-        .pose_events
-        .iter()
-        .filter(|e| e.entity == entity_name)
-        .collect();
+    let events: Vec<&PoseEvent> = sobytiya_pozy(timeline, entity_name);
 
     let mut current_idx: Option<usize> = None;
     for (i, ev) in events.iter().enumerate() {
@@ -1341,6 +1337,37 @@ fn collect_bone_drawables<'a>(
     }
 }
 
+/// Все события позы одной сущности, УПОРЯДОЧЕННЫЕ ПО ВРЕМЕНИ.
+///
+/// Сортировка здесь — не аккуратность, а исправление. Потребители ищут текущую
+/// позу линейным проходом «последний элемент, у которого `time <= t`», то есть
+/// доверяют порядку МАССИВА. А таймлайн складывает события ветвями: `together`
+/// проходит первую ветвь целиком, отматывает время назад и проходит вторую.
+/// Реплика у нас пишется ровно так —
+///
+/// ```text
+/// together { do { lips ... }        // рты, времена 0.04 … 7.0
+///            do { overlays ... } }  // жесты, времена 0 … 4.2
+/// ```
+///
+/// — и в массиве жест со временем 0 оказывается ПОСЛЕ всех ртов. Линейный
+/// проход на любом t выбирал его: рот возвращался к базовой позе и всю реплику
+/// стоял закрытым. Липсинк при этом был исправен на всех этажах — Rhubarb
+/// размечал, препроцессор переводил, движок откладывал события, — просто до
+/// экрана они не доходили. Так вышел ролик «Этика» с неподвижным ртом.
+///
+/// Сортировка устойчивая: при равном времени порядок ветвей сохраняется, и
+/// более поздняя ветвь по-прежнему кладётся поверх — как и задумано.
+fn sobytiya_pozy<'a>(timeline: &'a Timeline, entity_name: &str) -> Vec<&'a PoseEvent> {
+    let mut events: Vec<&PoseEvent> = timeline
+        .pose_events
+        .iter()
+        .filter(|e| e.entity == entity_name)
+        .collect();
+    events.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap_or(std::cmp::Ordering::Equal));
+    events
+}
+
 /// Resolve the effective pose for a pose-event index. A full (non-overlay)
 /// event resolves to its named pose. An overlay event (speech mouth flap)
 /// resolves to the last held full pose with the overlay's bones merged on top,
@@ -2067,11 +2094,7 @@ fn get_pose_interpolation<'a>(
     entity_name: &str,
     t: f64,
 ) -> (Option<&'a str>, Option<&'a str>, f64) {
-    let events: Vec<&PoseEvent> = timeline
-        .pose_events
-        .iter()
-        .filter(|e| e.entity == entity_name)
-        .collect();
+    let events: Vec<&PoseEvent> = sobytiya_pozy(timeline, entity_name);
 
     if events.is_empty() {
         return (Some("idle"), Some("idle"), 1.0);

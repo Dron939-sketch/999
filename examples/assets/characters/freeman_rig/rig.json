@@ -1158,7 +1158,7 @@
       "transition_duration": 0.04,
       "bones": {
         "mouth": {
-          "part": "mouth_m"
+          "part": "mouth_ajar"
         }
       }
     },
