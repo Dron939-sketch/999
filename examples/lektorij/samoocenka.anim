@@ -150,12 +150,12 @@ scene "zerkalo" (duration: 1s, set: vannaya) {
     //  жертве вместо того, чтобы узнавать себя.
     //lip 2
     together {
-        freeman speaks for 2.66s
+        freeman speaks for 3.60s
         do {
             freeman overlays "rubit"       // «идиот»
-            wait 0.89s
+            wait 1.21s
             freeman overlays "obvinil"     // «куда полез»
-            wait 0.89s
+            wait 1.21s
             freeman overlays "otverg"      // «так и знал»
         }
     }
@@ -190,10 +190,10 @@ scene "zerkalo" (duration: 1s, set: vannaya) {
     //  превращались в полторы секунды на фронте ролика.
     //lip 4
     together {
-        freeman speaks for 5.53s
+        freeman speaks for 7.31s
         do {
             freeman overlays "otmahnulsya" // «и не надо про «полюби себя»»
-            wait 2.7s
+            wait 3.57s
             freeman overlays "ugryumo"     // «ни разу не сказали как»
         }
     }
@@ -208,12 +208,12 @@ scene "zerkalo" (duration: 1s, set: vannaya) {
     //  появится в нём только в жале.
     //lip 5
     together {
-        freeman speaks for 5.88s
+        freeman speaks for 5.38s
         do {
             freeman overlays "razvel"      // «вы вставали к зеркалу»
-            wait 1.95s
+            wait 1.78s
             freeman overlays "raskryl"     // «вы писали список достоинств»
-            wait 1.95s
+            wait 1.78s
             freeman overlays "palec_vverh" // «вы повторяли, что достойны»
         }
     }
@@ -501,10 +501,10 @@ scene "zhalo" (duration: 1s, set: vannaya) {
     //  обещание и не звучит обещанием.
     //lip 19
     together {
-        freeman speaks for 6.24s
+        freeman speaks for 5.33s
         do {
             freeman overlays "vozzvanie"   // «первая строка, которую вы не придумали»
-            wait 4.0s
+            wait 3.42s
             freeman overlays "teplo"       // «заметите разницу?»
         }
     }
@@ -528,16 +528,16 @@ scene "final" (duration: 1s, set: vannaya) {
 
     //lip 20
     together {
-        freeman speaks for 5.36s
+        freeman speaks for 3.76s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Поза поглаживания трогает
             //  только руку — значит ложится накладкой без потерь.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"
-            wait 2.66s
+            wait 1.87s
             freeman overlays "gladit_grud_niz"
-            wait 1.53s
+            wait 1.07s
             freeman overlays "palec_vverh" // «Поехали!»
         }
     }
