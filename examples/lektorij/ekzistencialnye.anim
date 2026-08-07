@@ -149,10 +149,10 @@ scene "noch" (duration: 1s, set: kuhnya) {
     //  ему собираются делать больно, и уйдёт на первой же секунде.
     //lip 1
     together {
-        freeman speaks for 3.41s
+        freeman speaks for 2.80s
         do {
             freeman overlays "hips"        // «вы просыпаетесь в три ночи»
-            wait 2.3s
+            wait 1.89s
             freeman overlays "vzglyad"     // «просто так»
         }
     }
@@ -180,11 +180,11 @@ scene "noch" (duration: 1s, set: kuhnya) {
     //  подставит свой, и промахнуться невозможно.
     //lip 3
     together {
-        freeman speaks for 5.87s
+        freeman speaks for 4.18s
         do {
             camera medium freeman
             freeman overlays "u_viska"     // «а в голове вопрос»
-            wait 3.4s
+            wait 2.42s
             freeman overlays "ostyl"       // «вы днём себе не задаёте»
         }
     }
@@ -249,10 +249,10 @@ scene "molchanie" (duration: 1s, set: void) {
     //  раньше. Поймано вычиткой, глазом автора не ловится.
     //lip 6
     together {
-        freeman speaks for 4.74s
+        freeman speaks for 5.20s
         do {
             freeman overlays "v_upor"
-            wait 3.0s
+            wait 3.29s
             freeman overlays "vozzvanie"   // «вы кому-нибудь рассказывали?»
         }
     }
@@ -264,10 +264,10 @@ scene "molchanie" (duration: 1s, set: void) {
     //  успевает, и её надо донести.
     //lip 7
     together {
-        freeman speaks for 4.15s
+        freeman speaks for 3.58s
         do {
             freeman overlays "otverg"      // «никому»
-            wait 2.4s
+            wait 2.07s
             freeman overlays "vzves"       // «и никто не рассказывал вам»
         }
     }
@@ -297,10 +297,10 @@ scene "posle_gostej" (duration: 1s, set: stol) {
     //  слово.
     //lip 8
     together {
-        freeman speaks for 5.30s
+        freeman speaks for 4.00s
         do {
             freeman overlays "razvel"      // «и каждый решает»
-            wait 3.2s
+            wait 2.41s
             freeman overlays "vniz"        // «сломался он один»
         }
     }
@@ -358,7 +358,7 @@ scene "cherdak" (duration: 1s, set: cherdak) {
     //  выдохе.
     //lip 11
     together {
-        freeman speaks for 2.56s
+        freeman speaks for 2.04s
         do {
             camera medium freeman
             freeman overlays "stop_ladon"  // «от них не лечатся»
@@ -387,10 +387,10 @@ scene "doroga" (duration: 1s, set: doroga) {
     //  проповедью. Первая фраза сухо, вторая теплее и медленнее.
     //lip 12
     together {
-        freeman speaks for 6.21s
+        freeman speaks for 7.03s
         do {
             freeman overlays "razvel"      // «смысл не дают заранее»
-            wait 3.4s
+            wait 3.85s
             freeman overlays "teplo"       // «его собирают по дороге»
         }
     }
@@ -491,11 +491,11 @@ scene "zhalo" (duration: 1s, set: kuhnya) {
     //  отговаривается. «Просто полежите» медленнее остального.
     //lip 17
     together {
-        freeman speaks for 6.71s
+        freeman speaks for 5.72s
         do {
             camera medium freeman
             freeman overlays "stop_ladon"  // «не берите телефон»
-            wait 4.0s
+            wait 3.41s
             freeman overlays "teplo"       // «просто полежите с вопросом»
         }
     }
@@ -536,20 +536,20 @@ scene "final" (duration: 1s, set: kuhnya) {
 
     //lip 19
     together {
-        freeman speaks for 6.39s
+        freeman speaks for 4.81s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает. Позы поглаживания трогают
             //  только руку — значит ложатся накладкой без потерь.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"
-            wait 2.8s
+            wait 2.11s
             nomer2 shows
             nomer2 scales 0.02 over 0.01s
-            nomer2 scales 0.285 over 0.29s ease-out
-            nomer2 scales 0.26 over 0.15s
+            nomer2 scales 0.285 over 0.22s ease-out
+            nomer2 scales 0.26 over 0.11s
             freeman overlays "gladit_grud_niz"
-            wait 1.6s
+            wait 1.2s
             freeman overlays "palec_vverh" // «Поехали!»
         }
     }
