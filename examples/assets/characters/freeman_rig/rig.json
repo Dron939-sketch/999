@@ -475,15 +475,6 @@
         "mouth": {
           "part": "mouth_teeth"
         },
-        "hat": {
-          "part": "hat",
-          "offset": [
-            -18,
-            -114
-          ],
-          "rotation": -18,
-          "z_order": 6
-        },
         "cane": {
           "part": "cane",
           "rotation": 26
@@ -3805,15 +3796,16 @@
         },
         "head": {
           "offset": [
-            4,
-            52
+            -11,
+            69
           ],
           "rotation": 6,
           "scale": [
-            1.12,
-            0.775
+            1.0,
+            1.1667
           ],
-          "z_order": 1
+          "z_order": 1,
+          "part": "head_back"
         },
         "upper_arm_left": {
           "rotation": 22,
@@ -4184,20 +4176,21 @@
           ]
         },
         "head": {
+          "part": "head_34",
           "scale": [
-            0.9,
-            0.8583
+            1.0,
+            0.9167
           ],
           "z_order": 5,
           "offset": [
-            23,
-            57
+            11,
+            70
           ]
         },
         "eye_left": {
           "part": "eye_left",
           "offset": [
-            -47,
+            -33,
             -125
           ],
           "scale": [
@@ -4208,7 +4201,7 @@
         "eye_right": {
           "part": "eye_right",
           "offset": [
-            3,
+            13,
             -117
           ],
           "scale": [
@@ -4219,7 +4212,7 @@
         "mouth": {
           "part": "mouth_34",
           "offset": [
-            -22,
+            -10,
             -56
           ],
           "scale": [
@@ -4295,20 +4288,21 @@
           ]
         },
         "head": {
+          "part": "head_34",
           "scale": [
-            0.9,
-            0.8583
+            1.0,
+            0.9167
           ],
           "z_order": 5,
           "offset": [
-            23,
-            57
+            11,
+            70
           ]
         },
         "eye_left": {
           "part": "eye_left",
           "offset": [
-            -47,
+            -33,
             -125
           ],
           "scale": [
@@ -4319,7 +4313,7 @@
         "eye_right": {
           "part": "eye_right",
           "offset": [
-            3,
+            13,
             -117
           ],
           "scale": [
@@ -4330,7 +4324,7 @@
         "mouth": {
           "part": "mouth_34",
           "offset": [
-            -22,
+            -10,
             -56
           ],
           "scale": [
@@ -4431,15 +4425,16 @@
         },
         "head": {
           "scale": [
-            1.12,
-            0.5392
+            1.0,
+            0.6667
           ],
           "offset": [
-            55,
-            7
+            40,
+            -4
           ],
           "rotation": 5,
-          "z_order": 1
+          "z_order": 1,
+          "part": "head_back"
         },
         "upper_arm_left": {
           "rotation": 26,

@@ -11,8 +11,9 @@ on:
     inputs:
       production:
         description: >-
-          id одного продакшена из tools/productions.json (например
-          teorii-lichnosti-intro). Пусто — рендерить всё.
+          id продакшенов из tools/productions.json через пробел (например
+          teorii-lichnosti-intro). Пусто — только затронутые правкой;
+          `all` — весь манифест.
         required: false
         default: ''
 
@@ -33,35 +34,106 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Какой продакшен гнать. Два входа, потому что ручной запуск доступен не
-      # всем токенам: у ассистента `workflow_dispatch` отдаёт 403, а починить
-      # один ролик надо, не переозвучивая остальные восемь. Поэтому тот же
-      # выбор читается из сообщения последнего коммита: маркер `[only: <id>]`.
-      # Пусто в обоих входах — гоним весь манифест, как и раньше.
-      - name: Какой продакшен рендерим
+      # Какие продакшены гнать. УМОЛЧАНИЕ — ТОЛЬКО ЗАТРОНУТЫЕ ПРАВКОЙ.
+      #
+      # Раньше умолчанием был весь манифест: правка одного интро стоила сорока
+      # минут раннера и переозвучки девяти чужих роликов, у которых не менялся
+      # ни кадр. Теперь набор считает `tools/affected.py` по diff'у пуша —
+      # сценарий, его ассеты (риг, декорации, пропы, транзитивно), VO-файл.
+      # Правка движка/завода/тестов задевает всё → `ALL`; правка одних доков не
+      # задевает ничего → рендер пропускается целиком.
+      #
+      # Три ручных перехвата, потому что автоматика не покрывает всё:
+      #   * `workflow_dispatch` с полем `production` — но он доступен не всем
+      #     токенам (у ассистента отдаёт 403);
+      #   * маркер `[only: <id> <id>]` в ЗАГОЛОВКЕ коммита — тот же выбор без
+      #     workflow_dispatch;
+      #   * маркер `[all]` — перегнать весь манифест (сверка после правок в
+      #     доктрине, когда diff «ничего не задел», а пересобрать надо всё);
+      #   * маркер `[skip render]` — не гнать ничего. Нужен, когда правка задела
+      #     глобальный путь (движок, завод, сам workflow), но ни одного пикселя
+      #     не меняет: без него правка комментария в render.yml стоит полного
+      #     прогона.
+      #
+      # МАРКЕРЫ ЧИТАЮТСЯ ТОЛЬКО ИЗ ЗАГОЛОВКА (первой строки). Раньше искали по
+      # всему сообщению — и коммит, в теле которого написано «восстанавливается
+      # маркером [all]», сам себя и запускал на полный прогон. Проза о маркере
+      # неотличима от маркера, если смотреть на всё сообщение; заголовок же
+      # человек пишет коротко и осознанно.
+      - name: Какие продакшены рендерим
         env:
           INPUT_ONLY: ${{ inputs.production }}
+          BEFORE: ${{ github.event.before }}
         run: |
+          set -u
+          SUBJ=$(git log -1 --pretty=%s)      # ТОЛЬКО заголовок, см. выше
+          echo "Заголовок коммита: $SUBJ"
           ONLY="$INPUT_ONLY"
           if [ -z "$ONLY" ]; then
-            ONLY=$(git log -1 --pretty=%B \
-              | sed -n 's/.*\[only:[[:space:]]*\([A-Za-z0-9_-]*\)[[:space:]]*\].*/\1/p' \
-              | head -1)
+            ONLY=$(printf '%s' "$SUBJ" \
+              | sed -n 's/.*\[only:[[:space:]]*\([A-Za-z0-9_ -]*\)\].*/\1/p' | head -1)
+          fi
+          if printf '%s' "$SUBJ" | grep -qi '\[all\]'; then ONLY="all"; fi
+          # `[skip render]` сильнее всех прочих маркеров и ручного поля: если
+          # человек сказал «не гони», спорить не о чем.
+          if printf '%s' "$SUBJ" | grep -qi '\[skip[ -]render\]'; then
+            echo "RENDER_ONLY=" >> "$GITHUB_ENV"
+            echo "RENDER_SUBSET=skip" >> "$GITHUB_ENV"
+            echo "Маркер [skip render] — рендер пропускается."
+            exit 0
+          fi
+
+          if [ -z "$ONLY" ]; then
+            # Диапазон пуша. Родителя тянем точечно (--depth=1): полный клон
+            # этого репо — 600МБ, качать его ради одного diff'а незачем.
+            RANGE_OK=0
+            case "$BEFORE" in
+              ""|0000000000000000000000000000000000000000) ;;
+              *) git fetch --no-tags --depth=1 origin "$BEFORE" 2>/dev/null \
+                   && RANGE_OK=1 ;;
+            esac
+            if [ "$RANGE_OK" = 1 ]; then
+              CHANGED=$(git diff --name-only "$BEFORE" "$GITHUB_SHA")
+              echo "--- изменено в пуше ---"; echo "$CHANGED"
+              ONLY=$(printf '%s\n' "$CHANGED" | python3 tools/affected.py - | tr '\n' ' ')
+            else
+              # Новая ветка / история недоступна — считать нечего, гоним всё:
+              # ложное «ALL» стоит раннера, ложное «ничего» — дефекта в релизе.
+              echo "База для diff'а недоступна (before=$BEFORE) — гоню весь манифест."
+              ONLY="all"
+            fi
+          fi
+
+          ONLY=$(printf '%s' "$ONLY" | tr -s ' ' | sed 's/^ *//;s/ *$//')
+          if [ "$ONLY" = "ALL" ] || [ "$ONLY" = "all" ]; then ONLY=""; SUBSET=0
+          elif [ -z "$ONLY" ]; then SUBSET=skip
+          else SUBSET=1
           fi
           echo "RENDER_ONLY=$ONLY" >> "$GITHUB_ENV"
-          echo "Продакшен: ${ONLY:-ВСЕ}"
+          echo "RENDER_SUBSET=$SUBSET" >> "$GITHUB_ENV"
+          case "$SUBSET" in
+            skip) echo "Правка не задела ни одного ролика — рендер пропускается." ;;
+            0)    echo "Продакшены: ВЕСЬ МАНИФЕСТ" ;;
+            *)    echo "Продакшены: $ONLY" ;;
+          esac
 
       - name: Install ffmpeg
+        if: env.RENDER_SUBSET != 'skip'
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
       # Питон-зависимости планки (qc_metrics: golden-diff по SSIM). Без них
       # измеритель падал на `import numpy` — прогон писал «планка не измерена».
-      - name: Python deps (планка)
-        run: python3 -m pip install --quiet --upgrade numpy pillow
+      # vtracer — художник (tools/vectorize.py): обводка растра в векторные
+      # пути. Ставится готовым колесом, без сборки Rust; без него художник
+      # честно падает на вставку растром и говорит об этом в логе.
+      - name: Python deps (планка, художник)
+        if: env.RENDER_SUBSET != 'skip'
+        run: python3 -m pip install --quiet --upgrade numpy pillow vtracer
 
       # Rhubarb Lip Sync — фонемный липсинк (рот артикулирует слоги, не флэпы).
       # Бинарь кэшируется; при недоступности завод честно падает на RMS-огибающую.
       - name: Rhubarb cache
+        if: env.RENDER_SUBSET != 'skip'
         id: rhubarb-cache
         uses: actions/cache@v4
         with:
@@ -69,7 +141,7 @@ jobs:
           key: rhubarb-1.13.0-linux
 
       - name: Install Rhubarb Lip Sync
-        if: steps.rhubarb-cache.outputs.cache-hit != 'true'
+        if: env.RENDER_SUBSET != 'skip' && steps.rhubarb-cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p ~/rhubarb
           curl -sSL -o /tmp/rhubarb.zip \
@@ -78,9 +150,11 @@ jobs:
           find ~/rhubarb -name rhubarb -type f -exec chmod +x {} \;
 
       - name: Expose RHUBARB_BIN
+        if: env.RENDER_SUBSET != 'skip'
         run: echo "RHUBARB_BIN=$(find ~/rhubarb -name rhubarb -type f | head -1)" >> "$GITHUB_ENV"
 
       - name: Rust cache
+        if: env.RENDER_SUBSET != 'skip'
         uses: actions/cache@v4
         with:
           path: |
@@ -90,10 +164,12 @@ jobs:
           key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
 
       - name: Build engine
+        if: env.RENDER_SUBSET != 'skip'
         run: cargo build --release
 
       # Один завод: картинки → рендер → озвучка → сведение → videos/*.mp4(+mp3)
       - name: Studio (render + voice + mux)
+        if: env.RENDER_SUBSET != 'skip'
         env:
           # ОСНОВНОЙ путь озвучки — ПРЯМОЙ Fish Audio: студия клонировала свой
           # голос, его id лежит в FISH_AUDIO_VOICE_ID. Frederick — запасной,
@@ -112,34 +188,43 @@ jobs:
           IMAGE_API_KEY: ${{ secrets.IMAGE_API_KEY }}
           IMAGE_API_PROVIDER: ${{ secrets.IMAGE_API_PROVIDER }}
         run: |
-          ONLY="$RENDER_ONLY"
-          # По умолчанию рендерим ВСЕ продакшены из манифеста — регрессии в
-          # любом ролике видны в CI, а не только вручную. Ручной запуск с
-          # заполненным полем `production` гонит ОДИН ролик: правка одного
-          # интро не должна стоить сорока минут раннера и переозвучки всех
-          # остальных.
+          # Набор посчитан шагом «Какие продакшены рендерим»: пусто = весь
+          # манифест (маркер `[all]`, правка движка/завода, недоступная база
+          # для diff'а), иначе — только затронутые правкой.
           # --strict: QC-гейт роняет прогон на немом/рассинхронном ролике, если
           # ключи озвучки заданы (иначе черновой режим — только предупреждения).
-          if [ -n "$ONLY" ]; then
-            echo "Один продакшен: $ONLY"
-            python3 tools/studio.py --strict "$ONLY"
-          else
-            python3 tools/studio.py --strict
-          fi
+          # Без кавычек намеренно: $RENDER_ONLY — СПИСОК id через пробел.
+          # shellcheck disable=SC2086
+          python3 tools/studio.py --strict $RENDER_ONLY
           echo "=== videos/ ==="
           ls -la videos/
 
       - name: Upload videos to a GitHub Release
-        # always(): даже при красном QC уже отрендеренные здоровые ролики должны
-        # уехать в Release — принцип «отдать хоть что-то». B2: артефакты НЕ в git
-        # (иначе videos/ и история пухнут линейно по прогонам), а в Releases по
-        # rolling-тегу на ветку. GitHub Releases держат до 2ГБ на файл — прежний
-        # 95МБ-предохранитель под git-пуш больше не нужен.
-        if: always()
+        # РЕЛИЗ НИКОГДА НЕ УДАЛЯЕТСЯ — ТОЛЬКО ДОЗАЛИВАЕТСЯ. Прежде полный прогон
+        # делал `release delete --cleanup-tag` и создавал релиз заново из того,
+        # что лежит в videos/. Вместе с `always()` и `cancel-in-progress` это
+        # один раз уже стоило пяти роликов: следующий push отменил прогон на
+        # середине, шаг заливки всё равно отработал (always() ловит и cancelled),
+        # снёс релиз и пересоздал его из четырёх роликов, успевших отрендериться.
+        # Остальные пять просто исчезли — при том, что их файлы были в порядке.
+        #
+        # Отсюда два предохранителя:
+        #   1) `!cancelled()` вместо `always()` — на отменённом прогоне
+        #      выкладывать нечего, он оборван на произвольном ролике. При КРАСНОМ
+        #      прогоне заливка остаётся: принцип «отдать хоть что-то» был про QC,
+        #      а не про отмену;
+        #   2) заливка всегда через `upload --clobber` — свежие файлы затирают
+        #      одноимённые, чужие остаются. Ценой того, что ассет удалённого из
+        #      манифеста продакшена придётся снять руками, — это дешевле, чем
+        #      терять релиз целиком.
+        #
+        # B2: артефакты НЕ в git (иначе videos/ и история пухнут линейно по
+        # прогонам), а в Releases по rolling-тегу на ветку. GitHub Releases
+        # держат до 2ГБ на файл — прежний 95МБ-предохранитель под git-пуш не нужен.
+        if: '!cancelled() && env.RENDER_SUBSET != ''skip'''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ONLY="$RENDER_ONLY"
           shopt -s nullglob
           assets=(videos/*.mp4 videos/*.mp3)
           if [ ${#assets[@]} -eq 0 ]; then
@@ -149,20 +234,11 @@ jobs:
           TAG="renders-${GITHUB_REF_NAME//\//-}"
           NOTES="Автосборка роликов и озвучки для ветки \`$GITHUB_REF_NAME\` (commit \`$GITHUB_SHA\`). Обновляется на каждый прогон CI. Немой = рендер без голоса (TTS был недоступен)."
           echo "Заливаю ${#assets[@]} файл(ов) в Release '$TAG' (commit $GITHUB_SHA)"
-          if [ -n "$ONLY" ]; then
-            # Прогон одного ролика ДОЗАЛИВАЕТ, а не пересоздаёт релиз: videos/
-            # не лежит в git, поэтому в таком прогоне собран ровно один ролик,
-            # и пересоздание стёрло бы ссылки на все остальные.
-            gh release view "$TAG" >/dev/null 2>&1 || \
-              gh release create "$TAG" --target "$GITHUB_SHA" \
-                --title "Renders — $GITHUB_REF_NAME" --notes "$NOTES"
-            gh release upload "$TAG" "${assets[@]}" --clobber
-          else
-            # Полный прогон — пересоздаём rolling-релиз на текущий SHA.
-            gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
-            gh release create "$TAG" "${assets[@]}" \
-              --target "$GITHUB_SHA" \
-              --title "Renders — $GITHUB_REF_NAME" \
-              --notes "$NOTES"
-          fi
+          gh release view "$TAG" >/dev/null 2>&1 || \
+            gh release create "$TAG" --target "$GITHUB_SHA" \
+              --title "Renders — $GITHUB_REF_NAME" --notes "$NOTES"
+          gh release upload "$TAG" "${assets[@]}" --clobber
+          # Заметки указывают на коммит последнего прогона — при дозаливке они
+          # иначе врут про то, из чего собран релиз.
+          gh release edit "$TAG" --notes "$NOTES" >/dev/null
           echo "Готово: $(gh release view "$TAG" --json url -q .url)"

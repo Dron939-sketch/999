@@ -523,14 +523,21 @@ motion commands.
 Shot types set the camera framing instantly. They can optionally target a
 specific entity.
 
-| Shot Type          | Description                                       |
-|--------------------|---------------------------------------------------|
-| `wide`             | Full scene view                                   |
-| `medium`           | Waist-up framing                                  |
-| `close-up`         | Head and shoulders                                |
-| `extreme-close-up` | Face only                                         |
-| `two-shot`         | Framing two characters                            |
-| `over-shoulder`    | Over one character's shoulder toward another      |
+| Shot Type          | Description                                       | Figure fills |
+|--------------------|---------------------------------------------------|--------------|
+| `wide`             | Full scene view                                   | 0.60         |
+| `medium`           | Whole figure with plenty of air around it         | 0.45         |
+| `close-up`         | Whole figure, tight in frame                      | 0.78         |
+| `extreme-close-up` | Head and shoulders — the frame crops the body      | 2.01         |
+| `two-shot`         | Framing two characters                            | —            |
+| `over-shoulder`    | Over one character's shoulder toward another      | —            |
+
+"Figure fills" is the character's height as a fraction of frame height, for a
+target with a measured `karta`. The ladder is deliberately spaced by SIZE: only
+`extreme-close-up` crops the figure. A waist-up framing is not in the grammar —
+when every shot cropped the figure, cuts between them stopped reading as
+montage and the extreme close-up stopped being a punch. See FREEMAN_TARGET.md
+§3a for the measurement against the original.
 
 ```
 camera wide

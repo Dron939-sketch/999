@@ -1,66 +1,81 @@
 {
- "_comment": "Манифест завода Лектория. Каждый продакшен → готовый ролик в videos/. Поля: id (имя файлов), anim (сценарий движка), vo (VO-сценарий для Fish Audio, опц.), images (картинки для генерации Nano Banana, опц.), planka (эталон: гнать метрики Рубежа 2 через tools/qc_metrics.py, голдены в tests/golden/<id>). studio.py прогоняет: картинки → рендер → озвучка → сведение → (для planka) метрики.",
- "productions": [
-  {
-   "id": "etalon-15s",
-   "desc": "Эталон планки Фримена: контрольный 15-сек кусок для машинных метрик Рубежа 2 (длина плана/скорость/golden-frame/громкость). Не витрина — измеритель.",
-   "anim": "examples/lektorij/etalon-15s.anim",
-   "planka": true
-  },
-  {
-   "id": "pereproshivka-intro",
-   "desc": "Подводка к курсу «Перепрошивка»: камера-хук, книга, оживающая картинка",
-   "anim": "examples/lektorij/pereproshivka-intro.anim",
-   "vo": "examples/lektorij/pereproshivka-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "biznes-myshlenie-intro",
-   "desc": "Подводка к курсу «Бизнес-мышление»: толпа обходит красную «проблему», Фримен поднимает — это куш. Оптика. Свет/тень + ракурсы.",
-   "anim": "examples/lektorij/biznes-myshlenie-intro.anim",
-   "vo": "examples/lektorij/biznes-myshlenie-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "freeman-monologue",
-   "desc": "Мистер Фримен: монолог в камеру (витрина стиля)",
-   "anim": "examples/freeman-monologue.anim"
-  },
-  {
-   "id": "prison-intro",
-   "desc": "Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото). Три речевых удара, синхрон по //lip.",
-   "anim": "examples/lektorij/prison-intro.anim",
-   "vo": "examples/lektorij/prison-intro-VO.md"
-  },
-  {
-   "id": "fredi-expressions",
-   "desc": "Фреди: библиотека мимики",
-   "anim": "examples/lektorij/fredi-expressions-demo.anim"
-  },
-  {
-   "id": "lekciya-2-frejd",
-   "desc": "Пилот лекции (Фрейд, курс «Теории личности»)",
-   "anim": "examples/lektorij/lekciya-2-frejd-psihodinamika.anim"
-  },
-  {
-   "id": "snova-zhivoj-intro",
-   "desc": "Подводка к курсу «Снова живой»: выключенный человек — дышит, но не живёт. Пустое поле (канон), персонаж по SIMILARITY, режиссура по HOLLYWOOD.",
-   "anim": "examples/lektorij/snova-zhivoj-intro.anim",
-   "vo": "examples/lektorij/snova-zhivoj-intro-VO.md"
-  },
-  {
-   "id": "teorii-lichnosti-intro",
-   "desc": "Подводка к курсу «Теории личности»: чужие очки садятся на маску в первые 3 секунды и слетают на взлёте. 13 лекций — 20 линз.",
-   "anim": "examples/lektorij/teorii-lichnosti-intro.anim",
-   "vo": "examples/lektorij/teorii-lichnosti-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "myshlenie-intro",
-   "desc": "Подводка к курсу «Мышление и когнитивные искажения»: за тебя решили за полсекунды. 10 лекций, Канеман и Тверски.",
-   "anim": "examples/lektorij/myshlenie-intro.anim",
-   "vo": "examples/lektorij/myshlenie-intro-VO.md",
-   "images": []
-  }
- ]
+  "_comment": "Манифест завода Лектория. Каждый продакшен → готовый ролик в videos/. Поля: id (имя файлов), anim (сценарий движка), vo (VO-сценарий для Fish Audio, опц.), images (картинки для генерации Nano Banana, опц.), planka (эталон: гнать метрики Рубежа 2 через tools/qc_metrics.py, голдены в tests/golden/<id>). studio.py прогоняет: картинки → рендер → озвучка → сведение → (для planka) метрики.",
+  "productions": [
+    {
+      "id": "etalon-15s",
+      "desc": "Эталон планки Фримена: контрольный 15-сек кусок для машинных метрик Рубежа 2 (длина плана/скорость/golden-frame/громкость). Не витрина — измеритель.",
+      "anim": "examples/lektorij/etalon-15s.anim",
+      "planka": true
+    },
+    {
+      "id": "pereproshivka-intro",
+      "desc": "Подводка к курсу «Перепрошивка»: камера-хук, книга, оживающая картинка",
+      "anim": "examples/lektorij/pereproshivka-intro.anim",
+      "vo": "examples/lektorij/pereproshivka-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "biznes-myshlenie-intro",
+      "desc": "Подводка к курсу «Бизнес-мышление»: толпа обходит красную «проблему», Фримен поднимает — это куш. Оптика. Свет/тень + ракурсы.",
+      "anim": "examples/lektorij/biznes-myshlenie-intro.anim",
+      "vo": "examples/lektorij/biznes-myshlenie-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "freeman-monologue",
+      "desc": "Мистер Фримен: монолог в камеру (витрина стиля)",
+      "anim": "examples/freeman-monologue.anim"
+    },
+    {
+      "id": "prison-intro",
+      "desc": "Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото). Три речевых удара, синхрон по //lip.",
+      "anim": "examples/lektorij/prison-intro.anim",
+      "vo": "examples/lektorij/prison-intro-VO.md"
+    },
+    {
+      "id": "fredi-expressions",
+      "desc": "Фреди: библиотека мимики",
+      "anim": "examples/lektorij/fredi-expressions-demo.anim",
+      "_montage": "Витрина лиц, а не ролик: один портретный план на все 28 секунд — это её назначение. Приёмщик режиссуры (сверхкруп, смена крупности) здесь меряет не то и всегда красный.",
+      "montage": false
+    },
+    {
+      "id": "lekciya-2-frejd",
+      "desc": "Пилот лекции (Фрейд, курс «Теории личности»)",
+      "anim": "examples/lektorij/lekciya-2-frejd-psihodinamika.anim"
+    },
+    {
+      "id": "snova-zhivoj-intro",
+      "desc": "Подводка к курсу «Снова живой»: выключенный человек — дышит, но не живёт. Пустое поле (канон), персонаж по SIMILARITY, режиссура по HOLLYWOOD.",
+      "anim": "examples/lektorij/snova-zhivoj-intro.anim",
+      "vo": "examples/lektorij/snova-zhivoj-intro-VO.md"
+    },
+    {
+      "id": "teorii-lichnosti-intro",
+      "desc": "Подводка к курсу «Теории личности»: чужие очки садятся на маску в первые 3 секунды и слетают на взлёте. 13 лекций — 20 линз.",
+      "anim": "examples/lektorij/teorii-lichnosti-intro.anim",
+      "vo": "examples/lektorij/teorii-lichnosti-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "myshlenie-intro",
+      "desc": "Подводка к курсу «Мышление и когнитивные искажения»: за тебя решили за полсекунды. 10 лекций, Канеман и Тверски.",
+      "anim": "examples/lektorij/myshlenie-intro.anim",
+      "vo": "examples/lektorij/myshlenie-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "istoriya-idej-intro",
+      "desc": "Подводка к курсу «История идей»: у каждой мысли есть год выпуска и владелец до тебя. Даты впечатываются за спиной и осыпаются на взлёте. 10 лекций, ~4 часа.",
+      "anim": "examples/lektorij/istoriya-idej-intro.anim",
+      "vo": "examples/lektorij/istoriya-idej-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "proba-15s",
+      "desc": "Стенд персонажа: 15 секунд на проверку гипотез о пластике и сходстве. Не ролик — верстак (разворот, шаг, удержание жеста, лицо на сверхкрупе, покой).",
+      "anim": "examples/lektorij/proba-15s.anim",
+      "planka": true
+    }
+  ]
 }

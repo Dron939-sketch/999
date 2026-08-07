@@ -25,6 +25,7 @@ studio.py — «завод» Лектория: одна команда → го�
 Использование:
     python3 tools/studio.py                 # все продакшены из манифеста
     python3 tools/studio.py pereproshivka-intro   # только один (по id)
+    python3 tools/studio.py $(python3 tools/affected.py -)  # только задетые правкой
     python3 tools/studio.py --engine ./target/release/animdsl
 """
 
@@ -59,30 +60,51 @@ def run(cmd, **kw):
 
 
 def step_images(prod, out_dir):
-    """Генерит объявленные картинки (если задан IMAGE_API_KEY)."""
+    """Генерит объявленные картинки и делает из них сеты (художник)."""
     images = prod.get("images", [])
     if not images:
         return
-    if not os.environ.get("IMAGE_API_KEY"):
-        log("  [картинки] IMAGE_API_KEY не задан — пропуск генерации "
-            f"({len(images)} шт., будут использованы существующие ассеты).")
-        return
     gen = TOOLS / "image_gen.py"
+    art = TOOLS / "vectorize.py"
+    have_key = bool(os.environ.get("IMAGE_API_KEY"))
+    if not have_key:
+        log(f"  [картинки] IMAGE_API_KEY не задан — генерация пропущена "
+            f"({len(images)} шт.), беру существующие ассеты.")
     for img in images:
         dst = ROOT / img["out"]
-        if dst.exists() and not img.get("force"):
+        wrap = ROOT / img["wrap_svg"] if img.get("wrap_svg") else None
+        fresh = not dst.exists() or img.get("force")
+
+        if fresh and have_key:
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            cmd = [sys.executable, str(gen), "-o", str(dst), "--prompt", img["prompt"]]
+            if wrap:
+                cmd += ["--wrap-svg", str(wrap)]
+                cmd += ["--wrap-mode", img.get("wrap_mode", "auto")]
+            if img.get("size"):
+                cmd += ["--size", img["size"]]
+            try:
+                run(cmd)
+                continue                      # генератор сам позвал художника
+            except subprocess.CalledProcessError as e:
+                log(f"  [картинки] не удалось сгенерить {img['out']}: {e} — пропуск.")
+
+        # ХУДОЖНИК РАБОТАЕТ И БЕЗ КЛЮЧА. Раньше шаг выходил целиком, если
+        # картинка уже лежит или ключа нет, — и объявленный сет не собирался
+        # никогда: растр в репозитории есть, а SVG для движка взять неоткуда.
+        # Обводка ключа не требует, поэтому недостающий сет собираем из того,
+        # что уже на диске.
+        if wrap and dst.exists() and (not wrap.exists() or img.get("force")):
+            cmd = [sys.executable, str(art), str(dst), str(wrap),
+                   "--mode", img.get("wrap_mode", "auto")]
+            if img.get("size"):
+                cmd += ["--size", img["size"]]
+            try:
+                run(cmd)
+            except subprocess.CalledProcessError as e:
+                log(f"  [художник] не смог сделать сет {img['wrap_svg']}: {e}")
+        elif dst.exists():
             log(f"  [картинки] уже есть: {img['out']} — пропуск.")
-            continue
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        cmd = [sys.executable, str(gen), "-o", str(dst), "--prompt", img["prompt"]]
-        if img.get("wrap_svg"):
-            cmd += ["--wrap-svg", str(ROOT / img["wrap_svg"])]
-        if img.get("size"):
-            cmd += ["--size", img["size"]]
-        try:
-            run(cmd)
-        except subprocess.CalledProcessError as e:
-            log(f"  [картинки] не удалось сгенерить {img['out']}: {e} — пропуск.")
 
 
 # ВЕРТИКАЛЬНЫЙ ФОРМАТ — ВТОРОЙ КАДР, А НЕ ОБРЕЗКА. Ролики живут в двух местах:
@@ -707,6 +729,155 @@ def lint_pokoy(prod):
     return [], soft
 
 
+# Мимический УДАР: приём, который целиком держится на лице и длится 2–4 кадра.
+# Вспышка зрачков, оскал, подмиг. Всё остальное лицо (smug, stern, doubt) живёт
+# на плане любой крупности и сюда не входит.
+PUNCH_FACE = re.compile(r"^(flash_|.*wink$|.*grin$)")
+# Крупности, на которых лицо читается. По лестнице DSL.md фигура заполняет кадр
+# на `close-up` на 0.78 высоты — голова при этом порядка 8% кадра, глаз в
+# несколько пикселей. Лицо есть только на `extreme-close-up` (2.01).
+FACE_SHOTS = {"extreme-close-up"}
+
+
+def lint_krupnost_mimiki(prod):
+    """Приёмщик КРУПНОСТИ МИМИКИ: виден ли мимический удар. (hard, soft).
+
+    Дефект, который не ловил никто, потому что все приёмщики смотрели либо в
+    сценарий, либо на монтаж целиком. В сценарии приём ЕСТЬ: `flash_pupils`
+    стоит на месте, длится два кадра, читается в тексте как удар. На экране
+    его НЕТ: план в этот момент общий или средний, голова занимает восьмую
+    часть высоты кадра, и вспышка зрачков — две белые точки.
+
+    Так в каталоге и жили одиннадцать мимических ударов из девятнадцати:
+    нарисованы, поставлены, оплачены рендером — и не видны. Приёмщик режиссуры
+    их не видел (он меряет крупность по ролику в среднем), приёмщик мимики не
+    видел (он следит, чтобы лицо не стирало жест тела).
+
+    Крупность отслеживается по последней команде камеры перед ударом. После
+    `camera zoom-to` кадр сужается на неизвестную величину — там приёмщик
+    молчит, а не гадает: ложное обвинение дороже пропуска.
+    """
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return [], []
+    text = anim_code(anim.read_text(encoding="utf-8"))
+    shot, bad = "wide", []
+    token = re.compile(
+        r'camera\s+(zoom-to|extreme-close-up|close-up|two-shot|over-shoulder|wide|medium|reset)'
+        r'|(?:pose|overlays)\s+"([a-z_0-9]+)"')
+    for m in token.finditer(text):
+        if m.group(1):
+            shot = {"reset": "wide", "zoom-to": "?"}.get(m.group(1), m.group(1))
+        elif m.group(2) and PUNCH_FACE.match(m.group(2)):
+            if shot not in FACE_SHOTS and shot != "?":
+                bad.append(f"{m.group(2)} на плане {shot}")
+    if not bad:
+        return [], []
+    return [], [f"{prod['id']}: мимический удар снят мимо лица — {'; '.join(bad[:4])}"
+                + (" …" if len(bad) > 4 else "")
+                + ". Ставь `camera extreme-close-up` на кадр удара и отпускай "
+                  "сразу после: это удар, а не крупность ролика "
+                  "(HOLLYWOOD.md, «флэш-морда»)"]
+
+
+# Ниже этой длины ролик — измеритель или врезка, и неподвижная камера в нём
+# норма (эталон планки, витрина мимики). Спорить с ними приёмщику незачем.
+CAMERA_MOVE_MIN_SEC = 30.0
+
+
+def lint_kamera(prod):
+    """Приёмщик ДВИЖЕНИЯ КАМЕРЫ: не стоит ли она весь ролик. (hard, soft).
+
+    «Не хватает динамики» почти всегда читают как «мало катов» и лечат частым
+    монтажом. Но у нас каты и так вчетверо чаще оригинала (27 планов в минуту
+    против пяти), а ощущение статики остаётся: ВСЁ движение в ролике — это
+    склейки, а внутри плана не двигается ничего. Кат меняет точку зрения, но
+    внимание зрителя ведёт движение, и его в кадре нет.
+
+    Гейт считает `zoom-to`/`pan-to` — единственные команды DSL, которые двигают
+    камеру внутри плана. Ноль за минуту хронометража это не стиль, а недосмотр:
+    самый статичный ролик каталога набрал ровно ноль.
+
+    Витрины (`montage: false`) и короткие измерители не в счёт: у них
+    неподвижная камера — назначение, а не дефект.
+    """
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists() or prod.get("montage") is False:
+        return [], []
+    text = anim_code(anim.read_text(encoding="utf-8"))
+    secs = sum(float(x) for x in re.findall(r"duration:\s*(\d+)s", text))
+    if secs < CAMERA_MOVE_MIN_SEC:
+        return [], []
+    moves = len(re.findall(r"camera\s+(?:zoom-to|pan-to)", text))
+    if moves:
+        return [], []
+    return [], [f"{prod['id']}: камера не двинулась ни разу за {secs:.0f}с — "
+                f"вся динамика держится на катах. Наезд на ударное слово и "
+                f"отъезд-одиночество на паузе (`camera zoom-to … over`) "
+                f"тянут внимание там, где кат его только переключает "
+                f"(HOLLYWOOD.md, «наезд-удар»)"]
+
+
+def lint_sloj_tela(prod, rig_dir=None):
+    """Приёмщик СЛОЯ: не идёт ли поза ТЕЛА через `overlays`. (hard, soft).
+
+    Зеркальная ошибка к `lint_mimika`, и та её не ловит. Там мимика шла как
+    `pose` и стирала жест; здесь поза тела идёт как `overlays` и кладёт свой
+    корпус с руками ПОВЕРХ чужих ног. Получается гибрид, которого никто не
+    рисовал: в «Истории идей» `myslitel` + `overlays "no"` дал заваленное
+    набок туловище и разъехавшиеся ноги — на экране фигура читалась сидящей,
+    и студия увидела это раньше гейта.
+
+    Soft, а не hard: приём законный. Слой тела осмыслен, когда надо добавить
+    жест, не теряя стойку (`otvraschenie` + `za_golovu` — руки к голове поверх
+    отвращения, силуэт остаётся ровным, проверено рендером). Но результат
+    НИКТО не рисовал, поэтому на него надо посмотреть глазами. Гейт говорит,
+    куда именно смотреть, а не запрещает.
+    """
+    anim = ROOT / prod.get("anim", "")
+    poses = _rig_poses(rig_dir)
+    if not anim.exists() or not poses:
+        return [], []
+    names = re.findall(r'overlays\s+"([a-z_0-9]+)"',
+                       anim_code(anim.read_text(encoding="utf-8")))
+    bad = sorted({n for n in names if n in poses and not is_face_pose(n, poses)})
+    if not bad:
+        return [], []
+    return [], [f"{prod['id']}: поза ТЕЛА идёт слоем — "
+                + ", ".join(f"`overlays \"{n}\"`" for n in bad)
+                + ". Слой кладёт корпус и руки поверх чужих ног: силуэт "
+                  "получается гибридным, и его надо проверить кадром. Нужен "
+                  "жест целиком — пиши `pose`; нужно только лицо — бери "
+                  "лицевую позу (PRAVILA-DVIZHENIYA.md §5)"]
+
+
+def lint_udareniya(prod):
+    """Приёмщик УДАРЕНИЙ: реплика ушла в синтез без разметки. (hard, soft).
+
+    Soft, а не hard: неразмеченная реплика — не дефект сборки, ролик выйдет.
+    Но выйдет с чужим ударением, и услышит это только человек, который откроет
+    готовый mp3, — то есть после раннера, озвучки и заливки в релиз. Дешевле
+    сказать сразу и до рендера.
+
+    Правило разметки — U+0301 сразу после ударной гласной; сам синтез получает
+    текст как есть (`voiceover.py` его не нормализует), поэтому источник правды
+    здесь — VO-файл, а не догадка движка.
+    """
+    vo = prod.get("vo")
+    if not vo or not (ROOT / vo).exists():
+        return [], []
+    try:
+        from script_lint import accent_problems, parse as parse_vo
+    except ImportError:                                      # noqa: BLE001
+        return [], []
+    bad = accent_problems(parse_vo(ROOT / vo))
+    if not bad:
+        return [], []
+    show = ", ".join(f"{n} «{w}» — {why}" for n, w, why in bad[:5])
+    return [], [f"{prod['id']}: {len(bad)} слов(а) без разметки ударения "
+                f"({Path(vo).name}): {show}" + (" …" if len(bad) > 5 else "")]
+
+
 def lint_dlina(prod, final_mp4):
     """Приёмщик ДЛИНЫ: ролик длиннее потолка. (hard, soft)."""
     if not Path(final_mp4).exists() or not have_ffmpeg():
@@ -991,6 +1162,35 @@ def run_planka(prod, engine, render_sec, final_mp4):
     return hard, soft
 
 
+def run_montage(prod, video_mp4, final_mp4):
+    """Приёмщик режиссуры: гонит tools/montage_ref.py на готовом кадре.
+
+    Меряется КАРТИНКА, поэтому годится и немой рендер — если сведённого файла
+    нет, берём его. Все метрики мягкие: приёмщик новый, и ронять им прогон,
+    не подтянув сперва все продакшены, значит повторить историю гейта рук.
+    """
+    # Продакшен может быть не роликом, а витриной (библиотека мимики — один
+    # портретный план по назначению). Гнать по нему монтажные метрики значит
+    # мерить не то и держать вечно красный пункт. Отключается в манифесте
+    # флагом "montage": false с обязательным пояснением в "_montage".
+    if prod.get("montage") is False:
+        return []
+    src = final_mp4 if final_mp4 and Path(final_mp4).exists() else video_mp4
+    if not src or not Path(src).exists():
+        return [f"{prod['id']}: режиссура не измерена (нет видео)"]
+    out_json = ROOT / "videos" / f".{prod['id']}.montage.json"
+    cmd = [sys.executable, str(TOOLS / "montage_ref.py"), str(src),
+           "--gate", "--json", str(out_json)]
+    try:
+        run(cmd)
+        data = json.loads(Path(out_json).read_text(encoding="utf-8"))
+    except (subprocess.CalledProcessError, OSError, ValueError) as e:
+        return [f"{prod['id']}: режиссура не измерена ({e})"]
+    return [f"{prod['id']}: режиссура «{name}» = {g['value']} "
+            f"(цель {g['target']}) — {g['unit']}"
+            for name, g in data.get("metrics", {}).items() if not g.get("pass")]
+
+
 def build_one(prod, engine, videos_dir, voice_expected=False):
     pid = prod["id"]
     log(f"\n=== ПРОДАКШЕН: {pid} — {prod.get('desc', '')}")
@@ -1057,6 +1257,12 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
         hard += ph
         soft += ps
 
+    # Режиссура — на КАЖДОМ продакшене. Планка гоняется только на эталоне и
+    # читает сценарий; этот приёмщик читает готовый кадр, поэтому ловит то,
+    # чего в тексте не видно: сценарий чередует планы, а на экране они одного
+    # размера. Так и жил сплошной сверхкруп в девяти роликах из десяти.
+    soft += run_montage(prod, video_mp4, final_mp4)
+
     for e in hard:
         log(f"  [QC-HARD] {e}")
     for e in soft:
@@ -1066,7 +1272,9 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
 
 def main(argv):
     ap = argparse.ArgumentParser(description="Завод Лектория: ролики со звуком")
-    ap.add_argument("only", nargs="?", help="id одного продакшена (иначе — все)")
+    # nargs="*", а не "?": CI гонит НАБОР затронутых правкой роликов
+    # (tools/affected.py), и это обычно не один id. Пусто — весь манифест.
+    ap.add_argument("only", nargs="*", help="id продакшенов (иначе — все)")
     ap.add_argument("--manifest", default=str(DEFAULT_MANIFEST))
     ap.add_argument("--engine", default=str(DEFAULT_ENGINE))
     ap.add_argument("--videos", default=str(ROOT / "videos"))
@@ -1078,9 +1286,11 @@ def main(argv):
     manifest = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
     prods = manifest["productions"]
     if args.only:
-        prods = [p for p in prods if p["id"] == args.only]
-        if not prods:
-            sys.exit(f"нет продакшена с id={args.only}")
+        want = list(dict.fromkeys(args.only))          # порядок манифеста важен
+        unknown = [i for i in want if not any(p["id"] == i for p in prods)]
+        if unknown:
+            sys.exit(f"нет продакшена с id={', '.join(unknown)}")
+        prods = [p for p in prods if p["id"] in want]
 
     engine = Path(args.engine)
     if not engine.exists():
@@ -1119,12 +1329,24 @@ def main(argv):
         ah, asf = lint_mimika(prod)       # приёмщик мимики (жест не стирается)
         all_hard += ah
         all_soft += asf
+        oh, os_ = lint_sloj_tela(prod)    # приёмщик слоя (тело не идёт слоем)
+        all_hard += oh
+        all_soft += os_
         rh2, rs2 = lint_arms(prod)        # приёмщик забытой руки (по слоям)
         all_hard += rh2
         all_soft += rs2
         ph, ps = lint_pokoy(prod)         # приёмщик покоя кадра
         all_hard += ph
         all_soft += ps
+        uh, us = lint_udareniya(prod)     # приёмщик ударений в VO
+        all_hard += uh
+        all_soft += us
+        kh, ks = lint_krupnost_mimiki(prod)   # приёмщик крупности мимики
+        all_hard += kh
+        all_soft += ks
+        mh, ms = lint_kamera(prod)        # приёмщик движения камеры
+        all_hard += mh
+        all_soft += ms
         rh, rs = lint_propy(prod)         # приёмщик предметов
         all_hard += rh
         all_soft += rs
