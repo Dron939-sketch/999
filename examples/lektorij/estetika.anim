@@ -155,7 +155,7 @@ scene "ryady" (duration: 1s, set: super) {
     //  свою рациональность — станет, и её у него забирают.
     //lip 3
     together {
-        freeman speaks for 3.15s
+        freeman speaks for 2.17s
         do {
             camera medium freeman
             freeman overlays "ostyl"       // «а потом придумали про камеру»
@@ -267,10 +267,10 @@ scene "obrazec" (duration: 1s, set: void) {
     //  это не зритель. Ровно, как читают справку.
     //lip 8
     together {
-        freeman speaks for 4.72s
+        freeman speaks for 3.06s
         do {
             freeman overlays "razvel"      // «и насмотрелись того»
-            wait 2.8s
+            wait 1.81s
             freeman overlays "ugryumo"     // «что вам показывали»
         }
     }
@@ -309,10 +309,10 @@ scene "derevo" (duration: 1s, set: derevo) {
     //  курса, сказанная без слова «эволюция». Ровно, как констатируют.
     //lip 10
     together {
-        freeman speaks for 5.12s
+        freeman speaks for 4.44s
         do {
             freeman overlays "ladoni_vniz" // «вы не поверхностный»
-            wait 2.7s
+            wait 2.34s
             freeman overlays "teplo"       // «так устроен глаз»
         }
     }
@@ -323,11 +323,11 @@ scene "derevo" (duration: 1s, set: derevo) {
     //  оправдание зрителя — «ну такой у меня вкус». Спокойно, с достоинством.
     //lip 11
     together {
-        freeman speaks for 5.52s
+        freeman speaks for 4.99s
         do {
             camera medium freeman
             freeman overlays "stop_ladon"  // «вкус не даётся с рождения»
-            wait 3.4s
+            wait 3.07s
             freeman overlays "point"       // «набрать можно другой»
         }
     }
@@ -386,10 +386,10 @@ scene "tropy" (duration: 1s, set: tropy) {
     //  получится спор, а не смешно.
     //lip 14
     together {
-        freeman speaks for 4.26s
+        freeman speaks for 3.71s
         do {
             freeman overlays "v_upor"
-            wait 2.6s
+            wait 2.26s
             freeman overlays "doshlo"      // «как вы принесёте это домой»
         }
     }
@@ -415,10 +415,10 @@ scene "kurs" (duration: 1s, set: zal) {
     //  помощь.
     //lip 15
     together {
-        freeman speaks for 5.99s
+        freeman speaks for 5.51s
         do {
             freeman overlays "raskryl"     // «курс так и называется: эстетика»
-            wait 4.0s
+            wait 3.68s
             freeman overlays "razmer"      // «почему нам красиво»
         }
     }
@@ -460,11 +460,11 @@ scene "zhalo" (duration: 1s, set: super) {
     //  теперь выбирает красоту за зрителя.
     //lip 17
     together {
-        freeman speaks for 5.56s
+        freeman speaks for 6.09s
         do {
             camera medium freeman
             freeman overlays "palec_vverh" // «найдите одну красивую вещь»
-            wait 3.6s
+            wait 3.94s
             freeman overlays "stop_ladon"  // «не в телефоне»
         }
     }
