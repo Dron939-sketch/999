@@ -208,12 +208,12 @@ scene "detskaya" (duration: 1s, set: detskaya) {
     //  секундой раньше. Поймано вычиткой.
     //lip 5
     together {
-        freeman speaks for 7.18s
+        freeman speaks for 6.45s
         do {
             freeman overlays "razvel"      // «это тараканы»
-            wait 2.35s
+            wait 2.11s
             freeman overlays "raskryl"     // «их поселила мать»
-            wait 2.35s
+            wait 2.11s
             freeman overlays "vniz"        // «чужой дядя, который вас не помнит»
         }
     }
@@ -253,10 +253,10 @@ scene "kto_glavnyj" (duration: 1s, set: void) {
     //  падает на готовое.
     //lip 7
     together {
-        freeman speaks for 3.34s
+        freeman speaks for 3.87s
         do {
             freeman overlays "dve_storony" // «вы с ними договариваетесь»
-            wait 2.09s
+            wait 2.42s
             freeman overlays "otverg"      // «значит, не вы»
         }
     }
@@ -330,10 +330,10 @@ scene "cherta" (duration: 1s, set: porog) {
     //  только в ремарке для озвучки. Поймано вычиткой; теперь он в тексте.
     //lip 10
     together {
-        freeman speaks for 5.07s
+        freeman speaks for 6.03s
         do {
             freeman overlays "ladoni_vniz" // «и вот что страшно»
-            wait 2.64s
+            wait 3.14s
             freeman overlays "vzves"       // «тот просто делает»
         }
     }
@@ -344,11 +344,11 @@ scene "cherta" (duration: 1s, set: porog) {
     //  вторая фраза и есть обещание, и произносится она без нажима.
     //lip 11
     together {
-        freeman speaks for 5.91s
+        freeman speaks for 4.88s
         do {
             camera medium freeman
             freeman overlays "stop_ladon"  // «выселить их нельзя»
-            wait 3.4s
+            wait 2.81s
             freeman overlays "teplo"       // «кто из них ваш, а кто чужой»
         }
     }
@@ -376,10 +376,10 @@ scene "stado" (duration: 1s, set: stado) {
     //  «шум в голове это свобода» останется лозунгом без довода.
     //lip 12
     together {
-        freeman speaks for 4.53s
+        freeman speaks for 6.22s
         do {
             freeman overlays "teplo"       // «ваш шум в голове — это и есть свобода»
-            wait 2.5s
+            wait 3.43s
             freeman overlays "razvel"      // «а в стаде тихо»
         }
     }
@@ -449,7 +449,7 @@ scene "kurs" (duration: 1s, set: zal) {
     //  подвох.
     //lip 16
     together {
-        freeman speaks for 2.00s
+        freeman speaks for 2.74s
         do {
             freeman overlays "razvel"      // «все десять лекций — бесплатно»
         }
@@ -513,15 +513,15 @@ scene "final" (duration: 1s, set: prilavok) {
 
     //lip 19
     together {
-        freeman speaks for 3.47s
+        freeman speaks for 5.09s
         do {
             //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
             //  сбрасывает липсинк и рот прыгает.
             freeman overlays "gladit_grud"
             freeman overlays "teplo"
-            wait 1.71s
+            wait 2.51s
             freeman overlays "gladit_grud_niz"
-            wait 0.95s
+            wait 1.39s
             freeman overlays "palec_vverh" // «Поехали!»
         }
     }
