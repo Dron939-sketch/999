@@ -59,7 +59,7 @@ import character freeman from "../assets/characters/freeman_rig"
 import set ulica from "../assets/sets/parus-ulica-mojka.svg"
 import set void from "../assets/sets/void-black.svg"
 import set ozhidanie from "../assets/sets/parus-zal-ozhidaniya.svg"
-import set kuhnya from "../assets/sets/parus-kuhnya-noch.svg"
+import set dve from "../assets/sets/parus-dve-mojki.svg"
 import set tropy from "../assets/sets/razvilka-trop.svg"
 import set zal from "../assets/sets/lektorij-zal.svg"
 
@@ -86,27 +86,18 @@ config {
     cast-shadow: 0.32
 }
 
-// ============ СЦЕНА 1: УЛИЦА — ХУК И ПРИГОВОР ==============================
-//  ЛОКАЦИЯ ГОВОРИТ РАНЬШЕ СЛОВ: мойка работает, машина внутри, а рядом пустое
-//  помещение с приспущенной шторой. Ответ на вопрос переломa стоит в кадре с
-//  первой секунды, и зритель его не замечает — ровно как в жизни.
-scene "ulica" (duration: 1s, set: ulica) {
-    //  Координаты и масштаб сняты пробным рендером (карта пола: back_y 0.56).
+
+// ============ СЦЕНА 1: ulica ============================================
+scene "s1" (duration: 1s, set: ulica) {
     place freeman at (0.50, 0.96) facing front on floor
     freeman scales 0.86 over 0.01s
 
-    //  МЕТКА КУРСА 13. Масштаб метки идёт ЗА фигурой, а не берётся «как в
-    //  прошлый раз»: в этой локации человек занимает 0.24 кадра против 0.57 в
-    //  кухне, и метка того же размера накрыла бы ему половину балахона.
     let nomer = prop("nomer", "../assets/props/nomer-13.svg") at (0.515, 0.672) layer 9
     nomer scales 0.16 over 0.01s
     nomer hides
-
     camera wide
 
-    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ. Метка
-    //  проявляется через мгновение после стыка и снимается до первого слова:
-    //  на нулевом кадре её быть не может, иначе при зацикливании виден шов.
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ.
     freeman pose "gladit_grud"
     wait 0.02s
     nomer shows
@@ -119,85 +110,68 @@ scene "ulica" (duration: 1s, set: ulica) {
     freeman pose "calm"
     wait 0.1s
 
-    // ── ХУК (VO-1): факт ──────────────────────────────────────────────
-    //  РОВНО И БУДНИЧНО, как читают чужую биографию. Ни сочувствия, ни
-    //  насмешки: обе краски здесь закрывают ролик на первой секунде.
     //lip 1
     together {
         freeman speaks for 1.94s
         do {
-            freeman overlays "odna_v_bok"  // «вы открыли автомойку»
+            freeman overlays "odna_v_bok"
         }
     }
     wait 0.5s
 
-    // ── ХУК-ДОБИВКА (VO-2): три пункта ────────────────────────────────
-    //  КАЖДЫЙ ПУНКТ СТОИЛ ДЕНЕГ, и зритель помнит это лучше рассказчика.
-    //  Перечисляют по пальцам, без оценки.
     //lip 2
     together {
         freeman speaks for 5.06s
         do {
-            freeman overlays "rubit"       // «помещение»
-            wait 1.26s
-            freeman overlays "rubit_l"     // «оборудование»
-            wait 1.26s
-            freeman overlays "lokti"       // «персонал»
+            freeman overlays "rubit"
+            wait 1.55s
+            freeman overlays "rubit_l"
+            wait 1.55s
+            freeman overlays "lokti"
         }
     }
     wait 0.45s
 
-    // ── УДАР (VO-3): полгода ──────────────────────────────────────────
-    //  ПЕРВЫЙ УДАР ГОЛОСОМ. «Смотрят вакансии» — вниз и тяжелее всего: это
-    //  уже необратимо, и зритель это слышит без объяснений.
     //lip 3
     together {
-        freeman speaks for 7.73s
+        freeman speaks for 7.44s
         do {
             camera medium freeman
-            freeman overlays "ostyl"       // «полгода — и платить нечем»
-            wait 2.52s
-            freeman overlays "facepalm"    // «сотрудники смотрят вакансии»
+            freeman overlays "ostyl"
+            wait 3.42s
+            freeman overlays "facepalm"
         }
     }
     camera wide
     wait 0.8s
 
-    // ── ОТРИЦАНИЕ (VO-4): не повезло ──────────────────────────────────
-    //  ЗАКРЫВАЕТ ПЕРВОЕ ОБЪЯСНЕНИЕ, и закрывает фактом, а не спором: мойка
-    //  действительно работает. Устало, почти с сочувствием.
     //lip 4
     together {
         freeman speaks for 4.45s
         do {
-            freeman overlays "otmahnulsya" // «не говорите, что не повезло»
-            wait 2.4s
-            freeman overlays "vdal_l"      // «мойка работает»
+            freeman overlays "otmahnulsya"
+            wait 2.05s
+            freeman overlays "vdal_l"
         }
     }
     wait 0.5s
 
-    // ── ПУЛЕМЁТ (VO-5): приговор ──────────────────────────────────────
-    //  ПРИГОВОР И ВЕСЬ КУРС В ОДНОЙ СТРОКЕ. «Подсмотреть» произносится РОВНО:
-    //  слово и так самое злое в ролике, нажим превратит его в издёвку.
     //lip 5
     together {
         freeman speaks for 3.86s
         do {
             camera medium freeman
-            freeman overlays "v_upor"      // «вы сделали то»
-            wait 1.72s
-            freeman overlays "prishchur"   // «что смогли подсмотреть»
+            freeman overlays "v_upor"
+            wait 1.78s
+            freeman overlays "prishchur"
         }
     }
     camera wide
     wait 0.9s
 }
 
-// ============ СЦЕНА 2: ПУСТОТА — РАЗВОРОТ ==================================
-//  ЧЁРНЫЙ КАДР НА ПЕРЕЛОМЕ. Улица уходит: вопрос задают не мойке, а зрителю.
-//  Фигура у ПЕРЕДНЕГО края пола — иначе карта пола отправляет её к горизонту.
-scene "pustota" (duration: 1s, set: void) {
+// ============ СЦЕНА 2: void ============================================
+scene "s2" (duration: 1s, set: void) {
     transition static 0.2s
 
     place freeman at (0.50, 0.99) facing front on floor
@@ -205,179 +179,75 @@ scene "pustota" (duration: 1s, set: void) {
     camera wide
     freeman pose "calm"
 
-    // ── РАЗВОРОТ (VO-6): чего вы не открыли ───────────────────────────
-    //  ВОПРОС ВВЕРХ И БЕЗ НАЖИМА — приглашение проверить, а не упрёк. Дальше
-    //  пауза: зритель отвечает себе сам, и ответ у него есть.
     //lip 6
     together {
         freeman speaks for 5.34s
         do {
-            freeman overlays "vozzvanie"   // «а теперь скажите»
-            wait 2.4s
-            freeman overlays "manit"       // «что вы напротив не открыли?»
+            freeman overlays "vozzvanie"
+            wait 2.46s
+            freeman overlays "manit"
         }
     }
     wait 0.9s
 }
 
-// ============ СЦЕНА 3: ЗАЛ ОЖИДАНИЯ — УЗНАВАНИЕ ============================
-//  ЧАС НЕЛЬЗЯ НАРИСОВАТЬ — можно нарисовать место, где его теряют. Четыре
-//  стула, часы, мятый журнал, никого. Пустота здесь обязательна: посадишь
-//  кого-то — кадр станет про людей, а он про ВРЕМЯ.
-scene "ozhidanie" (duration: 1s, set: ozhidanie) {
+// ============ СЦЕНА 3: dve ============================================
+scene "s3" (duration: 1s, set: dve) {
     transition static 0.2s
 
-    //  Карта пола: back_y 0.62.
+    place freeman at (0.30, 0.96) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 7
+    together {
+        freeman speaks for 5.09s
+        do {
+            freeman overlays "razvel"
+            wait 2.34s
+            freeman overlays "razmer"
+        }
+    }
+    wait 0.5s
+
+    //lip 8
+    together {
+        freeman speaks for 5.30s
+        do {
+            camera medium freeman
+            freeman overlays "klin"
+            wait 2.44s
+            freeman overlays "vniz"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+// ============ СЦЕНА 4: ozhidanie ============================================
+scene "s4" (duration: 1s, set: ozhidanie) {
+    transition static 0.2s
+
     place freeman at (0.62, 0.95) facing front on floor
     freeman scales 0.90 over 0.01s
     camera wide
     freeman pose "calm"
 
-    // ── УЗНАВАНИЕ (VO-7): парикмахерскую ──────────────────────────────
-    //  ОТВЕТ ОДНИМ СЛОВОМ И СРАЗУ. После него пауза: зритель сверяет со своим
-    //  ответом и обнаруживает, что сам сидел этот час.
-    //lip 7
-    together {
-        freeman speaks for 9.65s
-        do {
-            freeman overlays "razvel"      // «парикмахерскую»
-            wait 3.0s
-            freeman overlays "kozyrek"     // «сидит у вас час»
-        }
-    }
-    wait 0.9s
-
-    // ── УЗНАВАНИЕ-ДОБИВКА (VO-8): час уже отнят ───────────────────────
-    //  ДВА ПРОВЕРЯЕМЫХ ФАКТА ПОДРЯД. Ровно, как читают опись; вторая фраза
-    //  чуть медленнее — в ней вся экономика курса.
-    //lip 8
+    //lip 9
     together {
         freeman speaks for 6.27s
         do {
-            camera medium freeman
-            freeman overlays "klin"        // «этот час уже отнят»
-            wait 2.9s
-            freeman overlays "ladoni_vniz" // «и вам этот час не стоит ничего»
-        }
-    }
-    camera wide
-    wait 0.9s
-}
-
-// ============ СЦЕНА 4: НОЧНАЯ КУХНЯ — ЦЕНА =================================
-//  САМОЙ АБСТРАКТНОЙ РЕПЛИКЕ САМАЯ КОНКРЕТНАЯ КАРТИНКА: исправная дорогая
-//  техника, выключенная на ночь. Работать может — не работает.
-scene "kuhnya" (duration: 1s, set: kuhnya) {
-    transition static 0.2s
-
-    //  Карта пола: back_y 0.70.
-    place freeman at (0.66, 0.95) facing front on floor
-    freeman scales 0.90 over 0.01s
-    camera wide
-    freeman pose "calm"
-
-    // ── ЦЕНА (VO-9): ноль ─────────────────────────────────────────────
-    //  АРИФМЕТИКА ВЛАДЕЛЬЦА, И ОНА НЕ ОБСУЖДАЕТСЯ. Перед «не мало — ноль»
-    //  пауза длиннее самой фразы: ноль должен упасть в тишину.
-    //lip 9
-    together {
-        freeman speaks for 5.12s
-        do {
-            freeman overlays "vzves"       // «ночью чужая плита простаивает»
-            wait 3.4s
-            freeman overlays "vniz"        // «не копейки — ноль»
-        }
-    }
-    wait 0.5s
-
-    // ── ЦЕНА-ДОБИВКА (VO-10): договориться про ноль ───────────────────
-    //  ДЕЛОВОЙ ТОН, БЕЗ ТОРЖЕСТВА. Это не хитрость, а свойство положения, и
-    //  подан он должен быть как справка, а не как секрет.
-    //lip 10
-    together {
-        freeman speaks for 5.32s
-        do {
-            freeman overlays "mahnul_oboimi" // «пустую ночь выпросить легче»
-        }
-    }
-    wait 0.9s
-
-    // ── ВОЗВРАТНЫЙ ВОПРОС (VO-11): сколько таких часов ────────────────
-    //  СЧЁТ ПО СВОЕЙ УЛИЦЕ, и он не риторический. Вверх, почти участливо —
-    //  иначе зритель услышит обвинение и считать не станет.
-    //lip 11
-    together {
-        freeman speaks for 11.58s
-        do {
-            camera medium freeman
-            freeman overlays "vozzvanie"   // «сколько таких пустых часов вокруг вас?»
-        }
-    }
-    camera wide
-    wait 0.9s
-}
-
-// ============ СЦЕНА 5: РАЗВИЛКА — КАЧЕЛИ, ХОД, ВЗЛЁТ =======================
-//  ОТКРЫТОЕ МЕСТО ПОД РЕПЛИКУ ПРО ВЕТЕР. Локация не иллюстрирует свободу — она
-//  показывает, что направление существует и его выбирают ногами.
-scene "tropy" (duration: 1s, set: tropy) {
-    transition static 0.2s
-
-    //  Горизонт низкий (карта: back_y 0.246), масштаб здесь меньше.
-    place freeman at (0.45, 0.92) facing front on floor
-    freeman scales 0.70 over 0.01s
-    camera wide
-    freeman pose "calm"
-
-    // ── КАЧЕЛИ (VO-12): строить вы умеете ─────────────────────────────
-    //  ВОЗВРАТ ДОСТОИНСТВА ДОКАЗАТЕЛЬСТВОМ: мойку он действительно построил.
-    //  Ровно, как признают факт, — не утешая.
-    //lip 12
-    together {
-        freeman speaks for 7.10s
-        do {
-            freeman overlays "teplo"       // «строить вы умеете»
-            wait 2.8s
-            freeman overlays "bow"         // «вы строили против ветра»
-        }
-    }
-    wait 0.9s
-
-    // ── ХОД (VO-13): парус ────────────────────────────────────────────
-    //  ЕДИНСТВЕННОЕ МЕСТО, ГДЕ КУРС ЧТО-ТО ДАЁТ. Метафора подаётся как правило
-    //  судоходства, а не как красота: парус честно не всесилен.
-    //lip 13
-    together {
-        freeman speaks for 4.93s
-        do {
-            camera medium freeman
-            freeman overlays "stop_ladon"  // «парус против ветра не ходит»
-            wait 2.7s
-            freeman overlays "vdal_l"      // «идёт туда, где уже дует»
-        }
-    }
-    camera wide
-    wait 0.9s
-
-    // ── ВЗЛЁТ (VO-14): свобода и стадо ────────────────────────────────
-    //  СОЕДИНЕНИЕ В ОДНОМ ПРЕДЛОЖЕНИИ (GLUBINA-I-SMEH.md §3): «свобода» и
-    //  «стадо» стоят в одной фразе. Уберите стадо — останется спорный лозунг.
-    //lip 14
-    together {
-        freeman speaks for 9.13s
-        do {
-            freeman overlays "raskryl"     // «это не свобода, это стадо»
-            wait 3.92s
-            freeman overlays "otverg"      // «потому что видят мойки»
+            freeman overlays "kozyrek"
+            wait 2.88s
+            freeman overlays "ladoni_vniz"
         }
     }
     wait 0.9s
 }
 
-// ============ СЦЕНА 6: УЛИЦА — ШУТКА =======================================
-//  ВОЗВРАТ К МОЙКЕ РОВНО НА ШУТКУ ПРО ВТОРУЮ: предел не-решения видно в кадре,
-//  и это дешевле любого объяснения.
-scene "shutka" (duration: 1s, set: ulica) {
+// ============ СЦЕНА 5: ulica ============================================
+scene "s5" (duration: 1s, set: ulica) {
     transition static 0.2s
 
     place freeman at (0.50, 0.96) facing front on floor
@@ -385,76 +255,152 @@ scene "shutka" (duration: 1s, set: ulica) {
     camera wide
     freeman pose "calm"
 
-    // ── ШУТКА (VO-15): вторая мойка ───────────────────────────────────
-    //  СМЕЮТСЯ НАД СПОСОБОМ, НЕ НАД ЧЕЛОВЕКОМ. Способ рабочий, у него просто
-    //  есть предел, и предел назовут следующей репликой.
+    //lip 10
+    together {
+        freeman speaks for 5.12s
+        do {
+            freeman overlays "manit"
+            wait 2.36s
+            freeman overlays "vdal_l"
+        }
+    }
+    wait 0.5s
+
+    //lip 11
+    together {
+        freeman speaks for 5.32s
+        do {
+            camera medium freeman
+            freeman overlays "teplo"
+            wait 2.45s
+            freeman overlays "raskryl"
+        }
+    }
+    camera wide
+    wait 0.9s
+
+    //lip 12
+    together {
+        freeman speaks for 11.08s
+        do {
+            freeman overlays "mahnul_oboimi"
+            wait 5.10s
+            freeman overlays "v_upor"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 6: tropy ============================================
+scene "s6" (duration: 1s, set: tropy) {
+    transition static 0.2s
+
+    place freeman at (0.45, 0.92) facing front on floor
+    freeman scales 0.70 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 13
+    together {
+        freeman speaks for 7.10s
+        do {
+            freeman overlays "teplo"
+            wait 3.27s
+            freeman overlays "bow"
+        }
+    }
+    wait 0.9s
+
+    //lip 14
+    together {
+        freeman speaks for 4.53s
+        do {
+            camera medium freeman
+            freeman overlays "stop_ladon"
+            wait 2.08s
+            freeman overlays "vdal_l"
+        }
+    }
+    camera wide
+    wait 0.9s
+
     //lip 15
+    together {
+        freeman speaks for 8.90s
+        do {
+            freeman overlays "raskryl"
+            wait 4.09s
+            freeman overlays "otverg"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 7: ulica ============================================
+scene "s7" (duration: 1s, set: ulica) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.96) facing front on floor
+    freeman scales 0.86 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 16
     together {
         freeman speaks for 5.03s
         do {
-            freeman overlays "otmahnulsya" // «работать больше»
-            wait 2.7s
-            freeman overlays "razmer"      // «открыть вторую мойку»
+            freeman overlays "otmahnulsya"
+            wait 2.31s
+            freeman overlays "razmer"
         }
     }
     wait 0.35s
 
-    // ── ШУТКА-ДОБИВКА (VO-16): предел ─────────────────────────────────
-    //  СПОКОЙНАЯ ДОБИВКА, ВНИЗ, БЕЗ УЛЫБКИ. Вторая аренда — вещь, которую
-    //  зритель держал в руках, и она называет предел точнее любой оценки.
-    //lip 16
+    //lip 17
     together {
         freeman speaks for 2.28s
         do {
             camera medium freeman
-            freeman overlays "doshlo"      // «до второй аренды»
+            freeman overlays "doshlo"
         }
     }
     camera wide
-    //  УХМЫЛКА — ПОСЛЕ РЕПЛИКИ: `smug` трогает рот.
     freeman overlays "smug"
     wait 1.0s
 }
 
-// ============ СЦЕНА 7: ЗАЛ ЛЕКТОРИЯ — КУРС =================================
-scene "zal" (duration: 1s, set: zal) {
+// ============ СЦЕНА 8: zal ============================================
+scene "s8" (duration: 1s, set: zal) {
     transition static 0.2s
 
-    //  Карта пола: back_y 0.62.
     place freeman at (0.32, 0.94) facing front on floor
     freeman scales 1.00 over 0.01s
     camera wide
     freeman pose "calm"
 
-    // ── ПРЕЗЕНТАЦИЯ (VO-17): название ─────────────────────────────────
-    //lip 17
-    together {
-        freeman speaks for 2.45s
-        do {
-            freeman overlays "razvel"      // «курс так и называется: парус»
-        }
-    }
-    wait 0.45s
-
-    // ── ПРЕЗЕНТАЦИЯ (VO-18): цена ─────────────────────────────────────
-    //  РЕПЛИКА САМОДОСТАТОЧНА: числа до неё не звучало, и «все двенадцать»
-    //  без слова «лекций» повисло бы без опоры — на этом уже обжигались.
     //lip 18
     together {
         freeman speaks for 2.45s
         do {
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.45s
+
+    //lip 19
+    together {
+        freeman speaks for 2.45s
+        do {
             camera medium freeman
-            freeman overlays "palec_vverh" // «двенадцать лекций, и всё бесплатно»
+            freeman overlays "palec_vverh"
         }
     }
     camera wide
     wait 0.9s
 }
 
-// ============ СЦЕНА 8: УЛИЦА — ЖАЛО И ПОДПИСЬ ==============================
-//  КОЛЬЦО. Та же улица, что и в первом кадре, но теперь зритель знает, куда на
-//  ней смотреть.
-scene "zhalo" (duration: 1s, set: ulica) {
+// ============ СЦЕНА 9: ulica ============================================
+scene "s9" (duration: 1s, set: ulica) {
     transition static 0.2s
 
     place freeman at (0.50, 0.96) facing front on floor
@@ -463,38 +409,31 @@ scene "zhalo" (duration: 1s, set: ulica) {
     let nomer2 = prop("nomer", "../assets/props/nomer-13.svg") at (0.515, 0.672) layer 9
     nomer2 scales 0.16 over 0.01s
     nomer2 hides
-
     camera wide
     freeman pose "calm"
 
-    // ── ЖАЛО (VO-19): выйдите и найдите ───────────────────────────────
-    //  ДЕЙСТВИЕ ЗАНИМАЕТ ПРОГУЛКУ, а не месяц. Кольцо к VO-7: там ждали в
-    //  зале, здесь ищут такое же место на своей улице.
-    //lip 19
+    //lip 20
     together {
-        freeman speaks for 5.27s
+        freeman speaks for 3.77s
         do {
-            freeman overlays "manit"       // «выйдите на свою улицу»
-            wait 2.5s
-            freeman overlays "kozyrek"     // «найдите место, где люди ждут»
+            freeman overlays "manit"
+            wait 1.73s
+            freeman overlays "kozyrek"
         }
     }
     wait 0.5s
 
-    // ── ЖАЛО-ДОБИВКА (VO-20): финал вопросом ──────────────────────────
-    //  ЗРИТЕЛЬ УХОДИТ НАВЕРХ ПО СТАТУСУ: у него в руках работа, а не приговор.
-    //lip 20
+    //lip 21
     together {
         freeman speaks for 5.81s
         do {
             camera medium freeman
-            freeman overlays "think"       // «кто на этом часе не зарабатывает?»
+            freeman overlays "think"
         }
     }
     camera wide
     wait 1.2s
 
-    // ── ПОДПИСЬ (VO-21): кольцо для ленты ─────────────────────────────
     //  ТОТ ЖЕ КАДР, ЧТО И ПЕРВЫЙ, И ТА ЖЕ МЕТКА.
     freeman pose "gladit_grud"
     wait 0.02s
@@ -502,17 +441,16 @@ scene "zhalo" (duration: 1s, set: ulica) {
     nomer2 scales 0.02 over 0.01s
     nomer2 scales 0.177 over 0.05s ease-out
     nomer2 scales 0.16 over 0.02s
-    //lip 21
+
+    //lip 22
     together {
         freeman speaks for 5.68s
         do {
-            freeman overlays "gladit_grud_niz"  // «лекторий мейстера»
-            wait 2.93s
-            freeman overlays "vozzvanie"        // «поехали!»
+            freeman overlays "gladit_grud_niz"
+            wait 2.61s
+            freeman overlays "vozzvanie"
         }
     }
     nomer2 hides
-    //  ПОДМИГИВАНИЕ — ПОСЛЕ РЕПЛИКИ: `hero_wink` трогает рот.
     freeman overlays "hero_wink"
-    wait 0.6s
 }
