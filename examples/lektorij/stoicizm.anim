@@ -66,7 +66,7 @@ import set probka from "../assets/sets/stoicizm-probka.svg"
 import set void from "../assets/sets/void-black.svg"
 import set vannaya from "../assets/sets/vannaya-zerkalo.svg"
 import set yaschiki from "../assets/sets/stoicizm-dva-yaschika.svg"
-import set pole from "../assets/sets/field-empty.svg"
+import set pole from "../assets/sets/field-day.svg"
 import set zal from "../assets/sets/lektorij-zal.svg"
 
 config {
@@ -97,8 +97,8 @@ config {
 //  Вещь ролика стоит в двух метрах и никуда не едет. Зритель видит это
 //  раньше, чем услышит «ни один из них об этом не узнал».
 scene "s1" (duration: 1s, set: probka) {
-    place freeman at (0.50, 0.95) facing front on floor
-    freeman scales 0.82 over 0.01s
+    place freeman at (0.42, 0.545) facing front on floor
+    freeman scales 0.76 over 0.01s
 
     let nomer = prop("nomer", "../assets/props/nomer-14.svg") at (0.515, 0.665) layer 9
     nomer scales 0.16 over 0.01s
@@ -187,8 +187,8 @@ scene "s1" (duration: 1s, set: probka) {
 scene "s2" (duration: 1s, set: void) {
     transition static 0.2s
 
-    place freeman at (0.50, 0.99) facing front on floor
-    freeman scales 1.05 over 0.01s
+    place freeman at (0.50, 0.46) facing front
+    freeman scales 2.00 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -225,8 +225,8 @@ scene "s2" (duration: 1s, set: void) {
 scene "s3" (duration: 1s, set: probka) {
     transition static 0.2s
 
-    place freeman at (0.50, 0.95) facing front on floor
-    freeman scales 0.82 over 0.01s
+    place freeman at (0.42, 0.545) facing front on floor
+    freeman scales 0.76 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -251,8 +251,8 @@ scene "s3" (duration: 1s, set: probka) {
 scene "s4" (duration: 1s, set: vannaya) {
     transition static 0.2s
 
-    place freeman at (0.50, 0.92) facing front on floor
-    freeman scales 0.72 over 0.01s
+    place freeman at (0.34, 0.94) facing front on floor
+    freeman scales 1.45 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -305,8 +305,8 @@ scene "s4" (duration: 1s, set: vannaya) {
 scene "s5" (duration: 1s, set: yaschiki) {
     transition static 0.2s
 
-    place freeman at (0.50, 0.94) facing front on floor
-    freeman scales 0.78 over 0.01s
+    place freeman at (0.24, 0.83) facing front on floor
+    freeman scales 1.23 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -367,8 +367,8 @@ scene "s5" (duration: 1s, set: yaschiki) {
 scene "s6" (duration: 1s, set: pole) {
     transition static 0.2s
 
-    place freeman at (0.50, 0.88) facing front on floor
-    freeman scales 0.80 over 0.01s
+    place freeman at (0.50, 0.80) facing front on floor
+    freeman scales 1.15 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -396,8 +396,8 @@ scene "s6" (duration: 1s, set: pole) {
 scene "s7" (duration: 1s, set: probka) {
     transition static 0.2s
 
-    place freeman at (0.50, 0.95) facing front on floor
-    freeman scales 0.82 over 0.01s
+    place freeman at (0.42, 0.545) facing front on floor
+    freeman scales 0.76 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -468,8 +468,8 @@ scene "s8" (duration: 1s, set: zal) {
 scene "s9" (duration: 1s, set: probka) {
     transition static 0.2s
 
-    place freeman at (0.50, 0.95) facing front on floor
-    freeman scales 0.82 over 0.01s
+    place freeman at (0.42, 0.545) facing front on floor
+    freeman scales 0.76 over 0.01s
 
     let nomer2 = prop("nomer", "../assets/props/nomer-14.svg") at (0.515, 0.665) layer 9
     nomer2 scales 0.16 over 0.01s
