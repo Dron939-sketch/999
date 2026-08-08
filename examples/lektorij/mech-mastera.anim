@@ -1,0 +1,657 @@
+// =============================================================================
+//  «МЕЧ МАСТЕРА» — сказка с озвучкой.  VO — mech-mastera-VO.md, маркеры 1..42.
+//
+//  ФОРМАТ ДРУГОЙ. Это не ролик серии, а озвученная сказка: 6 минут 01 секунда,
+//  сорок две реплики, семь локаций. Структуры монолога — хука на третьей
+//  секунде, перелома на двадцать первой, шутки, жала — здесь нет и быть не
+//  должно. `tools/script_lint.py` на этом сценарии осмысленного вердикта не
+//  даёт: он проверяет партитуру монолога.
+//
+//  ТЕКСТ СТУДИИ, МЕНЯТЬ НЕЛЬЗЯ. Реплики нарезаны дословно.
+//
+//  1. ПЕРСОНАЖ И РАССКАЗЫВАЕТ, И ПРИСУТСТВУЕТ. Он не играет юношу и не играет
+//     мастеров — он стоит в местах сказки и говорит. Локации это МЕСТА, а не
+//     иллюстрации к репликам.
+//
+//  2. ОТВЕТ МАСТЕРА («этот меч тебе не подойдёт») звучит ЧЕТЫРЕ РАЗА и все
+//     четыре идут с ОДНИМ И ТЕМ ЖЕ слоем `teplo`. Ни разу не многозначительно.
+//     Смысл меняется не подачей, а тем, кто фразу произносит: первые три раза
+//     старики, четвёртый — сам герой. Сыграешь последний «со значением» —
+//     сказка станет нравоучением.
+//
+//  3. РАЗНООБРАЗИЕ ДВИЖЕНИЙ — ГЛАВНАЯ ЗАДАЧА ШЕСТИ МИНУТ. Пул на сорок слоёв,
+//     ни один не повторяется в окне из восьми реплик. Больше половины — из тех
+//     ста двух поз, что не использовались в серии ни разу: `chelo`, `k_sebe_r`,
+//     `zatylok_l`, `yorik`, `povorot_levo`, `ruka_vverh_r`, `think_r`,
+//     `vzves_r`, `wave_r` и зеркальные варианты. В двухминутном интро хватает
+//     пятнадцати движений, здесь их нужно втрое больше: повтор жеста на третьей
+//     минуте виден невооружённым глазом.
+//
+//  4. ЧЁРНЫЙ КАДР РОВНО ОДИН (VO-38) — «ведь он-то знал, что у него так и не
+//     было настоящего Меча Мастера». Признание не должно ни на что опираться.
+//
+//  5. МАСШТАБ ФИГУРЫ снят пробным рендером по каждой локации (реестр §XXVII).
+//     В доме, кузнице и на поле с первого раза фигура вышла ребёнком: стол
+//     приходился ей по грудь вместо колена. Поправлено.
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ. Завод перепишет их по факту озвучки.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set gory from "../assets/sets/skazka-gory.svg"
+import set doroga from "../assets/sets/skazka-doroga.svg"
+import set dom from "../assets/sets/skazka-dom.svg"
+import set vorota from "../assets/sets/skazka-vorota.svg"
+import set kuznica from "../assets/sets/skazka-kuznica.svg"
+import set pole from "../assets/sets/skazka-pole.svg"
+import set void from "../assets/sets/void-black.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+// ============ СЦЕНА 1: gory ==========================================
+scene "s1" (duration: 1s, set: gory) {
+    place freeman at (0.30, 0.95) facing front on floor
+    freeman scales 0.80 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 1
+    together {
+        freeman speaks for 6.59s
+        do {
+            freeman overlays "vozzvanie"
+            wait 3.43s
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.55s
+
+    //lip 2
+    together {
+        freeman speaks for 7.15s
+        do {
+            freeman overlays "rubit"
+            wait 3.72s
+            freeman overlays "kozyrek"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 2: doroga ==========================================
+scene "s2" (duration: 1s, set: doroga) {
+    transition static 0.2s
+    place freeman at (0.28, 0.95) facing front on floor
+    freeman scales 0.80 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 3
+    together {
+        freeman speaks for 7.15s
+        do {
+            freeman overlays "lokti"
+            wait 3.72s
+            freeman overlays "manit"
+        }
+    }
+    wait 0.55s
+
+    //lip 4
+    together {
+        freeman speaks for 4.13s
+        do {
+            freeman overlays "odna_v_bok"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 3: dom ==========================================
+scene "s3" (duration: 1s, set: dom) {
+    transition static 0.2s
+    place freeman at (0.72, 0.98) facing front on floor
+    freeman scales 1.45 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 5
+    together {
+        freeman speaks for 11.27s
+        do {
+            freeman overlays "vdal_l"
+            wait 5.86s
+            freeman overlays "chelo"
+        }
+    }
+    wait 0.55s
+
+    //lip 6
+    together {
+        freeman speaks for 11.28s
+        do {
+            freeman overlays "k_sebe_r"
+            wait 5.87s
+            freeman overlays "ruka_vverh_r"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 4: doroga ==========================================
+scene "s4" (duration: 1s, set: doroga) {
+    transition static 0.2s
+    place freeman at (0.28, 0.95) facing front on floor
+    freeman scales 0.80 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 7
+    together {
+        freeman speaks for 6.21s
+        do {
+            freeman overlays "zatylok_l"
+            wait 3.23s
+            freeman overlays "think_r"
+        }
+    }
+    wait 0.55s
+
+    //lip 8
+    together {
+        freeman speaks for 9.06s
+        do {
+            freeman overlays "vzves_r"
+            wait 4.71s
+            freeman overlays "wave_r"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 5: vorota ==========================================
+scene "s5" (duration: 1s, set: vorota) {
+    transition static 0.2s
+    place freeman at (0.25, 0.96) facing front on floor
+    freeman scales 0.85 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 9
+    together {
+        freeman speaks for 1.88s
+        do {
+            freeman overlays "dve_storony_l"
+        }
+    }
+    wait 0.55s
+
+    //lip 10
+    together {
+        freeman speaks for 10.76s
+        do {
+            freeman overlays "manit_l"
+            wait 5.60s
+            freeman overlays "palec_vverh_l"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 6: dom ==========================================
+scene "s6" (duration: 1s, set: dom) {
+    transition static 0.2s
+    place freeman at (0.72, 0.98) facing front on floor
+    freeman scales 1.45 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 11
+    together {
+        freeman speaks for 3.00s
+        do {
+            freeman overlays "vniz_l"
+        }
+    }
+    wait 0.55s
+
+    //lip 12
+    together {
+        freeman speaks for 22.36s
+        do {
+            freeman overlays "stop_ladon_l"
+            wait 11.63s
+            freeman overlays "otmahnulsya_r"
+        }
+    }
+    wait 0.55s
+
+    //lip 13
+    together {
+        freeman speaks for 4.33s
+        do {
+            freeman overlays "povorot_levo"
+        }
+    }
+    wait 0.55s
+
+    //lip 14
+    together {
+        freeman speaks for 4.73s
+        do {
+            //  ОТВЕТ МАСТЕРА: один и тот же слой все четыре раза.
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 7: doroga ==========================================
+scene "s7" (duration: 1s, set: doroga) {
+    transition static 0.2s
+    place freeman at (0.28, 0.95) facing front on floor
+    freeman scales 0.80 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 15
+    together {
+        freeman speaks for 3.94s
+        do {
+            freeman overlays "yorik"
+        }
+    }
+    wait 0.55s
+
+    //lip 16
+    together {
+        freeman speaks for 7.36s
+        do {
+            freeman overlays "ostyl"
+            wait 3.83s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 8: vorota ==========================================
+scene "s8" (duration: 1s, set: vorota) {
+    transition static 0.2s
+    place freeman at (0.25, 0.96) facing front on floor
+    freeman scales 0.85 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 17
+    together {
+        freeman speaks for 7.16s
+        do {
+            freeman overlays "v_upor"
+            wait 3.72s
+            freeman overlays "klin"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 9: dom ==========================================
+scene "s9" (duration: 1s, set: dom) {
+    transition static 0.2s
+    place freeman at (0.72, 0.98) facing front on floor
+    freeman scales 1.45 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 18
+    together {
+        freeman speaks for 26.54s
+        do {
+            freeman overlays "doshlo"
+            wait 13.80s
+            freeman overlays "raskryl"
+        }
+    }
+    wait 0.55s
+
+    //lip 19
+    together {
+        freeman speaks for 4.90s
+        do {
+            freeman overlays "ladoni_vniz"
+        }
+    }
+    wait 0.55s
+
+    //lip 20
+    together {
+        freeman speaks for 4.73s
+        do {
+            //  ОТВЕТ МАСТЕРА: один и тот же слой все четыре раза.
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 10: doroga ==========================================
+scene "s10" (duration: 1s, set: doroga) {
+    transition static 0.2s
+    place freeman at (0.28, 0.95) facing front on floor
+    freeman scales 0.80 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 21
+    together {
+        freeman speaks for 5.65s
+        do {
+            freeman overlays "ugryumo"
+            wait 2.94s
+            freeman overlays "razmer"
+        }
+    }
+    wait 0.55s
+
+    //lip 22
+    together {
+        freeman speaks for 5.46s
+        do {
+            freeman overlays "otverg"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 11: dom ==========================================
+scene "s11" (duration: 1s, set: dom) {
+    transition static 0.2s
+    place freeman at (0.72, 0.98) facing front on floor
+    freeman scales 1.45 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 23
+    together {
+        freeman speaks for 9.66s
+        do {
+            freeman overlays "bow"
+            wait 5.02s
+            freeman overlays "think"
+        }
+    }
+    wait 0.55s
+
+    //lip 24
+    together {
+        freeman speaks for 4.53s
+        do {
+            //  ОТВЕТ МАСТЕРА: один и тот же слой все четыре раза.
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 12: doroga ==========================================
+scene "s12" (duration: 1s, set: doroga) {
+    transition static 0.2s
+    place freeman at (0.28, 0.95) facing front on floor
+    freeman scales 0.80 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 25
+    together {
+        freeman speaks for 5.46s
+        do {
+            freeman overlays "facepalm"
+        }
+    }
+    wait 0.55s
+
+    //lip 26
+    together {
+        freeman speaks for 6.42s
+        do {
+            freeman overlays "mahnul_oboimi"
+            wait 3.34s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.55s
+
+    //lip 27
+    together {
+        freeman speaks for 3.21s
+        do {
+            freeman overlays "rubit_l"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 13: kuznica ==========================================
+scene "s13" (duration: 1s, set: kuznica) {
+    transition static 0.2s
+    place freeman at (0.80, 0.98) facing front on floor
+    freeman scales 1.30 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 28
+    together {
+        freeman speaks for 6.97s
+        do {
+            freeman overlays "vzves"
+            wait 3.62s
+            freeman overlays "vozzvanie"
+        }
+    }
+    wait 0.55s
+
+    //lip 29
+    together {
+        freeman speaks for 5.72s
+        do {
+            freeman overlays "razvel"
+            wait 2.97s
+            freeman overlays "rubit"
+        }
+    }
+    wait 0.55s
+
+    //lip 30
+    together {
+        freeman speaks for 9.41s
+        do {
+            freeman overlays "kozyrek"
+            wait 4.89s
+            freeman overlays "lokti"
+        }
+    }
+    wait 0.55s
+
+    //lip 31
+    together {
+        freeman speaks for 8.49s
+        do {
+            freeman overlays "manit"
+            wait 4.41s
+            freeman overlays "odna_v_bok"
+        }
+    }
+    wait 0.55s
+
+    //lip 32
+    together {
+        freeman speaks for 7.71s
+        do {
+            freeman overlays "vdal_l"
+            wait 4.01s
+            freeman overlays "chelo"
+        }
+    }
+    wait 0.55s
+
+    //lip 33
+    together {
+        freeman speaks for 7.09s
+        do {
+            freeman overlays "k_sebe_r"
+            wait 3.69s
+            freeman overlays "ruka_vverh_r"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 14: pole ==========================================
+scene "s14" (duration: 1s, set: pole) {
+    transition static 0.2s
+    place freeman at (0.32, 0.98) facing front on floor
+    freeman scales 1.15 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 34
+    together {
+        freeman speaks for 3.15s
+        do {
+            freeman overlays "zatylok_l"
+        }
+    }
+    wait 0.55s
+
+    //lip 35
+    together {
+        freeman speaks for 11.31s
+        do {
+            freeman overlays "think_r"
+            wait 5.88s
+            freeman overlays "vzves_r"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 15: dom ==========================================
+scene "s15" (duration: 1s, set: dom) {
+    transition static 0.2s
+    place freeman at (0.72, 0.98) facing front on floor
+    freeman scales 1.45 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 36
+    together {
+        freeman speaks for 12.22s
+        do {
+            freeman overlays "wave_r"
+            wait 6.35s
+            freeman overlays "dve_storony_l"
+        }
+    }
+    wait 0.55s
+
+    //lip 37
+    together {
+        freeman speaks for 10.38s
+        do {
+            freeman overlays "manit_l"
+            wait 5.40s
+            freeman overlays "palec_vverh_l"
+        }
+    }
+    wait 0.55s
+}
+
+// ============ СЦЕНА 16: void ==========================================
+scene "s16" (duration: 1s, set: void) {
+    transition static 0.2s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 1.05 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 38
+    together {
+        freeman speaks for 6.29s
+        do {
+            freeman overlays "vniz_l"
+            wait 3.27s
+            freeman overlays "stop_ladon_l"
+        }
+    }
+    wait 1.2s
+}
+
+// ============ СЦЕНА 17: dom ==========================================
+scene "s17" (duration: 1s, set: dom) {
+    transition static 0.2s
+    place freeman at (0.72, 0.98) facing front on floor
+    freeman scales 1.45 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 39
+    together {
+        freeman speaks for 4.90s
+        do {
+            freeman overlays "otmahnulsya_r"
+        }
+    }
+    wait 0.55s
+
+    //lip 40
+    together {
+        freeman speaks for 26.93s
+        do {
+            freeman overlays "povorot_levo"
+            wait 14.00s
+            freeman overlays "yorik"
+        }
+    }
+    wait 0.55s
+
+    //lip 41
+    together {
+        freeman speaks for 5.33s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.55s
+
+    //lip 42
+    together {
+        freeman speaks for 4.73s
+        do {
+            //  ОТВЕТ МАСТЕРА: один и тот же слой все четыре раза.
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.9s
+}
+
