@@ -1,0 +1,137 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+pered_renderom.py — ОДНА КОМАНДА ВМЕСТО СПИСКА В ГОЛОВЕ.
+
+Указание студии звучит коротко: «перед рендером проверь всё ещё раз». Гейтов
+к этому моменту десять, они в разных файлах, с разными ключами и разной
+громкостью вывода. Держать их перечень в памяти — это ровно тот способ, каким
+дефекты и просачиваются: забыть один гейт легче, чем написать плохой сценарий.
+
+Инструмент не проверяет ничего сам. Он знает, ЧТО надо прогнать, гоняет всё
+подряд даже после первого провала — чтобы за один заход увидеть весь список, а
+не чинить по одному, — и печатает сводку одной таблицей.
+
+ПОЧЕМУ НЕ studio.py. Тот собирает ролики: ставит ffmpeg, синтезирует голос,
+рендерит. Это минуты и внешние ключи. Здесь — секунды и ни одного обращения
+наружу: всё, что можно узнать до рендера, узнаётся до рендера.
+
+ДВА ГЕЙТА ДОРОГИЕ. Осанка и разворот РЕНДЕРЯТ фигуру на стенде — это десятки
+запусков движка, секунд по пять каждый. На одном ролике терпимо, на всём
+каталоге прогон уходит за пять минут и в CI не помещается. `--bystro`
+пропускает оба: остальные восемь считаются мгновенно и ловят большую часть.
+Перед отправкой конкретного ролика гоняем полный набор, по каталогу — быстрый.
+
+Использование:
+    python3 tools/pered_renderom.py privyazannost
+    python3 tools/pered_renderom.py --all --bystro
+"""
+
+import argparse
+import glob
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+PY = sys.executable
+
+# (заголовок, аргументы, нужен ли файл сценария вместо раскадровки)
+#
+# Порядок — от дешёвого к дорогому: сценарий и структура считаются мгновенно,
+# осанка рендерит каждую позу на стенде и занимает десятки секунд. Если валится
+# текст, до стенда дело обычно не доходит — но гоняем всё равно всё.
+GATES = [
+    ("сценарий: биты, ритм, ударения", ["tools/script_lint.py"], True),
+    ("раскадровка: синтаксис и наложения", None, False),   # animdsl check
+    ("номера реплик и маркеров", ["tools/sverka.py"], False),
+    ("речь: рот принадлежит липсинку", ["tools/speech_lint.py"], False),
+    ("тишина: дыры между репликами", ["tools/pauses.py"], False),
+    ("ходьба: проход закрыт полной позой", ["tools/walk.py", "--check"], False),
+    ("осанка: фигура не приседает", ["tools/posture.py"], False),
+    ("реквизит: вещь объявлена именем", ["tools/rekvizit.py"], None),
+    # КОНТАКТНЫЙ ЛИСТ МИЗАНСЦЕН — не гейт, а глаза. Машина не скажет, срезала ли
+    # столешница фигуру по грудь и туда ли показывает палец: это видно и только
+    # видно. Из переделок, стоивших полного прогона завода, больше половины были
+    # именно такими. Лист собирается за полминуты и кладётся рядом с .anim —
+    # посмотреть его перед пушем стоит дешевле, чем одна пересборка.
+    ("мизансцены: контактный лист (смотреть глазами)", ["tools/mizanscena.py"], False),
+    ("разворот: профиль не врёт", ["tools/turnaround.py"], None),
+]
+
+# Гейты, которые гоняют движок на стенде: дорогие, пропускаются по --bystro.
+DOROGIE = {"осанка: фигура не приседает", "разворот: профиль не врёт"}
+
+
+def run(cmd):
+    r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
+    return r.returncode, (r.stdout + r.stderr)
+
+
+def gates_for(anim, bystro=False):
+    """Прогон всех гейтов по одному ролику. Возвращает [(имя, ок, вывод)]."""
+    vo = anim.with_name(anim.stem + "-VO.md")
+    out = []
+    for title, args, needs_vo in GATES:
+        if bystro and title in DOROGIE:
+            continue
+        if args is None:
+            code, txt = run([str(ROOT / "target/release/animdsl"), "check", str(anim)])
+        elif needs_vo is None:                      # гейт по ригу, файл не нужен
+            code, txt = run([PY, *args])
+        else:
+            target = vo if needs_vo else anim
+            if needs_vo and not target.exists():
+                continue
+            code, txt = run([PY, *args, str(target)])
+        out.append((title, code == 0, txt.strip()))
+    return out
+
+
+def main(argv):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("ids", nargs="*", help="имена роликов без расширения")
+    ap.add_argument("--all", action="store_true")
+    ap.add_argument("--bystro", action="store_true",
+                    help="пропустить гейты, рендерящие фигуру на стенде")
+    ap.add_argument("-v", "--verbose", action="store_true",
+                    help="печатать вывод гейтов целиком, а не только вердикт")
+    a = ap.parse_args(argv)
+
+    if a.all:
+        anims = [Path(p) for p in sorted(glob.glob(str(ROOT / "examples/**/*.anim"),
+                                                   recursive=True))]
+    else:
+        anims = []
+        for i in a.ids:
+            hit = glob.glob(str(ROOT / f"examples/**/{i}.anim"), recursive=True)
+            if not hit:
+                sys.exit(f"не нашёл раскадровку «{i}.anim»")
+            anims.append(Path(hit[0]))
+    if not anims:
+        sys.exit("нечего проверять: укажи ролик или --all")
+
+    bad_total = 0
+    for anim in anims:
+        print(f"\n╔══ {anim.stem}")
+        for title, ok, txt in gates_for(anim, a.bystro):
+            print(f"║  {'✓' if ok else '✗'} {title}")
+            if not ok:
+                bad_total += 1
+                tail = [l for l in txt.splitlines() if l.strip()][-6:]
+                for l in tail:
+                    print(f"║      {l.strip()}")
+            elif a.verbose:
+                for l in txt.splitlines():
+                    print(f"║      {l}")
+        print("╚══")
+
+    if bad_total:
+        print(f"\n  ПРОВАЛОВ: {bad_total}. На завод не отправлять.\n")
+        return 1
+    print("\n  Всё чисто. Можно ставить маркер [only: <id>] и пушить.\n")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

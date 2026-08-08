@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 440 380" width="440" height="380">
+  <defs>
+    <filter id="ink" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="1" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- Геометрия руки одна на оба слоя: контур и заливка обязаны совпадать. -->
+    <g id="kist">
+      <path d="M0 340 L110 340 Q150 290 180 250 L120 200 Q60 270 0 340 Z"/>
+      <ellipse cx="185" cy="205" rx="85" ry="72" transform="rotate(-28 185 205)"/>
+      <path d="M120 235 Q100 210 118 190 L150 215 Z"/>
+      <circle cx="235" cy="255" r="26"/>
+      <circle cx="200" cy="272" r="24"/>
+      <circle cx="163" cy="277" r="22"/>
+      <path d="M212 170 Q235 120 268 88 L332 132 Q300 170 262 206 Q232 195 212 170 Z"/>
+      <circle cx="305" cy="105" r="58"/>
+    </g>
+  </defs>
+  <!-- РУКА-В-КАМЕРУ, БЕЛАЯ ТУШЬ — для ПУСТОТЫ (`void-black.svg`). Чёрная
+       `hand-point.svg` там пропадает начисто, чёрное по чёрному.
+       ПОЧЕМУ ДВА СЛОЯ. Просто белая рука тоже не годится: она наезжает на
+       белую маску и сливается с ней в одно пятно — палец перестаёт читаться
+       ровно в тот момент, когда он нажимает. Поэтому снизу лежит тёмный
+       силуэт, раздутый обводкой на 7px, сверху — белая заливка. Получается
+       рисованный контур без внутренних швов: границы кругов-костяшек прячутся
+       под верхним слоем. Оба слоя берут одну геометрию из <defs>. -->
+  <g filter="url(#ink)">
+    <use href="#kist" fill="#14140f" stroke="#14140f" stroke-width="14" stroke-linejoin="round"/>
+    <use href="#kist" fill="#f2f2ec"/>
+    <ellipse cx="318" cy="92" rx="20" ry="14" fill="#b9b9b1" transform="rotate(-30 318 92)"/>
+  </g>
+</svg>

@@ -134,7 +134,7 @@ scene "linza" (duration: 61s, set: pole) {
             ochki hides
             wait 0.15s
             freeman overlays "smug_ochki"
-            freeman pose "open_ochki"     // «дорогие мои» — раскрыл руки
+            freeman overlays "open_ochki"     // «дорогие мои» — раскрыл руки
             wait 0.6s
             camera medium freeman
         }
@@ -262,7 +262,7 @@ scene "linza" (duration: 61s, set: pole) {
             // пропа кадр оставался без очков вовсе.
             ochki moves-to (0.5022, 0.5068) over 0.01s
             ochki shows
-            freeman pose "raskryl"
+            freeman overlays "raskryl"
             together {
                 ochki moves-to (0.16, 1.25) over 0.45s ease-in
                 ochki rotates -140 over 0.45s
@@ -292,16 +292,16 @@ scene "linza" (duration: 61s, set: pole) {
         do {
             camera medium freeman
             wait 2.6s
-            freeman pose "point"           // «двадцать линз» — тычет
+            freeman overlays "point"           // «двадцать линз» — тычет
             camera close-up freeman
             wait 2.4s
-            freeman pose "open"            // раскрыл ладони
+            freeman overlays "open"            // раскрыл ладони
             camera wide
             wait 2.4s
-            freeman pose "hips"            // руки в боки
+            freeman overlays "hips"            // руки в боки
             camera medium freeman
             wait 2.6s
-            freeman pose "v_upor"          // ладонь в камеру на жале
+            freeman overlays "v_upor"          // ладонь в камеру на жале
             camera close-up freeman
         }
     }

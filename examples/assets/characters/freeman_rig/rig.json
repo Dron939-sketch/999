@@ -412,13 +412,6 @@
         },
         "forearm_right": {
           "rotation": 13
-        },
-        "mouth": {
-          "part": "mouth_smile",
-          "scale": [
-            1.25,
-            1.25
-          ]
         }
       }
     },
@@ -471,9 +464,58 @@
         },
         "eye_left": {
           "part": "eye_squint"
+        }
+      }
+    },
+    "confident_cilindr": {
+      "name": "confident_cilindr",
+      "transition_duration": 0.35,
+      "bones": {
+        "torso": {
+          "rotation": 7
         },
-        "mouth": {
-          "part": "mouth_teeth"
+        "head": {
+          "offset": [
+            -8,
+            48
+          ],
+          "rotation": -16
+        },
+        "upper_arm_left": {
+          "rotation": 132,
+          "z_order": 8
+        },
+        "forearm_left": {
+          "rotation": 30,
+          "z_order": 8
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 9
+        },
+        "upper_arm_right": {
+          "rotation": -16
+        },
+        "forearm_right": {
+          "rotation": -6
+        },
+        "hand_right": {
+          "part": "hand_fist_r"
+        },
+        "thigh_left": {
+          "rotation": 6
+        },
+        "shin_left": {
+          "rotation": -4
+        },
+        "thigh_right": {
+          "rotation": -14
+        },
+        "shin_right": {
+          "rotation": 20
+        },
+        "eye_left": {
+          "part": "eye_squint"
         },
         "hat": {
           "part": "hat",
@@ -505,13 +547,6 @@
         },
         "forearm_right": {
           "rotation": 13
-        },
-        "mouth": {
-          "part": "mouth_smile",
-          "scale": [
-            1.15,
-            1.15
-          ]
         }
       }
     },
@@ -630,9 +665,6 @@
         "head": {
           "rotation": -6
         },
-        "mouth": {
-          "part": "mouth_closed"
-        },
         "upper_arm_left": {
           "rotation": 55,
           "z_order": 7
@@ -683,9 +715,6 @@
         },
         "hand_right": {
           "part": "hand_offer_r"
-        },
-        "mouth": {
-          "part": "mouth_frown"
         }
       }
     },
@@ -746,9 +775,6 @@
         },
         "eye_right": {
           "part": "eye_angry_right"
-        },
-        "mouth": {
-          "part": "mouth_m"
         }
       }
     },
@@ -756,9 +782,6 @@
       "name": "hips",
       "transition_duration": 0.4,
       "bones": {
-        "mouth": {
-          "part": "mouth_m"
-        },
         "upper_arm_left": {
           "rotation": 84,
           "z_order": 4
@@ -789,9 +812,6 @@
       "bones": {
         "head": {
           "rotation": 14
-        },
-        "mouth": {
-          "part": "mouth_closed"
         },
         "upper_arm_left": {
           "rotation": -150
@@ -900,9 +920,6 @@
         },
         "eye_right": {
           "part": "eye_angry_right"
-        },
-        "mouth": {
-          "part": "mouth_teeth"
         }
       }
     },
@@ -950,9 +967,6 @@
         "head": {
           "rotation": 3
         },
-        "mouth": {
-          "part": "mouth_wide"
-        },
         "hand_left": {
           "part": "hand_open"
         }
@@ -981,9 +995,6 @@
         "head": {
           "rotation": -2
         },
-        "mouth": {
-          "part": "mouth_m"
-        },
         "hand_left": {
           "part": "hand_open"
         },
@@ -1006,9 +1017,6 @@
         },
         "head": {
           "rotation": -9
-        },
-        "mouth": {
-          "part": "mouth_frown"
         },
         "hand_left": {
           "part": "hand_open"
@@ -1049,9 +1057,6 @@
             1.15
           ]
         },
-        "mouth": {
-          "part": "mouth_wide"
-        },
         "head": {
           "rotation": 2
         },
@@ -1081,9 +1086,6 @@
             0.689,
             0.18
           ]
-        },
-        "mouth": {
-          "part": "mouth_teeth"
         },
         "upper_arm_left": {
           "rotation": 30
@@ -1116,9 +1118,6 @@
         "head": {
           "rotation": 1
         },
-        "mouth": {
-          "part": "mouth_o"
-        },
         "hand_left": {
           "part": "hand_offer"
         },
@@ -1142,9 +1141,6 @@
         },
         "upper_arm_right": {
           "rotation": -20
-        },
-        "mouth": {
-          "part": "mouth_closed"
         }
       }
     },
@@ -1355,9 +1351,6 @@
         },
         "hand_right": {
           "part": "hand_relax_r"
-        },
-        "mouth": {
-          "part": "mouth_closed"
         }
       }
     },
@@ -1590,9 +1583,6 @@
         },
         "eye_right": {
           "part": "eye_arc"
-        },
-        "mouth": {
-          "part": "mouth_wide"
         }
       }
     },
@@ -1619,9 +1609,6 @@
         },
         "eye_left": {
           "part": "eye_squint"
-        },
-        "mouth": {
-          "part": "mouth_m"
         }
       }
     },
@@ -1647,9 +1634,6 @@
         },
         "forearm_right": {
           "rotation": 70
-        },
-        "mouth": {
-          "part": "mouth_frown"
         }
       }
     },
@@ -1683,9 +1667,6 @@
         },
         "eye_right": {
           "part": "eye_squint"
-        },
-        "mouth": {
-          "part": "mouth_closed"
         }
       }
     },
@@ -1731,9 +1712,6 @@
             0.758,
             1.1
           ]
-        },
-        "mouth": {
-          "part": "mouth_o"
         },
         "thigh_left": {
           "rotation": -8
@@ -2114,9 +2092,6 @@
         },
         "eye_right": {
           "part": "eye_angry_right"
-        },
-        "mouth": {
-          "part": "mouth_o"
         }
       }
     },
@@ -2155,9 +2130,6 @@
         },
         "hand_right": {
           "part": "hand_open_r"
-        },
-        "mouth": {
-          "part": "mouth_wide"
         }
       }
     },
@@ -2204,9 +2176,6 @@
         },
         "eye_right": {
           "part": "eye_shock"
-        },
-        "mouth": {
-          "part": "mouth_wide"
         }
       }
     },
@@ -2265,9 +2234,6 @@
         },
         "hand_right": {
           "part": "hand_relax_r"
-        },
-        "mouth": {
-          "part": "mouth_m"
         },
         "cloak": {
           "scale": [
@@ -2347,9 +2313,6 @@
         "eye_right": {
           "part": "eye_arc"
         },
-        "mouth": {
-          "part": "mouth_closed"
-        },
         "cloak": {
           "scale": [
             1.3,
@@ -2424,9 +2387,6 @@
         "eye_right": {
           "part": "eye_angry_right"
         },
-        "mouth": {
-          "part": "mouth_closed"
-        },
         "cloak": {
           "scale": [
             1.3,
@@ -2496,9 +2456,6 @@
         },
         "eye_right": {
           "part": "eye_arc"
-        },
-        "mouth": {
-          "part": "mouth_smile"
         }
       }
     },
@@ -2583,9 +2540,6 @@
         },
         "hand_right": {
           "part": "hand_fist_r"
-        },
-        "mouth": {
-          "part": "mouth_o"
         }
       }
     },
@@ -2642,9 +2596,6 @@
         },
         "eye_right": {
           "part": "eye_shock"
-        },
-        "mouth": {
-          "part": "mouth_wide"
         }
       }
     },
@@ -2753,9 +2704,6 @@
         },
         "eye_right": {
           "part": "eye_angry_right"
-        },
-        "mouth": {
-          "part": "mouth_o"
         }
       }
     },
@@ -2795,9 +2743,6 @@
         },
         "eye_right": {
           "part": "eye_arc"
-        },
-        "mouth": {
-          "part": "mouth_o"
         }
       }
     },
@@ -2831,9 +2776,6 @@
         },
         "forearm_right": {
           "rotation": 24
-        },
-        "mouth": {
-          "part": "mouth_m"
         }
       }
     },
@@ -2882,9 +2824,6 @@
         },
         "eye_right": {
           "part": "eye_angry_right"
-        },
-        "mouth": {
-          "part": "mouth_m"
         }
       }
     },
@@ -3007,13 +2946,6 @@
         },
         "eye_right": {
           "part": "eye_squint"
-        },
-        "mouth": {
-          "part": "mouth_o",
-          "scale": [
-            1.3,
-            1.5
-          ]
         }
       }
     },
@@ -3058,13 +2990,6 @@
         },
         "eye_right": {
           "part": "eye_shock"
-        },
-        "mouth": {
-          "part": "mouth_bliss",
-          "scale": [
-            1.15,
-            1.4
-          ]
         }
       }
     },
@@ -3104,9 +3029,6 @@
         },
         "eye_right": {
           "part": "eye_angry_right"
-        },
-        "mouth": {
-          "part": "mouth_wave"
         }
       }
     },
@@ -3147,9 +3069,6 @@
         },
         "eye_right": {
           "part": "eye_arc"
-        },
-        "mouth": {
-          "part": "mouth_bliss"
         }
       }
     },
@@ -3202,9 +3121,6 @@
         },
         "eye_right": {
           "part": "eye_sad"
-        },
-        "mouth": {
-          "part": "mouth_gore"
         }
       }
     },
@@ -3239,9 +3155,6 @@
         },
         "eye_right": {
           "part": "eye_right"
-        },
-        "mouth": {
-          "part": "mouth_gore"
         }
       }
     },
@@ -3300,13 +3213,6 @@
         },
         "eye_right": {
           "part": "eye_angry_right"
-        },
-        "mouth": {
-          "part": "mouth_teeth",
-          "scale": [
-            1.25,
-            1.3
-          ]
         }
       }
     },
@@ -3332,9 +3238,6 @@
         },
         "head": {
           "rotation": 1
-        },
-        "mouth": {
-          "part": "mouth_o"
         },
         "hand_left": {
           "part": "hand_offer"
@@ -3398,13 +3301,6 @@
         },
         "forearm_right": {
           "rotation": 13
-        },
-        "mouth": {
-          "part": "mouth_smile",
-          "scale": [
-            1.15,
-            1.15
-          ]
         },
         "glasses": {
           "part": "glasses"
@@ -3474,9 +3370,6 @@
         },
         "eye_right": {
           "part": "eye_angry_right"
-        },
-        "mouth": {
-          "part": "mouth_o"
         },
         "glasses": {
           "part": "glasses"
@@ -3550,9 +3443,6 @@
         "eye_right": {
           "part": "eye_squint"
         },
-        "mouth": {
-          "part": "mouth_closed"
-        },
         "glasses": {
           "part": "glasses"
         }
@@ -3600,9 +3490,6 @@
             0.758,
             1.1
           ]
-        },
-        "mouth": {
-          "part": "mouth_o"
         },
         "thigh_left": {
           "rotation": -8
@@ -3658,9 +3545,6 @@
         "eye_right": {
           "part": "eye_angry_right"
         },
-        "mouth": {
-          "part": "mouth_wave"
-        },
         "glasses": {
           "part": "glasses"
         }
@@ -3711,9 +3595,6 @@
       "bones": {
         "head": {
           "rotation": -6
-        },
-        "mouth": {
-          "part": "mouth_closed"
         },
         "upper_arm_left": {
           "rotation": 55,
@@ -3772,9 +3653,6 @@
         },
         "hand_right": {
           "part": "hand_open_r"
-        },
-        "mouth": {
-          "part": "mouth_wide"
         },
         "glasses": {
           "part": "glasses"
@@ -3938,7 +3816,7 @@
             0.9167
           ],
           "offset": [
-            57,
+            63,
             66
           ],
           "z_order": 5
@@ -3974,7 +3852,7 @@
         "upper_arm_right": {
           "part": "arm_out_upper_r",
           "offset": [
-            21,
+            0,
             23
           ],
           "rotation": 13,
@@ -4030,15 +3908,21 @@
           ]
         },
         "thigh_left": {
+          "rotation": -8,
+          "offset": [
+            11,
+            172
+          ],
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         },
         "shin_left": {
+          "rotation": 6,
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         }
       }
@@ -4061,7 +3945,7 @@
             0.9167
           ],
           "offset": [
-            57,
+            63,
             66
           ],
           "z_order": 5
@@ -4097,7 +3981,7 @@
         "upper_arm_right": {
           "part": "arm_out_upper_r",
           "offset": [
-            21,
+            0,
             23
           ],
           "rotation": 13,
@@ -4153,15 +4037,21 @@
           ]
         },
         "thigh_left": {
+          "rotation": -8,
+          "offset": [
+            11,
+            172
+          ],
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         },
         "shin_left": {
+          "rotation": 6,
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         },
         "torso": {
@@ -4489,7 +4379,7 @@
             0.9167
           ],
           "offset": [
-            57,
+            63,
             66
           ],
           "z_order": 5
@@ -4525,10 +4415,10 @@
         "upper_arm_right": {
           "part": "arm_out_upper_r",
           "offset": [
-            21,
+            0,
             23
           ],
-          "rotation": 13,
+          "rotation": -11.0,
           "z_order": 4,
           "scale": [
             0.48,
@@ -4537,7 +4427,7 @@
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -7
+          "rotation": 3.8
         },
         "hand_right": {
           "part": "arm_out_hand_r",
@@ -4565,7 +4455,6 @@
           ]
         },
         "thigh_right": {
-          "rotation": 30,
           "offset": [
             18,
             172
@@ -4573,26 +4462,32 @@
           "scale": [
             -0.9,
             1.0
-          ]
+          ],
+          "rotation": 18
         },
         "shin_right": {
-          "rotation": -34,
-          "offset": null,
           "scale": [
             -0.9,
             1.0
-          ]
+          ],
+          "rotation": -20
         },
         "thigh_left": {
+          "rotation": -22,
+          "offset": [
+            11,
+            172
+          ],
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         },
         "shin_left": {
+          "rotation": 16,
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         }
       }
@@ -4615,7 +4510,7 @@
             0.9167
           ],
           "offset": [
-            57,
+            63,
             66
           ],
           "z_order": 5
@@ -4651,10 +4546,10 @@
         "upper_arm_right": {
           "part": "arm_out_upper_r",
           "offset": [
-            21,
+            0,
             23
           ],
-          "rotation": 13,
+          "rotation": 35.0,
           "z_order": 4,
           "scale": [
             0.48,
@@ -4663,7 +4558,7 @@
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -7
+          "rotation": -16.9
         },
         "hand_right": {
           "part": "arm_out_hand_r",
@@ -4691,7 +4586,6 @@
           ]
         },
         "thigh_right": {
-          "rotation": -40,
           "offset": [
             18,
             172
@@ -4699,26 +4593,32 @@
           "scale": [
             -0.9,
             1.0
-          ]
+          ],
+          "rotation": -24
         },
         "shin_right": {
-          "rotation": 30,
-          "offset": null,
           "scale": [
             -0.9,
             1.0
-          ]
+          ],
+          "rotation": 18
         },
         "thigh_left": {
+          "rotation": 18,
+          "offset": [
+            11,
+            172
+          ],
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         },
         "shin_left": {
+          "rotation": -18,
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         }
       }
@@ -4741,7 +4641,7 @@
             0.9167
           ],
           "offset": [
-            57,
+            63,
             66
           ],
           "z_order": 5
@@ -4777,10 +4677,10 @@
         "upper_arm_right": {
           "part": "arm_out_upper_r",
           "offset": [
-            21,
+            0,
             23
           ],
-          "rotation": 13,
+          "rotation": -11.0,
           "z_order": 4,
           "scale": [
             0.48,
@@ -4789,7 +4689,7 @@
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -7
+          "rotation": 3.8
         },
         "hand_right": {
           "part": "arm_out_hand_r",
@@ -4817,7 +4717,6 @@
           ]
         },
         "thigh_right": {
-          "rotation": 30,
           "offset": [
             18,
             172
@@ -4825,26 +4724,32 @@
           "scale": [
             -0.9,
             1.0
-          ]
+          ],
+          "rotation": 18
         },
         "shin_right": {
-          "rotation": -34,
-          "offset": null,
           "scale": [
             -0.9,
             1.0
-          ]
+          ],
+          "rotation": -20
         },
         "thigh_left": {
+          "rotation": -22,
+          "offset": [
+            11,
+            172
+          ],
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         },
         "shin_left": {
+          "rotation": 16,
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         },
         "torso": {
@@ -4873,7 +4778,7 @@
             0.9167
           ],
           "offset": [
-            57,
+            63,
             66
           ],
           "z_order": 5
@@ -4909,10 +4814,10 @@
         "upper_arm_right": {
           "part": "arm_out_upper_r",
           "offset": [
-            21,
+            0,
             23
           ],
-          "rotation": 13,
+          "rotation": 35.0,
           "z_order": 4,
           "scale": [
             0.48,
@@ -4921,7 +4826,7 @@
         },
         "forearm_right": {
           "part": "arm_out_fore_r",
-          "rotation": -7
+          "rotation": -16.9
         },
         "hand_right": {
           "part": "arm_out_hand_r",
@@ -4949,7 +4854,6 @@
           ]
         },
         "thigh_right": {
-          "rotation": -40,
           "offset": [
             18,
             172
@@ -4957,26 +4861,32 @@
           "scale": [
             -0.9,
             1.0
-          ]
+          ],
+          "rotation": -24
         },
         "shin_right": {
-          "rotation": 30,
-          "offset": null,
           "scale": [
             -0.9,
             1.0
-          ]
+          ],
+          "rotation": 18
         },
         "thigh_left": {
+          "rotation": 18,
+          "offset": [
+            11,
+            172
+          ],
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         },
         "shin_left": {
+          "rotation": -18,
           "scale": [
-            0,
-            0
+            -0.846,
+            0.97
           ]
         },
         "torso": {
@@ -5107,16 +5017,6 @@
             0.98
           ]
         },
-        "mouth": {
-          "offset": [
-            -22,
-            -56
-          ],
-          "scale": [
-            0.92,
-            1.0
-          ]
-        },
         "upper_arm_right": {
           "offset": [
             40,
@@ -5217,16 +5117,6 @@
             0.98
           ]
         },
-        "mouth": {
-          "offset": [
-            -22,
-            -56
-          ],
-          "scale": [
-            0.92,
-            1.0
-          ]
-        },
         "upper_arm_right": {
           "offset": [
             40,
@@ -5288,6 +5178,1146 @@
           ]
         }
       }
+    },
+    "bok_pravo_govorit": {
+      "name": "bok_pravo_govorit",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "part": "torso_side",
+          "scale": [
+            1.092,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.9,
+            0.8583
+          ],
+          "z_order": 5,
+          "offset": [
+            63,
+            66
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            3,
+            -117
+          ],
+          "scale": [
+            0.662,
+            0.86
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -47,
+            -125
+          ],
+          "scale": [
+            0.505,
+            1.092
+          ]
+        },
+        "mouth": {
+          "part": "mouth_34",
+          "offset": [
+            -22,
+            -56
+          ],
+          "scale": [
+            0.86,
+            1.0
+          ]
+        },
+        "upper_arm_right": {
+          "part": "arm_out_upper_r",
+          "offset": [
+            0,
+            23
+          ],
+          "rotation": 13,
+          "z_order": 4,
+          "scale": [
+            0.48,
+            1.0
+          ]
+        },
+        "forearm_right": {
+          "part": "arm_out_fore_r",
+          "rotation": -7
+        },
+        "hand_right": {
+          "part": "arm_out_hand_r",
+          "scale": [
+            0.95,
+            0.75
+          ]
+        },
+        "upper_arm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "forearm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "hand_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            18,
+            172
+          ],
+          "scale": [
+            -0.9,
+            1.0
+          ]
+        },
+        "shin_right": {
+          "scale": [
+            -0.9,
+            1.0
+          ]
+        },
+        "thigh_left": {
+          "rotation": -8,
+          "offset": [
+            11,
+            172
+          ],
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "shin_left": {
+          "rotation": 6,
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        }
+      }
+    },
+    "bok_pravo_govorit_levoj": {
+      "name": "bok_pravo_govorit_levoj",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "part": "torso_side",
+          "scale": [
+            1.092,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.9,
+            0.8583
+          ],
+          "z_order": 5,
+          "offset": [
+            63,
+            66
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            3,
+            -117
+          ],
+          "scale": [
+            0.662,
+            0.86
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -47,
+            -125
+          ],
+          "scale": [
+            0.505,
+            1.092
+          ]
+        },
+        "mouth": {
+          "part": "mouth_34",
+          "offset": [
+            -22,
+            -56
+          ],
+          "scale": [
+            0.86,
+            1.0
+          ]
+        },
+        "upper_arm_right": {
+          "part": "arm_out_upper_r",
+          "offset": [
+            0,
+            23
+          ],
+          "rotation": -11.0,
+          "z_order": 4,
+          "scale": [
+            0.48,
+            1.0
+          ]
+        },
+        "forearm_right": {
+          "part": "arm_out_fore_r",
+          "rotation": 3.8
+        },
+        "hand_right": {
+          "part": "arm_out_hand_r",
+          "scale": [
+            0.95,
+            0.75
+          ]
+        },
+        "upper_arm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "forearm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "hand_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            18,
+            172
+          ],
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": 18
+        },
+        "shin_right": {
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": -20
+        },
+        "thigh_left": {
+          "rotation": -22,
+          "offset": [
+            11,
+            172
+          ],
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "shin_left": {
+          "rotation": 16,
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        }
+      }
+    },
+    "bok_pravo_govorit_pravoj": {
+      "name": "bok_pravo_govorit_pravoj",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "part": "torso_side",
+          "scale": [
+            1.092,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.9,
+            0.8583
+          ],
+          "z_order": 5,
+          "offset": [
+            63,
+            66
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            3,
+            -117
+          ],
+          "scale": [
+            0.662,
+            0.86
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -47,
+            -125
+          ],
+          "scale": [
+            0.505,
+            1.092
+          ]
+        },
+        "mouth": {
+          "part": "mouth_34",
+          "offset": [
+            -22,
+            -56
+          ],
+          "scale": [
+            0.86,
+            1.0
+          ]
+        },
+        "upper_arm_right": {
+          "part": "arm_out_upper_r",
+          "offset": [
+            0,
+            23
+          ],
+          "rotation": 35.0,
+          "z_order": 4,
+          "scale": [
+            0.48,
+            1.0
+          ]
+        },
+        "forearm_right": {
+          "part": "arm_out_fore_r",
+          "rotation": -16.9
+        },
+        "hand_right": {
+          "part": "arm_out_hand_r",
+          "scale": [
+            0.95,
+            0.75
+          ]
+        },
+        "upper_arm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "forearm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "hand_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            18,
+            172
+          ],
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": -24
+        },
+        "shin_right": {
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": 18
+        },
+        "thigh_left": {
+          "rotation": 18,
+          "offset": [
+            11,
+            172
+          ],
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "shin_left": {
+          "rotation": -18,
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        }
+      }
+    },
+    "bok_levo_govorit": {
+      "name": "bok_levo_govorit",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "part": "torso_side",
+          "scale": [
+            1.092,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.9,
+            0.8583
+          ],
+          "z_order": 5,
+          "offset": [
+            63,
+            66
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            3,
+            -117
+          ],
+          "scale": [
+            0.662,
+            0.86
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -47,
+            -125
+          ],
+          "scale": [
+            0.505,
+            1.092
+          ]
+        },
+        "mouth": {
+          "part": "mouth_34",
+          "offset": [
+            -22,
+            -56
+          ],
+          "scale": [
+            0.86,
+            1.0
+          ]
+        },
+        "upper_arm_right": {
+          "part": "arm_out_upper_r",
+          "offset": [
+            0,
+            23
+          ],
+          "rotation": 13,
+          "z_order": 4,
+          "scale": [
+            0.48,
+            1.0
+          ]
+        },
+        "forearm_right": {
+          "part": "arm_out_fore_r",
+          "rotation": -7
+        },
+        "hand_right": {
+          "part": "arm_out_hand_r",
+          "scale": [
+            0.95,
+            0.75
+          ]
+        },
+        "upper_arm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "forearm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "hand_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            18,
+            172
+          ],
+          "scale": [
+            -0.9,
+            1.0
+          ]
+        },
+        "shin_right": {
+          "scale": [
+            -0.9,
+            1.0
+          ]
+        },
+        "thigh_left": {
+          "rotation": -8,
+          "offset": [
+            11,
+            172
+          ],
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "shin_left": {
+          "rotation": 6,
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "torso": {
+          "scale": [
+            -1.55,
+            1.86
+          ]
+        }
+      }
+    },
+    "bok_levo_govorit_levoj": {
+      "name": "bok_levo_govorit_levoj",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "part": "torso_side",
+          "scale": [
+            1.092,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.9,
+            0.8583
+          ],
+          "z_order": 5,
+          "offset": [
+            63,
+            66
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            3,
+            -117
+          ],
+          "scale": [
+            0.662,
+            0.86
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -47,
+            -125
+          ],
+          "scale": [
+            0.505,
+            1.092
+          ]
+        },
+        "mouth": {
+          "part": "mouth_34",
+          "offset": [
+            -22,
+            -56
+          ],
+          "scale": [
+            0.86,
+            1.0
+          ]
+        },
+        "upper_arm_right": {
+          "part": "arm_out_upper_r",
+          "offset": [
+            0,
+            23
+          ],
+          "rotation": -11.0,
+          "z_order": 4,
+          "scale": [
+            0.48,
+            1.0
+          ]
+        },
+        "forearm_right": {
+          "part": "arm_out_fore_r",
+          "rotation": 3.8
+        },
+        "hand_right": {
+          "part": "arm_out_hand_r",
+          "scale": [
+            0.95,
+            0.75
+          ]
+        },
+        "upper_arm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "forearm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "hand_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            18,
+            172
+          ],
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": 18
+        },
+        "shin_right": {
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": -20
+        },
+        "thigh_left": {
+          "rotation": -22,
+          "offset": [
+            11,
+            172
+          ],
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "shin_left": {
+          "rotation": 16,
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "torso": {
+          "scale": [
+            -1.55,
+            1.86
+          ]
+        }
+      }
+    },
+    "bok_levo_govorit_pravoj": {
+      "name": "bok_levo_govorit_pravoj",
+      "transition_duration": 0.3,
+      "bones": {
+        "cloak": {
+          "part": "torso_side",
+          "scale": [
+            1.092,
+            1.0
+          ]
+        },
+        "head": {
+          "scale": [
+            0.9,
+            0.8583
+          ],
+          "z_order": 5,
+          "offset": [
+            63,
+            66
+          ]
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            3,
+            -117
+          ],
+          "scale": [
+            0.662,
+            0.86
+          ]
+        },
+        "eye_left": {
+          "part": "eye_left",
+          "offset": [
+            -47,
+            -125
+          ],
+          "scale": [
+            0.505,
+            1.092
+          ]
+        },
+        "mouth": {
+          "part": "mouth_34",
+          "offset": [
+            -22,
+            -56
+          ],
+          "scale": [
+            0.86,
+            1.0
+          ]
+        },
+        "upper_arm_right": {
+          "part": "arm_out_upper_r",
+          "offset": [
+            0,
+            23
+          ],
+          "rotation": 35.0,
+          "z_order": 4,
+          "scale": [
+            0.48,
+            1.0
+          ]
+        },
+        "forearm_right": {
+          "part": "arm_out_fore_r",
+          "rotation": -16.9
+        },
+        "hand_right": {
+          "part": "arm_out_hand_r",
+          "scale": [
+            0.95,
+            0.75
+          ]
+        },
+        "upper_arm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "forearm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "hand_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            18,
+            172
+          ],
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": -24
+        },
+        "shin_right": {
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": 18
+        },
+        "thigh_left": {
+          "rotation": 18,
+          "offset": [
+            11,
+            172
+          ],
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "shin_left": {
+          "rotation": -18,
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "torso": {
+          "scale": [
+            -1.55,
+            1.86
+          ]
+        }
+      }
+    },
+    "shag_bok_levoj": {
+      "name": "shag_bok_levoj",
+      "transition_duration": 0.12,
+      "bones": {
+        "thigh_right": {
+          "offset": [
+            18,
+            172
+          ],
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": 18
+        },
+        "shin_right": {
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": -20
+        },
+        "thigh_left": {
+          "rotation": -22,
+          "offset": [
+            11,
+            172
+          ],
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "shin_left": {
+          "rotation": 16,
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "upper_arm_right": {
+          "part": "arm_out_upper_r",
+          "offset": [
+            0,
+            23
+          ],
+          "rotation": -11.0,
+          "z_order": 4,
+          "scale": [
+            0.48,
+            1.0
+          ]
+        },
+        "forearm_right": {
+          "part": "arm_out_fore_r",
+          "rotation": 3.8
+        }
+      }
+    },
+    "shag_bok_pravoj": {
+      "name": "shag_bok_pravoj",
+      "transition_duration": 0.12,
+      "bones": {
+        "thigh_right": {
+          "offset": [
+            18,
+            172
+          ],
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": -24
+        },
+        "shin_right": {
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": 18
+        },
+        "thigh_left": {
+          "rotation": 18,
+          "offset": [
+            11,
+            172
+          ],
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "shin_left": {
+          "rotation": -18,
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "upper_arm_right": {
+          "part": "arm_out_upper_r",
+          "offset": [
+            0,
+            23
+          ],
+          "rotation": 35.0,
+          "z_order": 4,
+          "scale": [
+            0.48,
+            1.0
+          ]
+        },
+        "forearm_right": {
+          "part": "arm_out_fore_r",
+          "rotation": -16.9
+        }
+      }
+    },
+    "vdal": {
+      "transition_duration": 0.35,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -84,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": -12,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_point_r",
+          "z_order": 7
+        },
+        "upper_arm_left": {
+          "rotation": 32
+        },
+        "forearm_left": {
+          "rotation": -16
+        }
+      },
+      "name": "vdal"
+    },
+    "otmahnulsya": {
+      "transition_duration": 0.25,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 56,
+          "z_order": 5
+        },
+        "forearm_left": {
+          "rotation": -26,
+          "z_order": 5
+        },
+        "hand_left": {
+          "part": "hand_relax",
+          "z_order": 6
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        }
+      },
+      "name": "otmahnulsya"
+    },
+    "k_sebe": {
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 76,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": -86,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        }
+      },
+      "name": "k_sebe"
+    },
+    "zatylok": {
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -122,
+          "z_order": 8
+        },
+        "forearm_right": {
+          "rotation": -116,
+          "z_order": 8
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 9
+        },
+        "upper_arm_left": {
+          "rotation": 26
+        },
+        "forearm_left": {
+          "rotation": -12
+        }
+      },
+      "name": "zatylok"
+    },
+    "vzves": {
+      "transition_duration": 0.35,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 98,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": -18,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -72,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": 6,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 7
+        }
+      },
+      "name": "vzves"
+    },
+    "ruka_vverh": {
+      "name": "ruka_vverh",
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 124,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": 34,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        }
+      }
+    },
+    "gladit_grud": {
+      "name": "gladit_grud",
+      "transition_duration": 0.22,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 70,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": -92,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        }
+      }
+    },
+    "gladit_grud_niz": {
+      "name": "gladit_grud_niz",
+      "transition_duration": 0.22,
+      "bones": {
+        "upper_arm_left": {
+          "rotation": 58,
+          "z_order": 6
+        },
+        "forearm_left": {
+          "rotation": -74,
+          "z_order": 6
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 7
+        },
+        "upper_arm_right": {
+          "rotation": -29
+        },
+        "forearm_right": {
+          "rotation": 13
+        }
+      }
     }
   },
   "karta": {
@@ -5297,5 +6327,10 @@
     "feet": 0.4953,
     "mask_dx": -0.029,
     "mask_w": 0.1426
+  },
+  "props": {
+    "hat": "cilindr",
+    "cane": "cilindr",
+    "glasses": "ochki"
   }
 }

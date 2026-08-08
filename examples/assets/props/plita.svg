@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 300" width="220" height="300">
+  <defs>
+    <filter id="ink" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="41" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- ПЛИТА С НАДПИСЬЮ MEMENTO MORI — «помни о смерти».
+
+       НАДПИСЬ НЕ ИМЕННАЯ, И ЭТО ПРИНЦИПИАЛЬНО. Имя, дата или крест сделали бы
+       плиту памятником КОНКРЕТНОМУ человеку, и зритель разглядывал бы чужую
+       могилу. «Memento mori» — обращение, а не запись: адресовано тому, кто
+       читает, то есть смотрящему. Ровно на этом стоит сцена — «зато вы
+       впервые подумали дальше собственной смерти».
+
+       БУКВЫ ВЫРЕЗАНЫ, А НЕ НАПИСАНЫ: светлые по тёмному камню, как настоящая
+       резьба. Гарнитура широкая и без засечек — на общем плане плита мельче
+       фигуры, и тонкие штрихи превратились бы в грязь.
+
+       Слегка завалена: за ней давно никто не ходит. Якорь — низ рисунка,
+       ставится через `on floor`. -->
+  <g filter="url(#ink)">
+    <path d="M46 296 L38 96 C 36 58, 62 34, 104 32 C 148 30, 176 54, 178 92
+             L184 292 Z" fill="#171714" stroke="#0e0e0e" stroke-width="6"/>
+    <!-- СКОЛ УБРАН. Светлый треугольник на левой кромке в кадре читался
+         кнопкой «play» — глаз опознаёт эту форму раньше, чем понимает, что
+         перед ним камень, и надпись проигрывает значку. Старость камня
+         показывает неровный контур, ей не нужен отдельный скол. -->
+    <!-- РЕЗЬБА: две строки, крупно и в разрядку -->
+    <text x="110" y="170" text-anchor="middle" fill="#eef1ec"
+          font-family="Arial Black, Arial, Helvetica, sans-serif"
+          font-size="26" font-weight="700" letter-spacing="0.5">MEMENTO</text>
+    <text x="110" y="214" text-anchor="middle" fill="#eef1ec"
+          font-family="Arial Black, Arial, Helvetica, sans-serif"
+          font-size="34" font-weight="700" letter-spacing="3">MORI</text>
+    <!-- земля у основания -->
+    <path d="M28 296 C 80 284, 150 284, 196 296" stroke="#0e0e0e" stroke-width="7" fill="none"/>
+  </g>
+</svg>

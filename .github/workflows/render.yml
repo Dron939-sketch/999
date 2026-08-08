@@ -43,25 +43,61 @@ jobs:
           INPUT_ONLY: ${{ inputs.production }}
         run: |
           ONLY="$INPUT_ONLY"
+          MSG=$(git log -1 --pretty=%B)
+          # `[skip render]` — коммит не трогает ролики (документация, оснастка).
+          # Без него правка одного README запускает полный прогон на пятнадцать
+          # продакшенов: четверть часа раннера и перезалитый релиз ради файла,
+          # которого рендер не касается. Маркер уже писали в сообщениях коммитов,
+          # считая, что он работает, — он не работал.
+          if [ -z "$INPUT_ONLY" ] && printf '%s' "$MSG" | grep -qiE '\[skip[ -]render\]'; then
+            echo "Коммит помечен [skip render] — ролики не трогаем."
+            echo "RENDER_SKIP=1" >> "$GITHUB_ENV"
+            echo "RENDER_ONLY=" >> "$GITHUB_ENV"
+            exit 0
+          fi
           if [ -z "$ONLY" ]; then
-            ONLY=$(git log -1 --pretty=%B \
+            ONLY=$(printf '%s' "$MSG" \
               | sed -n 's/.*\[only:[[:space:]]*\([A-Za-z0-9_-]*\)[[:space:]]*\].*/\1/p' \
               | head -1)
           fi
+          # БЕЗ МАРКЕРА ЗАВОД НЕ ГОНИТ НИЧЕГО. Раньше пустой `[only:]` означал
+          # «рендерить всё», и это стоило дорого: правка одного ролика или
+          # документации запускала прогон на пятнадцать продакшенов, а студия
+          # просила ровно обратного — «отправляй только один ролик». Полагаться
+          # на то, что автор не забудет маркер, нельзя: забыть его бесплатно, а
+          # ошибка стоит четверти часа раннера и перезалитого релиза.
+          #
+          # Теперь умолчание безопасное: нет маркера — нет прогона. Прогнать
+          # весь каталог можно, но это надо СКАЗАТЬ: `[only: all]` или ручной
+          # запуск с пустым полем production.
+          if [ -z "$ONLY" ]; then
+            echo "В сообщении коммита нет [only: <id>] — завод не запускается."
+            echo "Нужен весь каталог — напиши [only: all]."
+            echo "RENDER_SKIP=1" >> "$GITHUB_ENV"
+            echo "RENDER_ONLY=" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          if [ "$ONLY" = "all" ]; then
+            ONLY=""
+            echo "Маркер [only: all] — гоним весь каталог."
+          fi
           echo "RENDER_ONLY=$ONLY" >> "$GITHUB_ENV"
-          echo "Продакшен: ${ONLY:-ВСЕ}"
+          echo "Продакшен: ${ONLY:-ВЕСЬ КАТАЛОГ (по явному [only: all])}"
 
       - name: Install ffmpeg
+        if: env.RENDER_SKIP != '1'
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
       # Питон-зависимости планки (qc_metrics: golden-diff по SSIM). Без них
       # измеритель падал на `import numpy` — прогон писал «планка не измерена».
       - name: Python deps (планка)
+        if: env.RENDER_SKIP != '1'
         run: python3 -m pip install --quiet --upgrade numpy pillow
 
       # Rhubarb Lip Sync — фонемный липсинк (рот артикулирует слоги, не флэпы).
       # Бинарь кэшируется; при недоступности завод честно падает на RMS-огибающую.
       - name: Rhubarb cache
+        if: env.RENDER_SKIP != '1'
         id: rhubarb-cache
         uses: actions/cache@v4
         with:
@@ -69,7 +105,7 @@ jobs:
           key: rhubarb-1.13.0-linux
 
       - name: Install Rhubarb Lip Sync
-        if: steps.rhubarb-cache.outputs.cache-hit != 'true'
+        if: env.RENDER_SKIP != '1' && steps.rhubarb-cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p ~/rhubarb
           curl -sSL -o /tmp/rhubarb.zip \
@@ -78,9 +114,11 @@ jobs:
           find ~/rhubarb -name rhubarb -type f -exec chmod +x {} \;
 
       - name: Expose RHUBARB_BIN
+        if: env.RENDER_SKIP != '1'
         run: echo "RHUBARB_BIN=$(find ~/rhubarb -name rhubarb -type f | head -1)" >> "$GITHUB_ENV"
 
       - name: Rust cache
+        if: env.RENDER_SKIP != '1'
         uses: actions/cache@v4
         with:
           path: |
@@ -90,10 +128,12 @@ jobs:
           key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
 
       - name: Build engine
+        if: env.RENDER_SKIP != '1'
         run: cargo build --release
 
       # Один завод: картинки → рендер → озвучка → сведение → videos/*.mp4(+mp3)
       - name: Studio (render + voice + mux)
+        if: env.RENDER_SKIP != '1'
         env:
           # ОСНОВНОЙ путь озвучки — ПРЯМОЙ Fish Audio: студия клонировала свой
           # голос, его id лежит в FISH_AUDIO_VOICE_ID. Frederick — запасной,
@@ -135,7 +175,7 @@ jobs:
         # (иначе videos/ и история пухнут линейно по прогонам), а в Releases по
         # rolling-тегу на ветку. GitHub Releases держат до 2ГБ на файл — прежний
         # 95МБ-предохранитель под git-пуш больше не нужен.
-        if: always()
+        if: always() && env.RENDER_SKIP != '1'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

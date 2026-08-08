@@ -266,12 +266,85 @@ def step_mux(prod, video_mp4, voice_mp3, sfx_mp3, out_final):
     audio = voice_mp3 if have_voice else sfx_mp3
     if have_voice and have_sfx:
         mixed = Path(video_mp4).with_name(Path(video_mp4).stem + "-mix.mp3")
+        # SFX ПРИЖИМАЕТСЯ ГОЛОСОМ (sidechain), а не просто стоит тише.
+        #
+        # Замечание студии: «появляются посторонние шумы, из-за которых не
+        # слышно». Претензия подтвердилась замером: при `volume=0.75` дорожка
+        # SFX шла на -26.7 LUFS против -22.4 LUFS у голоса — всего 4 LU
+        # разницы. Для подложки под речь это не подложка, а второй голос:
+        # разборчивость держится, когда фон сидит на 12-18 LU ниже.
+        #
+        # Просто убавить громкость мало: половина звуков в этих роликах
+        # работает В ПАУЗАХ — «гул обрывается», «щёлкает замок», обрыв в
+        # чёрное. Прижмёшь их насмерть — исчезнет и то, ради чего они
+        # ставились. Поэтому компрессор с боковой цепью: пока звучит голос,
+        # фон уходит вниз на ~8:1, в паузе возвращается за треть секунды.
+        # Голос при этом не трогается вообще — он идёт в микс как есть и
+        # только служит ключом.
+        #
+        # ЧИСЛА ПОДОБРАНЫ ЗАМЕРОМ на готовой дорожке «Дистанции». Виноваты были
+        # три места, а не вся дорожка: кухня (гул холодильника, шелест бумаг,
+        # калькулятор) шла на -12.6 dB при голосе -7.2 dB, эхо зала -20.4 dB,
+        # шаги в финале -21.1 dB; всё остальное честно сидело на -36 dB. После
+        # прижатия кухня уходит на -18.4 и -33.1 dB, то есть на 11-26 dB ниже
+        # речи. Пробовал жёстче (0.5 / 8:1 / 350 мс) — фон становится совсем
+        # неслышным и в паузах тоже; выбран средний вариант.
         run(["ffmpeg", "-y", "-v", "error", "-i", str(voice_mp3), "-i", str(sfx_mp3),
              "-filter_complex",
-             "[0]volume=1.0[v];[1]volume=0.75[s];"
-             "[v][s]amix=inputs=2:duration=longest:normalize=0",
+             "[0]asplit=2[v][key];"
+             "[1]volume=0.6[s];"
+             "[s][key]sidechaincompress=threshold=0.03:ratio=6:"
+             "attack=5:release=250[duck];"
+             "[v][duck]amix=inputs=2:duration=longest:normalize=0",
              "-b:a", "160k", str(mixed)])
         audio = mixed
+
+    # МУЗЫКАЛЬНАЯ ВРЕЗКА. Ролик может кончаться песней: персонаж включает
+    # кассетник, и дальше играет кусок трека. Описывается в манифесте:
+    #     "music": {"file": "трек.mp3", "at": 62.0, "duration": 12.0,
+    #               "start": 0.0, "volume": 0.9, "fade_out": 1.5}
+    # `at` — секунда РОЛИКА, где музыка вступает (щелчок клавиши), `start` —
+    # с какой секунды берётся сам трек. Кусок вырезается, задерживается на
+    # `at` и подмешивается третьим входом: голос и SFX не трогаются, а музыка
+    # приходит ровно туда, где нажали кнопку.
+    music = prod.get("music")
+    if music and (ROOT / music["file"]).exists():
+        src = ROOT / music["file"]
+        # «ПОСЛЕ РЕЧИ» — НЕ ЧИСЛО, А ПРАВИЛО. Секунду вступления считали руками
+        # по рендеру, и она устаревала при первой же правке хронометража: в
+        # ролике-презентации сцены подросли на паузы для ходьбы, голос вытянулся
+        # до 112.8 с, а музыка осталась на 103.5 — и последние девять секунд
+        # монолога играли ПОД песню. Теперь можно написать `"at": "after-voice"`
+        # (плюс `gap`), и сборщик сам возьмёт длину готовой озвучки: музыка
+        # физически не может начаться раньше, чем персонаж договорит.
+        at_raw = music.get("at", 0.0)
+        if isinstance(at_raw, str) and at_raw.startswith("after-voice"):
+            gap = float(music.get("gap", 1.5))
+            at = (media_duration(voice_mp3) if have_voice else 0.0) + gap
+            log(f"  [музыка] вступает после речи: {at:.1f} c "
+                f"(озвучка {media_duration(voice_mp3):.1f} c + пауза {gap} c)")
+        else:
+            at = float(at_raw)
+        dur = float(music.get("duration", 12.0))
+        start = float(music.get("start", 0.0))
+        vol = float(music.get("volume", 0.9))
+        fade = float(music.get("fade_out", 1.5))
+        piece = Path(video_mp4).with_name(Path(video_mp4).stem + "-music.mp3")
+        # Вырезаем кусок с затуханием в хвосте: обрыв на полуноте читается
+        # как технический сбой, а не как точка.
+        run(["ffmpeg", "-y", "-v", "error", "-ss", f"{start}", "-t", f"{dur}",
+             "-i", str(src),
+             "-af", f"volume={vol},afade=t=out:st={max(dur - fade, 0):.2f}:d={fade}",
+             "-b:a", "192k", str(piece)])
+        with_music = Path(video_mp4).with_name(Path(video_mp4).stem + "-mixmus.mp3")
+        run(["ffmpeg", "-y", "-v", "error", "-i", str(audio), "-i", str(piece),
+             "-filter_complex",
+             f"[1]adelay={int(at * 1000)}|{int(at * 1000)}[m];"
+             f"[0][m]amix=inputs=2:duration=longest:normalize=0",
+             "-b:a", "192k", str(with_music)])
+        audio = with_music
+        log(f"  [музыка] {src.name}: {dur:.0f} с с {start:.0f}-й секунды трека, "
+            f"вступает на {at:.0f}-й секунде ролика")
     cmd = ["bash", str(TOOLS / "compose_video.sh"),
            str(video_mp4), str(audio), str(out_final)]
     if prod.get("title"):
@@ -849,6 +922,141 @@ def lint_dinamika(prod, rig_dir=None):
     return [], soft
 
 
+def lint_hodba(prods):
+    """Приёмщик ХОДЬБЫ: проход обязан закрываться полной позой.
+
+    Слои накапливаются и живут до следующей ПОЛНОЙ позы, поэтому брошенный
+    слой шага остаётся висеть на фигуре: она стоит с разведёнными ногами и
+    «доигрывает полушаг». Разбор — в шапке tools/walk.py.
+    """
+    sys.path.insert(0, str(TOOLS))
+    import walk
+    files = [str(ROOT / p["anim"]) for p in prods if (ROOT / p["anim"]).exists()]
+    return [f"{Path(p).name}:{ln} — {msg}" for p, ln, msg in walk.check_anim(files)], []
+
+
+def lint_osanka(prods):
+    """Приёмщик ОСАНКИ: персонаж не приседает.
+
+    SOFT, и намеренно: гейт РЕНДЕРИТ каждую сыгранную позу на стенде, а это
+    десятки прогонов движка. На раннере это минуты, и ронять из-за них весь
+    завод дороже, чем один некрасивый кадр. Ловить всё равно надо — замечание
+    «на корточки не садится» приходило трижды. Разбор — в шапке
+    tools/posture.py.
+    """
+    sys.path.insert(0, str(TOOLS))
+    import posture
+    out = []
+    for prod in prods:
+        anim = ROOT / prod["anim"]
+        if not anim.exists():
+            continue
+        try:
+            _, bad = posture.check(str(anim))
+        except Exception as e:  # noqa: BLE001 — стенд может не собраться, это не повод падать
+            out.append(f"{anim.name}: осанка не измерена ({e})")
+            continue
+        for pose, r in bad:
+            out.append(f"{anim.name}: поза «{pose}» роняет рост до {r:.2f} "
+                       f"эталона — фигура приседает")
+    return [], out
+
+
+def lint_sverka(prods):
+    """Приёмщик СООТВЕТСТВИЯ: номера реплик и маркеров совпадают.
+
+    HARD. Реплика `| VO-4 |` и маркер `//lip 4` связаны ТОЛЬКО номером; другой
+    связи между сценарием и раскадровкой нет. Сдвиг на один слот собирается без
+    единой ошибки — липсинк сходится, длина совпадает, — и слышен лишь на
+    готовом файле. Разбор — в шапке tools/sverka.py.
+    """
+    sys.path.insert(0, str(TOOLS))
+    import sverka
+    out = []
+    for prod in prods:
+        anim = ROOT / prod["anim"]
+        if not anim.exists():
+            continue
+        out += [f"{anim.name}: {b}" for b in sverka.check(str(anim))]
+    return out, []
+
+
+def lint_rekvizit(prods):
+    """Приёмщик РЕКВИЗИТА: вещь не появляется на персонаже сама.
+
+    HARD. Цилиндр, возникающий на одну реплику и пропадающий, — брак, который
+    зритель замечает мгновенно, а автор сценария не видит вовсе: позу выбирают
+    по названию, а не по списку костей. Проверка идёт по ригу, поэтому одна на
+    все ролики. Разбор — в шапке tools/rekvizit.py.
+    """
+    sys.path.insert(0, str(TOOLS))
+    import rekvizit
+    rig = json.loads((ROOT / "examples/assets/characters/freeman_rig/rig.json")
+                     .read_text(encoding="utf-8"))
+    return [f"риг: поза «{n}» надевает «{b}», не объявив это именем "
+            f"(нужен суффикс «{m}»)" for n, b, m in rekvizit.offenders(rig)], []
+
+
+def lint_tishina(prods):
+    """Приёмщик ТИШИНЫ: между репликами не должно быть дыр.
+
+    SOFT, и намеренно. Гейт меряет ТАЙМЛАЙН СЦЕНАРИЯ, а в ролик уходит
+    таймлайн после липсинка: `speaks for` подменяется реальной длиной mp3, и
+    дыра может как вырасти, так и схлопнуться. Ронять из-за расчётной оценки
+    весь завод нельзя — но и не считать её нельзя тоже: замечание «слишком
+    длинные паузы после реплик» пришло с готового ролика, где дыра в пять
+    секунд набежала сама. Разбор — в шапке tools/pauses.py.
+    """
+    sys.path.insert(0, str(TOOLS))
+    import pauses
+    out = []
+    for prod in prods:
+        anim = ROOT / prod["anim"]
+        if not anim.exists():
+            continue
+        try:
+            bad, _ = pauses.check(str(anim))
+        except Exception as e:  # noqa: BLE001 — таймлайн может не собраться
+            out.append(f"{anim.name}: тишина не измерена ({e})")
+            continue
+        for idx, gap, why in bad:
+            out.append(f"{anim.name}: после реплики {idx} — {gap:.1f} с тишины ({why})")
+    return [], out
+
+
+def lint_rech(prods):
+    """Приёмщик РЕЧИ И ЛИЦА: рот обязан принадлежать озвучке.
+
+    Два разных дефекта, оба читаются как «лицо не соответствует голосу», и оба
+    ловятся до рендера, а не глазами на готовом ролике:
+      · в РИГЕ — поза тела, которая сама ставит рот (спорит с липсинком);
+      · в СЦЕНАРИИ — полная поза или мимический слой внутри реплики.
+    Разбор причин — в шапках tools/mouth_ownership.py и tools/speech_lint.py.
+    """
+    # HARD — то, что ломает синхрон наверняка: рот в позе тела и полная поза
+    # внутри реплики. SOFT — исторический долг старых роликов: ракурсные и
+    # мимические слои внутри реплик. Их тоже надо вычистить, но ронять из-за
+    # них ВЕСЬ завод нельзя: ролики сняты и живут, а правка каждого — отдельная
+    # режиссёрская работа, а не механическая замена.
+    sys.path.insert(0, str(TOOLS))
+    hard, soft = [], []
+    import mouth_ownership, speech_lint
+    rig = json.loads((ROOT / "examples/assets/characters/freeman_rig/rig.json")
+                     .read_text(encoding="utf-8"))
+    for name, part in mouth_ownership.offenders(rig):
+        hard.append(f"риг: поза тела «{name}» ставит рот {part} — "
+                    f"спорит с липсинком (tools/mouth_ownership.py --fix)")
+    for prod in prods:
+        anim = ROOT / prod["anim"]
+        if not anim.exists():
+            continue
+        bad, _ = speech_lint.check(str(anim))
+        for ln, msg in bad:
+            line = f"{anim.name}:{ln} — {msg}"
+            (soft if "трогает рот" in msg else hard).append(line)
+    return hard, soft
+
+
 def lint_turnaround(prods):
     """Приёмщик РАЗВОРОТА: одна ли это фигура на всех ракурсах. (hard, soft).
 
@@ -1134,6 +1342,24 @@ def main(argv):
     th, ts = lint_turnaround(prods)       # приёмщик разворота (один на риг)
     all_hard += th
     all_soft += ts
+    rch, rcs = lint_rech(prods)           # приёмщик речи и лица (липсинк)
+    all_hard += rch
+    all_soft += rcs
+    hh, hs = lint_hodba(prods)            # приёмщик ходьбы (слой шага не брошен)
+    all_hard += hh
+    all_soft += hs
+    oh, os_ = lint_osanka(prods)          # приёмщик осанки (не приседает)
+    all_hard += oh
+    all_soft += os_
+    tih, tis = lint_tishina(prods)        # приёмщик тишины (дыры между репликами)
+    all_hard += tih
+    all_soft += tis
+    rkh, rks = lint_rekvizit(prods)       # приёмщик реквизита (шляпа не сама)
+    all_hard += rkh
+    all_soft += rks
+    svh, svs = lint_sverka(prods)         # приёмщик соответствия (номера реплик)
+    all_hard += svh
+    all_soft += svs
     for e in all_hard:
         log(f"  [LINT-HARD] {e}")
     for e in all_soft:
