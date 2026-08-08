@@ -48,7 +48,7 @@
 | `kuhnya-tri-kruga` | растр | 0.799 | — | 2 |
 | `lektorij-final` | вектор | — | — | 14 |
 | `lektorij-paper` | вектор | — | — | 3 |
-| `lektorij-zal` | вектор | 0.620 | — | 18 |
+| `lektorij-zal` | вектор | 0.620 | — | 19 |
 | `logika-dve-dveri-vse` | растр | 0.620 | — | 3 |
 | `logika-dve-dveri` | растр | 0.500 | — | 1 |
 | `logika-hor-golosov` | растр | 0.600 | — | 4 |
@@ -56,9 +56,10 @@
 | `mind-alive` | вектор | — | — | 1 |
 | `okno-vetka` | растр | 0.735 | — | 2 |
 | `paper` | вектор | — | — | 0 |
-| `parus-kuhnya-noch` | растр | 0.700 | 0.58 | 0 |
-| `parus-ulica-mojka` | растр | 0.560 | 0.24 | 0 |
-| `parus-zal-ozhidaniya` | растр | 0.620 | 0.58 | 0 |
+| `parus-dve-mojki` | растр | 0.620 | 0.59 | 0 |
+| `parus-kuhnya-noch` | растр | 0.700 | 0.58 | 1 |
+| `parus-ulica-mojka` | растр | 0.560 | 0.24 | 1 |
+| `parus-zal-ozhidaniya` | растр | 0.620 | 0.58 | 1 |
 | `perekrestok-bez-znakov` | растр | 0.490 | — | 5 |
 | `ploschadka-dve-dveri` | растр | 0.660 | — | 1 |
 | `porog-cherta` | растр | 0.517 | — | 3 |
@@ -66,15 +67,15 @@
 | `prilavok-sdacha` | растр | 0.610 | — | 1 |
 | `prison-cell` | вектор | 0.655 | — | 2 |
 | `prison-infocygane` | вектор | 0.655 | — | 1 |
-| `razvilka-trop` | растр | 0.246 | — | 1 |
+| `razvilka-trop` | растр | 0.246 | — | 2 |
 | `stado-v-odnu-storonu` | растр | 0.350 | — | 1 |
 | `stol-neprochitannoe` | растр | 0.737 | — | 1 |
 | `stol-noutbuk` | растр | 0.688 | — | 1 |
 | `stol-posle-gostej` | растр | 0.450 | — | 2 |
 | `supermarket-ryady` | растр | 0.300 | — | 4 |
 | `vannaya-zerkalo` | растр | 0.620 | — | 3 |
-| `void-black` | вектор | 0.972 | — | 18 |
+| `void-black` | вектор | 0.972 | — | 19 |
 | `void` | вектор | — | — | 1 |
 | `wasteland` | вектор | — | — | 0 |
 
-Всего локаций: 58. Размечен рост: 5.
+Всего локаций: 59. Размечен рост: 6.
