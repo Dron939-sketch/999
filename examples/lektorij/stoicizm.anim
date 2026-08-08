@@ -121,7 +121,7 @@ scene "s1" (duration: 1s, set: probka) {
     //lip 1
     //  «Вы сегодня злились.»
     together {
-        freeman speaks for 1.10s
+        freeman speaks for 1.57s
         do {
             freeman overlays "obvinil"
         }
@@ -131,12 +131,12 @@ scene "s1" (duration: 1s, set: probka) {
     //lip 2
     //  «И не говорите, что держались. Вы просто не подали виду.»
     together {
-        freeman speaks for 6.21s
+        freeman speaks for 5.41s
         do {
             freeman overlays "zakrylsya"
-            wait 3.10s
+            wait 2.7s
             freeman overlays "shrug"
-            wait 1.90s
+            wait 1.65s
             freeman overlays "ugryumo"
         }
     }
@@ -207,12 +207,12 @@ scene "s2" (duration: 1s, set: void) {
     //lip 7
     //  «Ничего. Только то, что вы обо всём этом подумали.»
     together {
-        freeman speaks for 5.98s
+        freeman speaks for 4.83s
         do {
             freeman overlays "u_viska"
-            wait 3.00s
+            wait 2.42s
             freeman overlays "k_sebe"
-            wait 1.80s
+            wait 1.45s
             freeman overlays "doshlo"
         }
     }
@@ -233,12 +233,12 @@ scene "s3" (duration: 1s, set: probka) {
     //lip 8
     //  «Ранит не пробка. Ранит то, что вы про неё решили.»
     together {
-        freeman speaks for 6.01s
+        freeman speaks for 4.94s
         do {
             freeman overlays "otverg"
-            wait 3.05s
+            wait 2.51s
             freeman overlays "v_upor"
-            wait 1.80s
+            wait 1.48s
             freeman overlays "ostyl"
         }
     }
@@ -287,12 +287,12 @@ scene "s4" (duration: 1s, set: vannaya) {
     //lip 11
     //  «Сколько раз за день вы себе это рассказывали?»
     together {
-        freeman speaks for 4.30s
+        freeman speaks for 3.50s
         do {
             freeman overlays "dengi"
-            wait 2.20s
+            wait 1.79s
             freeman overlays "vzves"
-            wait 1.20s
+            wait 0.98s
             freeman overlays "klin"
         }
     }
@@ -313,10 +313,10 @@ scene "s5" (duration: 1s, set: yaschiki) {
     //lip 12
     //  «И вот что важно: злиться вы не разучитесь.»
     together {
-        freeman speaks for 3.05s
+        freeman speaks for 3.55s
         do {
             freeman overlays "smel"
-            wait 1.80s
+            wait 2.1s
             freeman overlays "blink"
         }
     }
@@ -337,10 +337,10 @@ scene "s5" (duration: 1s, set: yaschiki) {
     //lip 14
     //  «Стоики делили всё надвое: это в моей власти, а это нет.»
     together {
-        freeman speaks for 4.91s
+        freeman speaks for 5.80s
         do {
             freeman overlays "dve_storony"
-            wait 2.50s
+            wait 2.95s
             freeman overlays "klin"
         }
     }
@@ -404,12 +404,12 @@ scene "s7" (duration: 1s, set: probka) {
     //lip 17
     //  «Самый популярный ответ — просто не нервничать. Подышать по квадрату.»
     together {
-        freeman speaks for 5.14s
+        freeman speaks for 4.62s
         do {
             freeman overlays "razmer"
-            wait 2.60s
+            wait 2.34s
             freeman overlays "ladoni_vniz"
-            wait 1.90s
+            wait 1.71s
             freeman overlays "prishchur"
         }
     }
@@ -480,12 +480,12 @@ scene "s9" (duration: 1s, set: probka) {
     //lip 21
     //  «Сегодня, когда разозлитесь, назовите вслух: это моё или не моё?»
     together {
-        freeman speaks for 6.51s
+        freeman speaks for 5.36s
         do {
             freeman overlays "manit"
-            wait 3.30s
+            wait 2.71s
             freeman overlays "vdal_l"
-            wait 2.00s
+            wait 1.65s
             freeman overlays "chelo"
         }
     }
@@ -516,10 +516,10 @@ scene "s9" (duration: 1s, set: probka) {
     //lip 23
     //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
     together {
-        freeman speaks for 5.50s
+        freeman speaks for 4.65s
         do {
             freeman overlays "gladit_grud_niz"
-            wait 2.60s
+            wait 2.2s
             freeman overlays "wave"
         }
     }
