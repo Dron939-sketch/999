@@ -1,3 +1,8 @@
 {
-  "floor": { "back_y": 0.700, "front_y": 1.0 }
+  "floor": {
+    "back_y": 0.7,
+    "front_y": 1.0
+  },
+  "chelovek": 0.57,
+  "chelovek_pochemu": "холодильник 1.8 м = 434 px → 241 px/м → человек 1.7 м = 410 px = 0.57 кадра"
 }
