@@ -149,10 +149,10 @@ scene "s3" (duration: 1s, set: dom) {
 
     //lip 6
     together {
-        freeman speaks for 11.28s
+        freeman speaks for 9.85s
         do {
             freeman overlays "k_sebe_r"
-            wait 5.87s
+            wait 5.12s
             freeman overlays "ruka_vverh_r"
         }
     }
@@ -180,10 +180,10 @@ scene "s4" (duration: 1s, set: doroga) {
 
     //lip 8
     together {
-        freeman speaks for 9.06s
+        freeman speaks for 8.57s
         do {
             freeman overlays "vzves_r"
-            wait 4.71s
+            wait 4.45s
             freeman overlays "wave_r"
         }
     }
@@ -209,10 +209,10 @@ scene "s5" (duration: 1s, set: vorota) {
 
     //lip 10
     together {
-        freeman speaks for 10.76s
+        freeman speaks for 8.67s
         do {
             freeman overlays "manit_l"
-            wait 5.60s
+            wait 4.51s
             freeman overlays "palec_vverh_l"
         }
     }
@@ -238,10 +238,10 @@ scene "s6" (duration: 1s, set: dom) {
 
     //lip 12
     together {
-        freeman speaks for 22.36s
+        freeman speaks for 19.67s
         do {
             freeman overlays "stop_ladon_l"
-            wait 11.63s
+            wait 10.23s
             freeman overlays "otmahnulsya_r"
         }
     }
@@ -258,7 +258,7 @@ scene "s6" (duration: 1s, set: dom) {
 
     //lip 14
     together {
-        freeman speaks for 4.73s
+        freeman speaks for 3.74s
         do {
             //  ОТВЕТ МАСТЕРА: один и тот же слой все четыре раза.
             freeman overlays "teplo"
@@ -286,10 +286,10 @@ scene "s7" (duration: 1s, set: doroga) {
 
     //lip 16
     together {
-        freeman speaks for 7.36s
+        freeman speaks for 6.30s
         do {
             freeman overlays "ostyl"
-            wait 3.83s
+            wait 3.28s
             freeman overlays "prishchur"
         }
     }
@@ -326,10 +326,10 @@ scene "s9" (duration: 1s, set: dom) {
 
     //lip 18
     together {
-        freeman speaks for 26.54s
+        freeman speaks for 20.38s
         do {
             freeman overlays "doshlo"
-            wait 13.80s
+            wait 10.59s
             freeman overlays "raskryl"
         }
     }
@@ -346,7 +346,7 @@ scene "s9" (duration: 1s, set: dom) {
 
     //lip 20
     together {
-        freeman speaks for 4.73s
+        freeman speaks for 3.74s
         do {
             //  ОТВЕТ МАСТЕРА: один и тот же слой все четыре раза.
             freeman overlays "teplo"
@@ -376,7 +376,7 @@ scene "s10" (duration: 1s, set: doroga) {
 
     //lip 22
     together {
-        freeman speaks for 5.46s
+        freeman speaks for 5.98s
         do {
             freeman overlays "otverg"
         }
@@ -394,10 +394,10 @@ scene "s11" (duration: 1s, set: dom) {
 
     //lip 23
     together {
-        freeman speaks for 9.66s
+        freeman speaks for 7.71s
         do {
             freeman overlays "bow"
-            wait 5.02s
+            wait 4.0s
             freeman overlays "think"
         }
     }
@@ -405,7 +405,7 @@ scene "s11" (duration: 1s, set: dom) {
 
     //lip 24
     together {
-        freeman speaks for 4.53s
+        freeman speaks for 3.53s
         do {
             //  ОТВЕТ МАСТЕРА: один и тот же слой все четыре раза.
             freeman overlays "teplo"
@@ -473,10 +473,10 @@ scene "s13" (duration: 1s, set: kuznica) {
 
     //lip 29
     together {
-        freeman speaks for 5.72s
+        freeman speaks for 5.04s
         do {
             freeman overlays "razvel"
-            wait 2.97s
+            wait 2.62s
             freeman overlays "rubit"
         }
     }
@@ -484,10 +484,10 @@ scene "s13" (duration: 1s, set: kuznica) {
 
     //lip 30
     together {
-        freeman speaks for 9.41s
+        freeman speaks for 8.18s
         do {
             freeman overlays "kozyrek"
-            wait 4.89s
+            wait 4.25s
             freeman overlays "lokti"
         }
     }
@@ -495,10 +495,10 @@ scene "s13" (duration: 1s, set: kuznica) {
 
     //lip 31
     together {
-        freeman speaks for 8.49s
+        freeman speaks for 7.34s
         do {
             freeman overlays "manit"
-            wait 4.41s
+            wait 3.81s
             freeman overlays "odna_v_bok"
         }
     }
@@ -517,10 +517,10 @@ scene "s13" (duration: 1s, set: kuznica) {
 
     //lip 33
     together {
-        freeman speaks for 7.09s
+        freeman speaks for 6.53s
         do {
             freeman overlays "k_sebe_r"
-            wait 3.69s
+            wait 3.4s
             freeman overlays "ruka_vverh_r"
         }
     }
@@ -546,10 +546,10 @@ scene "s14" (duration: 1s, set: pole) {
 
     //lip 35
     together {
-        freeman speaks for 11.31s
+        freeman speaks for 10.14s
         do {
             freeman overlays "think_r"
-            wait 5.88s
+            wait 5.27s
             freeman overlays "vzves_r"
         }
     }
@@ -566,10 +566,10 @@ scene "s15" (duration: 1s, set: dom) {
 
     //lip 36
     together {
-        freeman speaks for 12.22s
+        freeman speaks for 10.11s
         do {
             freeman overlays "wave_r"
-            wait 6.35s
+            wait 5.25s
             freeman overlays "dve_storony_l"
         }
     }
@@ -577,10 +577,10 @@ scene "s15" (duration: 1s, set: dom) {
 
     //lip 37
     together {
-        freeman speaks for 10.38s
+        freeman speaks for 7.00s
         do {
             freeman overlays "manit_l"
-            wait 5.40s
+            wait 3.64s
             freeman overlays "palec_vverh_l"
         }
     }
@@ -597,10 +597,10 @@ scene "s16" (duration: 1s, set: void) {
 
     //lip 38
     together {
-        freeman speaks for 6.29s
+        freeman speaks for 4.91s
         do {
             freeman overlays "vniz_l"
-            wait 3.27s
+            wait 2.55s
             freeman overlays "stop_ladon_l"
         }
     }
@@ -626,10 +626,10 @@ scene "s17" (duration: 1s, set: dom) {
 
     //lip 40
     together {
-        freeman speaks for 26.93s
+        freeman speaks for 21.39s
         do {
             freeman overlays "povorot_levo"
-            wait 14.00s
+            wait 11.12s
             freeman overlays "yorik"
         }
     }
@@ -637,7 +637,7 @@ scene "s17" (duration: 1s, set: dom) {
 
     //lip 41
     together {
-        freeman speaks for 5.33s
+        freeman speaks for 4.44s
         do {
             freeman overlays "ostyl"
         }
