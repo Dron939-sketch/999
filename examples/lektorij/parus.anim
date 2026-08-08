@@ -121,12 +121,12 @@ scene "s1" (duration: 1s, set: ulica) {
 
     //lip 2
     together {
-        freeman speaks for 3.40s
+        freeman speaks for 5.06s
         do {
             freeman overlays "rubit"
-            wait 1.04s
+            wait 1.55s
             freeman overlays "rubit_l"
-            wait 1.04s
+            wait 1.55s
             freeman overlays "lokti"
         }
     }
@@ -134,11 +134,11 @@ scene "s1" (duration: 1s, set: ulica) {
 
     //lip 3
     together {
-        freeman speaks for 5.43s
+        freeman speaks for 7.44s
         do {
             camera medium freeman
             freeman overlays "ostyl"
-            wait 2.5s
+            wait 3.42s
             freeman overlays "facepalm"
         }
     }
@@ -158,11 +158,11 @@ scene "s1" (duration: 1s, set: ulica) {
 
     //lip 5
     together {
-        freeman speaks for 2.46s
+        freeman speaks for 3.86s
         do {
             camera medium freeman
             freeman overlays "v_upor"
-            wait 1.13s
+            wait 1.78s
             freeman overlays "prishchur"
         }
     }
@@ -181,10 +181,10 @@ scene "s2" (duration: 1s, set: void) {
 
     //lip 6
     together {
-        freeman speaks for 6.16s
+        freeman speaks for 5.54s
         do {
             freeman overlays "vozzvanie"
-            wait 2.84s
+            wait 2.46s
             freeman overlays "manit"
         }
     }
@@ -202,10 +202,10 @@ scene "s3" (duration: 1s, set: dve) {
 
     //lip 7
     together {
-        freeman speaks for 4.23s
+        freeman speaks for 7.74s
         do {
             freeman overlays "razvel"
-            wait 1.95s
+            wait 2.34s
             freeman overlays "razmer"
         }
     }
@@ -213,11 +213,11 @@ scene "s3" (duration: 1s, set: dve) {
 
     //lip 8
     together {
-        freeman speaks for 4.10s
+        freeman speaks for 5.30s
         do {
             camera medium freeman
             freeman overlays "klin"
-            wait 1.89s
+            wait 2.44s
             freeman overlays "vniz"
         }
     }
@@ -236,10 +236,10 @@ scene "s4" (duration: 1s, set: ozhidanie) {
 
     //lip 9
     together {
-        freeman speaks for 4.65s
+        freeman speaks for 7.71s
         do {
             freeman overlays "kozyrek"
-            wait 2.14s
+            wait 2.88s
             freeman overlays "ladoni_vniz"
         }
     }
@@ -268,7 +268,7 @@ scene "s5" (duration: 1s, set: ulica) {
 
     //lip 11
     together {
-        freeman speaks for 5.32s
+        freeman speaks for 5.12s
         do {
             camera medium freeman
             freeman overlays "teplo"
@@ -281,10 +281,10 @@ scene "s5" (duration: 1s, set: ulica) {
 
     //lip 12
     together {
-        freeman speaks for 7.65s
+        freeman speaks for 12.53s
         do {
             freeman overlays "mahnul_oboimi"
-            wait 3.52s
+            wait 5.10s
             freeman overlays "v_upor"
         }
     }
@@ -302,10 +302,10 @@ scene "s6" (duration: 1s, set: tropy) {
 
     //lip 13
     together {
-        freeman speaks for 6.48s
+        freeman speaks for 7.88s
         do {
             freeman overlays "teplo"
-            wait 2.98s
+            wait 3.27s
             freeman overlays "bow"
         }
     }
@@ -313,11 +313,11 @@ scene "s6" (duration: 1s, set: tropy) {
 
     //lip 14
     together {
-        freeman speaks for 3.68s
+        freeman speaks for 4.93s
         do {
             camera medium freeman
             freeman overlays "stop_ladon"
-            wait 1.69s
+            wait 2.08s
             freeman overlays "vdal_l"
         }
     }
@@ -326,10 +326,10 @@ scene "s6" (duration: 1s, set: tropy) {
 
     //lip 15
     together {
-        freeman speaks for 7.31s
+        freeman speaks for 8.90s
         do {
             freeman overlays "raskryl"
-            wait 3.36s
+            wait 4.09s
             freeman overlays "otverg"
         }
     }
@@ -358,7 +358,7 @@ scene "s7" (duration: 1s, set: ulica) {
 
     //lip 17
     together {
-        freeman speaks for 2.77s
+        freeman speaks for 2.28s
         do {
             camera medium freeman
             freeman overlays "doshlo"
@@ -389,7 +389,7 @@ scene "s8" (duration: 1s, set: zal) {
 
     //lip 19
     together {
-        freeman speaks for 3.29s
+        freeman speaks for 2.45s
         do {
             camera medium freeman
             freeman overlays "palec_vverh"
@@ -425,7 +425,7 @@ scene "s9" (duration: 1s, set: ulica) {
 
     //lip 21
     together {
-        freeman speaks for 4.65s
+        freeman speaks for 5.81s
         do {
             camera medium freeman
             freeman overlays "think"
