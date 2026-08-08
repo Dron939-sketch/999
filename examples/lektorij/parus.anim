@@ -281,10 +281,10 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  пауза длиннее самой фразы: ноль должен упасть в тишину.
     //lip 9
     together {
-        freeman speaks for 7.08s
+        freeman speaks for 8.18s
         do {
             freeman overlays "vzves"       // «ночью чужая плита простаивает»
-            wait 3.4s
+            wait 3.93s
             freeman overlays "vniz"        // «не копейки — ноль»
         }
     }
@@ -334,10 +334,10 @@ scene "tropy" (duration: 1s, set: tropy) {
     //  Ровно, как признают факт, — не утешая.
     //lip 12
     together {
-        freeman speaks for 5.12s
+        freeman speaks for 5.85s
         do {
             freeman overlays "teplo"       // «строить вы умеете»
-            wait 2.8s
+            wait 3.2s
             freeman overlays "bow"         // «вы строили против ветра»
         }
     }
@@ -364,10 +364,10 @@ scene "tropy" (duration: 1s, set: tropy) {
     //  «стадо» стоят в одной фразе. Уберите стадо — останется спорный лозунг.
     //lip 14
     together {
-        freeman speaks for 8.52s
+        freeman speaks for 7.73s
         do {
             freeman overlays "raskryl"     // «это не свобода, это стадо»
-            wait 3.92s
+            wait 3.56s
             freeman overlays "otverg"      // «потому что видят мойки»
         }
     }
@@ -390,10 +390,10 @@ scene "shutka" (duration: 1s, set: ulica) {
     //  есть предел, и предел назовут следующей репликой.
     //lip 15
     together {
-        freeman speaks for 5.03s
+        freeman speaks for 4.18s
         do {
             freeman overlays "otmahnulsya" // «работать больше»
-            wait 2.7s
+            wait 2.24s
             freeman overlays "razmer"      // «открыть вторую мойку»
         }
     }
@@ -429,7 +429,7 @@ scene "zal" (duration: 1s, set: zal) {
     // ── ПРЕЗЕНТАЦИЯ (VO-17): название ─────────────────────────────────
     //lip 17
     together {
-        freeman speaks for 2.45s
+        freeman speaks for 1.85s
         do {
             freeman overlays "razvel"      // «курс так и называется: парус»
         }
@@ -485,7 +485,7 @@ scene "zhalo" (duration: 1s, set: ulica) {
     //  ЗРИТЕЛЬ УХОДИТ НАВЕРХ ПО СТАТУСУ: у него в руках работа, а не приговор.
     //lip 20
     together {
-        freeman speaks for 5.01s
+        freeman speaks for 4.31s
         do {
             camera medium freeman
             freeman overlays "think"       // «кто на этом часе не зарабатывает?»
@@ -504,10 +504,10 @@ scene "zhalo" (duration: 1s, set: ulica) {
     nomer2 scales 0.16 over 0.02s
     //lip 21
     together {
-        freeman speaks for 4.62s
+        freeman speaks for 5.41s
         do {
             freeman overlays "gladit_grud_niz"  // «лекторий мейстера»
-            wait 2.93s
+            wait 3.43s
             freeman overlays "vozzvanie"        // «поехали!»
         }
     }
