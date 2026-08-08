@@ -7952,7 +7952,8 @@
           "rotation": 14
         },
         "shin_right": {
-          "rotation": -58
+          "rotation": -58,
+          "part": "shin_right_nosok"
         },
         "upper_arm_left": {
           "rotation": 22
@@ -7988,7 +7989,8 @@
           "rotation": 14
         },
         "shin_left": {
-          "rotation": -58
+          "rotation": -58,
+          "part": "shin_left_nosok"
         },
         "upper_arm_right": {
           "rotation": -22
@@ -8001,6 +8003,41 @@
         },
         "forearm_left": {
           "rotation": -24
+        }
+      }
+    },
+    "na_noskah": {
+      "name": "na_noskah",
+      "transition_duration": 0.18,
+      "bones": {
+        "torso": {
+          "rotation": -2
+        },
+        "thigh_left": {
+          "rotation": -4
+        },
+        "shin_left": {
+          "rotation": -14,
+          "part": "shin_left_nosok"
+        },
+        "thigh_right": {
+          "rotation": 4
+        },
+        "shin_right": {
+          "rotation": -14,
+          "part": "shin_right_nosok"
+        },
+        "upper_arm_left": {
+          "rotation": 38
+        },
+        "forearm_left": {
+          "rotation": -26
+        },
+        "upper_arm_right": {
+          "rotation": -38
+        },
+        "forearm_right": {
+          "rotation": 26
         }
       }
     }
