@@ -7931,6 +7931,78 @@
           ]
         }
       }
+    },
+    "luna_levaya": {
+      "name": "luna_levaya",
+      "transition_duration": 0.1,
+      "bones": {
+        "torso": {
+          "rotation": -3
+        },
+        "head": {
+          "rotation": 4
+        },
+        "thigh_left": {
+          "rotation": -22
+        },
+        "shin_left": {
+          "rotation": 2
+        },
+        "thigh_right": {
+          "rotation": 14
+        },
+        "shin_right": {
+          "rotation": -58
+        },
+        "upper_arm_left": {
+          "rotation": 22
+        },
+        "forearm_left": {
+          "rotation": -30
+        },
+        "upper_arm_right": {
+          "rotation": -34
+        },
+        "forearm_right": {
+          "rotation": 24
+        }
+      }
+    },
+    "luna_pravaya": {
+      "name": "luna_pravaya",
+      "transition_duration": 0.1,
+      "bones": {
+        "torso": {
+          "rotation": 3
+        },
+        "head": {
+          "rotation": -4
+        },
+        "thigh_right": {
+          "rotation": -22
+        },
+        "shin_right": {
+          "rotation": 2
+        },
+        "thigh_left": {
+          "rotation": 14
+        },
+        "shin_left": {
+          "rotation": -58
+        },
+        "upper_arm_right": {
+          "rotation": -22
+        },
+        "forearm_right": {
+          "rotation": 30
+        },
+        "upper_arm_left": {
+          "rotation": 34
+        },
+        "forearm_left": {
+          "rotation": -24
+        }
+      }
     }
   },
   "karta": {
