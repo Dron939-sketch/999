@@ -8040,6 +8040,276 @@
           "rotation": 26
         }
       }
+    },
+    "luna_bok_1": {
+      "name": "luna_bok_1",
+      "transition_duration": 0.1,
+      "bones": {
+        "cloak": {
+          "part": "torso_side",
+          "scale": [
+            1.092,
+            1.0
+          ]
+        },
+        "head": {
+          "part": "head_side",
+          "scale": [
+            0.98,
+            0.9167
+          ],
+          "offset": [
+            63,
+            66
+          ],
+          "z_order": 5
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            22,
+            -121
+          ],
+          "scale": [
+            0.521,
+            0.783
+          ]
+        },
+        "eye_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "mouth": {
+          "part": "mouth_side",
+          "offset": [
+            10,
+            -56
+          ],
+          "scale": [
+            1.0,
+            1.458
+          ]
+        },
+        "upper_arm_right": {
+          "part": "arm_out_upper_r",
+          "offset": [
+            0,
+            23
+          ],
+          "rotation": 13,
+          "z_order": 4,
+          "scale": [
+            0.48,
+            1.0
+          ]
+        },
+        "forearm_right": {
+          "part": "arm_out_fore_r",
+          "rotation": -7
+        },
+        "hand_right": {
+          "part": "arm_out_hand_r",
+          "scale": [
+            0.95,
+            0.75
+          ]
+        },
+        "upper_arm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "forearm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "hand_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            18,
+            172
+          ],
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": -26
+        },
+        "shin_right": {
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": 4
+        },
+        "thigh_left": {
+          "rotation": 16,
+          "offset": [
+            11,
+            172
+          ],
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "shin_left": {
+          "rotation": -52,
+          "scale": [
+            -0.846,
+            0.97
+          ],
+          "part": "shin_left_nosok"
+        },
+        "torso": {
+          "rotation": -4
+        }
+      }
+    },
+    "luna_bok_2": {
+      "name": "luna_bok_2",
+      "transition_duration": 0.1,
+      "bones": {
+        "cloak": {
+          "part": "torso_side",
+          "scale": [
+            1.092,
+            1.0
+          ]
+        },
+        "head": {
+          "part": "head_side",
+          "scale": [
+            0.98,
+            0.9167
+          ],
+          "offset": [
+            63,
+            66
+          ],
+          "z_order": 5
+        },
+        "eye_right": {
+          "part": "eye_right",
+          "offset": [
+            22,
+            -121
+          ],
+          "scale": [
+            0.521,
+            0.783
+          ]
+        },
+        "eye_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "mouth": {
+          "part": "mouth_side",
+          "offset": [
+            10,
+            -56
+          ],
+          "scale": [
+            1.0,
+            1.458
+          ]
+        },
+        "upper_arm_right": {
+          "part": "arm_out_upper_r",
+          "offset": [
+            0,
+            23
+          ],
+          "rotation": 13,
+          "z_order": 4,
+          "scale": [
+            0.48,
+            1.0
+          ]
+        },
+        "forearm_right": {
+          "part": "arm_out_fore_r",
+          "rotation": -7
+        },
+        "hand_right": {
+          "part": "arm_out_hand_r",
+          "scale": [
+            0.95,
+            0.75
+          ]
+        },
+        "upper_arm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "forearm_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "hand_left": {
+          "scale": [
+            0,
+            0
+          ]
+        },
+        "thigh_right": {
+          "offset": [
+            18,
+            172
+          ],
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": 16
+        },
+        "shin_right": {
+          "scale": [
+            -0.9,
+            1.0
+          ],
+          "rotation": -52,
+          "part": "shin_right_nosok"
+        },
+        "thigh_left": {
+          "rotation": -26,
+          "offset": [
+            11,
+            172
+          ],
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "shin_left": {
+          "rotation": 4,
+          "scale": [
+            -0.846,
+            0.97
+          ]
+        },
+        "torso": {
+          "rotation": -4
+        }
+      }
     }
   },
   "karta": {
