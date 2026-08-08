@@ -25,8 +25,10 @@
 //     `lokti`, `manit`, `odna_v_bok`, `vdal_l`, `mahnul_oboimi`, `facepalm`,
 //     `bow`, `think`. Руки и брови — не единственное, чем человек говорит.
 //
-//  5. НОМЕРА КУРСА НЕТ: студия его не присвоила. Первый и последний кадры
-//     тождественны и стоят в позе поглаживания груди — место под метку готово.
+//  5. НОМЕР КУРСА 13, метка `nomer-13.svg` белой тушью на груди, в ПЕРВОМ и
+//     ПОСЛЕДНЕМ кадре. Масштаб метки идёт ЗА фигурой: в этой локации человек
+//     занимает 0.24 кадра против 0.57 в кухне, и метка «как в прошлый раз»
+//     накрыла бы полбалахона.
 //
 //  6. ЛОКАЦИЙ ШЕСТЬ, ТРИ НАРИСОВАНЫ СТУДИЕЙ ПОД ЭТОТ РОЛИК по промтам
 //     (`parus-IMAGE-PROMPTS.md`): улица с мойкой и пустым помещением, зал
@@ -92,11 +94,28 @@ scene "ulica" (duration: 1s, set: ulica) {
     //  Координаты и масштаб сняты пробным рендером (карта пола: back_y 0.56).
     place freeman at (0.50, 0.96) facing front on floor
     freeman scales 0.86 over 0.01s
+
+    //  МЕТКА КУРСА 13. Масштаб метки идёт ЗА фигурой, а не берётся «как в
+    //  прошлый раз»: в этой локации человек занимает 0.24 кадра против 0.57 в
+    //  кухне, и метка того же размера накрыла бы ему половину балахона.
+    let nomer = prop("nomer", "../assets/props/nomer-13.svg") at (0.515, 0.672) layer 9
+    nomer scales 0.16 over 0.01s
+    nomer hides
+
     camera wide
 
-    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ.
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ. Метка
+    //  проявляется через мгновение после стыка и снимается до первого слова:
+    //  на нулевом кадре её быть не может, иначе при зацикливании виден шов.
     freeman pose "gladit_grud"
-    wait 0.15s
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.177 over 0.05s ease-out
+    nomer scales 0.16 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
     freeman pose "calm"
     wait 0.1s
 
@@ -440,6 +459,11 @@ scene "zhalo" (duration: 1s, set: ulica) {
 
     place freeman at (0.50, 0.96) facing front on floor
     freeman scales 0.86 over 0.01s
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-13.svg") at (0.515, 0.672) layer 9
+    nomer2 scales 0.16 over 0.01s
+    nomer2 hides
+
     camera wide
     freeman pose "calm"
 
@@ -471,7 +495,13 @@ scene "zhalo" (duration: 1s, set: ulica) {
     wait 1.2s
 
     // ── ПОДПИСЬ (VO-21): кольцо для ленты ─────────────────────────────
+    //  ТОТ ЖЕ КАДР, ЧТО И ПЕРВЫЙ, И ТА ЖЕ МЕТКА.
     freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.177 over 0.05s ease-out
+    nomer2 scales 0.16 over 0.02s
     //lip 21
     together {
         freeman speaks for 4.62s
@@ -481,6 +511,7 @@ scene "zhalo" (duration: 1s, set: ulica) {
             freeman overlays "vozzvanie"        // «поехали!»
         }
     }
+    nomer2 hides
     //  ПОДМИГИВАНИЕ — ПОСЛЕ РЕПЛИКИ: `hero_wink` трогает рот.
     freeman overlays "hero_wink"
     wait 0.6s
