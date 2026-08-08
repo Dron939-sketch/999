@@ -216,7 +216,7 @@ pub fn render_frame(
     let set_floor = set_name
         .and_then(|n| assets.sets.get(n))
         .and_then(|s| s.surfaces.as_ref())
-        .map(|s| s.floor);
+        .and_then(|s| s.floor);
     // Карты фигур — чтобы `on floor` у персонажа переводил ступни в якорь.
     let kartas = assets.kartas();
 
@@ -483,11 +483,7 @@ fn render_rigged_character(
     // Determine current and previous pose events, and interpolation progress.
     // Overlay events (speech mouth flaps) merge onto the last held body pose,
     // so a gesture — or a lying character — keeps its posture while talking.
-    let events: Vec<&PoseEvent> = timeline
-        .pose_events
-        .iter()
-        .filter(|e| e.entity == entity_name)
-        .collect();
+    let events: Vec<&PoseEvent> = sobytiya_pozy(timeline, entity_name);
 
     let mut current_idx: Option<usize> = None;
     for (i, ev) in events.iter().enumerate() {
@@ -519,16 +515,6 @@ fn render_rigged_character(
     let from_pose = resolve_effective_pose(rig, &events, from_idx);
     let to_pose = resolve_effective_pose(rig, &events, to_idx);
 
-    // Hand-drawn timing. Short transitions (mouth flaps, blinks) just ease out.
-    // Larger gestures get anticipation (a wind-up away from the target) plus an
-    // overshoot, so poses read as struck rather than slid — the core of the
-    // Freeman feel. Extrapolation past [0,1] is intentional here.
-    let eased_t = if td < 0.15 {
-        ease_out_cubic(pose_t)
-    } else {
-        anticipate_back(pose_t)
-    };
-
     // Stable per-occurrence seed: same (entity, pose, start time) always nudges
     // the same way (reproducible renders), but a different occurrence of the
     // same named pose — a different scene, a different clone — draws its own
@@ -546,9 +532,9 @@ fn render_rigged_character(
         h
     };
 
-    // Get interpolated bone states.
-    let mut bone_states =
-        interpolate_skeleton(&rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), eased_t);
+    // Get interpolated bone states — с ПЕРЕХЛЁСТОМ (см. `poza_s_perehlyostom`).
+    let mut bone_states = poza_s_perehlyostom(
+        &rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), pose_t, td);
     skeleton::apply_pose_variance(&mut bone_states, pose_seed);
 
     // Pose-only state one animation tick (1/12s) earlier — lets us measure how
@@ -558,14 +544,52 @@ fn render_rigged_character(
         Some(idx) => (((pose_time - step_dt) - events[idx].time) / td).clamp(0.0, 1.0),
         None => 0.0,
     };
-    let eased_prev = if td < 0.15 {
-        ease_out_cubic(prev_pose_t)
-    } else {
-        anticipate_back(prev_pose_t)
-    };
-    let mut bone_states_prev =
-        interpolate_skeleton(&rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), eased_prev);
+    let mut bone_states_prev = poza_s_perehlyostom(
+        &rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), prev_pose_t, td);
     skeleton::apply_pose_variance(&mut bone_states_prev, pose_seed);
+
+    // РОТ ИДЁТ НА ОДИН РИСУНОК ВПЕРЁД ЗВУКА.
+    //
+    // Кадр держится N кадров (`on-twos`), а поза берётся по правилу «последнее
+    // событие не позже текущего времени». Значит визема, начавшаяся сразу ПОСЛЕ
+    // начала рисунка, покажется только на следующем — рот опаздывает от звука на
+    // 0..83 мс. Ухо к такому знаку неравнодушно: рассинхрон, где звук ОБГОНЯЕТ
+    // картинку, замечают примерно с 45 мс, а обратный — где рот чуть впереди —
+    // терпят вчетверо дольше. Поэтому мультипликаторы всегда кладут рисунок рта
+    // на кадр-два РАНЬШЕ фонограммы, и мы делаем то же: рот сэмплируется на один
+    // держаный рисунок вперёд, остальное тело — как было.
+    //
+    // Делается только для кости рта: увести вперёд всё тело значило бы, что жест
+    // приходит раньше слова, под которое поставлен.
+    let mouth_time = pose_time + step_dt;
+    let mouth_idx = events.iter().rposition(|e| e.time <= mouth_time);
+    if mouth_idx != current_idx {
+        let (m_from, m_to, m_t, m_td) = match mouth_idx {
+            None => (None, None, 0.0, 0.18),
+            Some(idx) => {
+                let d = events
+                    .get(idx)
+                    .and_then(|ev| rig.poses.get(&ev.pose))
+                    .map(|p| p.transition_duration)
+                    .unwrap_or(0.18)
+                    .max(0.01);
+                let elapsed = mouth_time - events[idx].time;
+                if elapsed >= d {
+                    (Some(idx), Some(idx), 1.0, d)
+                } else {
+                    (if idx > 0 { Some(idx - 1) } else { None }, Some(idx), elapsed / d, d)
+                }
+            }
+        };
+        let mf = resolve_effective_pose(rig, &events, m_from);
+        let mt = resolve_effective_pose(rig, &events, m_to);
+        let rot = poza_s_perehlyostom(&rig.skeleton, mf.as_ref(), mt.as_ref(), m_t, m_td);
+        for (s, m) in bone_states.iter_mut().zip(rot.iter()) {
+            if s.name == "mouth" {
+                *s = m.clone();
+            }
+        }
+    }
 
     // Detect if the character is moving (for walk cycle).
     let velocity = compute_velocity(timeline, entity_name, t);
@@ -1313,6 +1337,37 @@ fn collect_bone_drawables<'a>(
     }
 }
 
+/// Все события позы одной сущности, УПОРЯДОЧЕННЫЕ ПО ВРЕМЕНИ.
+///
+/// Сортировка здесь — не аккуратность, а исправление. Потребители ищут текущую
+/// позу линейным проходом «последний элемент, у которого `time <= t`», то есть
+/// доверяют порядку МАССИВА. А таймлайн складывает события ветвями: `together`
+/// проходит первую ветвь целиком, отматывает время назад и проходит вторую.
+/// Реплика у нас пишется ровно так —
+///
+/// ```text
+/// together { do { lips ... }        // рты, времена 0.04 … 7.0
+///            do { overlays ... } }  // жесты, времена 0 … 4.2
+/// ```
+///
+/// — и в массиве жест со временем 0 оказывается ПОСЛЕ всех ртов. Линейный
+/// проход на любом t выбирал его: рот возвращался к базовой позе и всю реплику
+/// стоял закрытым. Липсинк при этом был исправен на всех этажах — Rhubarb
+/// размечал, препроцессор переводил, движок откладывал события, — просто до
+/// экрана они не доходили. Так вышел ролик «Этика» с неподвижным ртом.
+///
+/// Сортировка устойчивая: при равном времени порядок ветвей сохраняется, и
+/// более поздняя ветвь по-прежнему кладётся поверх — как и задумано.
+fn sobytiya_pozy<'a>(timeline: &'a Timeline, entity_name: &str) -> Vec<&'a PoseEvent> {
+    let mut events: Vec<&PoseEvent> = timeline
+        .pose_events
+        .iter()
+        .filter(|e| e.entity == entity_name)
+        .collect();
+    events.sort_by(|a, b| a.time.partial_cmp(&b.time).unwrap_or(std::cmp::Ordering::Equal));
+    events
+}
+
 /// Resolve the effective pose for a pose-event index. A full (non-overlay)
 /// event resolves to its named pose. An overlay event (speech mouth flap)
 /// resolves to the last held full pose with the overlay's bones merged on top,
@@ -1365,6 +1420,68 @@ fn resolve_effective_pose(
         }
         None => Some(pose.clone()),
     }
+}
+
+/// ПЕРЕХЛЁСТ (overlapping action): части тела трогаются НЕ ОДНОВРЕМЕННО.
+///
+/// Раньше все кости ехали по одному `t`: корпус, плечо, предплечье и кисть
+/// стартовали в один кадр и в один кадр останавливались. Так двигается
+/// картонная марионетка на одной оси — и именно это студия назвала «не как у
+/// живого человека». У живого движение идёт ВОЛНОЙ от опоры к концу: таз ведёт,
+/// плечо подхватывает, кисть приходит последней и потому «хлещет».
+///
+/// Здесь это сделано самым дешёвым честным способом: у кости есть ЗАДЕРЖКА —
+/// доля перехода, на которую она трогается позже корпуса. Внутри своего
+/// остатка кость проходит ту же кривую целиком, поэтому к концу перехода все
+/// приходят вместе и поза читается как единая — расходится только СЕРЕДИНА,
+/// где и живёт пластика.
+///
+/// Рот исключён намеренно: он принадлежит липсинку и опаздывать не имеет права.
+fn zaderzhka_kosti(name: &str) -> f64 {
+    match name {
+        "thigh_left" | "thigh_right" => 0.03,
+        "upper_arm_left" | "upper_arm_right" => 0.06,
+        "shin_left" | "shin_right" => 0.07,
+        "head" | "hat" | "glasses" | "eye_left" | "eye_right"
+        | "brow_left" | "brow_right" => 0.08,
+        "forearm_left" | "forearm_right" => 0.14,
+        "hand_left" | "hand_right" | "cane" => 0.22,
+        _ => 0.0, // root, torso, cloak, mouth — ведут, не отстают
+    }
+}
+
+/// Набор задержек, встречающихся в `zaderzhka_kosti`. Держится списком, а не
+/// собирается по костям, чтобы число проходов интерполяции было константой.
+const ZADERZHKI: [f64; 6] = [0.03, 0.06, 0.07, 0.08, 0.14, 0.22];
+
+fn poza_s_perehlyostom(
+    skeleton: &skeleton::Skeleton,
+    from_pose: Option<&skeleton::Pose>,
+    to_pose: Option<&skeleton::Pose>,
+    pose_t: f64,
+    td: f64,
+) -> Vec<skeleton::BoneState> {
+    // Hand-drawn timing. Short transitions (mouth flaps, blinks) just ease out.
+    // Larger gestures get anticipation (a wind-up away from the target) plus an
+    // overshoot, so poses read as struck rather than slid — the core of the
+    // Freeman feel. Extrapolation past [0,1] is intentional here.
+    let krivaya = |x: f64| if td < 0.15 { ease_out_cubic(x) } else { anticipate_back(x) };
+    let mut states = interpolate_skeleton(skeleton, from_pose, to_pose, krivaya(pose_t));
+    // На коротких переходах (флэп рта, моргание) перехлёст не нужен и вреден:
+    // 22% от 0.04с — это полкадра, зато лишние пять интерполяций на каждый слог.
+    if td < 0.15 {
+        return states;
+    }
+    for lag in ZADERZHKI {
+        let sdvig = ((pose_t - lag) / (1.0 - lag)).clamp(0.0, 1.0);
+        let pozdnie = interpolate_skeleton(skeleton, from_pose, to_pose, krivaya(sdvig));
+        for (s, p) in states.iter_mut().zip(pozdnie.iter()) {
+            if (zaderzhka_kosti(&s.name) - lag).abs() < 1e-9 {
+                *s = p.clone();
+            }
+        }
+    }
+    states
 }
 
 /// Ease-out-back: decelerates and overshoots slightly past the target before
@@ -1536,9 +1653,32 @@ fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64, accent: f64
             "hand_right" => {
                 state.rotation += accent * hr;
             }
-            // Бровей у оригинала нет ни на одном кадре — лицо это только
-            // глаза и рот. Акцент отыгрывается веком (форма глаза) и ртом,
-            // а не подскоком брови: бровь была нашей отсебятиной.
+            // ЛИЦО РАБОТАЕТ ВО ВРЕМЯ РЕЧИ, А НЕ ТОЛЬКО РОТ.
+            //
+            // Бровей у оригинала нет ни на одном кадре — лицо это только глаза
+            // и рот. Здесь и стояла заглушка `_ => {}`: комментарий обещал, что
+            // акцент отыгрывается веком, а веко не двигалось ни разу. Всю речь
+            // — а это четыре пятых хронометража — жил один рот, и лицо читалось
+            // как маска с механической челюстью. Замер по шестнадцати роликам:
+            // восемь изменений лица ВНУТРИ реплик на весь каталог.
+            //
+            // Теперь глаз идёт от ГОЛОСА, а не от таймера: `accent` — это удар
+            // по огибающей mp3, `amt` — насколько сейчас громко. Поэтому мимика
+            // попадает в озвучку по построению, в любом ролике и без разметки.
+            name if name.starts_with("eye") => {
+                // Прищур на ударном слоге: веко закрывает глаз сверху и тут же
+                // отпускает (accent спадает за ~0.25с). Объём сохраняем — глаз
+                // раздаётся в ширину, как настоящее веко.
+                state.scale.1 *= 1.0 - accent * 0.17;
+                state.scale.0 *= 1.0 + accent * 0.05;
+                // Между ударами глаз чуть шире обычного: человек, который
+                // говорит, смотрит активнее, чем человек, который молчит.
+                state.scale.1 *= 1.0 + amt * 0.03;
+                // Взгляд ДЕРЖИТ зрителя, пока голова уходит за жестом: зрачок
+                // смещается против поворота головы (та же величина, обратный
+                // знак — см. ветку "head" выше).
+                state.offset.0 -= (t * 0.9 * tau).sin() * 0.45 * amt;
+            }
             _ => {}
         }
     }
@@ -1954,11 +2094,7 @@ fn get_pose_interpolation<'a>(
     entity_name: &str,
     t: f64,
 ) -> (Option<&'a str>, Option<&'a str>, f64) {
-    let events: Vec<&PoseEvent> = timeline
-        .pose_events
-        .iter()
-        .filter(|e| e.entity == entity_name)
-        .collect();
+    let events: Vec<&PoseEvent> = sobytiya_pozy(timeline, entity_name);
 
     if events.is_empty() {
         return (Some("idle"), Some("idle"), 1.0);

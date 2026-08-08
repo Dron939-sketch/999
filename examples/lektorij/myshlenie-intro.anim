@@ -91,7 +91,7 @@ scene "dver" (duration: 50s, set: dveri) {
             wait 0.7s
             freeman overlays "point"
             wait 0.7s
-            freeman overlays "no"              // «да не думал ты» — развёл руками
+            freeman overlays "no"              // «за э́той две́рью — ты» — развёл руками
             camera medium freeman
         }
     }

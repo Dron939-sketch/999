@@ -1,0 +1,456 @@
+// =============================================================================
+//  «ПАРИКМАХЕРСКАЯ» — интро к курсу «Парус».
+//  VO — parus-VO.md, маркеры 1..21.
+//
+//  ОДНА МЫСЛЬ НА РОЛИК: вы построили то, что смогли подсмотреть. Строить надо
+//  не с нуля, а там, где уже течёт чужой поток и стоит чужой простой.
+//
+//  ЧЕМ ЭТОТ РОЛИК УСТРОЕН
+//
+//  1. У ЗРИТЕЛЯ ЗАБИРАЮТ ОБЪЯСНЕНИЯ ДО ТОГО, как назовут причину. Мойка в
+//     ролике исправна, персонал не ворует, спрос есть. Не сделаешь этого —
+//     зритель спрячется за «не повезло» и дальше не услышит ничего.
+//
+//  2. ОТВЕТ НА ПЕРЕЛОМ ДАЮТ СРАЗУ И ОДНИМ СЛОВОМ: «Парикмахерскую». Держать
+//     паузу тут нечем — зритель уже сам ответил, и ролику остаётся совпасть.
+//
+//  3. ВЕЩЬ РОЛИКА — ЧАС, который клиент теряет на мойке. Его нельзя выдумать и
+//     нельзя оспорить: зритель сам его сидел. Уберите час — останется
+//     «используйте чужие потоки», верно и мертво.
+//
+//  4. РАЗНООБРАЗИЕ ДВИЖЕНИЙ — ЗАДАНИЕ СТУДИИ, И ОНО СЧИТАЕТСЯ ЧИСЛОМ. Замер по
+//     каталогу: в риге 198 поз, использованы 96, сто две не использованы ни
+//     разу, а на двенадцать самых частых приходится треть всех вызовов. В этом
+//     ролике намеренно взяты слои, которых в серии ещё не было: `kozyrek`,
+//     `lokti`, `manit`, `odna_v_bok`, `vdal_l`, `mahnul_oboimi`, `facepalm`,
+//     `bow`, `think`. Руки и брови — не единственное, чем человек говорит.
+//
+//  5. НОМЕР КУРСА 13, метка `nomer-13.svg` белой тушью на груди, в ПЕРВОМ и
+//     ПОСЛЕДНЕМ кадре. Масштаб метки идёт ЗА фигурой: в этой локации человек
+//     занимает 0.24 кадра против 0.57 в кухне, и метка «как в прошлый раз»
+//     накрыла бы полбалахона.
+//
+//  6. ЛОКАЦИЙ ШЕСТЬ, ТРИ НАРИСОВАНЫ СТУДИЕЙ ПОД ЭТОТ РОЛИК по промтам
+//     (`parus-IMAGE-PROMPTS.md`): улица с мойкой и пустым помещением, зал
+//     ожидания автомойки и ночная кухня кафе. Все три проверены пробным
+//     рендером: цвета ноль, масштаб сходится, гейт масштаба зелёный.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · речь НА ХОДУ — фронтальный шаг слоем, полная поза сбрасывает липсинк;
+//    · в длинной реплике первым слоем называется РУКА (lint_arms);
+//    · фигура НЕ ПРИСЕДАЕТ (tools/posture.py);
+//    · `duration:` ГОВОРЯЩЕЙ СЦЕНЫ — ПОЛ, А НЕ ЦЕЛЬ, и потому равен 1s;
+//      ветка `do{}` не длиннее `speaks for` (tools/pauses.py);
+//    · голый `scales` стоит 0.5с таймлайна — всегда `over 0.01s`;
+//    · слой, трогающий рот, ВНУТРИ реплики перебивает липсинк — только до или
+//      после (tools/speech_lint.py). Здесь таких два: `smug` и `hero_wink`;
+//    · номера реплик и маркеров сходятся (tools/sverka.py);
+//    · комментарий цитирует ЖИВУЮ реплику (tools/citaty.py);
+//    · КАЖДОЕ ИМЯ ПОЗЫ ЕСТЬ В РИГЕ (tools/imena_poz.py);
+//    · ВИЗЕМЫ ОТКРЫВАЮТ РОТ (tools/rot.py, реестр §XXVI);
+//    · МАСШТАБ ФИГУРЫ сверяется с мерой локации (tools/masshtab.py, §XXVII);
+//    · БЕЗ СВЕРХКРУПНЫХ ПЛАНОВ: растр сета на ECU-зуме взрывается.
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
+//  Завод перепишет их по факту озвучки.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set ulica from "../assets/sets/parus-ulica-mojka.svg"
+import set void from "../assets/sets/void-black.svg"
+import set ozhidanie from "../assets/sets/parus-zal-ozhidaniya.svg"
+import set dve from "../assets/sets/parus-dve-mojki.svg"
+import set tropy from "../assets/sets/razvilka-trop.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+
+// ============ СЦЕНА 1: ulica ============================================
+scene "s1" (duration: 1s, set: ulica) {
+    place freeman at (0.50, 0.96) facing front on floor
+    freeman scales 0.86 over 0.01s
+
+    let nomer = prop("nomer", "../assets/props/nomer-13.svg") at (0.515, 0.672) layer 9
+    nomer scales 0.16 over 0.01s
+    nomer hides
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.177 over 0.05s ease-out
+    nomer scales 0.16 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 1
+    together {
+        freeman speaks for 1.94s
+        do {
+            freeman overlays "odna_v_bok"
+        }
+    }
+    wait 0.5s
+
+    //lip 2
+    together {
+        freeman speaks for 4.15s
+        do {
+            freeman overlays "rubit"
+            wait 1.27s
+            freeman overlays "rubit_l"
+            wait 1.27s
+            freeman overlays "lokti"
+        }
+    }
+    wait 0.45s
+
+    //lip 3
+    together {
+        freeman speaks for 5.46s
+        do {
+            camera medium freeman
+            freeman overlays "ostyl"
+            wait 2.51s
+            freeman overlays "facepalm"
+        }
+    }
+    camera wide
+    wait 0.8s
+
+    //lip 4
+    together {
+        freeman speaks for 4.45s
+        do {
+            freeman overlays "otmahnulsya"
+            wait 2.05s
+            freeman overlays "vdal_l"
+        }
+    }
+    wait 0.5s
+
+    //lip 5
+    together {
+        freeman speaks for 2.06s
+        do {
+            camera medium freeman
+            freeman overlays "v_upor"
+            wait 0.95s
+            freeman overlays "prishchur"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+// ============ СЦЕНА 2: void ============================================
+scene "s2" (duration: 1s, set: void) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 1.05 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 6
+    together {
+        freeman speaks for 5.54s
+        do {
+            freeman overlays "vozzvanie"
+            wait 2.46s
+            freeman overlays "manit"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 3: dve ============================================
+scene "s3" (duration: 1s, set: dve) {
+    transition static 0.2s
+
+    place freeman at (0.30, 0.96) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 7
+    together {
+        freeman speaks for 7.29s
+        do {
+            freeman overlays "razvel"
+            wait 2.2s
+            freeman overlays "razmer"
+        }
+    }
+    wait 0.5s
+
+    //lip 8
+    together {
+        freeman speaks for 3.94s
+        do {
+            camera medium freeman
+            freeman overlays "klin"
+            wait 1.82s
+            freeman overlays "vniz"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+// ============ СЦЕНА 4: ozhidanie ============================================
+scene "s4" (duration: 1s, set: ozhidanie) {
+    transition static 0.2s
+
+    place freeman at (0.62, 0.95) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 9
+    together {
+        freeman speaks for 5.09s
+        do {
+            freeman overlays "kozyrek"
+            wait 1.9s
+            freeman overlays "ladoni_vniz"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 5: ulica ============================================
+scene "s5" (duration: 1s, set: ulica) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.96) facing front on floor
+    freeman scales 0.86 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 10
+    together {
+        freeman speaks for 5.12s
+        do {
+            freeman overlays "manit"
+            wait 2.36s
+            freeman overlays "vdal_l"
+        }
+    }
+    wait 0.5s
+
+    //lip 11
+    together {
+        freeman speaks for 4.18s
+        do {
+            camera medium freeman
+            freeman overlays "teplo"
+            wait 2.0s
+            freeman overlays "raskryl"
+        }
+    }
+    camera wide
+    wait 0.9s
+
+    //lip 12
+    together {
+        freeman speaks for 9.56s
+        do {
+            freeman overlays "mahnul_oboimi"
+            wait 3.89s
+            freeman overlays "v_upor"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 6: tropy ============================================
+scene "s6" (duration: 1s, set: tropy) {
+    transition static 0.2s
+
+    place freeman at (0.45, 0.92) facing front on floor
+    freeman scales 0.70 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 13
+    together {
+        freeman speaks for 7.88s
+        do {
+            freeman overlays "teplo"
+            wait 3.27s
+            freeman overlays "bow"
+        }
+    }
+    wait 0.9s
+
+    //lip 14
+    together {
+        freeman speaks for 4.93s
+        do {
+            camera medium freeman
+            freeman overlays "stop_ladon"
+            wait 2.08s
+            freeman overlays "vdal_l"
+        }
+    }
+    camera wide
+    wait 0.9s
+
+    //lip 15
+    together {
+        freeman speaks for 7.76s
+        do {
+            freeman overlays "raskryl"
+            wait 3.57s
+            freeman overlays "otverg"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 7: ulica ============================================
+scene "s7" (duration: 1s, set: ulica) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.96) facing front on floor
+    freeman scales 0.86 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 16
+    together {
+        freeman speaks for 4.41s
+        do {
+            freeman overlays "otmahnulsya"
+            wait 2.03s
+            freeman overlays "razmer"
+        }
+    }
+    wait 0.35s
+
+    //lip 17
+    together {
+        freeman speaks for 2.28s
+        do {
+            camera medium freeman
+            freeman overlays "doshlo"
+        }
+    }
+    camera wide
+    freeman overlays "smug"
+    wait 1.0s
+}
+
+// ============ СЦЕНА 8: zal ============================================
+scene "s8" (duration: 1s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.32, 0.94) facing front on floor
+    freeman scales 1.00 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 18
+    together {
+        freeman speaks for 1.85s
+        do {
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.45s
+
+    //lip 19
+    together {
+        freeman speaks for 2.45s
+        do {
+            camera medium freeman
+            freeman overlays "palec_vverh"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+// ============ СЦЕНА 9: ulica ============================================
+scene "s9" (duration: 1s, set: ulica) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.96) facing front on floor
+    freeman scales 0.86 over 0.01s
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-13.svg") at (0.515, 0.672) layer 9
+    nomer2 scales 0.16 over 0.01s
+    nomer2 hides
+    camera wide
+    freeman pose "calm"
+
+    //lip 20
+    together {
+        freeman speaks for 3.77s
+        do {
+            freeman overlays "manit"
+            wait 1.73s
+            freeman overlays "kozyrek"
+        }
+    }
+    wait 0.5s
+
+    //lip 21
+    together {
+        freeman speaks for 4.00s
+        do {
+            camera medium freeman
+            freeman overlays "think"
+        }
+    }
+    camera wide
+    wait 1.2s
+
+    //  ТОТ ЖЕ КАДР, ЧТО И ПЕРВЫЙ, И ТА ЖЕ МЕТКА.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.177 over 0.05s ease-out
+    nomer2 scales 0.16 over 0.02s
+
+    //lip 22
+    together {
+        freeman speaks for 5.68s
+        do {
+            freeman overlays "gladit_grud_niz"
+            wait 2.61s
+            freeman overlays "vozzvanie"
+        }
+    }
+    nomer2 hides
+    freeman overlays "hero_wink"
+}

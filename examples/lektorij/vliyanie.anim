@@ -110,7 +110,7 @@ scene "prihozhaya" (duration: 1s, set: prihozhaya) {
         do {
             camera medium freeman
             wait 2.2s
-            freeman overlays "no"          // «три пакета» — развёл руками
+            freeman overlays "no"          // «вышли с тремя пакетами» — развёл руками
         }
     }
     camera wide

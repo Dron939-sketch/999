@@ -1,0 +1,875 @@
+// =============================================================================
+//  «СТАНОК» — интро к курсу «Логика».
+//  VO — stanok-VO.md, маркеры 1..36.
+//
+//  ЧЕМ ЭТОТ РОЛИК ОТЛИЧАЕТСЯ ОТ «ТЕОРЕМЫ»
+//
+//  1. ОН НАЧИНАЕТ С ПОДАРКА, А НЕ С ЛОВУШКИ. Прежние подводки к «Логике»
+//     показывали её только как способ не быть обманутым, и зритель не понимал,
+//     зачем ему курс: он и так осторожен. Здесь первые двадцать три секунды —
+//     про то, что логика УМЕЕТ: знание размножается, из двух известных вещей
+//     выходит третья, и так без конца. Станок у зрителя уже есть, работает и
+//     кормит его каждый день. И только потом выясняется, что у станка есть
+//     вход.
+//
+//  2. ОДИН РОЛИК — ОДИН РЕФЛЕКС. Ролик не учит логике: за три минуты этого
+//     сделать нельзя, а попытка превращает его в лекцию, которую листают.
+//     Ставится РОВНО ОДИН рефлекс — «у всякой очевидности есть автор» — и
+//     создаётся нехватка, которую закрывает курс. Ни «индукция», ни «дедукция»,
+//     ни «силлогизм» в тексте не звучат.
+//
+//  3. ОБРАЗ — ПРЕДМЕТ, А НЕ ПОНЯТИЕ. Станок и заготовка: их видно, их можно
+//     показать рукой. «Первая строка» из «Теоремы» точнее, но она абстракция;
+//     станок работает на слух с первого раза и держит весь ролик — от
+//     четвёртой реплики до презентации.
+//
+//  4. ЧЕТЫРЕ ПОСЛОВИЦЫ ВМЕСТО ОБЪЯСНЕНИЯ. «Незаменимых нет», «клиент всегда
+//     прав», «деньги любят тишину», «терпи, потом будет лучше» — буквально то,
+//     что «не требует доказательств». Зритель узнаёт все четыре и тут же
+//     получает опись: ни одна не доказана, каждая кому-то выгодна, и это не он.
+//     Перечисление доказывает тезис само, без единого термина.
+//
+//  5. АНЕКДОТ ВСТАЛ НА СВОЁ МЕСТО, НО НАЗЫВАТЬ ЕГО НАДО ТОЧНО. Волк ломает ОБА
+//     конца: первую строку взял с чужих слов и не проверил, а на медведе ещё и
+//     вывернул её наизнанку («спичек нет — значит, не куришь»), чего из «А → Б»
+//     не следует. Ролику нужна первая половина — чужая непроверенная
+//     заготовка, — и ровно она звучит в реплике. Ранняя версия говорила «станок
+//     у волка отличный»: неправда, и в ролике про логику она стоит дороже
+//     прочих.
+//
+//  6. РАЗВЯЗКИ АНЕКДОТА НЕТ. Что сделал медведь — не говорится ни словом: пока
+//     в кадре волк, зритель смотрит на волка. Вместо развязки полторы секунды
+//     тишины и обрыв в чёрное (`SMESHNO.md` §XII).
+//
+//  7. ДЕСЯТЬ ЛОКАЦИЙ НА ТРИ С ПОЛОВИНОЙ МИНУТЫ, и каждая смена локации
+//     совпадает со сменой мысли: подарок на дороге со столбами, станок в
+//     чёрном, чужие истины на базаре, «это все знают» в рядах полок, догма у
+//     камня. Зритель видит, что мысль сменилась, до того, как услышит слова.
+//
+//  8. ТЕМП ПО БИТАМ, В СЛОГАХ В СЕКУНДУ (`tools/podacha.py`): подарок 5.2,
+//     цепочка 6.3, пословицы 6.6, дно 4.4. Перепад в полтора раза стоит на
+//     обрыве в чёрное после панча.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · речь НА ХОДУ — фронтальный шаг слоем, полная поза сбрасывает липсинк;
+//    · проход закрывается ПОЛНОЙ ПОЗОЙ, иначе слой шага висит на фигуре;
+//    · в длинной реплике первым слоем называется РУКА (lint_arms);
+//    · фигура НЕ ПРИСЕДАЕТ (tools/posture.py);
+//    · реквизит носит только поза, объявившая его именем (tools/rekvizit.py);
+//    · `duration:` ГОВОРЯЩЕЙ СЦЕНЫ — ПОЛ, А НЕ ЦЕЛЬ, и потому равен 1s;
+//      ветка `do{}` не длиннее `speaks for` (tools/pauses.py);
+//    · `moves-to ... over` и `scales ... over` ЗАНИМАЮТ ВРЕМЯ наравне с `wait`;
+//    · голый `scales` стоит 0.5с таймлайна — всегда `over 0.01s`;
+//    · номера реплик и маркеров сходятся (tools/sverka.py);
+//    · БЕЗ СВЕРХКРУПНЫХ ПЛАНОВ: растр сета на ECU-зуме взрывается.
+//
+//  ЧИСЛА `speaks for` РАСЧЁТНЫЕ — ролик новый. Модель «0.59 с на внутренний
+//  знак», поправленная коэффициентом 0.93 с прошлого прогона завода. Первый
+//  прогон перепишет их по факту (`tools/hronometrazh.py`).
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set doroga from "../assets/sets/doroga-stolby.svg"
+import set void from "../assets/sets/void-black.svg"
+import set bazar from "../assets/sets/bazaar-obeschanij.svg"
+import set ryady from "../assets/sets/supermarket-ryady.svg"
+import set kamen from "../assets/sets/kamen-memento.svg"
+import set rupory from "../assets/sets/logika-hor-golosov.svg"
+import set les from "../assets/sets/derevo-pen.svg"
+import set perekrestok from "../assets/sets/perekrestok-bez-znakov.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+import set dveri_vse from "../assets/sets/logika-dve-dveri-vse.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+// ============ СЦЕНА 1: ДОРОГА СО СТОЛБАМИ — ПОДАРОК ========================
+//  СТОЛБЫ УХОДЯТ ЗА ГОРИЗОНТ, И ЭТО «И ТАК БЕЗ КОНЦА» ДО ЕДИНОГО СЛОВА.
+//  Цепь одинаковых звеньев, каждое следующее меньше предыдущего, конца не
+//  видно. Ролик про то, что знание размножается бесконечно, обязан открываться
+//  картинкой бесконечности, а не заявлением о ней.
+scene "doroga" (duration: 1s, set: doroga) {
+    place freeman at (0.5, 0.94) facing front on floor
+    freeman scales 0.90 over 0.01s
+
+    //  НОМЕР КУРСА НА БАЛАХОНЕ — СЛЕДУЮЩЕГО, а не этого: подпись говорит «идём
+    //  дальше», и метка обязана говорить то же. Проп живёт только пока камера
+    //  неподвижна: он стоит в координатах КАДРА, а не на фигуре.
+    let nomer = prop("nomer", "../assets/props/nomer-07.svg") at (0.525, 0.66) layer 9
+    nomer scales 0.21 over 0.01s
+    nomer hides
+
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ. Голый
+    //  `scales` на пропе, до которого не было анимированной смены масштаба, не
+    //  применяется вовсе — метка встаёт в натуральную величину и закрывает
+    //  торс. Рабочий рисунок один: спрятать, показать, вырастить с 0.02.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.23 over 0.05s ease-out
+    nomer scales 0.21 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+
+    // ── ХУК (VO-1): «вы знаете больше, чем вам говорили» ──────────────
+    //  ПОДАРОК, А НЕ УГРОЗА, И ЭТО ГЛАВНОЕ ОТЛИЧИЕ РОЛИКА. Первая фраза не
+    //  обвиняет и не пугает — она сообщает зрителю, что у него уже есть
+    //  нечто, о чём он не думал. Разгонишь или добавишь нажима — станет
+    //  комплиментом продавца.
+    //lip 1
+    together {
+        freeman speaks for 3.31s
+        do {
+            freeman overlays "hips"
+            wait 1.9s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.6s
+
+    // ── ОБРАЗ (VO-2): «знание размножается» ───────────────────────────
+    //lip 2
+    together {
+        freeman speaks for 4.73s
+        do {
+            camera medium freeman
+            wait 2.29s
+            freeman overlays "razvel"      // «из двух вещей выходит третья»
+        }
+    }
+    wait 0.5s
+
+    // ── ПРИМЕР (VO-3): телефон ────────────────────────────────────────
+    //  БЫТОВОЙ ПРИМЕР ОБЯЗАТЕЛЕН И ОБЯЗАН БЫТЬ КОРОТКИМ. Без него «знание
+    //  размножается» остаётся лозунгом; с ним зритель за три секунды делает
+    //  вывод сам и убеждается, что станок у него правда есть.
+    //lip 3
+    together {
+        freeman speaks for 6.49s
+        do {
+            wait 2.0s
+            freeman overlays "somnenie"    // «а берёт всегда»
+            wait 2.0s
+            freeman overlays "poimal"      // «это вывели вы»
+        }
+    }
+    camera wide
+    wait 0.5s
+
+    // ── ЦЕПОЧКА (VO-4): «и так без конца. Это станок» ─────────────────
+    //  ИДЁТ ВДОЛЬ СТОЛБОВ, А НЕ НА КАМЕРУ. Единственный проход ролика, где
+    //  движение боковое: цепочка здесь не подступает к зрителю, она уходит
+    //  вдаль вместе с ним. Останавливается ровно на слове «станок».
+    freeman pose "calm"
+    //lip 4
+    together {
+        freeman speaks for 6.03s
+        do {
+            freeman overlays "shag_levoj"
+            freeman overlays "palec_vverh" // «из третьей и четвёртой — пятая»
+            freeman moves-to (0.62, 0.94) over 1.5s
+            freeman overlays "shag_pravoj"
+            freeman moves-to (0.74, 0.94) over 1.5s
+            freeman overlays "shag_levoj"
+            freeman overlays "vdal"        // «и так без конца»
+            freeman moves-to (0.86, 0.94) over 1.5s
+        }
+    }
+    //  Остановка ПОЛНОЙ ПОЗОЙ: слои шага сняты.
+    freeman pose "v_upor"
+    wait 0.9s
+}
+
+// ============ СЦЕНА 2: ПУСТОТА — У СТАНКА ЕСТЬ ВХОД ========================
+//  ПЕРЕЛОМ РОЛИКА НА 24-Й СЕКУНДЕ, И ОН СТАВИТСЯ В ЧЁРНОМ. Только что был
+//  подарок; здесь у подарка обнаруживается условие. Ни дороги, ни столбов —
+//  механизм называется там, где нечем отвлечься.
+scene "vhod" (duration: 1s, set: void) {
+    transition static 0.15s
+
+    //  ЕДИНСТВЕННЫЕ `place` БЕЗ `on floor`: пола нет, кадр держит МАСКА.
+    place freeman at (0.5, 0.44) facing front
+    freeman scales 2.2
+    camera wide
+    freeman pose "v_upor"
+
+    // ── РАЗВОРОТ (VO-5): «он не спрашивает, откуда заготовка» ─────────
+    //lip 5
+    together {
+        freeman speaks for 5.63s
+        do {
+            freeman overlays "calm"
+            wait 2.6s
+            freeman overlays "klin"        // ударное слово последнее
+        }
+    }
+    wait 0.5s
+
+    // ── УДАР (VO-6): «мусор — деталь из мусора» ───────────────────────
+    //lip 6
+    together {
+        freeman speaks for 6.49s
+        do {
+            freeman overlays "dve_storony" // хорошая и плохая — две стороны
+            wait 3.0s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.5s
+
+    // ── УДАР (VO-7): «по детали не видно» ─────────────────────────────
+    //  ЗДЕСЬ ОБЪЯСНЯЕТСЯ, ПОЧЕМУ ОШИБКУ НЕЛЬЗЯ ЗАМЕТИТЬ ПО РЕЗУЛЬТАТУ, — и
+    //  это самая недооценённая мысль ролика. Деталь из мусора правильной
+    //  формы. Проверять вывод бесполезно не потому, что лень, а потому, что
+    //  нечего проверять: он сходится.
+    //lip 7
+    together {
+        freeman speaks for 5.73s
+        do {
+            wait 2.3s
+            freeman overlays "obvinil"     // «по детали не видно» — в зрителя
+            freeman overlays "poimal"
+        }
+    }
+    freeman overlays "flash_pupils"
+    wait 1.0s
+}
+
+// ============ СЦЕНА 3: БАЗАР ОБЕЩАНИЙ — КТО КЛАДЁТ ЗАГОТОВКУ ===============
+//  МЕСТО, ГДЕ ИСТИНЫ РАЗДАЮТ БЕСПЛАТНО И В ТОВАРНЫХ КОЛИЧЕСТВАХ. Четыре
+//  пословицы звучат ровно там, где их и слышат: в общем гуле, из каждого ряда,
+//  без автора и без доказательства.
+scene "bazar" (duration: 1s, set: bazar) {
+    transition static 0.15s
+
+    //  Пол базара начинается высоко (карта: back_y 0.33) — фигура ставится
+    //  вглубь прохода и идёт НА КАМЕРУ.
+    place freeman at (0.5, 0.62) facing front on floor
+    freeman scales 0.44 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── ОТРИЦАНИЕ (VO-8): «кладёт не всегда тот, кто у станка» ────────
+    //lip 8
+    together {
+        freeman speaks for 3.42s
+        do {
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.6s
+
+    // ── ПУЛЕМЁТ (VO-9): четыре пословицы, ИДЁТ НА КАМЕРУ ──────────────
+    //  ШАГ И НАЕЗД ОДНОВРЕМЕННО, ПО ОДНОМУ НА ПОСЛОВИЦУ. Записанные подряд,
+    //  `moves-to` и `scales` и выполняются подряд — в кадре это «подъехал, а
+    //  потом раздулся». `together` внутри `do` связывает их в один отрезок.
+    //  Числа идут равными приращениями: y +0.075, масштаб +0.11 за шаг.
+    //lip 9
+    together {
+        freeman speaks for 6.64s
+        do {
+            freeman overlays "shag_levoj"
+            freeman overlays "vzglyad"     // «незаменимых нет»
+            together {
+                freeman moves-to (0.5, 0.695) over 1.47s
+                freeman scales 0.55 over 1.47s
+            }
+            freeman overlays "shag_pravoj"
+            freeman overlays "razvel"      // «клиент всегда прав»
+            together {
+                freeman moves-to (0.5, 0.77) over 1.47s
+                freeman scales 0.66 over 1.47s
+            }
+            freeman overlays "shag_levoj"
+            freeman overlays "somnenie"    // «деньги любят тишину»
+            together {
+                freeman moves-to (0.5, 0.845) over 1.47s
+                freeman scales 0.77 over 1.47s
+            }
+            freeman overlays "shag_pravoj"
+            freeman overlays "ostyl"       // «терпи, потом будет лучше»
+        }
+    }
+    //  Остановка ПОЛНОЙ ПОЗОЙ.
+    freeman pose "calm"
+    wait 0.5s
+
+    // ── ДОБИВКА (VO-10): опись ────────────────────────────────────────
+    //lip 10
+    together {
+        freeman speaks for 6.16s
+        do {
+            freeman overlays "hips"
+            wait 2.9s
+            freeman overlays "vzves"       // «каждая кому-то выгодна»
+        }
+    }
+    wait 0.4s
+
+    // ── УДАР (VO-11): «и это не вы» ───────────────────────────────────
+    //  ТРИ СЛОВА И СЕКУНДА ТИШИНЫ. Самая короткая реплика ролика; всё, что
+    //  можно было испортить, — это добавить к ней хоть что-нибудь.
+    freeman pose "v_upor"
+    //lip 11
+    together {
+        freeman speaks for 1.10s
+        do {
+            freeman overlays "klin"
+        }
+    }
+    wait 1.1s
+}
+
+// ============ СЦЕНА 4: РЯДЫ ПОЛОК — САМООЧЕВИДНОЕ ==========================
+//  «ЭТО ВСЕ ЗНАЮТ» — ОДИНАКОВЫЕ УПАКОВКИ ДО ГОРИЗОНТА. Локация доказывает
+//  реплику буквально: очевидность выглядит как товар, которого много и который
+//  никто не выбирал.
+scene "ryady" (duration: 1s, set: ryady) {
+    transition static 0.15s
+
+    place freeman at (0.5, 0.86) facing front on floor
+    freeman scales 0.72 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── ОБРАЗ (VO-12): «как они входят» ───────────────────────────────
+    //lip 12
+    together {
+        freeman speaks for 7.92s
+        do {
+            freeman overlays "k_sebe"      // «заметьте, как они входят»
+            wait 2.9s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.4s
+
+    // ── ПУЛЕМЁТ (VO-13): три чужих голоса ─────────────────────────────
+    //  ТРИ ГОЛОСА ИДУТ ВДОЛЬ ПОЛОК, А НЕ НА КАМЕРУ: эти фразы не наступают,
+    //  они лежат. Их не говорят зрителю — их берут с полки.
+    //lip 13
+    together {
+        freeman speaks for 4.41s
+        do {
+            freeman overlays "shag_levoj"
+            freeman moves-to (0.60, 0.86) over 2.07s
+            freeman overlays "shag_pravoj"
+            freeman moves-to (0.70, 0.86) over 2.07s
+        }
+    }
+    freeman pose "v_upor"
+    wait 0.5s
+
+    // ── УДАР (VO-14): «самое опасное слово — очевидно» ────────────────
+    //  ГЛАВНАЯ ФРАЗА РОЛИКА, И ОНА ИГРАЕТСЯ ПОЧТИ НЕПОДВИЖНО. Рефлекс,
+    //  который зритель должен унести, стоит здесь целиком: «очевидно»
+    //  значит «доказательства не будет».
+    //lip 14
+    together {
+        freeman speaks for 7.18s
+        do {
+            freeman overlays "calm"
+            wait 2.3s
+            freeman overlays "palec_vverh" // «очевидно»
+            wait 2.2s
+            freeman overlays "klin"        // «доказательства не будет»
+            wait 2.11s
+            freeman overlays "doshlo"
+        }
+    }
+    wait 1.0s
+}
+
+// ============ СЦЕНА 5: КАМЕНЬ В ПОЛЕ — ДОГМА ===============================
+//  КАМЕНЬ СТОИТ, ВСЕ ЕГО ОБХОДЯТ, КТО ПОЛОЖИЛ — НЕ ПОМНИТ НИКТО. Догма
+//  выглядит ровно так, и другой картинки для неё не нужно.
+scene "kamen" (duration: 1s, set: kamen) {
+    transition static 0.2s
+
+    place freeman at (0.42, 0.92) facing front on floor
+    freeman scales 0.76 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── ОБРАЗ (VO-15): «год, десять, сто» ─────────────────────────────
+    //lip 15
+    together {
+        freeman speaks for 3.16s
+        do {
+            freeman overlays "vdal"        // время идёт
+            wait 1.51s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.4s
+
+    // ── УДАР (VO-16): «выводом, у которого забыли начало» ─────────────
+    //lip 16
+    together {
+        freeman speaks for 5.95s
+        do {
+            camera medium freeman
+            wait 2.8s
+            freeman overlays "klin"
+        }
+    }
+    wait 0.4s
+
+    // ── ЦЕНА (VO-17): «заготовку не помнит уже никто» ─────────────────
+    //lip 17
+    together {
+        freeman speaks for 5.95s
+        do {
+            freeman overlays "razvel"      // «стоит, работает, все кивают»
+            wait 3.0s
+            freeman overlays "doshlo"
+        }
+    }
+    camera wide
+    wait 1.2s
+}
+
+// ============ СЦЕНА 6: КОРИДОР РУПОРОВ — ВОЗРАЖЕНИЕ СНЯТО ==================
+scene "rupory" (duration: 1s, set: rupory) {
+    transition static 0.15s
+
+    place freeman at (0.5, 0.92) facing front on floor
+    freeman scales 0.84 over 0.01s
+    camera wide
+    freeman pose "v_upor"
+
+    // ── ОТРИЦАНИЕ (VO-18): «тогда анекдот» ────────────────────────────
+    //  Возражение снимается не спором, а сменой жанра: спор дал бы зрителю
+    //  сторону, за которую можно держаться.
+    //lip 18
+    together {
+        freeman speaks for 3.78s
+        do {
+            freeman overlays "zakrylsya"   // передразнивает: «я-то проверяю»
+            wait 1.8s
+            freeman overlays "prishchur"   // козырь
+        }
+    }
+    wait 0.6s
+}
+
+// ============ СЦЕНА 7: ЛЕС — ЗАЯЦ НА ПОЛЯНЕ ================================
+scene "les" (duration: 1s, set: les) {
+    transition static 0.2s
+
+    place freeman at (0.44, 0.90) facing front on floor
+    freeman scales 0.70 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── ЗАВЯЗКА (VO-19) ───────────────────────────────────────────────
+    //lip 19
+    together {
+        freeman speaks for 4.50s
+        do {
+            freeman overlays "vdal"        // «идёт волк по лесу»
+            wait 2.1s
+            freeman overlays "vzglyad"     // «видит — заяц книжку читает»
+        }
+    }
+    wait 0.35s
+
+    // ── ДВА ГОЛОСА (VO-20) ────────────────────────────────────────────
+    //  РАЗНИЦА ГОЛОСОВ ДЕЛАЕТСЯ ПУНКТУАЦИЕЙ И ДЛИНОЙ ФРАЗЫ, а не актёрством:
+    //  у волка вопрос коротким предложением, у зайца ответ с оборотом.
+    //lip 20
+    together {
+        freeman speaks for 4.14s
+        do {
+            camera medium freeman
+            wait 1.9s
+            freeman overlays "smel"        // «логику учу»
+        }
+    }
+    camera wide
+    wait 0.35s
+}
+
+// ============ СЦЕНА 8: КОРИДОР РУПОРОВ — ЦЕПОЧКА ЗАЙЦА =====================
+//  ЦЕПОЧКА ЗАЙЦА ЗВУЧИТ ТАМ ЖЕ, ГДЕ ЧУЖИЕ ИСТИНЫ, — и это утверждение, а не
+//  экономия: конструкция та же самая, что и у четырёх пословиц.
+scene "cepochka" (duration: 1s, set: rupory) {
+    transition static 0.12s
+
+    place freeman at (0.5, 0.66) facing front on floor
+    freeman scales 0.44 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── ПУЛЕМЁТ 1 (VO-21): «спички есть?» ─────────────────────────────
+    //lip 21
+    together {
+        freeman speaks for 4.73s
+        do {
+            freeman overlays "shag_levoj"
+            freeman overlays "vzglyad"
+            together {
+                freeman moves-to (0.5, 0.73) over 1.1s
+                freeman scales 0.55 over 1.1s
+            }
+            freeman overlays "shag_pravoj"
+            freeman overlays "k_sebe"      // «спички есть?» — рука за ответом
+            together {
+                freeman moves-to (0.5, 0.80) over 1.1s
+                freeman scales 0.66 over 1.1s
+            }
+            freeman overlays "shag_levoj"
+        }
+    }
+    wait 0.3s
+
+    // ── ПУЛЕМЁТ 2 (VO-22): «значит, куришь. ну да.» ───────────────────
+    //  ВСТАВКИ ВОЛКА («ну да», «ну, бывает») ЗАМЕДЛЯЮТ ОЧЕРЕДЬ — и это работа,
+    //  а не помеха: каждое согласие волка есть согласие зрителя. Он кивает
+    //  вместе с ним и потому не может отскочить на панче.
+    //lip 22
+    together {
+        freeman speaks for 5.09s
+        do {
+            freeman overlays "palec_vverh" // «значит, куришь»
+            together {
+                freeman moves-to (0.5, 0.87) over 1.12s
+                freeman scales 0.77 over 1.12s
+            }
+            freeman overlays "shag_pravoj"
+            freeman overlays "poimal"      // «ну да»
+            together {
+                freeman moves-to (0.5, 0.93) over 1.12s
+                freeman scales 0.88 over 1.12s
+            }
+            freeman overlays "shag_levoj"
+            freeman overlays "razvel"      // «значит, выпиваешь»
+        }
+    }
+    freeman pose "calm"
+    wait 0.3s
+
+    // ── ПУЛЕМЁТ 3 (VO-23): «значит, ты свой, нормальный мужик» ────────
+    //lip 23
+    together {
+        freeman speaks for 4.49s
+        do {
+            camera medium freeman
+            wait 2.13s
+            freeman overlays "oba_vverh"
+            freeman overlays "prishchur"   // и всё сошлось
+        }
+    }
+    camera wide
+    wait 0.6s
+}
+
+// ============ СЦЕНА 9: ЛЕС — ВОЛК, МЕДВЕДЬ, ПАНЧ ===========================
+scene "medved" (duration: 1s, set: les) {
+    transition static 0.2s
+
+    place freeman at (0.52, 0.92) facing front on floor
+    freeman scales 0.80 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── ДОБИВКА 1 (VO-24) ─────────────────────────────────────────────
+    //lip 24
+    together {
+        freeman speaks for 3.81s
+        do {
+            freeman overlays "raspahnul"   // «волк в восторге»
+            wait 1.8s
+            freeman overlays "vdal"        // «встретил медведя»
+        }
+    }
+    wait 0.4s
+
+    // ── ПАНЧ (VO-25) ──────────────────────────────────────────────────
+    //  ПАНЧ НЕ ТЕРПИТ ХВОСТА И НЕ ТЕРПИТ ЖЕСТА. Тело почти неподвижно: любое
+    //  движение на ударном слове крадёт слово. Играют лицом — `klin` на
+    //  «нет», `poimal` на самом панче.
+    //  РАЗВЯЗКИ НЕТ: что сделал медведь, не говорится ни словом. Полторы
+    //  секунды тишины после — и в них входит «станок у волка отличный».
+    freeman pose "v_upor"
+    //lip 25
+    together {
+        freeman speaks for 4.70s
+        do {
+            freeman overlays "k_sebe"      // «спички есть?» — ТОТ ЖЕ ЖЕСТ
+            wait 1.72s
+            camera medium freeman
+            freeman overlays "klin"        // «нет»
+            wait 1.64s
+            freeman overlays "poimal"      // ПАНЧ
+        }
+    }
+    camera wide
+    wait 1.6s
+}
+
+// ============ СЦЕНА 10: ПУСТОТА — ПОВОРОТ И ДНО ============================
+//  СМЕХ ГАСНЕТ ЗДЕСЬ, И ЭТО ЗАПЛАНИРОВАНО. Обрыв в чёрное сразу после панча:
+//  между «смешно» и «это про меня» должна быть не связка, а разрыв.
+scene "povorot" (duration: 1s, set: void) {
+    transition static 0.12s
+
+    place freeman at (0.5, 0.44) facing front
+    freeman scales 2.2
+    camera wide
+    freeman pose "v_upor"
+
+    // ── ПОВОРОТ (VO-26): «волк не спросил, откуда она» ────────────────
+    //  ВЕСЬ АНЕКДОТ СВОДИТСЯ К ОБРАЗУ РОЛИКА ОДНОЙ ФРАЗОЙ, И ФРАЗА ГОВОРИТ
+    //  РОВНО ТО, ЧТО БЫЛО: заготовку волку положил заяц, а волк не спросил,
+    //  откуда она. Про переходы волка здесь не сказано ни слова — и правильно,
+    //  потому что переход он тоже сломал, а это тема соседнего ролика.
+    //lip 26
+    together {
+        freeman speaks for 4.82s
+        do {
+            freeman overlays "calm"
+            wait 2.2s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.5s
+
+    // ── ДНО (VO-27): «и то же самое происходит с вами» ────────────────
+    //lip 27
+    together {
+        freeman speaks for 6.17s
+        do {
+            wait 1.9s
+            freeman overlays "obvinil"     // «с вами» — в зрителя
+            freeman overlays "poimal"
+            wait 1.9s
+            freeman overlays "doshlo"      // «когда что-то очевидно»
+        }
+    }
+    freeman overlays "flash_pupils"
+    //  САМАЯ ДЛИННАЯ ПАУЗА РОЛИКА. Диагноз поставлен; сейчас скажут, что с
+    //  ним делать, и зритель должен успеть этого захотеть.
+    wait 1.8s
+}
+
+// ============ СЦЕНА 11: ПЕРЕКРЁСТОК БЕЗ ЗНАКОВ — ДВА ВОПРОСА ===============
+//  ДОРОГ МНОГО И НИ ОДНА НЕ ПОДПИСАНА — ровно то, что скрывает чужая
+//  заготовка. Здесь впервые за ролик светло и впервые звучит тепло.
+scene "perekrestok" (duration: 1s, set: perekrestok) {
+    transition static 0.25s
+
+    place freeman at (0.44, 0.94) facing front on floor
+    freeman scales 0.84 over 0.01s
+    camera wide
+    freeman pose "think"
+    wait 0.4s
+
+    // ── ВЗЛЁТ 1 (VO-28): «выводить вы умеете с трёх лет» ──────────────
+    freeman pose "calm"
+    //lip 28
+    together {
+        freeman speaks for 4.63s
+        do {
+            freeman overlays "raspahnul"
+            wait 2.2s
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.4s
+
+    // ── ВЗЛЁТ 2 (VO-29): «она про то, как проверять» ──────────────────
+    //lip 29
+    together {
+        freeman speaks for 4.99s
+        do {
+            camera medium freeman
+            wait 2.4s
+            freeman overlays "vzves"       // «свой вывод — и чужое начало»
+        }
+    }
+    wait 0.5s
+
+    // ── ВЗЛЁТ 3 (VO-30): первый вопрос ────────────────────────────────
+    //  ХОД ОТДАЁТСЯ ДВУМЯ ВОПРОСАМИ, И БОЛЬШЕ НИЧЕМ. Список из пяти проверок
+    //  не уносит никто; два вопроса, каждый в отдельной реплике и с паузой
+    //  между ними, уносят.
+    //lip 30
+    together {
+        freeman speaks for 4.75s
+        do {
+            freeman overlays "palec_vverh" // «а это откуда?»
+            wait 2.21s
+            freeman overlays "vniz"        // «задать не выводу, а началу»
+        }
+    }
+    wait 0.4s
+
+    // ── ВЗЛЁТ 4 (VO-31): второй вопрос ────────────────────────────────
+    //lip 31
+    together {
+        freeman speaks for 4.57s
+        do {
+            freeman overlays "obvinil"     // «кому станет хорошо»
+            wait 2.13s
+            freeman overlays "klin"
+        }
+    }
+    camera wide
+    wait 0.8s
+
+    // ── ПОДЪЁМ (VO-32): «до первого медведя» ──────────────────────────
+    //  ЦЕНА ВМЕСТО МОРАЛИ, И КАЛЛБЭК В КОНЦЕ. Медведь из анекдота
+    //  возвращается единицей измерения: зритель смеялся над ним минуту
+    //  назад, теперь это его собственная мерка.
+    //lip 32
+    together {
+        freeman speaks for 7.44s
+        do {
+            freeman overlays "otmahnulsya" // «можно и не спрашивать»
+            freeman overlays "prishchur"
+            wait 3.5s
+            freeman overlays "razmer"      // «листайте ленту»
+            wait 3.4s
+            freeman overlays "u_viska_l"   // «до первого медведя» — серьёзно?
+        }
+    }
+    wait 1.2s
+}
+
+// ============ СЦЕНА 12: ЗАЛ ЛЕКТОРИЯ — ПРЕЗЕНТАЦИЯ =========================
+scene "zal" (duration: 1s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.46, 0.93) facing front on floor
+    freeman scales 0.72 over 0.01s
+    camera wide
+    freeman pose "raskryl"
+    wait 0.2s
+
+    // ── ПРЕЗЕНТАЦИЯ 1 (VO-33) ─────────────────────────────────────────
+    //lip 33
+    together {
+        freeman speaks for 4.60s
+        do {
+            freeman overlays "ruki_za_spinu" // курс называют по-лекторски
+            wait 2.23s
+            freeman overlays "open"
+        }
+    }
+    wait 0.4s
+
+    // ── ПРЕЗЕНТАЦИЯ 2 (VO-34): «чтобы станок работал на вас» ──────────
+    //  ОБРАЗ ЗАКРЫВАЕТ САМ СЕБЯ. Станок, объявленный на четвёртой реплике,
+    //  здесь становится обещанием: он останется вашим.
+    //lip 34
+    together {
+        freeman speaks for 3.94s
+        do {
+            camera medium freeman
+            wait 1.84s
+            freeman overlays "teplo"       // приглашение, а не продажа
+        }
+    }
+    camera wide
+    wait 1.0s
+}
+
+// ============ СЦЕНА 13: КОРИДОР ВСЕХ ДВЕРЕЙ — ЖАЛО =========================
+//  ВОПРОС ЗАДАН ТАМ, ГДЕ ОТВЕТ УЖЕ ВИДЕН: помеченных дверей две, а дверей в
+//  коридоре двадцать. Зритель получает ответ раньше, чем успевает задать
+//  вопрос, — и это единственный способ сказать «вы их не видели», не обвиняя.
+scene "vopros" (duration: 1s, set: dveri_vse) {
+    transition static 0.2s
+
+    place freeman at (0.5, 0.94) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    freeman overlays "smug"
+    wait 0.3s
+
+    // ── ЖАЛО (VO-35): «что вы сегодня приняли?» ───────────────────────
+    //  ИЗМЕРИМОЕ ДЕЙСТВИЕ, а не мысль на прощание: вопрос можно задать себе
+    //  сегодня же вечером, на первом же «это же очевидно».
+    //lip 35
+    together {
+        freeman speaks for 4.15s
+        do {
+            camera medium freeman
+            wait 1.94s
+            freeman overlays "vozzvanie"   // вопрос повисает
+            freeman overlays "doshlo"
+        }
+    }
+    camera wide
+    freeman overlays "hero_wink"
+    wait 1.5s
+}
+
+// ============ СЦЕНА 14: ПОДПИСЬ — ТОТ ЖЕ КАДР, ЧТО И ПЕРВЫЙ ================
+//  ПОСЛЕДНИЙ КАДР ТОЖДЕСТВЕН ПЕРВОМУ: та же дорога, тот же `place`, тот же
+//  масштаб, та же поза, тот же номер того же размера. Отличается только то,
+//  чего не видно, — звучащая реплика. Метка снимается перед самым концом: на
+//  нулевом кадре её быть не может, значит и в последнем быть не должно.
+scene "final" (duration: 1s, set: doroga) {
+    transition static 0.2s
+
+    place freeman at (0.5, 0.94) facing front on floor
+    //  `over 0.01s` НА ОБОИХ МАСШТАБАХ: голый `scales` стоит полсекунды
+    //  таймлайна, и два подряд дают дыру перед подписью (гейт `pauses.py`).
+    freeman scales 0.90 over 0.01s
+    camera wide
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-07.svg") at (0.525, 0.66) layer 9
+    nomer2 scales 0.21 over 0.01s
+    nomer2 hides
+
+    //lip 36
+    together {
+        freeman speaks for 5.75s
+        do {
+            //  ЖЕСТ СЛОЕМ, А НЕ ПОЛНОЙ ПОЗОЙ: полная поза внутри реплики
+            //  сбрасывает липсинк и рот прыгает. Обе позы поглаживания
+            //  трогают только руку — значит ложатся накладкой без потерь.
+            freeman overlays "gladit_grud"
+            freeman overlays "teplo"
+            wait 2.8s
+            nomer2 shows
+            nomer2 scales 0.02
+            nomer2 scales 0.23 over 0.35s ease-out
+            nomer2 scales 0.21 over 0.18s
+            freeman overlays "gladit_grud_niz"
+            wait 1.2s
+            freeman overlays "gladit_grud"
+        }
+    }
+    nomer2 hides
+    freeman pose "gladit_grud"
+    wait 0.4s
+}

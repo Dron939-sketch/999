@@ -10,6 +10,10 @@ studio.py — «завод» Лектория: одна команда → го�
                  (tools/image_gen.py, Nano Banana / image API). Опционально.
   2) РЕНДЕР    — движок animdsl рендерит НЕМОЙ ролик (.anim → mp4/png).
   3) ОЗВУЧКА   — Fish Audio по VO-сценарию (tools/voiceover.py) → mp3. Опц.
+  3а) ХРОНОМЕТРАЖ — `speaks for` и таймкоды VO переписываются по фактической
+                 длине готовых реплик (tools/hronometrazh.py). Идёт сразу за
+                 озвучкой и до липсинка: единственный момент, когда mp3 уже
+                 есть, а сценарий ещё не отрендерен.
   4) СВЕДЕНИЕ  — ffmpeg подмешивает голос к видео (tools/compose_video.sh)
                  → финальный mp4 со звуком.
 
@@ -198,6 +202,36 @@ def step_assemble_voice(prod, prepped_anim, parts_dir, out_voice, engine):
     except subprocess.CalledProcessError as e:
         log(f"  [сборка голоса] не удалась ({e}) — немой ролик.")
         return None
+
+
+def step_hronometrazh(prod, parts_dir):
+    """Переписать `speaks for` в СЦЕНАРИИ по фактической длине озвучки.
+
+    ЕДИНСТВЕННЫЙ МОМЕНТ, КОГДА ЭТО ВОЗМОЖНО: mp3 уже синтезированы, сценарий
+    ещё не отрендерен. До озвучки фактических длительностей не существует, а
+    после рендера они уже никому не нужны.
+
+    Автор пишет `speaks for` по мерке 0.36 с на слово — другого способа у него
+    нет. Синтез на конкретной реплике длиннее расчёта на 0.2–0.45 с, и от этого
+    числа считается всё остальное: каты и жесты соседней ветки `do{}`, гейт
+    тишины, таймкоды VO-таблицы. Рот-то `prep_lipsync` откроет по звуку — врёт
+    окружение реплики. Здесь сценарий становится тем, чем притворялся.
+
+    Правка идёт В ИСХОДНЫЙ ФАЙЛ, а не во временную копию: смысл в том, чтобы
+    раскадровка перестала врать, а не чтобы соврала тише. Прогон завода
+    возвращает файл изменённым — CI дозаливает его в ветку.
+    """
+    src = ROOT / prod["anim"]
+    cmd = [sys.executable, str(TOOLS / "hronometrazh.py"), str(src),
+           "--parts", str(parts_dir)]
+    if prod.get("vo"):
+        cmd += ["--vo", str(ROOT / prod["vo"])]
+    try:
+        run(cmd)
+    except subprocess.CalledProcessError as e:
+        # Мягко: сценарий останется с расчётными числами, и завод соберёт ролик
+        # ровно как собирал раньше — растяжку в prep_lipsync никто не отменял.
+        log(f"  [хронометраж] не сработал ({e}) — `speaks for` остаётся расчётным.")
 
 
 def step_prep_lipsync(prod, parts_dir):
@@ -874,6 +908,34 @@ DISTINCT_BODIES_MIN = 9
 DEFAULT_BODY_SHARE_MAX = 0.35
 
 
+def hronometrazh_anim(anim, engine=None):
+    """Фактическая длина таймлайна сценария в секундах (`animdsl timing`).
+
+    СУММА `duration:` — НЕ ХРОНОМЕТРАЖ, И ЭТО НЕ МЕЛОЧЬ. У говорящей сцены
+    объявленная длительность — ПОЛ, а не цель: с тех пор как это стало
+    правилом (`pauses.py`), она равна `1s` независимо от того, сколько сцена
+    идёт на самом деле. Ролик на 78 секунд объявляет шесть.
+
+    Любая мерка, делящая на эту сумму, врёт во столько же раз. Ровно это и
+    случилось с приёмщиком динамики: на четырёх новейших роликах знаменатель
+    занижен в десять-тринадцать раз, и «смены силуэта в минуту» выходили за
+    400 при норме 18 — гейт не мог провалиться в принципе.
+
+    Длину берём у движка тем же способом, что `pauses.py`: он единственный
+    знает, сколько сцена идёт по содержимому. Движка нет — возвращаем None,
+    и звать нас будут с честной оговоркой, а не с выдуманным числом.
+    """
+    eng = Path(engine or DEFAULT_ENGINE)
+    if not eng.exists():
+        return None
+    try:
+        out = subprocess.run([str(eng), "timing", str(anim)],
+                             capture_output=True, check=True).stdout
+        return float(json.loads(out)["total"])
+    except Exception:                                        # noqa: BLE001
+        return None
+
+
 def lint_dinamika(prod, rig_dir=None):
     """Приёмщик ДИНАМИКИ: меняется ли СИЛУЭТ ТЕЛА, а не только лицо. (hard, soft)."""
     anim = ROOT / prod.get("anim", "")
@@ -882,8 +944,11 @@ def lint_dinamika(prod, rig_dir=None):
         return [], []
     text = anim_code(anim.read_text(encoding="utf-8"))
     seq = re.findall(r'(pose|overlays)\s+"([a-z_0-9]+)"', text)
-    secs = sum(float(x) for x in re.findall(r"duration:\s*(\d+)s", text))
-    if secs < 5 or not seq:
+    # ХРОНОМЕТРАЖ У ДВИЖКА, А НЕ ИЗ ОБЪЯВЛЕНИЙ. Разбор — в шапке
+    # hronometrazh_anim. Без движка мерить нечем: считать по `duration:`
+    # значит печатать зелёное там, где не измерено.
+    secs = hronometrazh_anim(anim)
+    if secs is None or secs < 5 or not seq:
         return [], []
 
     # Проигрываем сценарий так же, как движок: `pose` задаёт тело целиком
@@ -1207,11 +1272,21 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
     final_mp4 = videos_dir / f"{pid}-final.mp4"
     parts_dir = videos_dir / f"{pid}-parts"
 
-    # Порядок: картинки → озвучка ЧАСТЯМИ → липсинк по звуку в сцену →
+    # Порядок: картинки → озвучка ЧАСТЯМИ → ХРОНОМЕТРАЖ ПО ФАКТУ (`speaks for`
+    # в раскадровке = реальная длина mp3) → липсинк по звуку в сцену →
     # ФАКТИЧЕСКИЕ времена речи из движка (animdsl timing) → сборка голосовой
     # дорожки по этим временам (синхрон по конструкции) → рендер → SFX → микс.
+    #
+    # ХРОНОМЕТРАЖ СТОИТ ПЕРЕД ЛИПСИНКОМ И ЭТО НЕ ПОРЯДОК РАДИ ПОРЯДКА. Обе
+    # правки считают одно и то же отношение «факт / объявлено»: хронометраж
+    # выпрямляет им сценарий, липсинк — подменяет рот. Поменяй их местами — и
+    # липсинк растянет каты под старое число, а хронометраж следом растянет их
+    # ещё раз под новое. Пройдя в этом порядке, второй видит k = 1.00 и не
+    # трогает ничего.
     step_images(prod, videos_dir)
     parts_ok = step_voice_parts(prod, parts_dir)
+    if parts_ok:
+        step_hronometrazh(prod, parts_dir)
     src_anim = step_prep_lipsync(prod, parts_dir)
     voice = step_assemble_voice(prod, src_anim, parts_dir, voice_mp3, engine) if parts_ok else None
     import time as _time
