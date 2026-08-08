@@ -136,7 +136,7 @@ scene "ulica" (duration: 1s, set: ulica) {
     //  Перечисляют по пальцам, без оценки.
     //lip 2
     together {
-        freeman speaks for 3.74s
+        freeman speaks for 5.06s
         do {
             freeman overlays "rubit"       // «помещение»
             wait 1.26s
@@ -152,7 +152,7 @@ scene "ulica" (duration: 1s, set: ulica) {
     //  уже необратимо, и зритель это слышит без объяснений.
     //lip 3
     together {
-        freeman speaks for 5.41s
+        freeman speaks for 7.73s
         do {
             camera medium freeman
             freeman overlays "ostyl"       // «полгода — и платить нечем»
@@ -182,7 +182,7 @@ scene "ulica" (duration: 1s, set: ulica) {
     //  слово и так самое злое в ролике, нажим превратит его в издёвку.
     //lip 5
     together {
-        freeman speaks for 2.46s
+        freeman speaks for 3.86s
         do {
             camera medium freeman
             freeman overlays "v_upor"      // «вы сделали то»
@@ -210,7 +210,7 @@ scene "pustota" (duration: 1s, set: void) {
     //  пауза: зритель отвечает себе сам, и ответ у него есть.
     //lip 6
     together {
-        freeman speaks for 4.34s
+        freeman speaks for 5.34s
         do {
             freeman overlays "vozzvanie"   // «а теперь скажите»
             wait 2.4s
@@ -238,7 +238,7 @@ scene "ozhidanie" (duration: 1s, set: ozhidanie) {
     //  ответом и обнаруживает, что сам сидел этот час.
     //lip 7
     together {
-        freeman speaks for 5.83s
+        freeman speaks for 9.65s
         do {
             freeman overlays "razvel"      // «парикмахерскую»
             wait 3.0s
@@ -252,7 +252,7 @@ scene "ozhidanie" (duration: 1s, set: ozhidanie) {
     //  чуть медленнее — в ней вся экономика курса.
     //lip 8
     together {
-        freeman speaks for 5.80s
+        freeman speaks for 6.27s
         do {
             camera medium freeman
             freeman overlays "klin"        // «этот час уже отнят»
@@ -281,10 +281,10 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  пауза длиннее самой фразы: ноль должен упасть в тишину.
     //lip 9
     together {
-        freeman speaks for 8.18s
+        freeman speaks for 5.12s
         do {
             freeman overlays "vzves"       // «ночью чужая плита простаивает»
-            wait 3.93s
+            wait 3.4s
             freeman overlays "vniz"        // «не копейки — ноль»
         }
     }
@@ -295,7 +295,7 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  подан он должен быть как справка, а не как секрет.
     //lip 10
     together {
-        freeman speaks for 4.14s
+        freeman speaks for 5.32s
         do {
             freeman overlays "mahnul_oboimi" // «пустую ночь выпросить легче»
         }
@@ -307,7 +307,7 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  иначе зритель услышит обвинение и считать не станет.
     //lip 11
     together {
-        freeman speaks for 2.95s
+        freeman speaks for 11.58s
         do {
             camera medium freeman
             freeman overlays "vozzvanie"   // «сколько таких пустых часов вокруг вас?»
@@ -334,10 +334,10 @@ scene "tropy" (duration: 1s, set: tropy) {
     //  Ровно, как признают факт, — не утешая.
     //lip 12
     together {
-        freeman speaks for 5.85s
+        freeman speaks for 7.10s
         do {
             freeman overlays "teplo"       // «строить вы умеете»
-            wait 3.2s
+            wait 2.8s
             freeman overlays "bow"         // «вы строили против ветра»
         }
     }
@@ -364,10 +364,10 @@ scene "tropy" (duration: 1s, set: tropy) {
     //  «стадо» стоят в одной фразе. Уберите стадо — останется спорный лозунг.
     //lip 14
     together {
-        freeman speaks for 7.73s
+        freeman speaks for 9.13s
         do {
             freeman overlays "raskryl"     // «это не свобода, это стадо»
-            wait 3.56s
+            wait 3.92s
             freeman overlays "otverg"      // «потому что видят мойки»
         }
     }
@@ -390,10 +390,10 @@ scene "shutka" (duration: 1s, set: ulica) {
     //  есть предел, и предел назовут следующей репликой.
     //lip 15
     together {
-        freeman speaks for 4.18s
+        freeman speaks for 5.03s
         do {
             freeman overlays "otmahnulsya" // «работать больше»
-            wait 2.24s
+            wait 2.7s
             freeman overlays "razmer"      // «открыть вторую мойку»
         }
     }
@@ -429,7 +429,7 @@ scene "zal" (duration: 1s, set: zal) {
     // ── ПРЕЗЕНТАЦИЯ (VO-17): название ─────────────────────────────────
     //lip 17
     together {
-        freeman speaks for 1.85s
+        freeman speaks for 2.45s
         do {
             freeman overlays "razvel"      // «курс так и называется: парус»
         }
@@ -472,7 +472,7 @@ scene "zhalo" (duration: 1s, set: ulica) {
     //  зале, здесь ищут такое же место на своей улице.
     //lip 19
     together {
-        freeman speaks for 4.71s
+        freeman speaks for 5.27s
         do {
             freeman overlays "manit"       // «выйдите на свою улицу»
             wait 2.5s
@@ -485,7 +485,7 @@ scene "zhalo" (duration: 1s, set: ulica) {
     //  ЗРИТЕЛЬ УХОДИТ НАВЕРХ ПО СТАТУСУ: у него в руках работа, а не приговор.
     //lip 20
     together {
-        freeman speaks for 4.31s
+        freeman speaks for 5.81s
         do {
             camera medium freeman
             freeman overlays "think"       // «кто на этом часе не зарабатывает?»
@@ -504,10 +504,10 @@ scene "zhalo" (duration: 1s, set: ulica) {
     nomer2 scales 0.16 over 0.02s
     //lip 21
     together {
-        freeman speaks for 5.41s
+        freeman speaks for 5.68s
         do {
             freeman overlays "gladit_grud_niz"  // «лекторий мейстера»
-            wait 3.43s
+            wait 2.93s
             freeman overlays "vozzvanie"        // «поехали!»
         }
     }
