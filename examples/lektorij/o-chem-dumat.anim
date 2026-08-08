@@ -149,11 +149,11 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  потом у него забирают объяснение.
     //lip 3
     together {
-        freeman speaks for 4.35s
+        freeman speaks for 3.79s
         do {
             camera medium freeman
             freeman overlays "ostyl"       // «устали как после смены»
-            wait 2.6s
+            wait 2.26s
             freeman overlays "vniz"        // «а сделано ничего»
         }
     }
@@ -193,12 +193,12 @@ scene "stol" (duration: 1s, set: stol) {
     //  нажима: жвачка обязана объяснить себя сама, комментарий её убьёт.
     //lip 5
     together {
-        freeman speaks for 5.41s
+        freeman speaks for 4.05s
         do {
             freeman overlays "razmer"      // «это жвачка»
-            wait 1.8s
+            wait 1.35s
             freeman overlays "rubit"       // «челюсть работает»
-            wait 1.8s
+            wait 1.35s
             freeman overlays "razvel"      // «желудок пустой, калорий ноль»
         }
     }
@@ -239,11 +239,11 @@ scene "pustota" (duration: 1s, set: void) {
     //  Пауза между ними длиннее второй фразы.
     //lip 7
     together {
-        freeman speaks for 4.09s
+        freeman speaks for 3.50s
         do {
             camera medium freeman
             freeman overlays "klin"        // «усилие вы помните»
-            wait 2.6s
+            wait 2.23s
             freeman overlays "vniz"        // «продукт — нет»
         }
     }
@@ -267,10 +267,10 @@ scene "cena" (duration: 1s, set: stol) {
     //  всего в реплике.
     //lip 8
     together {
-        freeman speaks for 5.79s
+        freeman speaks for 4.81s
         do {
             freeman overlays "vzves"       // «способов думать — восемь»
-            wait 3.2s
+            wait 2.66s
             freeman overlays "vniz"        // «пять из них не производят ничего»
         }
     }
@@ -281,7 +281,7 @@ scene "cena" (duration: 1s, set: stol) {
     //  выйдет упрёк, и зритель начнёт защищаться вместо того, чтобы считать.
     //lip 9
     together {
-        freeman speaks for 3.63s
+        freeman speaks for 2.98s
         do {
             camera medium freeman
             freeman overlays "ugryumo"     // «а устаёте вы от всех восьми одинаково»
@@ -398,11 +398,11 @@ scene "tropy" (duration: 1s, set: tropy) {
     //  оплачен вещью, которая уже пришла и не уйдёт.
     //lip 15
     together {
-        freeman speaks for 4.83s
+        freeman speaks for 4.08s
         do {
             camera medium freeman
             freeman overlays "v_upor"
-            wait 2.6s
+            wait 2.19s
             freeman overlays "doshlo"      // «дальше он ваш до ночи»
         }
     }
@@ -468,10 +468,10 @@ scene "zhalo" (duration: 1s, set: kuhnya) {
     //  на ней ловят.
     //lip 18
     together {
-        freeman speaks for 5.08s
+        freeman speaks for 6.22s
         do {
             freeman overlays "vozzvanie"   // «поймайте себя на жвачке»
-            wait 2.9s
+            wait 3.55s
             freeman overlays "palec_vverh" // «что у меня в руках?»
         }
     }
@@ -499,10 +499,10 @@ scene "zhalo" (duration: 1s, set: kuhnya) {
     freeman pose "gladit_grud"
     //lip 20
     together {
-        freeman speaks for 5.68s
+        freeman speaks for 4.83s
         do {
             freeman overlays "gladit_grud_niz"  // «лекторий мейстера»
-            wait 3.6s
+            wait 3.06s
             freeman overlays "vozzvanie"        // «поехали!»
         }
     }
