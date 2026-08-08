@@ -152,7 +152,7 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  закрывает ролик на второй реплике.
     //lip 2
     together {
-        freeman speaks for 4.41s
+        freeman speaks for 5.79s
         do {
             freeman overlays "razvel"      // «плохо вспоминается»
             wait 2.36s
@@ -167,10 +167,10 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  не менялся годами.
     //lip 3
     together {
-        freeman speaks for 4.96s
+        freeman speaks for 6.58s
         do {
             camera medium freeman
-            freeman overlays "ostyl"       // «а список у вас есть»
+            freeman overlays "ostyl"       // «а список тем у вас есть»
             wait 2.68s
             freeman overlays "vniz"        // «годами одни и те же»
         }
@@ -199,7 +199,7 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
         do {
             freeman overlays "rubit"       // «их принесли»
             wait 1.5s
-            freeman overlays "rubit_l"     // «работа. деньги»
+            freeman overlays "rubit_l"     // «работу. деньги»
             wait 1.5s
             freeman overlays "razvel"      // «чужое мнение»
         }
@@ -270,7 +270,7 @@ scene "ceh" (duration: 1s, set: ceh) {
     //  медленнее и ровнее; «вас» без подчёркивания, иначе выйдет проповедь.
     //lip 8
     together {
-        freeman speaks for 6.19s
+        freeman speaks for 7.71s
         do {
             freeman overlays "vzves"       // «каждый день — один и тот же вопрос»
             wait 3.37s
@@ -298,12 +298,12 @@ scene "ceh" (duration: 1s, set: ceh) {
     //  пауза длиннее второй фразы: слово должно упасть в тишину.
     //lip 10
     together {
-        freeman speaks for 5.30s
+        freeman speaks for 6.03s
         do {
             camera medium freeman
             freeman overlays "ostyl"       // «десять лет — это не стаж»
             wait 3.0s
-            freeman overlays "vniz"        // «это срок изготовления»
+            freeman overlays "vniz"        // «это срок вашего изготовления»
         }
     }
     camera wide
@@ -328,7 +328,7 @@ scene "okno" (duration: 1s, set: okno) {
     //  искать. Вверх, почти участливо.
     //lip 11
     together {
-        freeman speaks for 1.18s
+        freeman speaks for 1.78s
         do {
             freeman overlays "vozzvanie"   // «а ваш вопрос — какой?»
         }
@@ -373,7 +373,7 @@ scene "tropy" (duration: 1s, set: tropy) {
     //  останется лозунг без довода.
     //lip 13
     together {
-        freeman speaks for 5.72s
+        freeman speaks for 7.60s
         do {
             freeman overlays "teplo"       // «свобода — это когда вы выбираете»
             wait 3.09s
@@ -432,7 +432,7 @@ scene "zal" (duration: 1s, set: zal) {
     //  продолжением фразы.
     //lip 16
     together {
-        freeman speaks for 2.38s
+        freeman speaks for 2.83s
         do {
             freeman overlays "razvel"      // «курс так и называется»
         }
@@ -476,11 +476,11 @@ scene "zhalo" (duration: 1s, set: kuhnya) {
     //  него заглядывают за своим вопросом.
     //lip 18
     together {
-        freeman speaks for 5.27s
+        freeman speaks for 5.46s
         do {
-            freeman overlays "vozzvanie"   // «загляните в свой список»
+            freeman overlays "vozzvanie"   // «загляните в свой список тем»
             wait 2.9s
-            freeman overlays "palec_vverh" // «поймайте вопрос, который задаёте»
+            freeman overlays "palec_vverh" // «поймайте вопрос, который вы к ним задаёте»
         }
     }
     wait 0.5s
@@ -490,12 +490,12 @@ scene "zhalo" (duration: 1s, set: kuhnya) {
     //  него в руках работа, а не приговор.
     //lip 19
     together {
-        freeman speaks for 3.92s
+        freeman speaks for 5.81s
         do {
             camera medium freeman
-            freeman overlays "teplo"       // «и спросите»
+            freeman overlays "teplo"       // «и спросите: этот вопрос»
             wait 2.1s
-            freeman overlays "raskryl"     // «кем я хочу быть?»
+            freeman overlays "raskryl"     // «делает из меня того, кем я хочу быть?»
         }
     }
     camera wide
@@ -512,7 +512,7 @@ scene "zhalo" (duration: 1s, set: kuhnya) {
     nomer2 scales 0.34 over 0.02s
     //lip 20
     together {
-        freeman speaks for 4.05s
+        freeman speaks for 5.68s
         do {
             freeman overlays "gladit_grud_niz"  // «лекторий мейстера»
             wait 2.57s
