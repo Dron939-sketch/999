@@ -152,10 +152,10 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  закрывает ролик на второй реплике.
     //lip 2
     together {
-        freeman speaks for 5.79s
+        freeman speaks for 5.02s
         do {
             freeman overlays "razvel"      // «плохо вспоминается»
-            wait 2.36s
+            wait 2.04s
             freeman overlays "rubit"       // «что-то про работу, что-то про деньги»
         }
     }
@@ -167,11 +167,11 @@ scene "kuhnya" (duration: 1s, set: kuhnya) {
     //  не менялся годами.
     //lip 3
     together {
-        freeman speaks for 6.58s
+        freeman speaks for 5.90s
         do {
             camera medium freeman
             freeman overlays "ostyl"       // «а список тем у вас есть»
-            wait 2.68s
+            wait 2.4s
             freeman overlays "vniz"        // «годами одни и те же»
         }
     }
@@ -239,11 +239,11 @@ scene "pustota" (duration: 1s, set: void) {
     //  вторая суше первой, без всякого нажима на «только».
     //lip 7
     together {
-        freeman speaks for 3.14s
+        freeman speaks for 2.48s
         do {
             camera medium freeman
             freeman overlays "klin"        // «не вы»
-            wait 1.7s
+            wait 1.34s
             freeman overlays "vniz"        // «вы только исполняете»
         }
     }
@@ -270,10 +270,10 @@ scene "ceh" (duration: 1s, set: ceh) {
     //  медленнее и ровнее; «вас» без подчёркивания, иначе выйдет проповедь.
     //lip 8
     together {
-        freeman speaks for 7.71s
+        freeman speaks for 5.51s
         do {
             freeman overlays "vzves"       // «каждый день — один и тот же вопрос»
-            wait 3.37s
+            wait 2.41s
             freeman overlays "v_upor"      // «он делает не ответ, он делает вас»
         }
     }
@@ -284,10 +284,10 @@ scene "ceh" (duration: 1s, set: ceh) {
     //  выйдет, что следователь хуже мастера, а ролик этого не утверждает.
     //lip 9
     together {
-        freeman speaks for 8.39s
+        freeman speaks for 7.31s
         do {
             freeman overlays "rubit"       // «десять лет — и вы мастер»
-            wait 4.5s
+            wait 3.92s
             freeman overlays "rubit_l"     // «десять лет — и вы следователь»
         }
     }
@@ -298,11 +298,11 @@ scene "ceh" (duration: 1s, set: ceh) {
     //  пауза длиннее второй фразы: слово должно упасть в тишину.
     //lip 10
     together {
-        freeman speaks for 6.03s
+        freeman speaks for 6.61s
         do {
             camera medium freeman
             freeman overlays "ostyl"       // «десять лет — это не стаж»
-            wait 3.0s
+            wait 3.29s
             freeman overlays "vniz"        // «это срок вашего изготовления»
         }
     }
@@ -373,10 +373,10 @@ scene "tropy" (duration: 1s, set: tropy) {
     //  останется лозунг без довода.
     //lip 13
     together {
-        freeman speaks for 7.60s
+        freeman speaks for 6.24s
         do {
             freeman overlays "teplo"       // «свобода — это когда вы выбираете»
-            wait 3.09s
+            wait 2.54s
             freeman overlays "otverg"      // «а не жуёте тот, что достался»
         }
     }
@@ -387,10 +387,10 @@ scene "tropy" (duration: 1s, set: tropy) {
     //  фраза — как предлагают проверить, а не как ловят.
     //lip 14
     together {
-        freeman speaks for 5.61s
+        freeman speaks for 7.29s
         do {
             freeman overlays "otmahnulsya" // «проще всего — перестать думать»
-            wait 3.0s
+            wait 3.9s
             freeman overlays "prishchur"   // «не думайте о белом медведе»
         }
     }
@@ -401,11 +401,11 @@ scene "tropy" (duration: 1s, set: tropy) {
     //  моментом провала: слово произнесено — и медведь уже пришёл.
     //lip 15
     together {
-        freeman speaks for 4.76s
+        freeman speaks for 4.13s
         do {
             camera medium freeman
             freeman overlays "v_upor"
-            wait 2.6s
+            wait 2.25s
             freeman overlays "doshlo"      // «дальше он ваш до ночи»
         }
     }
@@ -432,7 +432,7 @@ scene "zal" (duration: 1s, set: zal) {
     //  продолжением фразы.
     //lip 16
     together {
-        freeman speaks for 2.83s
+        freeman speaks for 2.38s
         do {
             freeman overlays "razvel"      // «курс так и называется»
         }
@@ -444,7 +444,7 @@ scene "zal" (duration: 1s, set: zal) {
     //  без слова «лекций» повисло бы без опоры — на этом уже обжигались.
     //lip 17
     together {
-        freeman speaks for 2.64s
+        freeman speaks for 3.11s
         do {
             camera medium freeman
             freeman overlays "palec_vverh" // «четырнадцать лекций, и всё бесплатно»
@@ -476,10 +476,10 @@ scene "zhalo" (duration: 1s, set: kuhnya) {
     //  него заглядывают за своим вопросом.
     //lip 18
     together {
-        freeman speaks for 5.46s
+        freeman speaks for 6.06s
         do {
             freeman overlays "vozzvanie"   // «загляните в свой список тем»
-            wait 2.9s
+            wait 3.22s
             freeman overlays "palec_vverh" // «поймайте вопрос, который вы к ним задаёте»
         }
     }
