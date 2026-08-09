@@ -123,10 +123,10 @@ scene "s1" (duration: 1s, set: zalsp) {
     //lip 2
     //  «В зале тяжелее. И вы туда ходите.»
     together {
-        freeman speaks for 6.21s
+        freeman speaks for 4.57s
         do {
             freeman overlays "lokti"
-            wait 2.10s
+            wait 1.55s
             freeman overlays "doshlo"
         }
     }
@@ -135,12 +135,12 @@ scene "s1" (duration: 1s, set: zalsp) {
     //lip 3
     //  «Отчёт. Английский. Ремонт. Тот самый проект.»
     together {
-        freeman speaks for 3.67s
+        freeman speaks for 4.52s
         do {
             freeman overlays "rubit"
-            wait 1.45s
+            wait 1.79s
             freeman overlays "rubit_l"
-            wait 1.45s
+            wait 1.79s
             freeman overlays "vniz"
         }
     }
@@ -208,12 +208,12 @@ scene "s3" (duration: 1s, set: zalsp) {
     //lip 7
     //  «Штанга. Она не хвалит, не жалеет, не входит в положение.»
     together {
-        freeman speaks for 7.23s
+        freeman speaks for 5.20s
         do {
             freeman overlays "no"
-            wait 1.51s
+            wait 1.09s
             freeman overlays "otverg"
-            wait 1.51s
+            wait 1.09s
             freeman overlays "stop_ladon"
         }
     }
@@ -243,12 +243,12 @@ scene "s4" (duration: 1s, set: stol) {
     //lip 9
     //  «А на работе скажут «нормально» — и вы полгода думаете, что растёте.»
     together {
-        freeman speaks for 8.30s
+        freeman speaks for 6.35s
         do {
             freeman overlays "otmahnulsya"
-            wait 2.17s
+            wait 1.66s
             freeman overlays "prishchur"
-            wait 1.76s
+            wait 1.35s
             freeman overlays "ostyl"
         }
     }
@@ -268,10 +268,10 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 10
     //  «Значит, я мало стараюсь, надо ещё поднажать.»
     together {
-        freeman speaks for 3.64s
+        freeman speaks for 3.06s
         do {
             freeman overlays "yarost_telom"
-            wait 1.90s
+            wait 1.6s
             freeman overlays "za_golovu"
         }
     }
@@ -292,11 +292,11 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 12
     //  «Сколько месяцев вы шли, не зная — вперёд или на месте?»
     together {
-        freeman speaks for 6.30s
+        freeman speaks for 5.17s
         do {
             camera medium freeman
             freeman overlays "dengi"
-            wait 2.27s
+            wait 1.86s
             freeman overlays "vzves"
         }
     }
@@ -318,10 +318,10 @@ scene "s6" (duration: 1s, set: zalsp) {
     //lip 13
     //  «Характер у вас есть. Три года тренировок — доказательство.»
     together {
-        freeman speaks for 4.57s
+        freeman speaks for 3.89s
         do {
             freeman overlays "teplo"
-            wait 2.40s
+            wait 2.04s
             freeman overlays "doshlo"
         }
     }
@@ -330,10 +330,10 @@ scene "s6" (duration: 1s, set: zalsp) {
     //lip 14
     //  «Не хватает не воли. Не хватает весов.»
     together {
-        freeman speaks for 3.05s
+        freeman speaks for 3.71s
         do {
             freeman overlays "razmer"
-            wait 1.60s
+            wait 1.95s
             freeman overlays "klin"
         }
     }
@@ -378,12 +378,12 @@ scene "s7" (duration: 1s, set: doroga) {
     //  «Смысл не в том, чтобы нарастить мясо, а в том, чтобы завести весы там,
     //  где вам врут.»
     together {
-        freeman speaks for 6.99s
+        freeman speaks for 5.36s
         do {
             freeman overlays "raspahnul"
-            wait 2.23s
+            wait 1.71s
             freeman overlays "oba_vverh"
-            wait 1.85s
+            wait 1.42s
             freeman overlays "vzglyad"
         }
     }
@@ -513,10 +513,10 @@ scene "s10" (duration: 1s, set: zalsp) {
     //lip 24
     //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
     together {
-        freeman speaks for 5.50s
+        freeman speaks for 4.88s
         do {
             freeman overlays "gladit_grud_niz"
-            wait 2.07s
+            wait 1.84s
             freeman overlays "wave"
         }
     }
