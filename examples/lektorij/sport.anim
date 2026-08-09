@@ -135,12 +135,12 @@ scene "s1" (duration: 1s, set: zalsp) {
     //lip 3
     //  «Отчёт. Английский. Ремонт. Тот самый проект.»
     together {
-        freeman speaks for 3.67s
+        freeman speaks for 4.44s
         do {
             freeman overlays "rubit"
-            wait 1.20s
+            wait 1.45s
             freeman overlays "rubit_l"
-            wait 1.20s
+            wait 1.45s
             freeman overlays "vniz"
         }
     }
@@ -149,7 +149,7 @@ scene "s1" (duration: 1s, set: zalsp) {
     //lip 4
     //  «Четвёртый месяц на том же месте.»
     together {
-        freeman speaks for 1.55s
+        freeman speaks for 2.01s
         do {
             freeman overlays "yorik"
         }
@@ -208,12 +208,12 @@ scene "s3" (duration: 1s, set: zalsp) {
     //lip 7
     //  «Штанга. Она не хвалит, не жалеет, не входит в положение.»
     together {
-        freeman speaks for 7.23s
+        freeman speaks for 4.55s
         do {
             freeman overlays "no"
-            wait 2.40s
+            wait 1.51s
             freeman overlays "otverg"
-            wait 2.40s
+            wait 1.51s
             freeman overlays "stop_ladon"
         }
     }
@@ -243,12 +243,12 @@ scene "s4" (duration: 1s, set: stol) {
     //lip 9
     //  «А на работе скажут «нормально» — и вы полгода думаете, что растёте.»
     together {
-        freeman speaks for 8.02s
+        freeman speaks for 5.43s
         do {
             freeman overlays "otmahnulsya"
-            wait 3.20s
+            wait 2.17s
             freeman overlays "prishchur"
-            wait 2.60s
+            wait 1.76s
             freeman overlays "ostyl"
         }
     }
@@ -292,11 +292,11 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 12
     //  «Сколько месяцев вы шли, не зная — вперёд или на месте?»
     together {
-        freeman speaks for 6.30s
+        freeman speaks for 4.47s
         do {
             camera medium freeman
             freeman overlays "dengi"
-            wait 3.20s
+            wait 2.27s
             freeman overlays "vzves"
         }
     }
@@ -353,10 +353,10 @@ scene "s7" (duration: 1s, set: doroga) {
     //lip 15
     //  «Спорт здесь не тема, а лаборатория: в нём всё видно за неделю.»
     together {
-        freeman speaks for 4.91s
+        freeman speaks for 5.67s
         do {
             freeman overlays "dve_storony"
-            wait 2.50s
+            wait 2.89s
             freeman overlays "chelo"
         }
     }
@@ -365,10 +365,10 @@ scene "s7" (duration: 1s, set: doroga) {
     //lip 16
     //  «В работе то же самое, только правда опаздывает на полгода.»
     together {
-        freeman speaks for 4.57s
+        freeman speaks for 5.22s
         do {
             freeman overlays "vdal"
-            wait 2.40s
+            wait 2.74s
             freeman overlays "ugryumo"
         }
     }
@@ -378,12 +378,12 @@ scene "s7" (duration: 1s, set: doroga) {
     //  «Смысл не в том, чтобы нарастить мясо, а в том, чтобы завести весы там,
     //  где вам врут.»
     together {
-        freeman speaks for 6.99s
+        freeman speaks for 5.38s
         do {
             freeman overlays "raspahnul"
-            wait 2.90s
+            wait 2.23s
             freeman overlays "oba_vverh"
-            wait 2.40s
+            wait 1.85s
             freeman overlays "vzglyad"
         }
     }
@@ -405,12 +405,12 @@ scene "s8" (duration: 1s, set: zalsp) {
     //  «Обычно тут идут за мотивацией. Смотреть ролик, где кричит нарисованный
     //  человек.»
     together {
-        freeman speaks for 6.28s
+        freeman speaks for 5.69s
         do {
             freeman overlays "krik"
-            wait 3.20s
+            wait 2.9s
             freeman overlays "shrug"
-            wait 2.10s
+            wait 1.9s
             freeman overlays "prishchur"
         }
     }
@@ -419,10 +419,10 @@ scene "s8" (duration: 1s, set: zalsp) {
     //lip 19
     //  «Как этот. Работает ровно до вторника.»
     together {
-        freeman speaks for 3.05s
+        freeman speaks for 3.71s
         do {
             freeman overlays "gladit_grud"
-            wait 1.60s
+            wait 1.95s
             freeman overlays "ugryumo"
         }
     }
@@ -493,7 +493,7 @@ scene "s10" (duration: 1s, set: zalsp) {
     //lip 23
     //  «И кто скажет вам правду в пятницу?»
     together {
-        freeman speaks for 2.08s
+        freeman speaks for 2.56s
         do {
             camera medium freeman
             freeman overlays "v_upor"
@@ -513,10 +513,10 @@ scene "s10" (duration: 1s, set: zalsp) {
     //lip 24
     //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
     together {
-        freeman speaks for 5.50s
+        freeman speaks for 4.39s
         do {
             freeman overlays "gladit_grud_niz"
-            wait 2.60s
+            wait 2.07s
             freeman overlays "wave"
         }
     }
