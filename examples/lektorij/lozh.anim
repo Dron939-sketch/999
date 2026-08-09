@@ -46,8 +46,7 @@
 //  Завод перепишет их по факту озвучки.
 // =============================================================================
 //
-//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: e52ea7ee
-
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 48a31785
 import character freeman from "../assets/characters/freeman_rig"
 import set stulya from "../assets/sets/dva-stula.svg"
 import set void from "../assets/sets/void-black.svg"
@@ -86,10 +85,10 @@ config {
 //  Два стула друг напротив друга: разговор уже кончился, приговор уже вынесен.
 scene "s1" (duration: 1s, set: stulya) {
     place freeman at (0.50, 0.62) facing front on floor
-    freeman scales 1.30 over 0.01s
+    freeman scales 0.90 over 0.01s
 
-    let nomer = prop("nomer", "../assets/props/nomer-16.svg") at (0.530, 0.320) layer 9
-    nomer scales 0.28 over 0.01s
+    let nomer = prop("nomer", "../assets/props/nomer-16.svg") at (0.525, 0.415) layer 9
+    nomer scales 0.19 over 0.01s
     nomer hides
     camera wide
 
@@ -98,8 +97,8 @@ scene "s1" (duration: 1s, set: stulya) {
     wait 0.02s
     nomer shows
     nomer scales 0.02 over 0.01s
-    nomer scales 0.31 over 0.05s ease-out
-    nomer scales 0.28 over 0.02s
+    nomer scales 0.21 over 0.05s ease-out
+    nomer scales 0.19 over 0.02s
     freeman pose "gladit_grud_niz"
     wait 0.02s
     nomer hides
@@ -213,7 +212,7 @@ scene "s3" (duration: 1s, set: stulya) {
     transition static 0.2s
 
     place freeman at (0.50, 0.62) facing front on floor
-    freeman scales 1.30 over 0.01s
+    freeman scales 0.90 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -239,7 +238,7 @@ scene "s4" (duration: 1s, set: gosti) {
     transition static 0.2s
 
     place freeman at (0.18, 0.96) facing front on floor
-    freeman scales 1.55 over 0.01s
+    freeman scales 1.25 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -314,7 +313,7 @@ scene "s6" (duration: 1s, set: ryady) {
     transition static 0.2s
 
     place freeman at (0.50, 0.78) facing front on floor
-    freeman scales 1.05 over 0.01s
+    freeman scales 1.00 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -467,10 +466,10 @@ scene "s10" (duration: 1s, set: stulya) {
     transition static 0.2s
 
     place freeman at (0.50, 0.62) facing front on floor
-    freeman scales 1.30 over 0.01s
+    freeman scales 0.90 over 0.01s
 
-    let nomer2 = prop("nomer", "../assets/props/nomer-16.svg") at (0.530, 0.320) layer 9
-    nomer2 scales 0.28 over 0.01s
+    let nomer2 = prop("nomer", "../assets/props/nomer-16.svg") at (0.525, 0.415) layer 9
+    nomer2 scales 0.19 over 0.01s
     nomer2 hides
     camera wide
     freeman pose "calm"
@@ -511,8 +510,8 @@ scene "s10" (duration: 1s, set: stulya) {
     wait 0.02s
     nomer2 shows
     nomer2 scales 0.02 over 0.01s
-    nomer2 scales 0.31 over 0.05s ease-out
-    nomer2 scales 0.28 over 0.02s
+    nomer2 scales 0.21 over 0.05s ease-out
+    nomer2 scales 0.19 over 0.02s
 
     //lip 23
     //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
