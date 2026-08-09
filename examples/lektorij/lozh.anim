@@ -109,10 +109,10 @@ scene "s1" (duration: 1s, set: stulya) {
     //lip 1
     //  «Вы решили, что вам врут. По глазам.»
     together {
-        freeman speaks for 3.03s
+        freeman speaks for 2.53s
         do {
             freeman overlays "obvinil"
-            wait 1.60s
+            wait 1.34s
             freeman overlays "prishchur"
         }
     }
@@ -121,10 +121,10 @@ scene "s1" (duration: 1s, set: stulya) {
     //lip 2
     //  «И были уверены настолько, что перестали проверять.»
     together {
-        freeman speaks for 5.25s
+        freeman speaks for 3.66s
         do {
             freeman overlays "odna_v_bok"
-            wait 2.70s
+            wait 1.88s
             freeman overlays "ugryumo"
         }
     }
@@ -197,10 +197,10 @@ scene "s2" (duration: 1s, set: void) {
     //lip 7
     //  «Четыре процента. Вот вся ваша проницательность.»
     together {
-        freeman speaks for 4.73s
+        freeman speaks for 3.97s
         do {
             freeman overlays "palec_vverh"
-            wait 2.40s
+            wait 2.01s
             freeman overlays "doshlo"
         }
     }
@@ -220,12 +220,12 @@ scene "s3" (duration: 1s, set: stulya) {
     //lip 8
     //  «А тот, кого вы тогда осудили, просто волновался.»
     together {
-        freeman speaks for 6.30s
+        freeman speaks for 3.58s
         do {
             freeman overlays "manit_l"
-            wait 3.20s
+            wait 1.82s
             freeman overlays "gorech"
-            wait 2.10s
+            wait 1.19s
             freeman overlays "chelo"
         }
     }
@@ -269,10 +269,10 @@ scene "s5" (duration: 1s, set: vannaya) {
     //lip 10
     //  «Да нет, я людей насквозь вижу, у меня чутьё.»
     together {
-        freeman speaks for 3.48s
+        freeman speaks for 2.56s
         do {
             freeman overlays "smel"
-            wait 1.80s
+            wait 1.32s
             freeman overlays "vzglyad"
         }
     }
@@ -295,11 +295,11 @@ scene "s5" (duration: 1s, set: vannaya) {
     //lip 12
     //  «Скольких вы записали в лжецы за то, что они боялись?»
     together {
-        freeman speaks for 5.58s
+        freeman speaks for 4.05s
         do {
             camera medium freeman
             freeman overlays "dengi"
-            wait 2.80s
+            wait 2.03s
             freeman overlays "ugryumo"
         }
     }
@@ -347,12 +347,12 @@ scene "s6" (duration: 1s, set: ryady) {
     //  «У каждого своя норма: кто-то трогает нос всегда. Без его нормы ваш
     //  вывод — гадание.»
     together {
-        freeman speaks for 6.99s
+        freeman speaks for 7.55s
         do {
             freeman overlays "dve_storony"
-            wait 3.50s
+            wait 3.78s
             freeman overlays "za_uho"
-            wait 2.40s
+            wait 2.59s
             freeman overlays "somnenie"
         }
     }
@@ -374,12 +374,12 @@ scene "s7" (duration: 1s, set: derevo) {
     //  «Истина не в жесте, а в фактах — жест говорит только о том, у кого
     //  дрожит шкура.»
     together {
-        freeman speaks for 6.60s
+        freeman speaks for 5.62s
         do {
             freeman overlays "raspahnul"
-            wait 2.70s
+            wait 2.3s
             freeman overlays "oba_vverh"
-            wait 2.30s
+            wait 1.96s
             freeman overlays "vzglyad"
         }
     }
@@ -495,11 +495,11 @@ scene "s10" (duration: 1s, set: stulya) {
     //lip 22
     //  «И что у вас есть, кроме его лица и ваших четырёх процентов?»
     together {
-        freeman speaks for 4.73s
+        freeman speaks for 5.22s
         do {
             camera medium freeman
             freeman overlays "v_upor"
-            wait 2.40s
+            wait 2.65s
             freeman overlays "prishchur"
         }
     }
