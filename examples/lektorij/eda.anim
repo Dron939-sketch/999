@@ -482,9 +482,9 @@ scene "s9" (duration: 1s, set: void) {
     freeman pose "calm"
 
     //lip 18
-    //  «Голодов два: один из тела, другой из головы.»
+    //  «Голод бывает двух видов: один в теле, другой в голове.»
     together {
-        freeman speaks for 2.64s
+        freeman speaks for 4.34s
         do {
             freeman overlays "dve_storony"
             wait 1.4s
@@ -567,9 +567,9 @@ scene "s11" (duration: 1s, set: zal) {
     wait 0.45s
 
     //lip 23
-    //  «Он не про вес и не про правильные продукты. Он про два голода.»
+    //  «Он не про вес и не про правильные продукты. Он про голод в теле и голод в голове.»
     together {
-        freeman speaks for 4.33s
+        freeman speaks for 5.46s
         do {
             freeman overlays "otverg"
             wait 2.3s
@@ -625,9 +625,9 @@ scene "s12" (duration: 1s, set: kuhnya) {
     freeman pose "calm"
 
     //lip 26
-    //  «Сегодня в одиннадцать спросите про овсянку. За вас никто не спросит.»
+    //  «Сегодня в одиннадцать задайте вопрос про овсянку. За вас никто не спросит.»
     together {
-        freeman speaks for 5.54s
+        freeman speaks for 4.90s
         do {
             freeman overlays "palec_vverh"
             wait 2.94s
