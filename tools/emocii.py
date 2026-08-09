@@ -66,6 +66,11 @@ SKELETY = {"разбор", "притча", "прямой показ"}
 
 EMO = re.compile(r"^\s*\*\*ЭМОЦИЯ:?\*\*\s*:?\s*([^—\n]+?)\s*(?:—|$)", re.M | re.I)
 SKEL = re.compile(r"^\s*\*\*СКЕЛЕТ:?\*\*\s*:?\s*([^—\n]+?)\s*(?:—|$)", re.M | re.I)
+#  Станок шутки — номер раздела `BANK-SHUTOK.md`. Банк заведён именно потому,
+#  что готовая шутка протухает за семь роликов: приём превращается в слот, слот
+#  заполняется автоматически. Слотом может стать и сам станок — пять последних
+#  роликов взяли первый и только первый, а их в банке восемь.
+STANOK = re.compile(r"Станок\s+(\d+)", re.I)
 REG = re.compile(r"^\|\s*\d+\s*\|\s*[\d.]+\s*\|\s*([а-яё]+)\s*\|", re.M)
 REPL = re.compile(r"^\|\s*VO-?\d+\s*\|[^|]*\|[^|]*\|\s*«(.*?)»", re.M)
 
@@ -104,6 +109,7 @@ def razbor(path):
         "id": p.stem.replace("-VO", ""),
         "emo": (m.group(1).strip().lower() if m else None),
         "skelet": (s.group(1).strip().lower() if s else None),
+        "stanok": (STANOK.search(t).group(1) if STANOK.search(t) else None),
         "profil": {k: v / vsego for k, v in c.items()} if vsego else {},
         "top": [k for k, _ in c.most_common(2)],
         "huk": hod_huka(repl[0]) if repl else "нет",
@@ -182,6 +188,15 @@ def proverit(target):
                 f"третий ролик подряд собран одним устройством — "
                 f"{', '.join(p['id'] for p in pred)}. Зритель узнаёт ход "
                 f"наперёд, и перелом перестаёт быть переломом"))
+
+    st = [p["stanok"] for p in pred]
+    out.append((f"станок шутки «{ja['stanok'] or '—'}» назван и не третий подряд",
+                bool(ja["stanok"]) and
+                not (len(st) == 2 and st[0] == st[1] == ja["stanok"]),
+                "в шапке не назван станок из BANK-SHUTOK.md" if not ja["stanok"]
+                else f"третий ролик подряд на станке {ja['stanok']} — "
+                     f"{', '.join(p['id'] for p in pred)}. Банк знает восемь; "
+                     f"приём, ставший слотом, перестаёт быть шуткой"))
 
     huki = [p["huk"] for p in pred]
     out.append((f"ход хука «{ja['huk']}» не совпадает с обоими предыдущими",
