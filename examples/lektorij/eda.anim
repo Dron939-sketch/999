@@ -113,10 +113,10 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 1
     //  «Одиннадцать ночи. Вы у холодильника.»
     together {
-        freeman speaks for 3.02s
+        freeman speaks for 3.47s
         do {
             freeman overlays "vdal"
-            wait 1.6s
+            wait 1.84s
             freeman overlays "calm"
         }
     }
@@ -286,10 +286,10 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 9
     //  «Положено сказать «сорвался».»
     together {
-        freeman speaks for 1.69s
+        freeman speaks for 2.14s
         do {
             freeman overlays "shrug"
-            wait 0.9s
+            wait 1.14s
             freeman overlays "zatylok"
         }
     }
@@ -347,12 +347,12 @@ scene "s7" (duration: 1s, set: kuhnya) {
     //lip 12
     //  «Вечером четвёртого дня оно счёт предъявило. Целиком.»
     together {
-        freeman speaks for 3.96s
+        freeman speaks for 4.49s
         do {
             freeman overlays "raskryl"
-            wait 1.3s
+            wait 1.47s
             freeman overlays "chelo"
-            wait 1.3s
+            wait 1.47s
             freeman overlays "ostyl"
         }
     }
@@ -372,12 +372,12 @@ scene "s7" (duration: 1s, set: kuhnya) {
     //  «Не слабость — арифметика. Зовите это достоинством или силой воли, а
     //  решает брюхо.»
     together {
-        freeman speaks for 7.73s
+        freeman speaks for 8.88s
         do {
             freeman overlays "dve_storony"
-            wait 2.7s
+            wait 3.1s
             freeman overlays "razvel"
-            wait 2.7s
+            wait 3.1s
             freeman overlays "vniz"
         }
     }
@@ -401,14 +401,14 @@ scene "s8" (duration: 1s, set: kuhnya) {
     //  «Что делать, не скажу. Скажу, что спросить: съели бы вы сейчас тарелку
     //  овсянки?»
     together {
-        freeman speaks for 5.04s
+        freeman speaks for 6.06s
         do {
             freeman overlays "otmahnulsya"
-            wait 1.22s
+            wait 1.47s
             freeman overlays "think"
-            wait 1.22s
+            wait 1.47s
             freeman overlays "k_sebe"
-            wait 1.22s
+            wait 1.47s
             freeman overlays "vzglyad"
         }
     }
@@ -447,14 +447,14 @@ scene "s8" (duration: 1s, set: kuhnya) {
     //  «Голод тела ждёт. Голод тела ест что дают. Голод тела кончается.»
     //  МАНТРА: три куска с одного слова.
     together {
-        freeman speaks for 7.05s
+        freeman speaks for 5.75s
         do {
             freeman overlays "ruki_za_spinu"
-            wait 1.66s
+            wait 1.35s
             freeman overlays "razvel"
-            wait 1.66s
+            wait 1.35s
             freeman overlays "ladoni_vniz"
-            wait 1.66s
+            wait 1.35s
             freeman overlays "ostyl"
         }
     }
@@ -484,10 +484,10 @@ scene "s9" (duration: 1s, set: void) {
     //lip 18
     //  «Голод бывает двух видов: один в теле, другой в голове.»
     together {
-        freeman speaks for 4.34s
+        freeman speaks for 3.66s
         do {
             freeman overlays "dve_storony"
-            wait 1.4s
+            wait 1.18s
             freeman overlays "razvel"
         }
     }
@@ -496,10 +496,10 @@ scene "s9" (duration: 1s, set: void) {
     //lip 19
     //  «Оба чувствуются по-разному, а дверцу открывают одну.»
     together {
-        freeman speaks for 4.14s
+        freeman speaks for 3.53s
         do {
             freeman overlays "klin"
-            wait 1.8s
+            wait 1.53s
             freeman overlays "ostyl"
         }
     }
@@ -521,12 +521,12 @@ scene "s10" (duration: 1s, set: kuhnya) {
     //  «И что назначают тому, кто их спутал? Новый список. Или ролик вроде
     //  этого.» — САМОРЕФЕРЕНЦИЯ, без подмигивания.
     together {
-        freeman speaks for 7.11s
+        freeman speaks for 6.56s
         do {
             freeman overlays "point"
-            wait 2.32s
+            wait 2.14s
             freeman overlays "razmer"
-            wait 2.32s
+            wait 2.14s
             freeman overlays "prishchur"
         }
     }
@@ -557,10 +557,10 @@ scene "s11" (duration: 1s, set: zal) {
     //lip 22
     //  «Есть курс «Психология еды». Десять лекций, и всё бесплатно.»
     together {
-        freeman speaks for 4.53s
+        freeman speaks for 5.20s
         do {
             freeman overlays "raskryl"
-            wait 2.4s
+            wait 2.75s
             freeman overlays "teplo"
         }
     }
@@ -598,10 +598,10 @@ scene "s11" (duration: 1s, set: zal) {
     //lip 25
     //  «И вы уже вспомнили того, кто зовёт себя безвольным. Из-за еды.»
     together {
-        freeman speaks for 4.60s
+        freeman speaks for 5.17s
         do {
             freeman overlays "v_upor"
-            wait 2.43s
+            wait 2.73s
             freeman overlays "prishchur"
         }
     }
@@ -627,10 +627,10 @@ scene "s12" (duration: 1s, set: kuhnya) {
     //lip 26
     //  «Сегодня в одиннадцать задайте вопрос про овсянку. За вас никто не спросит.»
     together {
-        freeman speaks for 4.90s
+        freeman speaks for 5.77s
         do {
             freeman overlays "palec_vverh"
-            wait 2.94s
+            wait 3.46s
             freeman overlays "v_upor"
         }
     }
@@ -665,10 +665,10 @@ scene "s12" (duration: 1s, set: kuhnya) {
     //lip 28
     //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
     together {
-        freeman speaks for 5.68s
+        freeman speaks for 5.04s
         do {
             freeman overlays "wave"
-            wait 3.0s
+            wait 2.66s
             freeman overlays "manit"
         }
     }
