@@ -52,6 +52,8 @@
 //  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
 //  Завод перепишет их по факту озвучки.
 // =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 09ed4d0c
 import character freeman from "../assets/characters/freeman_rig"
 import set kuhnya from "../assets/sets/eda-kuhnya-noch.svg"
 import set vitrina from "../assets/sets/eda-vitrina.svg"
@@ -88,7 +90,7 @@ config {
 //  ставят зрителя в кадр, а не в подсудимые.
 scene "s1" (duration: 1s, set: kuhnya) {
     place freeman at (0.54, 0.95) facing front on floor
-    freeman scales 0.62 over 0.01s
+    freeman scales 1.15 over 0.01s
 
     let nomer = prop("nomer", "../assets/props/nomer-20.svg") at (0.565, 0.545) layer 9
     nomer scales 0.17 over 0.01s
@@ -174,8 +176,12 @@ scene "s2" (duration: 1s, set: kuhnya) {
     transition static 0.2s
 
     place freeman at (0.44, 0.95) facing front on floor
-    freeman scales 0.62 over 0.01s
-    camera close-up freeman
+    freeman scales 1.15 over 0.01s
+    //  СРЕДНИЙ, А НЕ КРУПНЫЙ. Крупный план строится вокруг фигуры и выкинул бы
+    //  из кадра дверцу со списком — а реплика именно про список. Контактный
+    //  лист этого не покажет: он рисует все сцены общим планом, и работа
+    //  камеры человеческой проверке пока недоступна.
+    camera medium freeman
     freeman pose "calm"
 
     //lip 5
@@ -200,7 +206,7 @@ scene "s3" (duration: 1s, set: vitrina) {
     transition static 0.2s
 
     place freeman at (0.16, 0.92) facing front on floor
-    freeman scales 0.70 over 0.01s
+    freeman scales 1.06 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -255,7 +261,7 @@ scene "s5" (duration: 1s, set: kuhnya) {
     transition static 0.2s
 
     place freeman at (0.54, 0.95) facing front on floor
-    freeman scales 0.62 over 0.01s
+    freeman scales 1.15 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -314,7 +320,7 @@ scene "s7" (duration: 1s, set: kuhnya) {
     transition static 0.2s
 
     place freeman at (0.54, 0.95) facing front on floor
-    freeman scales 0.62 over 0.01s
+    freeman scales 1.15 over 0.01s
     camera medium freeman
     freeman pose "calm"
 
@@ -381,7 +387,7 @@ scene "s8" (duration: 1s, set: kuhnya) {
     transition static 0.2s
 
     place freeman at (0.54, 0.95) facing front on floor
-    freeman scales 0.62 over 0.01s
+    freeman scales 1.15 over 0.01s
     camera medium freeman
     freeman pose "calm"
 
@@ -501,7 +507,7 @@ scene "s10" (duration: 1s, set: kuhnya) {
     transition static 0.2s
 
     place freeman at (0.44, 0.95) facing front on floor
-    freeman scales 0.62 over 0.01s
+    freeman scales 1.15 over 0.01s
     camera medium freeman
     freeman pose "calm"
 
@@ -604,7 +610,7 @@ scene "s12" (duration: 1s, set: kuhnya) {
     transition static 0.2s
 
     place freeman at (0.54, 0.95) facing front on floor
-    freeman scales 0.62 over 0.01s
+    freeman scales 1.15 over 0.01s
 
     let nomer2 = prop("nomer", "../assets/props/nomer-20.svg") at (0.565, 0.545) layer 9
     nomer2 scales 0.17 over 0.01s
