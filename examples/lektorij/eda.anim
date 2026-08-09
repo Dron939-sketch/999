@@ -494,9 +494,9 @@ scene "s9" (duration: 1s, set: void) {
     wait 0.4s
 
     //lip 19
-    //  «Звучат по-разному, а дверцу открывают одну.»
+    //  «Оба чувствуются по-разному, а дверцу открывают одну.»
     together {
-        freeman speaks for 3.39s
+        freeman speaks for 4.14s
         do {
             freeman overlays "klin"
             wait 1.8s
