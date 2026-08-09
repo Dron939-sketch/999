@@ -128,12 +128,12 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 2
     //  «И не говорите, что не было времени. Время было.»
     together {
-        freeman speaks for 5.71s
+        freeman speaks for 3.79s
         do {
             freeman overlays "ruki_za_spinu"
-            wait 2.80s
+            wait 1.86s
             freeman overlays "hips"
-            wait 1.80s
+            wait 1.19s
             freeman overlays "ugryumo"
         }
     }
@@ -142,12 +142,12 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 3
     //  «Посуда. Отчёт. Спортзал. Тот самый разговор.»
     together {
-        freeman speaks for 3.83s
+        freeman speaks for 4.39s
         do {
             freeman overlays "poimal"
-            wait 1.25s
+            wait 1.43s
             freeman overlays "za_uho"
-            wait 1.25s
+            wait 1.43s
             freeman overlays "u_viska_l"
         }
     }
@@ -156,7 +156,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 4
     //  «А вечером два часа листали ленту.»
     together {
-        freeman speaks for 1.86s
+        freeman speaks for 2.38s
         do {
             freeman overlays "otvraschenie"
         }
@@ -166,11 +166,11 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 5
     //  «Силы были — ушли не туда.»
     together {
-        freeman speaks for 2.27s
+        freeman speaks for 1.78s
         do {
             camera medium freeman
             freeman overlays "gore"
-            wait 1.20s
+            wait 0.94s
             freeman overlays "somnenie"
         }
     }
@@ -215,10 +215,10 @@ scene "s3" (duration: 1s, set: void) {
     //lip 7
     //  «Никогда. Туда двигатель едет сам.»
     together {
-        freeman speaks for 3.66s
+        freeman speaks for 3.16s
         do {
             freeman overlays "vdal"
-            wait 1.90s
+            wait 1.64s
             freeman overlays "doshlo"
         }
     }
@@ -239,12 +239,12 @@ scene "s4" (duration: 1s, set: perekrestok) {
     //lip 8
     //  «Значит, он исправен — просто ему не сказали, куда ехать.»
     together {
-        freeman speaks for 7.30s
+        freeman speaks for 4.57s
         do {
             freeman overlays "ruka_vverh"
-            wait 3.60s
+            wait 2.25s
             freeman overlays "confident"
-            wait 2.40s
+            wait 1.5s
             freeman overlays "ostyl"
         }
     }
@@ -254,11 +254,11 @@ scene "s4" (duration: 1s, set: perekrestok) {
     //  «И сразу граница: если давно не тянет вообще ничего — это не лень, это
     //  к врачу.»
     together {
-        freeman speaks for 6.80s
+        freeman speaks for 5.22s
         do {
             camera medium freeman
             freeman overlays "stop_ladon"
-            wait 3.40s
+            wait 2.61s
             freeman overlays "chelo"
         }
     }
@@ -350,10 +350,10 @@ scene "s6" (duration: 1s, set: perekrestok) {
     //lip 15
     //  «Мозг бережёт топливо. Это не порок, это конструкция.»
     together {
-        freeman speaks for 4.53s
+        freeman speaks for 5.49s
         do {
             freeman overlays "razmer"
-            wait 2.30s
+            wait 2.79s
             freeman overlays "klin"
         }
     }
@@ -363,12 +363,12 @@ scene "s6" (duration: 1s, set: perekrestok) {
     //  «А куда ехать — задаёт направление. Амбиция это не «хочу больше», а
     //  «хочу туда».»
     together {
-        freeman speaks for 7.24s
+        freeman speaks for 6.30s
         do {
             freeman overlays "dve_storony"
-            wait 3.60s
+            wait 3.13s
             freeman overlays "vdal"
-            wait 2.40s
+            wait 2.09s
             freeman overlays "doshlo"
         }
     }
@@ -389,12 +389,12 @@ scene "s7" (duration: 1s, set: pole) {
     //lip 17
     //  «Свобода — это не пустой вечер, а вечер, который вы не отдали ленте.»
     together {
-        freeman speaks for 6.40s
+        freeman speaks for 7.21s
         do {
             freeman overlays "raspahnul"
-            wait 2.60s
+            wait 2.93s
             freeman overlays "oba_vverh"
-            wait 2.20s
+            wait 2.48s
             freeman overlays "teplo"
         }
     }
@@ -505,11 +505,11 @@ scene "s10" (duration: 1s, set: kuhnya) {
     //lip 23
     //  «И кто выбрал ему это направление — вы или лента?»
     together {
-        freeman speaks for 4.32s
+        freeman speaks for 4.88s
         do {
             camera medium freeman
             freeman overlays "v_upor"
-            wait 2.20s
+            wait 2.49s
             freeman overlays "ostyl"
         }
     }
@@ -527,10 +527,10 @@ scene "s10" (duration: 1s, set: kuhnya) {
     //lip 24
     //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
     together {
-        freeman speaks for 5.50s
+        freeman speaks for 4.57s
         do {
             freeman overlays "gladit_grud_niz"
-            wait 2.60s
+            wait 2.16s
             freeman overlays "wave"
         }
     }
