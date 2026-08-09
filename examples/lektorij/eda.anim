@@ -29,9 +29,14 @@
 //     (гейт tools/rost.py).
 //
 //  6. ПЕРСОНАЖ ХОДИТ. В одиннадцати последних роликах не было ни одного
-//     `moves-to`. Здесь два: проход мимо витрины во вторник и переход к столу
-//     после шутки — там он садится (`na_stule`, поза из шестидесяти семи,
-//     не поставленных ни разу).
+//     `moves-to`. Здесь два: проход мимо витрины во вторник и отход от дверцы
+//     после шутки. Новые позы — `spina_oglyadka` и `low_angle`, обе из
+//     шестидесяти семи, не поставленных ни разу.
+//
+//     СИДЕТЬ НЕЛЬЗЯ. Первая редакция ставила `na_stule` и `spina_ponuro` —
+//     гейт осанки отбил обе (0.88 и 0.80 роста эталона при пороге 0.92), и
+//     он прав: студия трижды говорила «нигде не сидит». Брать из нетронутого
+//     запаса можно только то, что не роняет фигуру.
 //
 //  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
 //    · в длинной реплике первым слоем называется РУКА (lint_arms);
@@ -125,10 +130,16 @@ scene "s1" (duration: 1s, set: kuhnya) {
     }
     wait 0.5s
 
-    //  СПИНОЙ К КАМЕРЕ. Поза `spina_ponuro` — из шестидесяти семи, которых в
-    //  роликах не было ни разу. Реплика про «держались» звучит в спину: пока
-    //  не сказано, что он не виноват, лицо показывать нечего.
-    freeman pose "spina_ponuro"
+    //  СПИНОЙ К КАМЕРЕ, С ОГЛЯДКОЙ ЧЕРЕЗ ПЛЕЧО. Поза `spina_oglyadka` — из
+    //  шестидесяти семи, которых в роликах не было ни разу. Реплика про
+    //  «держались» звучит в спину: пока не сказано, что он не виноват, лицо
+    //  показывать нечего.
+    //
+    //  СНАЧАЛА СТОЯЛА `spina_ponuro` — и гейт осанки её отбил: 0.80 роста
+    //  эталона при пороге 0.92. Гейт прав, и это не придирка: студия трижды
+    //  говорила «нигде не сидит», «на корточки не садится — некрасиво в кадре».
+    //  Понурая спина роняет фигуру ровно так же. Оглядка держит рост 0.96.
+    freeman pose "spina_oglyadka"
     wait 0.15s
 
     //lip 3
@@ -148,7 +159,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
         do {
             freeman overlays "stop_ladon"
             wait 1.6s
-            freeman overlays "stern"
+            freeman overlays "ugryumo"
         }
     }
     camera wide
@@ -339,6 +350,10 @@ scene "s7" (duration: 1s, set: kuhnya) {
     //  фигура крупнее слов, которыми зритель себя судит.
     camera close-up freeman
     camera angle low
+    //  Поза `low_angle` — ОБЪЁМНАЯ добавка к наклону камеры (CAMERA.md рига):
+    //  один наклон даёт ракурс плоско, поза доигрывает перспективу телом.
+    //  Вторая из нетронутых шестидесяти семи, рост 1.00 эталона.
+    freeman pose "low_angle"
     wait 0.1s
 
     //lip 13
@@ -356,6 +371,7 @@ scene "s7" (duration: 1s, set: kuhnya) {
     }
     camera angle level
     camera wide
+    freeman pose "calm"
     wait 0.9s
 }
 
@@ -397,20 +413,21 @@ scene "s8" (duration: 1s, set: kuhnya) {
             wait 1.6s
             freeman overlays "doshlo"
             wait 1.6s
-            freeman overlays "smug"
+            freeman overlays "ostyl"
         }
     }
     wait 0.5s
 
-    //  ПЕРЕХОД К СТОЛУ И ПОСАДКА. Драка кончилась — дальше объясняют сидя.
-    //  `na_stule` — вторая поза из нетронутых шестидесяти семи.
+    //  ОТХОД ОТ ДВЕРЦЫ. Драка кончилась — он отходит от холодильника и
+    //  договаривает уже не у него. Сидеть здесь нельзя: `na_stule` даёт 0.88
+    //  роста эталона, и гейт осанки её отбивает по прямому указанию студии.
     together {
         freeman moves-to (0.71, 0.95) over 0.8s
         do {
             freeman overlays "shag_bok_pravoj"
         }
     }
-    freeman pose "na_stule"
+    freeman pose "hips"
     camera wide
     wait 0.2s
 
@@ -420,9 +437,9 @@ scene "s8" (duration: 1s, set: kuhnya) {
     together {
         freeman speaks for 5.10s
         do {
-            freeman overlays "hips"
-            wait 1.2s
             freeman overlays "ruki_za_spinu"
+            wait 1.2s
+            freeman overlays "razvel"
             wait 1.2s
             freeman overlays "ladoni_vniz"
             wait 1.2s
@@ -498,7 +515,7 @@ scene "s10" (duration: 1s, set: kuhnya) {
             wait 2.1s
             freeman overlays "razmer"
             wait 2.1s
-            freeman overlays "smug"
+            freeman overlays "prishchur"
         }
     }
     wait 0.35s
@@ -561,7 +578,7 @@ scene "s11" (duration: 1s, set: zal) {
             wait 2.3s
             freeman overlays "vozzvanie"
             wait 2.3s
-            freeman overlays "stern"
+            freeman overlays "ostyl"
         }
     }
     wait 0.9s
