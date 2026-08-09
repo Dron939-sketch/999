@@ -1355,6 +1355,15 @@ def main(argv):
     ap.add_argument("--videos", default=str(ROOT / "videos"))
     ap.add_argument("--strict", action="store_true",
                     help="ненулевой выход, если QC-гейт нашёл немой/рассинхронный ролик")
+    #  ЛИНТ БЕЗ РЕНДЕРА. Десять приёмщиков — мимики, рук, покоя, динамики,
+    #  ружья Чехова, гротеска, носимой детали, предметов, локаций, синхрона —
+    #  жили ТОЛЬКО внутри завода и в приёмку `pered_renderom.py` не входили.
+    #  Это стоило прогона: приёмка «Психологии еды» показала двадцать зелёных
+    #  гейтов из двадцати, а завод на первой же минуте отбил ролик за мимику,
+    #  поставленную полной позой. Ровно то, чего студия просила не допускать —
+    #  переделки после отправки. Теперь тот же линт вызывается до пуша.
+    ap.add_argument("--tolko-lint", action="store_true",
+                    help="прогнать пред-линт синхрона и выйти, ничего не рендеря")
     args = ap.parse_args(argv)
     strict = args.strict or bool(os.environ.get("QC_STRICT"))
 
@@ -1439,6 +1448,9 @@ def main(argv):
         log(f"  [LINT-HARD] {e}")
     for e in all_soft:
         log(f"  [LINT-soft] {e}")
+    if args.tolko_lint:
+        log(f"\n  линт синхрона: {'НАШЁЛ ' + str(len(all_hard)) + ' — на завод не отправлять' if all_hard else 'чисто'}")
+        return 1 if all_hard else 0
     if all_hard and strict:
         log("\nЛинт синхрона строгий → падаем ДО рендера (не жжём раннер на разъезде).")
         return 1
