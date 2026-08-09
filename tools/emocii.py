@@ -59,7 +59,13 @@ PALITRA = {
 
 POROG = 0.96          # выше — считается повтором предыдущего ролика
 
+#  Скелет — устройство основной части, а не жанр. Их три, и это не список
+#  «на выбор из многого»: любое четвёртое устройство надо сначала завести в
+#  EMOCII.md §IV, объяснив, чем оно держит внимание.
+SKELETY = {"разбор", "притча", "прямой показ"}
+
 EMO = re.compile(r"^\s*\*\*ЭМОЦИЯ:?\*\*\s*:?\s*([^—\n]+?)\s*(?:—|$)", re.M | re.I)
+SKEL = re.compile(r"^\s*\*\*СКЕЛЕТ:?\*\*\s*:?\s*([^—\n]+?)\s*(?:—|$)", re.M | re.I)
 REG = re.compile(r"^\|\s*\d+\s*\|\s*[\d.]+\s*\|\s*([а-яё]+)\s*\|", re.M)
 REPL = re.compile(r"^\|\s*VO-?\d+\s*\|[^|]*\|[^|]*\|\s*«(.*?)»", re.M)
 
@@ -89,6 +95,7 @@ def razbor(path):
     p = Path(path)
     t = p.read_text(encoding="utf-8")
     m = EMO.search(t)
+    s = SKEL.search(t)
     regs = REG.findall(t)
     repl = REPL.findall(t)
     c = Counter(regs)
@@ -96,6 +103,7 @@ def razbor(path):
     return {
         "id": p.stem.replace("-VO", ""),
         "emo": (m.group(1).strip().lower() if m else None),
+        "skelet": (s.group(1).strip().lower() if s else None),
         "profil": {k: v / vsego for k, v in c.items()} if vsego else {},
         "top": [k for k, _ in c.most_common(2)],
         "huk": hod_huka(repl[0]) if repl else "нет",
@@ -162,6 +170,19 @@ def proverit(target):
                     f"кривая подачи совпадает с «{pred[-1]['id']}» на {s:.3f} "
                     f"при пороге {POROG}: те же доли регистров в том же порядке"))
 
+    out.append(("скелет объявлен и есть в списке трёх",
+                ja["skelet"] in SKELETY,
+                f"«{ja['skelet']}» — не из трёх законных устройств "
+                f"(EMOCII.md §IV)" if ja["skelet"]
+                else "в шапке нет строки «**СКЕЛЕТ:**»"))
+
+    skel = [p["skelet"] for p in pred]
+    out.append((f"скелет «{ja['skelet']}» не идёт третий раз подряд",
+                not (len(skel) == 2 and skel[0] == skel[1] == ja["skelet"]),
+                f"третий ролик подряд собран одним устройством — "
+                f"{', '.join(p['id'] for p in pred)}. Зритель узнаёт ход "
+                f"наперёд, и перелом перестаёт быть переломом"))
+
     huki = [p["huk"] for p in pred]
     out.append((f"ход хука «{ja['huk']}» не совпадает с обоими предыдущими",
                 not (len(huki) == 2 and huki[0] == huki[1] == ja["huk"]),
@@ -185,6 +206,7 @@ def main(argv):
             r = razbor(f)
             s = f"{cos(r['profil'], prev['profil']):.3f}" if prev else "  —  "
             print(f"    {i:24} {str(r['emo'] or '—'):22} "
+                  f"{str(r['skelet'] or '—'):14} "
                   f"хук: {r['huk']:22} сходство {s}")
             prev = r
         print()
