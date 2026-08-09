@@ -88,6 +88,10 @@ GATES = [
     # посмотреть его перед пушем стоит дешевле, чем одна пересборка.
     ("мизансцены: контактный лист (смотреть глазами)", ["tools/mizanscena.py"], False),
     ("разворот: профиль не врёт", ["tools/turnaround.py"], None),
+    # ПЕЧАТИ НА ШАГАХ, КОТОРЫЕ ДЕЛАЕТ ЧЕЛОВЕК. Гейт не проверяет, ХОРОШО ли
+    # прошли вычитку и просмотр мизансцен, — он проверяет, что человек смотрел
+    # РОВНО ЭТОТ материал, а не тот, что был три правки назад (tools/pechat.py).
+    ("печати: вычитка и мизансцены свежие", ["tools/pechat.py", "--check"], "oba"),
 ]
 
 # Гейты, которые гоняют движок на стенде: дорогие, пропускаются по --bystro.
@@ -109,6 +113,9 @@ def gates_for(anim, bystro=False):
             continue
         if args is None:
             code, txt = run([str(ROOT / "target/release/animdsl"), "check", str(anim)])
+        elif needs_vo == "oba":                     # печати: и сценарий, и раскадровка
+            args2 = list(args) + ([str(vo)] if vo.exists() else []) + [str(anim)]
+            code, txt = run([PY, *args2])
         elif needs_vo is None:                      # гейт по ригу, файл не нужен
             code, txt = run([PY, *args])
         else:

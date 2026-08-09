@@ -139,6 +139,34 @@ jobs:
         if: env.RENDER_SKIP != '1'
         run: cargo build --release
 
+      # ПРИЁМКА ДО РЕНДЕРА. До сегодняшнего дня завод рендерил ЧТО УГОДНО:
+      # гейты гонялись только руками и только если про них вспомнить. Именно
+      # так на завод уехал ролик с неподвижным ртом, ролик без звуковой
+      # дорожки и ролик с фигурой в шесть раз крупнее нормы — каждый раз
+      # проверка существовала и каждый раз её не запустили.
+      #
+      # Теперь смена начинается с приёмки: пятнадцать гейтов плюс печати на
+      # шагах, которые делает человек (вычитка и мизансцены). Красный гейт
+      # означает, что рендера не будет вовсе — переделка стоит дешевле, пока
+      # она на бумаге, а не в готовом файле.
+      - name: Приёмка (гейты + печати) — без неё рендера нет
+        if: env.RENDER_SKIP != '1'
+        run: |
+          set -e
+          ONLY="$RENDER_ONLY"
+          if [ -n "$ONLY" ]; then
+            ANIM=$(ls examples/**/"$ONLY".anim examples/"$ONLY".anim 2>/dev/null | head -1)
+            VO="${ANIM%.anim}-VO.md"
+            python3 tools/pered_renderom.py "$ONLY"
+            if [ -f "$VO" ]; then
+              python3 tools/pechat.py --check "$VO" "$ANIM"
+            else
+              python3 tools/pechat.py --check "$ANIM"
+            fi
+          else
+            python3 tools/pered_renderom.py --all --bystro
+          fi
+
       # Один завод: картинки → рендер → озвучка → сведение → videos/*.mp4(+mp3)
       - name: Studio (render + voice + mux)
         if: env.RENDER_SKIP != '1'

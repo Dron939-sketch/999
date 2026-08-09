@@ -50,6 +50,8 @@
 //  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
 //  Завод перепишет их по факту озвучки.
 // =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: bad97829
 
 import character freeman from "../assets/characters/freeman_rig"
 import set zalsp from "../assets/sets/sport-shtanga.svg"
