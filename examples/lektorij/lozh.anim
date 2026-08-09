@@ -1,0 +1,529 @@
+// =============================================================================
+//  «ЧЕТЫРЕ ПРОЦЕНТА» — интро к курсу «Язык тела и психология лжи», номер 16.
+//  VO — lozh-VO.md, маркеры 1..23.
+//
+//  ОДНА МЫСЛЬ НА РОЛИК: тело не показывает ложь. Тело показывает волнение — и
+//  зритель раз за разом осуждает тех, кому просто страшно.
+//
+//  ЧЕМ ЭТОТ РОЛИК УСТРОЕН
+//
+//  1. ЧИСЛО ВМЕСТО СПОРА. С мнением о собственной проницательности спорить
+//     бесполезно: его защищают. Поэтому спора нет — есть пятьдесят четыре
+//     процента против пятидесяти у монетки, и разница названа на переломе.
+//
+//  2. АДРЕСАТ ПЕРЕСЫЛКИ (VO-9) — ВПЕРВЫЕ В СЕРИИ. «И вы уже вспомнили того,
+//     кто учит вас читать по жестам.» Тема курса сама подаёт третьего
+//     человека: у каждого есть знакомый, объясняющий за столом про нос. Пока
+//     зритель думает о нём, он наполовину нажал «переслать» — это механизм M5
+//     из STIL-FRIMENA.md: ролик оставляет долг, а долг отдают дальше.
+//
+//  3. МАНТРА (VO-11) и САМОРЕФЕРЕНЦИЯ (VO-18) — оба приёма из разбора
+//     оригинала, оба на своих местах: три удара одной конструкцией и ролик,
+//     записывающий себя в тот же ряд, что сериал про гения-детектора.
+//
+//  4. ЖЕРТВА НАЗВАНА (VO-8). Без этой реплики ролик про точность метода; с
+//     ней — про человека, которому уже досталось.
+//
+//  5. НОМЕР КУРСА 16, метка `nomer-16.svg` в ПЕРВОМ и ПОСЛЕДНЕМ кадре.
+//
+//  6. ЛОКАЦИЙ СЕМЬ, НОВЫХ НЕТ НИ ОДНОЙ — и это не экономия, а совпадение
+//     смысла: два стула это разговор, который уже кончился; стол после гостей
+//     — место, где объясняют про нос; ряды супермаркета — норма, которую не
+//     замечают; погасший экран — сериал, который кончился.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · в длинной реплике первым слоем называется РУКА (lint_arms);
+//    · фигура НЕ ПРИСЕДАЕТ (tools/posture.py);
+//    · `duration:` ГОВОРЯЩЕЙ СЦЕНЫ — ПОЛ, А НЕ ЦЕЛЬ, и потому равен 1s;
+//    · голый `scales` стоит 0.5с таймлайна — всегда `over 0.01s`;
+//    · слой, трогающий рот, ВНУТРИ реплики перебивает липсинк — только до или
+//      после (tools/speech_lint.py). Здесь такой один: `hero_wink` в финале;
+//    · У ПОГАСШЕГО ЭКРАНА НЕТ КАРТЫ ПОЛА: линии пола в кадре не существует,
+//      поэтому `place` БЕЗ `on floor`, масштаб вручную;
+//    · МАСШТАБ ЧИТАЕТСЯ ВМЕСТЕ С `over` (реестр §XXXI).
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
+//  Завод перепишет их по факту озвучки.
+// =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: e52ea7ee
+
+import character freeman from "../assets/characters/freeman_rig"
+import set stulya from "../assets/sets/dva-stula.svg"
+import set void from "../assets/sets/void-black.svg"
+import set gosti from "../assets/sets/stol-posle-gostej.svg"
+import set vannaya from "../assets/sets/vannaya-zerkalo.svg"
+import set ryady from "../assets/sets/supermarket-ryady.svg"
+import set derevo from "../assets/sets/derevo-pen.svg"
+import set ekran from "../assets/sets/ekran-pogas.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+
+// ============ СЦЕНА 1: stulya ===========================================
+//  Два стула друг напротив друга: разговор уже кончился, приговор уже вынесен.
+scene "s1" (duration: 1s, set: stulya) {
+    place freeman at (0.50, 0.62) facing front on floor
+    freeman scales 1.30 over 0.01s
+
+    let nomer = prop("nomer", "../assets/props/nomer-16.svg") at (0.530, 0.320) layer 9
+    nomer scales 0.28 over 0.01s
+    nomer hides
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.31 over 0.05s ease-out
+    nomer scales 0.28 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 1
+    //  «Вы решили, что вам врут. По глазам.»
+    together {
+        freeman speaks for 3.03s
+        do {
+            freeman overlays "obvinil"
+            wait 1.60s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.4s
+
+    //lip 2
+    //  «И были уверены настолько, что перестали проверять.»
+    together {
+        freeman speaks for 5.25s
+        do {
+            freeman overlays "odna_v_bok"
+            wait 2.70s
+            freeman overlays "ugryumo"
+        }
+    }
+    wait 0.5s
+
+    //lip 3
+    //  «Отвёл взгляд. Потрогал нос. Скрестил руки. Замялся.»
+    together {
+        freeman speaks for 3.98s
+        do {
+            freeman overlays "vdal_l"
+            wait 1.30s
+            freeman overlays "za_uho"
+            wait 1.30s
+            freeman overlays "zakrylsya"
+        }
+    }
+    wait 0.35s
+
+    //lip 4
+    //  «Четыре признака — и приговор готов.»
+    together {
+        freeman speaks for 2.46s
+        do {
+            freeman overlays "rubit"
+            wait 1.30s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.7s
+
+    //lip 5
+    //  «Люди угадывают ложь чуть точнее монетки: пятьдесят четыре процента
+    //  против пятидесяти.»
+    together {
+        freeman speaks for 6.40s
+        do {
+            camera medium freeman
+            freeman overlays "vzves"
+            wait 3.20s
+            freeman overlays "razmer"
+            wait 2.10s
+            freeman overlays "somnenie"
+        }
+    }
+    camera wide
+    wait 0.6s
+}
+
+// ============ СЦЕНА 2: void =============================================
+//  Вопрос в лоб и «Ну?» без разбега; перелом — числом, а не словом.
+scene "s2" (duration: 1s, set: void) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.46) facing front
+    freeman scales 2.00 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 6
+    //  «Сколько бы вы дали себе? Ну?»
+    together {
+        freeman speaks for 2.32s
+        do {
+            freeman overlays "open"
+        }
+    }
+    wait 0.9s
+
+    //lip 7
+    //  «Четыре процента. Вот вся ваша проницательность.»
+    together {
+        freeman speaks for 4.73s
+        do {
+            freeman overlays "palec_vverh"
+            wait 2.40s
+            freeman overlays "doshlo"
+        }
+    }
+    wait 0.5s
+}
+
+// ============ СЦЕНА 3: stulya ===========================================
+//  Жертву называют там же, где вынесли приговор.
+scene "s3" (duration: 1s, set: stulya) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.62) facing front on floor
+    freeman scales 1.30 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 8
+    //  «А тот, кого вы тогда осудили, просто волновался.»
+    together {
+        freeman speaks for 6.30s
+        do {
+            freeman overlays "manit_l"
+            wait 3.20s
+            freeman overlays "gorech"
+            wait 2.10s
+            freeman overlays "chelo"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 4: gosti ============================================
+//  АДРЕСАТ ПЕРЕСЫЛКИ. Стол после гостей — ровно то место, где знакомый
+//  объясняет, что «он потрогал нос, значит врёт».
+scene "s4" (duration: 1s, set: gosti) {
+    transition static 0.2s
+
+    place freeman at (0.18, 0.96) facing front on floor
+    freeman scales 1.55 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 9
+    //  «И вы уже вспомнили того, кто учит вас читать по жестам.»
+    together {
+        freeman speaks for 3.96s
+        do {
+            freeman overlays "kozyrek"
+            wait 2.10s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 5: vannaya ==========================================
+//  Внутренняя речь и мантра — там, где тихо и есть зеркало.
+scene "s5" (duration: 1s, set: vannaya) {
+    transition static 0.2s
+
+    place freeman at (0.34, 0.92) facing front on floor
+    freeman scales 1.10 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 10
+    //  «Да нет, я людей насквозь вижу, у меня чутьё.»
+    together {
+        freeman speaks for 3.48s
+        do {
+            freeman overlays "smel"
+            wait 1.80s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.35s
+
+    //lip 11
+    //  «Вы видите не ложь. Вы видите страх. Вы видите неловкость.»
+    together {
+        freeman speaks for 4.13s
+        do {
+            freeman overlays "no"
+            wait 1.35s
+            freeman overlays "otverg"
+            wait 1.35s
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.8s
+
+    //lip 12
+    //  «Скольких вы записали в лжецы за то, что они боялись?»
+    together {
+        freeman speaks for 5.58s
+        do {
+            camera medium freeman
+            freeman overlays "dengi"
+            wait 2.80s
+            freeman overlays "ugryumo"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+// ============ СЦЕНА 6: ryady ============================================
+//  Норма выглядит как ряды одинаковых полок: её не замечают, пока что-нибудь
+//  из неё не выпадет.
+scene "s6" (duration: 1s, set: ryady) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.78) facing front on floor
+    freeman scales 1.05 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 13
+    //  «Читать тело можно — просто не так. Не жест, а отклонение от
+    //  привычного.»
+    together {
+        freeman speaks for 6.10s
+        do {
+            freeman overlays "teplo"
+            wait 3.10s
+            freeman overlays "klin"
+            wait 2.00s
+            freeman overlays "doshlo"
+        }
+    }
+    wait 0.35s
+
+    //lip 14
+    //  «И не один жест, а связка.»
+    together {
+        freeman speaks for 2.10s
+        do {
+            freeman overlays "poimal"
+        }
+    }
+    wait 0.9s
+
+    //lip 15
+    //  «У каждого своя норма: кто-то трогает нос всегда. Без его нормы ваш
+    //  вывод — гадание.»
+    together {
+        freeman speaks for 6.99s
+        do {
+            freeman overlays "dve_storony"
+            wait 3.50s
+            freeman overlays "za_uho"
+            wait 2.40s
+            freeman overlays "somnenie"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 7: derevo ===========================================
+//  ВЗЛЁТ. Единственное высокое место ролика, и высокое слово стоит в одной
+//  фразе с бытовым: «истина» и «шкура».
+scene "s7" (duration: 1s, set: derevo) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.82) facing front on floor
+    freeman scales 0.95 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 16
+    //  «Истина не в жесте, а в фактах — жест говорит только о том, у кого
+    //  дрожит шкура.»
+    together {
+        freeman speaks for 6.60s
+        do {
+            freeman overlays "raspahnul"
+            wait 2.70s
+            freeman overlays "oba_vverh"
+            wait 2.30s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 8: ekran ============================================
+//  ШУТКА и САМОРЕФЕРЕНЦИЯ. Погасший экран: сериал кончился, а способ остался.
+//  КАРТЫ ПОЛА У ЛОКАЦИИ НЕТ — `place` без `on floor`, масштаб вручную.
+scene "s8" (duration: 1s, set: ekran) {
+    transition static 0.2s
+
+    place freeman at (0.30, 0.45) facing front
+    freeman scales 1.20 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 17
+    //  «Обычно в этом месте идут за сериалом про гения, который ловит лжецов
+    //  по лицу.»
+    together {
+        freeman speaks for 5.90s
+        do {
+            freeman overlays "otmahnulsya"
+            wait 3.00s
+            freeman overlays "shrug"
+            wait 2.00s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.35s
+
+    //lip 18
+    //  «Или за роликом вроде этого. Работает до первого честного человека,
+    //  который волнуется.»
+    together {
+        freeman speaks for 7.42s
+        do {
+            freeman overlays "gladit_grud"
+            wait 3.70s
+            freeman overlays "yorik"
+            wait 2.50s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 1.0s
+}
+
+// ============ СЦЕНА 9: zal ==============================================
+//  Служебная часть говорится в другом пространстве.
+scene "s9" (duration: 1s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.46, 0.93) facing front on floor
+    freeman scales 0.72 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 19
+    //  «Курс называется «Язык тела и психология лжи».»
+    together {
+        freeman speaks for 3.02s
+        do {
+            freeman overlays "vozzvanie"
+        }
+    }
+    wait 0.4s
+
+    //lip 20
+    //  «Десять лекций, и всё бесплатно.»
+    together {
+        freeman speaks for 2.17s
+        do {
+            camera medium freeman
+            freeman overlays "palec_vverh_l"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+// ============ СЦЕНА 10: stulya ==========================================
+//  ЖАЛО и ПОДПИСЬ. Кольцо: последний кадр тождествен первому.
+scene "s10" (duration: 1s, set: stulya) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.62) facing front on floor
+    freeman scales 1.30 over 0.01s
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-16.svg") at (0.530, 0.320) layer 9
+    nomer2 scales 0.28 over 0.01s
+    nomer2 hides
+    camera wide
+    freeman pose "calm"
+
+    //lip 21
+    //  «Сегодня, решив, что вам врут, спросите: а какой он обычно? За вас
+    //  никто не спросит.»
+    together {
+        freeman speaks for 8.07s
+        do {
+            freeman overlays "manit"
+            wait 3.10s
+            freeman overlays "vdal"
+            wait 2.60s
+            freeman overlays "stop_ladon"
+            wait 2.00s
+            freeman overlays "chelo"
+        }
+    }
+    wait 0.5s
+
+    //lip 22
+    //  «И что у вас есть, кроме его лица и ваших четырёх процентов?»
+    together {
+        freeman speaks for 4.73s
+        do {
+            camera medium freeman
+            freeman overlays "v_upor"
+            wait 2.40s
+            freeman overlays "prishchur"
+        }
+    }
+    camera wide
+    wait 1.1s
+
+    //  ТОТ ЖЕ КАДР, ЧТО И ПЕРВЫЙ, И ТА ЖЕ МЕТКА.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.31 over 0.05s ease-out
+    nomer2 scales 0.28 over 0.02s
+
+    //lip 23
+    //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
+    together {
+        freeman speaks for 5.50s
+        do {
+            freeman overlays "gladit_grud_niz"
+            wait 2.60s
+            freeman overlays "wave"
+        }
+    }
+    nomer2 hides
+    freeman overlays "hero_wink"
+}
