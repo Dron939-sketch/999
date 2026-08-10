@@ -72,7 +72,21 @@ KOMM = (
 KOMMENT = re.compile(r"<!--.*?-->", re.S)
 
 
-def perepisat(text):
+#  ЩЕТИНА НА ПЛЕЧЕ КАЙМОЙ НЕ ОБШИВАЕТСЯ. Рукав у плеча — бахрома коротких
+#  штрихов, и стоит она вплотную к маске. Обшитая светлым, бахрома СЛИВАЕТСЯ С
+#  ЛИЦОМ: белое к белому, граница пропадает, и приёмка по готовому файлу
+#  перестаёт находить маску вовсе — «фигуры не видно» там, где лицо в кадре
+#  крупно и открыто. Каймы бахрома и не просит: она торчит НАРУЖУ силуэта, на
+#  фон, и на чёрном плаще не теряется.
+#
+#  Кайма нужна самой руке — длинному штриху, который идёт перед корпусом. В
+#  `upper_arm_*.svg` это ПОСЛЕДНИЙ путь файла (бахрома и наплечники нарисованы
+#  до него), его и обшиваем.
+TOLKO_POSLEDNIJ = re.compile(r"^upper_arm_")
+PUT = re.compile(r"<path\b[^>]*/>")
+
+
+def perepisat(text, imya=""):
     if METKA in text:
         return None                      # кайма уже стоит
     m = re.search(r"</defs>", text)
@@ -85,6 +99,11 @@ def perepisat(text):
     golova = golova[: m.start()] + FILTR + golova[m.start():]
     # В нижнем проходе комментарии не нужны — они уже есть в верхнем.
     tenj = KOMMENT.sub("", risunok).strip()
+    if TOLKO_POSLEDNIJ.match(imya):
+        puti = PUT.findall(tenj)
+        if not puti:
+            return None
+        tenj = f'<g filter="url(#ink)">{puti[-1]}</g>'    # только сама рука
     return (golova + KOMM
             + f'\n<g filter="url(#kajma)">{tenj}</g>\n'
             + risunok.rstrip() + "\n" + konec)
@@ -112,7 +131,7 @@ def main(argv):
         return 0
     tronuto = 0
     for f in fajly:
-        novoe = perepisat(f.read_text(encoding="utf-8"))
+        novoe = perepisat(f.read_text(encoding="utf-8"), f.name)
         if novoe is None:
             print(f"  · {f.name}: кайма уже стоит")
             continue
