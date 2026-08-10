@@ -45,7 +45,7 @@
 //  Завод перепишет их по факту озвучки.
 // =============================================================================
 //
-//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: e7dea9fa
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 10a90661
 import character freeman from "../assets/characters/freeman_rig"
 import set kuhnya from "../assets/sets/kuhnya-chajnik.svg"
 import set pole from "../assets/sets/field-day.svg"

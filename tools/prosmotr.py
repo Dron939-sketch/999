@@ -95,6 +95,26 @@ def kadry(istochnik, rab):
     return sorted(out.glob("*.png"))
 
 
+def szhat(m, raz=2):
+    """Сжать светлое пятно на `raz` пикселей: тонкие перемычки рвутся.
+
+    ЗАЧЕМ. Кисти обшиты светлой каймой в полтора пикселя (реестр §XXXIV), и
+    когда кисть подходит к лицу, кайма КАСАЕТСЯ маски. Два светлых пятна
+    становятся одним, у него нет ни формы яйца, ни дыр на месте глаз, — и
+    приёмка сообщает «фигуры не видно» там, где лицо в кадре открыто. Перемычка
+    тонкая, сама маска толстая: сжатие рвёт первую и не трогает вторую.
+    """
+    out = m
+    for _ in range(raz):
+        s = out
+        s = s & np.roll(out, 1, 0) & np.roll(out, -1, 0)
+        s = s & np.roll(out, 1, 1) & np.roll(out, -1, 1)
+        s[0] = s[-1] = False
+        s[:, 0] = s[:, -1] = False
+        out = s
+    return out
+
+
 def temno_v_ovale(g, pyatno, y0, y1):
     """Доля тёмного ВНУТРИ маски: построчно между её крайними светлыми точками.
 
@@ -114,6 +134,32 @@ def temno_v_ovale(g, pyatno, y0, y1):
 
 
 def maska(g):
+    """Два прохода, и это не перестраховка.
+
+    СТРОГИЙ (без сжатия) находит маску, только когда она стоит одна. Он и
+    меряет лицо: если кисть легла НА лицо, она внутри овала и доля тёмного
+    растёт. Если светлая кайма кисти лишь КАСАЕТСЯ маски, пятно теряет форму
+    яйца и строгий проход не находит ничего.
+
+    СЖАТЫЙ рвёт тонкую перемычку каймы и находит маску всегда — но вместе с
+    перемычкой отрезает и саму кисть, поэтому мерить лицо им нельзя: на кадрах,
+    где кисть заведомо стоит на лице, он даёт 0.19 вместо 0.31.
+
+    Поэтому: лицо меряет строгий, присутствие фигуры и её рост — сжатый. Там,
+    где строгий молчит, лицо в этом кадре просто НЕ ИЗМЕРЕНО, и это честнее,
+    чем измерить не то.
+    """
+    strogo = najti(g, szhimat=False)
+    myagko = najti(g, szhimat=True)
+    if myagko is None:
+        return None
+    return {
+        "vysota": myagko["vysota"],
+        "temno_vnutri": strogo["temno_vnutri"] if strogo else None,
+    }
+
+
+def najti(g, szhimat=True):
     """Маска лица: светлое пятно-яйцо с дырами (глаза и рот), не у кромки.
 
     Отбор именно такой, а не «самое большое светлое», потому что небо над полем
@@ -122,7 +168,7 @@ def maska(g):
     svet = g > SVETLO
     if not svet.any():
         return None
-    lab = label(svet)
+    lab = label(szhat(svet) if szhimat else svet)
     kromka = set(lab[0]) | set(lab[-1]) | set(lab[:, 0]) | set(lab[:, -1])
     ids, cnt = np.unique(lab[lab > 0], return_counts=True)
     luchshee = None
@@ -296,7 +342,7 @@ def main(argv):
             continue
         if m["vysota"] / ROST_MASKI < ROST_MIN:
             melko.append(i)
-        if m["temno_vnutri"] > LICO_ZANYATO:
+        if m["temno_vnutri"] is not None and m["temno_vnutri"] > LICO_ZANYATO:
             lico.append(i)
 
     print(f"\n╔══ ПРОСМОТР ГОТОВОГО ФАЙЛА: {imya}, {len(fajly)} с")

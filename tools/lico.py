@@ -81,6 +81,26 @@ def porog_bumagi(g):
     return int(v[np.argmax(c)]) + 4
 
 
+def szhat(m, raz=2):
+    """Сжать светлое пятно на `raz` пикселей: тонкие перемычки рвутся.
+
+    ЗАЧЕМ. Кисти обшиты светлой каймой в полтора пикселя (реестр §XXXIV), и
+    когда кисть подходит к лицу, кайма КАСАЕТСЯ маски. Два светлых пятна
+    становятся одним, у него нет ни формы яйца, ни дыр на месте глаз, — и
+    приёмка сообщает «фигуры не видно» там, где лицо в кадре открыто. Перемычка
+    тонкая, сама маска толстая: сжатие рвёт первую и не трогает вторую.
+    """
+    out = m
+    for _ in range(raz):
+        s = out
+        s = s & np.roll(out, 1, 0) & np.roll(out, -1, 0)
+        s = s & np.roll(out, 1, 1) & np.roll(out, -1, 1)
+        s[0] = s[-1] = False
+        s[:, 0] = s[:, -1] = False
+        out = s
+    return out
+
+
 def temno_v_ovale(g, pyatno, y0, y1):
     """Доля тёмного ВНУТРИ маски: построчно между её крайними светлыми точками.
 
@@ -103,7 +123,7 @@ def maska(g):
     svet = g > porog_bumagi(g)
     if not svet.any():
         return None
-    lab = label(svet)
+    lab = label(szhat(svet))
     kromka = set(lab[0]) | set(lab[-1]) | set(lab[:, 0]) | set(lab[:, -1])
     ids, cnt = np.unique(lab[lab > 0], return_counts=True)
     luchshee = None
