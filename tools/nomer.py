@@ -32,8 +32,11 @@ nomer.py — НОМЕР КУРСА НА БАЛАХОНЕ.
 """
 
 import argparse
+import re
 import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
 
 
 # ЦИФРЫ — КОНТУРАМИ, А НЕ ТЕКСТОМ. Первая версия рисовала номер элементом
@@ -76,11 +79,43 @@ TEMPLATE = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" widt
 '''
 
 
+def sleduyuschij():
+    """Следующий свободный номер: максимум по каталогу плюс один.
+
+    НОМЕР ПОРЯДКОВЫЙ, И СЧИТАТЬ ЕГО НАДО, А НЕ ПОМНИТЬ. Раньше он приходил от
+    студии отдельным сообщением, и это стоило простоя на каждом ролике: текст
+    готов, а сборка ждёт числа. Хуже другое — число легко перепутать по памяти,
+    а метка на балахоне и строка в шапке VO должны совпадать с рядом.
+
+    Считается по ДВУМ источникам сразу, и они обязаны сойтись: строки «НОМЕР
+    КУРСА» в шапках VO и файлы меток `nomer-NN.svg`. Расхождение печатается —
+    оно означает, что метка нарисована, а ролик под неё не сдан, или наоборот.
+    """
+    vo = set()
+    for p in ROOT.glob("examples/**/*-VO.md"):
+        m = re.search(r"^\*\*НОМЕР КУРСА:?\*\*\s*:?\s*(\d+)", p.read_text(encoding="utf-8"), re.M)
+        if m:
+            vo.add(int(m.group(1)))
+    metki = {int(re.search(r"(\d+)", p.stem).group(1))
+             for p in ROOT.glob("examples/assets/props/nomer-*.svg")}
+    return max(vo | metki, default=0) + 1, sorted(vo), sorted(metki)
+
+
 def main(argv):
     ap = argparse.ArgumentParser(description="Номер курса на балахон")
-    ap.add_argument("number", help="порядковый номер курса, например 6")
+    ap.add_argument("number", nargs="?", default=None,
+                    help="порядковый номер курса; без него берётся следующий свободный")
     ap.add_argument("--out", default=None)
     a = ap.parse_args(argv)
+
+    if a.number is None:
+        n, vo, metki = sleduyuschij()
+        lishnie = sorted(set(metki) - set(vo))
+        if lishnie:
+            print(f"  метки без сданного ролика: {lishnie}")
+        print(f"  занято по шапкам VO: {vo}")
+        print(f"  СЛЕДУЮЩИЙ СВОБОДНЫЙ: {n}")
+        a.number = str(n)
 
     num = a.number.strip()
     if not num.isdigit():

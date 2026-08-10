@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" width="300" height="200">
+  <defs>
+    <filter id="ink" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="1" seed="23" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- КОРМУШКА — деревянное корыто с зерном. Предмет, которому в городской
+       кухне взяться неоткуда: это и есть разрыв шаблона в картинке
+       (STIL-FRIMENA.md §II.8). Стоит на столе весь ролик, не объясняется, и
+       возвращается последним кадром, когда зритель уже знает, что это.
+
+       Рисуется вручную, а не генератором: генератор даёт локацию целиком, а
+       здесь нужна ОДНА вещь поверх готового кадра. Тушь плоская, обводка
+       дрожащая — тот же язык, что у сетов. -->
+  <g filter="url(#ink)" fill="none" stroke="#141410" stroke-width="7"
+     stroke-linecap="round" stroke-linejoin="round">
+    <!-- корыто: трапеция, узкая книзу -->
+    <path d="M28 62 L272 62 L232 168 L68 168 Z" fill="#d4d7cf"/>
+    <!-- внутренняя кромка: толщина доски -->
+    <path d="M28 62 L60 84 L240 84 L272 62"/>
+    <!-- зерно горкой -->
+    <path d="M74 84 C104 62 138 58 158 66 C182 56 214 62 232 84" fill="#d4d7cf"/>
+    <!-- зёрна отдельными штрихами -->
+    <g stroke-width="5">
+      <path d="M96 79 l7 -6"/>
+      <path d="M120 72 l8 -5"/>
+      <path d="M147 68 l7 -6"/>
+      <path d="M176 68 l8 -5"/>
+      <path d="M204 75 l7 -6"/>
+    </g>
+    <!-- ножки-опоры по торцам -->
+    <path d="M68 168 L60 190"/>
+    <path d="M232 168 L240 190"/>
+    <!-- доски: две вертикальные засечки -->
+    <g stroke-width="4">
+      <path d="M116 92 L104 160"/>
+      <path d="M186 92 L196 160"/>
+    </g>
+  </g>
+</svg>
