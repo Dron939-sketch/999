@@ -44,9 +44,11 @@
 //  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
 //  Завод перепишет их по факту озвучки.
 // =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 08e2b5db
 import character freeman from "../assets/characters/freeman_rig"
 import set kuhnya from "../assets/sets/kuhnya-chajnik.svg"
-import set pole from "../assets/sets/skazka-pole.svg"
+import set pole from "../assets/sets/field-day.svg"
 import set void from "../assets/sets/void-black.svg"
 import set zal from "../assets/sets/lektorij-zal.svg"
 
@@ -79,7 +81,7 @@ config {
 //  разу не подвело. На столе справа КОРМУШКА, и объяснять её никто не будет.
 scene "s1" (duration: 1s, set: kuhnya) {
     place freeman at (0.56, 0.95) facing front on floor
-    freeman scales 1.18 over 0.01s
+    freeman scales 1.10 over 0.01s
 
     let kormushka = prop("kormushka", "../assets/props/kormushka.svg") at (0.83, 0.33) layer 6
     kormushka scales 0.22 over 0.01s
@@ -108,6 +110,8 @@ scene "s1" (duration: 1s, set: kuhnya) {
         freeman speaks for 2.44s
         do {
             freeman overlays "razmer"
+            wait 1.3s
+            freeman overlays "prishchur"
         }
     }
     wait 0.6s
@@ -119,7 +123,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
         do {
             freeman overlays "shrug"
             wait 1.6s
-            freeman overlays "v_upor"
+            freeman overlays "vzglyad"
         }
     }
     wait 0.4s
@@ -141,7 +145,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     together {
         freeman speaks for 3.02s
         do {
-            freeman overlays "otverg"
+            freeman overlays "no"
             wait 1.6s
             freeman overlays "vzves"
         }
@@ -152,13 +156,18 @@ scene "s1" (duration: 1s, set: kuhnya) {
 
 
 // ============ СЦЕНА 2: pole — ПРИТЧА И ПЕРЕЛОМ ==========================
-//  Поле. Притча рассказывается там, где она случилась, а не в пустоте:
+//  Поле днём. Притча рассказывается там, где она случилась, а не в пустоте:
 //  спокойствие фермы должно быть видно, иначе перелом не с чем сравнивать.
+//
+//  СНАЧАЛА СТОЯЛО `skazka-pole` — и контактный лист это отбил: там не поле, а
+//  пустошь с кольями из сказочной серии, тёмное небо и торчащие древки. Курица
+//  на таком фоне читается как что-то совсем другое. Ровно тот случай, ради
+//  которого лист и смотрят глазами: ни один гейт неверную ЛОКАЦИЮ не поймает.
 scene "s2" (duration: 1s, set: pole) {
     transition static 0.2s
 
     place freeman at (0.50, 0.92) facing front on floor
-    freeman scales 0.82 over 0.01s
+    freeman scales 0.62 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -168,20 +177,29 @@ scene "s2" (duration: 1s, set: pole) {
         freeman speaks for 2.82s
         do {
             freeman overlays "point"
+            wait 1.5s
+            freeman overlays "vdal"
         }
     }
     wait 0.4s
 
     //lip 6
     //  «Первый день настороже. К десятому уверена: люди добрые.»
+    //  ПРОХОД ВДОЛЬ ПОЛЯ: дни идут, и рассказчик идёт вместе с ними.
+    //  Шаг слоями `shag_bok_*` — рта они не трогают, липсинк цел.
     together {
         freeman speaks for 4.91s
         do {
             freeman overlays "zakrylsya"
-            wait 2.6s
-            freeman overlays "teplo"
+            freeman moves-to (0.38, 0.92) over 1.6s
+            freeman overlays "shag_bok_levoj"
+            freeman moves-to (0.26, 0.92) over 1.6s
+            freeman overlays "shag_bok_pravoj"
+            freeman moves-to (0.20, 0.92) over 1.5s
         }
     }
+    //  Остановка полной позой тела: слои шага сняты, ноги приставлены.
+    freeman pose "ruki_za_spinu"
     wait 0.4s
 
     //lip 7
@@ -216,7 +234,7 @@ scene "s2" (duration: 1s, set: pole) {
     together {
         freeman speaks for 2.25s
         do {
-            freeman overlays "ostyl"
+            freeman overlays "gorech"
         }
     }
     camera wide
@@ -229,7 +247,7 @@ scene "s3" (duration: 1s, set: pole) {
     transition static 0.2s
 
     place freeman at (0.50, 0.92) facing front on floor
-    freeman scales 0.82 over 0.01s
+    freeman scales 0.62 over 0.01s
     camera medium freeman
     freeman pose "calm"
 
@@ -239,8 +257,10 @@ scene "s3" (duration: 1s, set: pole) {
         freeman speaks for 4.34s
         do {
             freeman overlays "razvel"
-            wait 2.3s
-            freeman overlays "vzves"
+            wait 1.4s
+            freeman overlays "lokti"
+            wait 1.4s
+            freeman overlays "somnenie"
         }
     }
     wait 0.5s
@@ -252,9 +272,11 @@ scene "s3" (duration: 1s, set: pole) {
         freeman speaks for 6.03s
         do {
             freeman overlays "dve_storony"
-            wait 2.0s
+            wait 1.5s
             freeman overlays "klin"
-            wait 2.0s
+            wait 1.5s
+            freeman overlays "stop_ladon"
+            wait 1.5s
             freeman overlays "rubit"
         }
     }
@@ -270,7 +292,7 @@ scene "s4" (duration: 1s, set: kuhnya) {
     transition static 0.2s
 
     place freeman at (0.56, 0.95) facing front on floor
-    freeman scales 1.18 over 0.01s
+    freeman scales 1.10 over 0.01s
     let kormushka2 = prop("kormushka", "../assets/props/kormushka.svg") at (0.83, 0.33) layer 6
     kormushka2 scales 0.22 over 0.01s
     camera medium freeman
@@ -282,6 +304,8 @@ scene "s4" (duration: 1s, set: kuhnya) {
         freeman speaks for 2.44s
         do {
             freeman overlays "vzglyad"
+            wait 1.2s
+            freeman overlays "kozyrek"
         }
     }
     wait 0.9s
@@ -292,7 +316,7 @@ scene "s4" (duration: 1s, set: kuhnya) {
     together {
         freeman speaks for 2.07s
         do {
-            freeman overlays "ugryumo"
+            freeman overlays "doshlo"
         }
     }
     wait 0.9s
@@ -304,9 +328,11 @@ scene "s4" (duration: 1s, set: kuhnya) {
         freeman speaks for 5.47s
         do {
             freeman overlays "hips"
-            wait 1.8s
+            wait 1.3s
+            freeman overlays "ruki_za_spinu"
+            wait 1.3s
             freeman overlays "ladoni_vniz"
-            wait 1.8s
+            wait 1.3s
             freeman overlays "ostyl"
         }
     }
@@ -318,11 +344,11 @@ scene "s4" (duration: 1s, set: kuhnya) {
     together {
         freeman speaks for 7.55s
         do {
-            freeman overlays "otverg"
-            wait 2.5s
+            freeman overlays "no"
+            wait 2.4s
             freeman overlays "razmer"
-            wait 2.5s
-            freeman overlays "prishchur"
+            wait 2.4s
+            freeman overlays "yorik"
         }
     }
     camera wide
@@ -346,7 +372,9 @@ scene "s5" (duration: 1s, set: void) {
         freeman speaks for 5.11s
         do {
             freeman overlays "otmahnulsya"
-            wait 2.7s
+            wait 1.7s
+            freeman overlays "think"
+            wait 1.7s
             freeman overlays "k_sebe"
         }
     }
@@ -406,7 +434,9 @@ scene "s6" (duration: 1s, set: zal) {
         freeman speaks for 3.97s
         do {
             freeman overlays "raskryl"
-            wait 2.1s
+            wait 1.3s
+            freeman overlays "confident_cilindr"
+            wait 1.3s
             freeman overlays "teplo"
         }
     }
@@ -428,7 +458,9 @@ scene "s6" (duration: 1s, set: zal) {
         freeman speaks for 4.72s
         do {
             freeman overlays "ladoni_vniz"
-            wait 2.5s
+            wait 1.6s
+            freeman overlays "vozzvanie"
+            wait 1.6s
             freeman overlays "open"
         }
     }
@@ -453,7 +485,7 @@ scene "s6" (duration: 1s, set: zal) {
     together {
         freeman speaks for 3.00s
         do {
-            freeman overlays "zatylok"
+            freeman overlays "smel"
         }
     }
     wait 0.9s
@@ -480,7 +512,7 @@ scene "s7" (duration: 1s, set: kuhnya) {
     transition static 0.2s
 
     place freeman at (0.56, 0.95) facing front on floor
-    freeman scales 1.18 over 0.01s
+    freeman scales 1.10 over 0.01s
 
     let kormushka3 = prop("kormushka", "../assets/props/kormushka.svg") at (0.83, 0.33) layer 6
     kormushka3 scales 0.22 over 0.01s
@@ -498,7 +530,7 @@ scene "s7" (duration: 1s, set: kuhnya) {
         do {
             freeman overlays "palec_vverh"
             wait 2.1s
-            freeman overlays "point"
+            freeman overlays "odna_v_bok"
         }
     }
     wait 0.9s
