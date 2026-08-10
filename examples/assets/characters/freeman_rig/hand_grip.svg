@@ -4,7 +4,15 @@
       <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="14" result="n"/>
       <feDisplacementMap in="SourceGraphic" in2="n" scale="0.8" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
-  </defs>
+  <filter id="kajma" x="-50%" y="-50%" width="200%" height="200%"><feMorphology in="SourceAlpha" operator="dilate" radius="1.6" result="tolshche"/><feFlood flood-color="#eef1ec" result="bumaga"/><feComposite in="bumaga" in2="tolshche" operator="in"/></filter></defs>
+<!-- СВЕТЛАЯ КАЙМА (tools/kajma.py). Ниже рисунок напечатан дважды:
+     первый проход — раздутый силуэт цветом бумаги, второй — он же тушью
+     поверх. На чёрном плаще кисть читается каймой, на светлом поле —
+     тушью. Правится не здесь, а в kajma.py: он пересобирает все файлы. -->
+<g filter="url(#kajma)"><g filter="url(#ink)">
+    <path d="M58.0 14.0 Q71.0 24.0 71.0 53.5 Q71.0 83.0 84.0 103.0 Q97.0 123.0 106.5 130.5 Q116.0 138.0 103.0 158.5 Q90.0 179.0 84.5 177.5 Q79.0 176.0 71.0 182.0 Q63.0 188.0 44.0 186.5 Q25.0 185.0 14.5 170.5 Q4.0 156.0 8.5 138.0 Q13.0 120.0 21.5 113.5 Q30.0 107.0 42.5 106.0 Q55.0 105.0 50.0 96.0 Q45.0 87.0 47.5 71.5 Q50.0 56.0 47.5 30.0 Z" fill="#0e0e0e" fill-rule="evenodd"/>
+  </g></g>
+
   <!-- СНЯТО СО СКУЛЬПТУРЫ `source/mr_freeman.stl` инструментом tools/stl_to_rig.py.
        Руками не править: правка сотрётся следующим прогоном. Форма меняется в
        скульптуре, привязка — в tools/freeman_bones.json. Плоский двухтоновый
