@@ -213,6 +213,30 @@ jobs:
           echo "=== videos/ ==="
           ls -la videos/
 
+      # ПРИЁМКА ПО ГОТОВОМУ ФАЙЛУ. Единственная, которая смотрит на то, что
+      # увидит зритель. Все прочие гейты читают сценарий, риг и стенды — и на
+      # ролике, где студия нашла три дефекта картинки подряд, были зелёные.
+      # Стоит после сборки и ПЕРЕД заливкой, но прогон не обрывает: файл всё
+      # равно уезжает в Release (принцип «отдать хоть что-то»), а прогон
+      # краснеет — чтобы о браке узнавал я, а не студия.
+      - name: Просмотр готового файла
+        if: always() && env.RENDER_SKIP != '1'
+        run: |
+          shopt -s nullglob
+          plohih=0
+          for f in videos/*.mp4; do
+            case "$f" in *-nemoj*|*-vert*) continue;; esac
+            imya=$(basename "$f" .mp4)
+            vo=$(python3 tools/prosmotr.py --vo-po-kursu "$imya" || true)
+            echo "=== $f"
+            if [ -n "$vo" ]; then
+              python3 tools/prosmotr.py "$f" --vo "$vo" --list videos/prosmotr || plohih=1
+            else
+              python3 tools/prosmotr.py "$f" --list videos/prosmotr || plohih=1
+            fi
+          done
+          exit $plohih
+
       - name: Upload videos to a GitHub Release
         # always(): даже при красном QC уже отрендеренные здоровые ролики должны
         # уехать в Release — принцип «отдать хоть что-то». B2: артефакты НЕ в git

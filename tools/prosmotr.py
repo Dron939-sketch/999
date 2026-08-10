@@ -234,10 +234,27 @@ def listy(fajly, kuda, imya):
 
 def main(argv):
     ap = argparse.ArgumentParser(description="Приёмка по готовому файлу")
-    ap.add_argument("video", help="mp4 или папка с png")
+    ap.add_argument("video", nargs="?", help="mp4 или папка с png")
+    # Имя готового файла — это СЛАГ КУРСА, а VO лежит у продакшена под коротким
+    # рабочим id. Связывает их манифест, и спрашивать его удобнее отсюда, чем
+    # разбирать json в шелле прогона.
+    ap.add_argument("--vo-po-kursu", metavar="СЛАГ",
+                    help="напечатать путь к VO по слагу курса и выйти")
     ap.add_argument("--vo", help="VO-сценарий: откуда взять метки тишины")
     ap.add_argument("--list", dest="kuda", help="куда положить листы")
     a = ap.parse_args(argv)
+
+    if a.vo_po_kursu:
+        import json
+        d = json.loads((ROOT / "tools/productions.json").read_text(encoding="utf-8"))
+        for prod in d["productions"]:
+            if (prod.get("kurs") or prod["id"]) == a.vo_po_kursu:
+                print(prod.get("vo", ""))
+                return 0
+        return 1
+
+    if not a.video:
+        raise SystemExit("укажи готовый файл")
 
     rab = Path(tempfile.mkdtemp(prefix="prosmotr-"))
     fajly = kadry(a.video, rab)
