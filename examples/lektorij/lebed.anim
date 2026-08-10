@@ -117,12 +117,16 @@ scene "s1" (duration: 1s, set: kuhnya) {
     wait 0.6s
 
     //lip 2
-    //  «Не знаю, какой. Но он у вас есть.»
+    //  «Счёт ведёте не вы.»
+    //  `ladon_pusta` — рука вынесена ладонью кверху и ПУСТА: счёт есть,
+    //  предъявить нечего. Поза нарисована под этот ролик, в риге такой не
+    //  было: `raskryl` распахивает обе, `vzves` взвешивает, а жеста «вот,
+    //  и тут ничего» не было ни одного.
     together {
-        freeman speaks for 3.03s
+        freeman speaks for 2.10s
         do {
-            freeman overlays "shrug"
-            wait 1.6s
+            freeman overlays "ladon_pusta"
+            wait 1.2s
             freeman overlays "vzglyad"
         }
     }
@@ -207,10 +211,13 @@ scene "s2" (duration: 1s, set: pole) {
 
     //lip 7
     //  «К сотому — сто подтверждений подряд.»
+    //  `otschet` — палец кверху, вторая ладонь раскрыта у груди: по ней и
+    //  считают. Тоже новая: считать в риге было нечем, `palec_vverh`
+    //  показывает один палец и на этом кончается.
     together {
         freeman speaks for 2.45s
         do {
-            freeman overlays "razmer"
+            freeman overlays "otschet"
         }
     }
     wait 0.4s
@@ -412,9 +419,13 @@ scene "s5" (duration: 1s, set: pustota) {
 
     //lip 19
     //  «Работает ровно до дня, когда он придёт не с кормом.»
+    //  `otmahnulsya_r` — отмашка на пределе способа, и она же снимает с
+    //  фигуры всё, что накопилось за перечень. Поза из нетронутых.
     together {
         freeman speaks for 3.58s
         do {
+            freeman overlays "otmahnulsya_r"
+            wait 2.0s
             freeman overlays "ostyl"
         }
     }
@@ -528,18 +539,22 @@ scene "s7" (duration: 1s, set: kuhnya) {
 
     //lip 26
     //  «Посчитайте свои дни. Не годы — дни у кормушки.»
+    //  `vzves_r` — рука взвешивает: жест счёта, а не указания. Из
+    //  шестидесяти семи нетронутых поз рига.
     together {
         freeman speaks for 4.52s
         do {
             freeman overlays "palec_vverh"
-            wait 2.39s
+            wait 1.6s
+            freeman overlays "vzves_r"
+            wait 1.4s
             freeman overlays "odna_v_bok"
         }
     }
-    wait 0.9s
-
     //  КРУПНО НА КОРМУШКУ. Предмет, молчавший весь ролик, впервые занимает
-    //  кадр — ровно там, где зритель считает свои дни.
+    //  кадр — ровно там, где зритель считает свои дни. Выдоха перед крупным
+    //  планом нет намеренно: он приклеивался к назначенной паузе и делал её
+    //  2.7 с вместо 1.8 — пауза тут расчётная, лишняя секунда её растворяет.
     camera close-up freeman
 
     //  ПАУЗА 1.8 с. Здесь зритель складывает вывод сам и НАЗЫВАЕТ ЧИСЛО САМ.

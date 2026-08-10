@@ -8310,6 +8310,70 @@
           "rotation": -4
         }
       }
+    },
+    "ladon_pusta": {
+      "name": "ladon_pusta",
+      "transition_duration": 0.34,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -98,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": 18,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_open_r",
+          "z_order": 7
+        },
+        "upper_arm_left": {
+          "rotation": 22
+        },
+        "forearm_left": {
+          "rotation": 10
+        },
+        "hand_left": {
+          "part": "hand_relax"
+        },
+        "head": {
+          "rotation": -3
+        }
+      }
+    },
+    "otschet": {
+      "name": "otschet",
+      "transition_duration": 0.3,
+      "bones": {
+        "upper_arm_right": {
+          "rotation": -62,
+          "z_order": 6
+        },
+        "forearm_right": {
+          "rotation": -104,
+          "z_order": 6
+        },
+        "hand_right": {
+          "part": "hand_point_r",
+          "z_order": 7,
+          "rotation": 8
+        },
+        "upper_arm_left": {
+          "rotation": 96,
+          "z_order": 5
+        },
+        "forearm_left": {
+          "rotation": -52,
+          "z_order": 5
+        },
+        "hand_left": {
+          "part": "hand_open",
+          "z_order": 6
+        },
+        "head": {
+          "rotation": 5
+        }
+      }
     }
   },
   "karta": {
