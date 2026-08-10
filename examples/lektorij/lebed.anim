@@ -1,0 +1,557 @@
+// =============================================================================
+//  «ДЕВЯНОСТО ДЕВЯТЫЙ ДЕНЬ» — интро к курсу «Чёрный лебедь», номер 22.
+//  VO — lebed-VO.md, маркеры 1..29.
+//
+//  ОДНА МЫСЛЬ НА РОЛИК: накопленный спокойный опыт не доказывает надёжность —
+//  он маскирует растущий риск. Чувство безопасности достигает пика ровно там,
+//  где риск максимален.
+//
+//  ПЕРВЫЙ РОЛИК, СОБРАННЫЙ ОТ ТЕЗИСА, А НЕ ОТ СЦЕНЫ
+//
+//  1. ЯКОРЬ — ЭТО ТЕЗИС КУРСА, СПРЯТАННЫЙ В СЧЁТ. «Девяносто девятый день» —
+//     счёт без предмета счёта: грамматически полно, смыслово пусто, достроить
+//     нечем. Посажен в первой секунде, не объясняется двадцать шесть реплик,
+//     возвращён ДОСЛОВНО в VO-27 и В ТОЙ ЖЕ ЛОКАЦИИ (STIL-FRIMENA.md §II.8–9).
+//
+//  2. РАЗРЫВ СТОИТ В ОБОИХ КАНАЛАХ. В тексте — счёт. В картинке — фермерская
+//     КОРМУШКА С ЗЕРНОМ на кухонном столе, которой в городской кухне взяться
+//     неоткуда. Она молчит весь ролик и попадает в крупный план на возврате
+//     якоря. Проп нарисован вручную: генератор рисует локацию целиком, а тут
+//     нужна одна вещь поверх готового кадра.
+//
+//  3. КОЛЬЦО ЗАКРЫВАЕТСЯ ЦЕЛИКОМ. Ролик в ленте зациклен: на втором круге
+//     «девяносто девятый день» значит уже не «какой день?», а «у меня остался
+//     один». Смысл перевёрнут, вес вырос — потому кадр и фраза обязаны
+//     сойтись в одном месте.
+//
+//  4. ПАУЗА 1.8 с ПОСЛЕ VO-27 — НЕ ВОЗДУХ, А РАБОЧЕЕ ВРЕМЯ ЗРИТЕЛЯ. Вычитка
+//     назвала это самым тонким расчётом ролика: срежется пауза — связка
+//     рассыплется первой. Резать нельзя ни при каком монтаже.
+//
+//  5. КУРИЦА ВМЕСТО ИНДЮШКИ. У Талеба индюшка, но «индюшку» синтез читает с
+//     чужим ударением (обожжённое слово реестра, дважды безуспешно чиненное
+//     разметкой). У Рассела, откуда довод растёт, была курица.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · в длинной реплике первым слоем называется РУКА (lint_arms);
+//    · фигура НЕ ПРИСЕДАЕТ (tools/posture.py);
+//    · `duration:` ГОВОРЯЩЕЙ СЦЕНЫ — ПОЛ, А НЕ ЦЕЛЬ, и потому равен 1s;
+//    · голый `scales` стоит 0.5с таймлайна — всегда `over 0.01s`;
+//    · слой, трогающий рот, ВНУТРИ реплики перебивает липсинк — только до или
+//      после; мимику полной позой не ставим вовсе (tools/speech_lint.py);
+//    · МАСШТАБ ЧИТАЕТСЯ ВМЕСТЕ С `over` (реестр §XXXI).
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
+//  Завод перепишет их по факту озвучки.
+// =============================================================================
+import character freeman from "../assets/characters/freeman_rig"
+import set kuhnya from "../assets/sets/kuhnya-chajnik.svg"
+import set pole from "../assets/sets/skazka-pole.svg"
+import set void from "../assets/sets/void-black.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+
+// ============ СЦЕНА 1: kuhnya — ЯКОРЬ ПОСАЖЕН ===========================
+//  Кухня утром: чайник на красном огне — то, что загорается каждый день и ни
+//  разу не подвело. На столе справа КОРМУШКА, и объяснять её никто не будет.
+scene "s1" (duration: 1s, set: kuhnya) {
+    place freeman at (0.56, 0.95) facing front on floor
+    freeman scales 1.18 over 0.01s
+
+    let kormushka = prop("kormushka", "../assets/props/kormushka.svg") at (0.83, 0.33) layer 6
+    kormushka scales 0.22 over 0.01s
+
+    let nomer = prop("nomer", "../assets/props/nomer-22.svg") at (0.585, 0.545) layer 9
+    nomer scales 0.17 over 0.01s
+    nomer hides
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.19 over 0.05s ease-out
+    nomer scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 1
+    //  «Сегодня у вас девяносто девятый день.»
+    together {
+        freeman speaks for 2.44s
+        do {
+            freeman overlays "razmer"
+        }
+    }
+    wait 0.6s
+
+    //lip 2
+    //  «Не знаю, какой. Но он у вас есть.»
+    together {
+        freeman speaks for 3.03s
+        do {
+            freeman overlays "shrug"
+            wait 1.6s
+            freeman overlays "v_upor"
+        }
+    }
+    wait 0.4s
+
+    camera medium freeman
+
+    //lip 3
+    //  «И это ваш самый спокойный день.»
+    together {
+        freeman speaks for 1.88s
+        do {
+            freeman overlays "ladoni_vniz"
+        }
+    }
+    wait 0.6s
+
+    //lip 4
+    //  «Это не предчувствие. Это статистика.»
+    together {
+        freeman speaks for 3.02s
+        do {
+            freeman overlays "otverg"
+            wait 1.6s
+            freeman overlays "vzves"
+        }
+    }
+    camera wide
+    wait 0.5s
+}
+
+
+// ============ СЦЕНА 2: pole — ПРИТЧА И ПЕРЕЛОМ ==========================
+//  Поле. Притча рассказывается там, где она случилась, а не в пустоте:
+//  спокойствие фермы должно быть видно, иначе перелом не с чем сравнивать.
+scene "s2" (duration: 1s, set: pole) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.92) facing front on floor
+    freeman scales 0.82 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 5
+    //  «На ферме курицу кормит незнакомый человек.»
+    together {
+        freeman speaks for 2.82s
+        do {
+            freeman overlays "point"
+        }
+    }
+    wait 0.4s
+
+    //lip 6
+    //  «Первый день настороже. К десятому уверена: люди добрые.»
+    together {
+        freeman speaks for 4.91s
+        do {
+            freeman overlays "zakrylsya"
+            wait 2.6s
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.4s
+
+    //lip 7
+    //  «К сотому — сто подтверждений подряд.»
+    together {
+        freeman speaks for 2.45s
+        do {
+            freeman overlays "razmer"
+        }
+    }
+    wait 0.4s
+
+    //  ВЗГЛЯД СВЕРХУ на пике уверенности. `high_angle` — поза из нетронутых
+    //  шестидесяти семи: ракурс доигрывается телом, а не одним наклоном камеры
+    //  (CAMERA.md рига). Ферма сверху — это уже взгляд того, кто придёт утром.
+    camera angle low
+    freeman pose "high_angle"
+    wait 0.15s
+
+    //lip 8
+    //  «Больше всего данных — утром сотого.»
+    freeman speaks for 2.64s
+    camera angle level
+    freeman pose "calm"
+    wait 0.9s
+
+    camera medium freeman
+
+    //lip 9
+    //  «В это утро её несут не к кормушке.»
+    //  ПЕРЕЛОМ. Ровно, без нажима: нажим превратит его в страшилку.
+    together {
+        freeman speaks for 2.25s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 3: pole — РАЗБОР МЕХАНИЗМА ==========================
+scene "s3" (duration: 1s, set: pole) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.92) facing front on floor
+    freeman scales 0.82 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 10
+    //  «Она не ошиблась. Сто из ста — отличная статистика.»
+    together {
+        freeman speaks for 4.34s
+        do {
+            freeman overlays "razvel"
+            wait 2.3s
+            freeman overlays "vzves"
+        }
+    }
+    wait 0.5s
+
+    //lip 11
+    //  «Мера была перевёрнута: каждый спокойный день не убавлял опасность,
+    //  а приближал.»
+    together {
+        freeman speaks for 6.03s
+        do {
+            freeman overlays "dve_storony"
+            wait 2.0s
+            freeman overlays "klin"
+            wait 2.0s
+            freeman overlays "rubit"
+        }
+    }
+    camera wide
+    wait 1.2s
+}
+
+
+// ============ СЦЕНА 4: kuhnya — ПЕРЕНОС ДЕЛАЕТ ЗРИТЕЛЬ ==================
+//  Возврат на кухню без единого слова про сходство. Связку «я курица»
+//  рассказчик не произносит ни разу за ролик — она остаётся зрителю.
+scene "s4" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.56, 0.95) facing front on floor
+    freeman scales 1.18 over 0.01s
+    let kormushka2 = prop("kormushka", "../assets/props/kormushka.svg") at (0.83, 0.33) layer 6
+    kormushka2 scales 0.22 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 12
+    //  «Сколько лет у вас на работе всё в порядке?»
+    together {
+        freeman speaks for 2.44s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.9s
+
+    //lip 13
+    //  «Ровно столько раз вам приносили корм.»
+    //  Тихо и вниз: несущая строка, громкость ей не нужна.
+    together {
+        freeman speaks for 2.07s
+        do {
+            freeman overlays "ugryumo"
+        }
+    }
+    wait 0.9s
+
+    //lip 14
+    //  «Спокойно было вчера. Спокойно было в прошлом году. Спокойно было
+    //  всегда.» — МАНТРА: три куска с одного слова.
+    together {
+        freeman speaks for 5.47s
+        do {
+            freeman overlays "hips"
+            wait 1.8s
+            freeman overlays "ladoni_vniz"
+            wait 1.8s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.5s
+
+    //lip 15
+    //  «Это не договор с будущим. Это список прошлых завтраков — один на всё
+    //  стадо, и судьба тут ни при чём.»
+    together {
+        freeman speaks for 7.55s
+        do {
+            freeman overlays "otverg"
+            wait 2.5s
+            freeman overlays "razmer"
+            wait 2.5s
+            freeman overlays "prishchur"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 5: void — ДРУГОЙ ВОПРОС И ШУТКА =====================
+//  Вопрос задают вне помещения: ни фермы, ни кухни — только он и зритель.
+scene "s5" (duration: 1s, set: void) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.46) facing front
+    freeman scales 1.85 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 16
+    //  «Что делать — решать вам. Скажу, какой вопрос вы не задавали.»
+    together {
+        freeman speaks for 5.11s
+        do {
+            freeman overlays "otmahnulsya"
+            wait 2.7s
+            freeman overlays "k_sebe"
+        }
+    }
+    wait 0.5s
+
+    //lip 17
+    //  «Не «часто ли бывало хорошо», а «что будет, если один раз плохо».»
+    together {
+        freeman speaks for 5.10s
+        do {
+            freeman overlays "dve_storony"
+            wait 2.7s
+            freeman overlays "klin"
+        }
+    }
+    wait 0.9s
+
+    //lip 18
+    //  «Что делают вместо этого? Читают прогнозы. Считают риски. Спрашивают
+    //  у того, кто кормит.» — ПЕРЕЧЕНЬ, ГДЕ ПОСЛЕДНИЙ ПУНКТ ВЫПАДАЕТ.
+    together {
+        freeman speaks for 7.94s
+        do {
+            freeman overlays "lokti"
+            wait 2.6s
+            freeman overlays "vzves"
+            wait 2.6s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.4s
+
+    //lip 19
+    //  «Работает ровно до дня, когда он придёт не с кормом.»
+    together {
+        freeman speaks for 3.58s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+    wait 1.0s
+}
+
+
+// ============ СЦЕНА 6: zal — ПРЕЗЕНТАЦИЯ, ГРАНИЦА, ПЕРЕСЫЛКА ============
+scene "s6" (duration: 1s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.93) facing front on floor
+    freeman scales 0.88 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 20
+    //  «Есть курс «Чёрный лебедь». Десять лекций, и всё бесплатно.»
+    together {
+        freeman speaks for 3.97s
+        do {
+            freeman overlays "raskryl"
+            wait 2.1s
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.45s
+
+    //lip 21
+    //  «Он не учит предсказывать — этого никто не умеет.»
+    together {
+        freeman speaks for 3.77s
+        do {
+            freeman overlays "no"
+        }
+    }
+    wait 0.5s
+
+    //lip 22
+    //  «Он про то, как жить так, чтобы один плохой день не заканчивал всё.»
+    together {
+        freeman speaks for 4.72s
+        do {
+            freeman overlays "ladoni_vniz"
+            wait 2.5s
+            freeman overlays "open"
+        }
+    }
+    wait 0.5s
+
+    camera medium freeman
+
+    //lip 23
+    //  «И про то, кому верить: советчик должен рисковать своим, а не вашим.»
+    together {
+        freeman speaks for 5.67s
+        do {
+            freeman overlays "dve_storony"
+            wait 3.0s
+            freeman overlays "vozzvanie"
+        }
+    }
+    wait 0.6s
+
+    //lip 24
+    //  «Нарисованный человек вашу ферму не проверит.» — САМОРЕФЕРЕНЦИЯ.
+    together {
+        freeman speaks for 3.00s
+        do {
+            freeman overlays "zatylok"
+        }
+    }
+    wait 0.9s
+
+    //lip 25
+    //  «И вы уже вспомнили того, у кого всё давно хорошо.»
+    together {
+        freeman speaks for 3.96s
+        do {
+            freeman overlays "v_upor"
+            wait 2.1s
+            freeman overlays "prishchur"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 7: kuhnya — ВОЗВРАТ ЯКОРЯ И ПОДПИСЬ =================
+//  Кадр VO-1 целиком. Кольцо смыкается и в картинке, и в тексте: то же место,
+//  та же кормушка, те же три слова.
+scene "s7" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.56, 0.95) facing front on floor
+    freeman scales 1.18 over 0.01s
+
+    let kormushka3 = prop("kormushka", "../assets/props/kormushka.svg") at (0.83, 0.33) layer 6
+    kormushka3 scales 0.22 over 0.01s
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-22.svg") at (0.585, 0.545) layer 9
+    nomer2 scales 0.17 over 0.01s
+    nomer2 hides
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 26
+    //  «Посчитайте свои дни. Не годы — дни у кормушки.»
+    together {
+        freeman speaks for 3.97s
+        do {
+            freeman overlays "palec_vverh"
+            wait 2.1s
+            freeman overlays "point"
+        }
+    }
+    wait 0.9s
+
+    //  КРУПНО НА КОРМУШКУ. Предмет, молчавший весь ролик, впервые занимает
+    //  кадр — ровно на возврате якоря.
+    camera close-up freeman
+
+    //lip 27
+    //  «Девяносто девятый день.» — ВОЗВРАТ ЯКОРЯ, теми же словами.
+    together {
+        freeman speaks for 1.50s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    //  ПАУЗА 1.8 с. Здесь зритель складывает вывод сам. Резать нельзя:
+    //  вычитка назвала это самым тонким расчётом ролика.
+    wait 1.8s
+
+    //lip 28
+    //  «Да…» — рассказчик приходит вторым и подтверждает одним словом.
+    together {
+        freeman speaks for 0.19s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+    camera wide
+    wait 1.2s
+
+    //  ПОДПИСЬ-КОЛЬЦО. Кадр тождествен первому, метка курса на месте.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.19 over 0.05s ease-out
+    nomer2 scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 29
+    //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
+    together {
+        freeman speaks for 5.68s
+        do {
+            freeman overlays "wave"
+            wait 3.0s
+            freeman overlays "manit"
+        }
+    }
+    nomer2 hides
+    wait 0.5s
+}
