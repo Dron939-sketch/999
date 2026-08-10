@@ -77,7 +77,7 @@ MASKA_MAKS = 0.35         # светлое пятно крупнее — это 
 MASKA_MIN = 0.0004
 ROST_MASKI = 0.2177       # высота маски в долях роста (карта рига)
 ROST_MIN = 0.35           # рост фигуры в долях кадра, ниже — точка
-LICO_ZANYATO = 0.45       # доля тёмного внутри маски
+LICO_ZANYATO = 0.30       # доля тёмного ВНУТРИ ОВАЛА маски (см. temno_v_ovale)
 TISHINA = 0.02            # амплитуда, ниже которой это тишина
 TISHINA_DLINA = 0.4       # сколько секунд тишины должно найтись
 TISHINA_OKNO = 3.0        # на сколько секунд вокруг метки её искать
@@ -93,6 +93,24 @@ def kadry(istochnik, rab):
     subprocess.run(["ffmpeg", "-v", "error", "-i", str(p), "-vf", "fps=1",
                     str(out / "k_%04d.png"), "-y"], check=True)
     return sorted(out.glob("*.png"))
+
+
+def temno_v_ovale(g, pyatno, y0, y1):
+    """Доля тёмного ВНУТРИ маски: построчно между её крайними светлыми точками.
+
+    Прямоугольник вокруг маски для этого не годится — в его углы попадает то,
+    что лица не закрывает, и кисть, поднятая К ЩЕКЕ, давала ту же долю, что и
+    кисть, легшая НА ЛИЦО. По овалу они расходятся: чистые кадры 0.05–0.16,
+    кисть у щеки 0.17–0.29, кисть на лице 0.31–0.37.
+    """
+    vnutri = np.zeros_like(pyatno)
+    for y in range(y0, y1 + 1):
+        xs = np.nonzero(pyatno[y])[0]
+        if len(xs):
+            vnutri[y, xs.min():xs.max() + 1] = True
+    if not vnutri.any():
+        return 0.0
+    return float(((g < TEMNO) & vnutri).sum() / vnutri.sum())
 
 
 def maska(g):
@@ -118,14 +136,13 @@ def maska(g):
         if c >= 0.80 * h * w:             # без дыр — значит не лицо
             continue
         if luchshee is None or c > luchshee[0]:
-            luchshee = (c, (ys.min(), ys.max(), xs.min(), xs.max()))
+            luchshee = (c, (ys.min(), ys.max(), xs.min(), xs.max()), lab == k)
     if luchshee is None:
         return None
-    _, (y0, y1, x0, x1) = luchshee
-    box = g[y0:y1 + 1, x0:x1 + 1]
+    _, (y0, y1, x0, x1), pyatno = luchshee
     return {
         "vysota": (y1 - y0 + 1) / g.shape[0],
-        "temno_vnutri": float((box < TEMNO).sum() / box.size),
+        "temno_vnutri": temno_v_ovale(g, pyatno, y0, y1),
     }
 
 

@@ -29,8 +29,8 @@ lico.py — ГЕЙТ ЛИЦА: кисть не закрывает маску.
 обнуляется, каждый `overlays` в него добавляется. Стек целиком выкладывается на
 стенд — движок складывает слои ровно так же, — и на снимке ищется маска:
 светлое пятно-яйцо с дырами (глаза и рот), не касающееся кромки кадра. Меряется
-доля ТЁМНОГО внутри её рамки. Глаза и рот дают 27–34%. Закрытое лицо — 47–51%.
-Порог 45% посередине, снят с готового файла, а не выдуман.
+доля ТЁМНОГО внутри её рамки. Глаза и рот дают 5–16%. Кисть у щеки — 17–29%. Кисть НА ЛИЦЕ — 31–37%.
+Порог 30% посередине измеренного, а не выдуман.
 
 ЧТО НЕ СЧИТАЕТСЯ БРАКОМ. Мимические слои (`prishchur`, `smug` и прочие) меняют
 рисунок глаз и рта, а не закрывают лицо: доля тёмного у них растёт на единицы
@@ -61,7 +61,7 @@ from karta import STAND, label, render                          # noqa: E402
 TEMNO = 90
 MASKA_MAKS = 0.15
 MASKA_MIN = 0.0004
-POROG = 0.45
+POROG = 0.30
 
 OVERLAY = re.compile(r'^\s*\w+\s+overlays\s+"([^"]+)"', re.M)
 POSE = re.compile(r'^\s*\w+\s+pose\s+"([^"]+)"', re.M)
@@ -81,6 +81,24 @@ def porog_bumagi(g):
     return int(v[np.argmax(c)]) + 4
 
 
+def temno_v_ovale(g, pyatno, y0, y1):
+    """Доля тёмного ВНУТРИ маски: построчно между её крайними светлыми точками.
+
+    Прямоугольник вокруг маски для этого не годится — в его углы попадает то,
+    что лица не закрывает, и кисть, поднятая К ЩЕКЕ, давала ту же долю, что и
+    кисть, легшая НА ЛИЦО. По овалу они расходятся: чистые кадры 0.05–0.16,
+    кисть у щеки 0.17–0.29, кисть на лице 0.31–0.37.
+    """
+    vnutri = np.zeros_like(pyatno)
+    for y in range(y0, y1 + 1):
+        xs = np.nonzero(pyatno[y])[0]
+        if len(xs):
+            vnutri[y, xs.min():xs.max() + 1] = True
+    if not vnutri.any():
+        return 0.0
+    return float(((g < TEMNO) & vnutri).sum() / vnutri.sum())
+
+
 def maska(g):
     svet = g > porog_bumagi(g)
     if not svet.any():
@@ -97,12 +115,11 @@ def maska(g):
         if not (1.05 < h / w < 2.0) or c >= 0.80 * h * w:
             continue
         if luchshee is None or c > luchshee[0]:
-            luchshee = (c, (ys.min(), ys.max(), xs.min(), xs.max()))
+            luchshee = (c, (ys.min(), ys.max(), xs.min(), xs.max()), lab == k)
     if luchshee is None:
         return None
-    _, (y0, y1, x0, x1) = luchshee
-    box = g[y0:y1 + 1, x0:x1 + 1]
-    return float((box < TEMNO).sum() / box.size)
+    _, (y0, y1, x0, x1), pyatno = luchshee
+    return temno_v_ovale(g, pyatno, y0, y1)
 
 
 def zamer(rig, poza):
