@@ -37,7 +37,7 @@ use crate::procedural;
 use crate::scene::{EntityKind, EntityState, RenderConfig};
 use crate::skeleton::{
     self, apply_idle_motion, apply_squash_stretch, apply_walk_cycle, interpolate_skeleton,
-    BoneState, CharacterRig,
+    interpolate_skeleton_pokostno, BoneState, CharacterRig,
 };
 use crate::timeline::{
     evaluate_camera, evaluate_track, CameraKeyframe, PoseEvent, Property, Timeline, TransitionKind,
@@ -492,35 +492,12 @@ fn render_rigged_character(
         }
     }
 
-    let (from_idx, to_idx, pose_t, td) = match current_idx {
-        None => (None, if events.is_empty() { None } else { Some(0) }, 0.0, 0.18),
-        Some(idx) => {
-            // Use the target pose's own transition duration (fast for flaps).
-            let td = events
-                .get(idx)
-                .and_then(|ev| rig.poses.get(&ev.pose))
-                .map(|p| p.transition_duration)
-                .unwrap_or(0.18) // snappier default than a slow 0.3s slide
-                .max(0.01);
-            let elapsed = pose_time - events[idx].time;
-            if elapsed >= td {
-                (Some(idx), Some(idx), 1.0, td)
-            } else {
-                let prev = if idx > 0 { Some(idx - 1) } else { None };
-                (prev, Some(idx), elapsed / td, td)
-            }
-        }
-    };
-
-    let from_pose = resolve_effective_pose(rig, &events, from_idx);
-    let to_pose = resolve_effective_pose(rig, &events, to_idx);
-
     // Stable per-occurrence seed: same (entity, pose, start time) always nudges
     // the same way (reproducible renders), but a different occurrence of the
     // same named pose — a different scene, a different clone — draws its own
     // slightly different version, the way an artist never traces an old page.
     let pose_seed: u64 = {
-        let key = match to_idx.and_then(|i| events.get(i)) {
+        let key = match current_idx.and_then(|i| events.get(i)) {
             Some(ev) => format!("{entity_name}|{}|{:.3}", ev.pose, ev.time),
             None => format!("{entity_name}|idle"),
         };
@@ -532,20 +509,25 @@ fn render_rigged_character(
         h
     };
 
-    // Get interpolated bone states — с ПЕРЕХЛЁСТОМ (см. `poza_s_perehlyostom`).
-    let mut bone_states = poza_s_perehlyostom(
-        &rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), pose_t, td);
+    // Кости идут ПОШТУЧНО, каждая от своего события (см. `dolya_kosti`):
+    // визема заводит часы рту и только рту, жест руки доигрывает свои 0.3 с.
+    // Перехлёст и кривая размаха сложены туда же, поэтому проход остаётся один.
+    let (p_ot, p_k, doli) = dolya_kosti(rig, &events, current_idx, pose_time);
+    let mut bone_states = interpolate_skeleton_pokostno(
+        &rig.skeleton, Some(&p_ot), Some(&p_k), 1.0, &doli);
     skeleton::apply_pose_variance(&mut bone_states, pose_seed);
 
     // Pose-only state one animation tick (1/12s) earlier — lets us measure how
     // fast each part is moving in THIS gesture, the basis for motion smears.
     // Pose-only (no idle/speak float) so only deliberate motion smears.
-    let prev_pose_t = match current_idx {
-        Some(idx) => (((pose_time - step_dt) - events[idx].time) / td).clamp(0.0, 1.0),
-        None => 0.0,
-    };
-    let mut bone_states_prev = poza_s_perehlyostom(
-        &rig.skeleton, from_pose.as_ref(), to_pose.as_ref(), prev_pose_t, td);
+    // Предыдущий тик считается ТЕМ ЖЕ поштучным ходом. Иначе смазы мерили бы
+    // скорость по одной модели движения, а рисовалось бы по другой, и смаз
+    // приходил бы не туда, где деталь на самом деле прошла путь.
+    let ranshe = pose_time - step_dt;
+    let idx_ranshe = events.iter().rposition(|e| e.time <= ranshe);
+    let (r_ot, r_k, r_doli) = dolya_kosti(rig, &events, idx_ranshe, ranshe);
+    let mut bone_states_prev = interpolate_skeleton_pokostno(
+        &rig.skeleton, Some(&r_ot), Some(&r_k), 1.0, &r_doli);
     skeleton::apply_pose_variance(&mut bone_states_prev, pose_seed);
 
     // РОТ ИДЁТ НА ОДИН РИСУНОК ВПЕРЁД ЗВУКА.
@@ -564,26 +546,9 @@ fn render_rigged_character(
     let mouth_time = pose_time + step_dt;
     let mouth_idx = events.iter().rposition(|e| e.time <= mouth_time);
     if mouth_idx != current_idx {
-        let (m_from, m_to, m_t, m_td) = match mouth_idx {
-            None => (None, None, 0.0, 0.18),
-            Some(idx) => {
-                let d = events
-                    .get(idx)
-                    .and_then(|ev| rig.poses.get(&ev.pose))
-                    .map(|p| p.transition_duration)
-                    .unwrap_or(0.18)
-                    .max(0.01);
-                let elapsed = mouth_time - events[idx].time;
-                if elapsed >= d {
-                    (Some(idx), Some(idx), 1.0, d)
-                } else {
-                    (if idx > 0 { Some(idx - 1) } else { None }, Some(idx), elapsed / d, d)
-                }
-            }
-        };
-        let mf = resolve_effective_pose(rig, &events, m_from);
-        let mt = resolve_effective_pose(rig, &events, m_to);
-        let rot = poza_s_perehlyostom(&rig.skeleton, mf.as_ref(), mt.as_ref(), m_t, m_td);
+        let (m_ot, m_k, m_doli) = dolya_kosti(rig, &events, mouth_idx, mouth_time);
+        let rot = interpolate_skeleton_pokostno(
+            &rig.skeleton, Some(&m_ot), Some(&m_k), 1.0, &m_doli);
         for (s, m) in bone_states.iter_mut().zip(rot.iter()) {
             if s.name == "mouth" {
                 *s = m.clone();
@@ -1368,60 +1333,6 @@ fn sobytiya_pozy<'a>(timeline: &'a Timeline, entity_name: &str) -> Vec<&'a PoseE
     events
 }
 
-/// Resolve the effective pose for a pose-event index. A full (non-overlay)
-/// event resolves to its named pose. An overlay event (speech mouth flap)
-/// resolves to the last held full pose with the overlay's bones merged on top,
-/// so the body keeps its gesture while the mouth talks. `None` (before any
-/// event) resolves to the rig's "idle" pose.
-fn resolve_effective_pose(
-    rig: &CharacterRig,
-    events: &[&PoseEvent],
-    idx: Option<usize>,
-) -> Option<skeleton::Pose> {
-    let idx = match idx {
-        Some(i) => i,
-        None => return rig.poses.get("idle").cloned(),
-    };
-    let ev = events.get(idx)?;
-    let pose = rig.poses.get(&ev.pose)?;
-    if !ev.overlay {
-        return Some(pose.clone());
-    }
-    // База — последняя ПОЛНАЯ поза; на неё кладутся ВСЕ слои после неё, по
-    // порядку, и только потом текущий.
-    //
-    // Раньше сливался ровно один слой — текущий, — и слои затирали друг друга.
-    // Из-за этого движение второй частью тела не жило дольше одного события:
-    // стоило заговорить, как первый же флэп рта сбрасывал наложенный жест
-    // руки. Тело у нас и так держит одну позу целиком, а человек делает
-    // несколько движений разными частями тела ОДНОВРЕМЕННО — накопление слоёв
-    // это и даёт: ноги шагают (база), рука несёт сигарету (слой), рот говорит
-    // (слой поверх).
-    let base_idx = events[..idx].iter().rposition(|e| !e.overlay);
-    let base = base_idx
-        .and_then(|i| rig.poses.get(&events[i].pose))
-        .or_else(|| rig.poses.get("idle"));
-    match base {
-        Some(base) => {
-            let mut merged = base.clone();
-            merged.transition_duration = pose.transition_duration;
-            let from = base_idx.map(|i| i + 1).unwrap_or(0);
-            for e in &events[from..idx] {
-                if let Some(layer) = rig.poses.get(&e.pose) {
-                    for (bone, bt) in &layer.bones {
-                        merged.bones.insert(bone.clone(), bt.clone());
-                    }
-                }
-            }
-            for (bone, bt) in &pose.bones {
-                merged.bones.insert(bone.clone(), bt.clone());
-            }
-            Some(merged)
-        }
-        None => Some(pose.clone()),
-    }
-}
-
 /// ПЕРЕХЛЁСТ (overlapping action): части тела трогаются НЕ ОДНОВРЕМЕННО.
 ///
 /// Раньше все кости ехали по одному `t`: корпус, плечо, предплечье и кисть
@@ -1437,6 +1348,11 @@ fn resolve_effective_pose(
 /// где и живёт пластика.
 ///
 /// Рот исключён намеренно: он принадлежит липсинку и опаздывать не имеет права.
+///
+/// Задержка вычитается из доли кости в `dolya_kosti` — там, где эта доля и
+/// считается. Раньше на каждую из шести задержек шёл отдельный проход
+/// интерполяции по всему скелету, и из результата выбирались подходящие кости;
+/// теперь проход один.
 fn zaderzhka_kosti(name: &str) -> f64 {
     match name {
         "thigh_left" | "thigh_right" => 0.03,
@@ -1450,38 +1366,118 @@ fn zaderzhka_kosti(name: &str) -> f64 {
     }
 }
 
-/// Набор задержек, встречающихся в `zaderzhka_kosti`. Держится списком, а не
-/// собирается по костям, чтобы число проходов интерполяции было константой.
-const ZADERZHKI: [f64; 6] = [0.03, 0.06, 0.07, 0.08, 0.14, 0.22];
+///
+/// ЗАМЕЧАНИЕ СТУДИИ: «движения ломанные». Подол был первой причиной, это —
+/// вторая, и она глубже.
+///
+/// Что было. Переход считался ОТ ПОСЛЕДНЕГО СОБЫТИЯ, каким бы это событие ни
+/// было. А во время речи события идут сплошняком: рот щёлкает виземой на
+/// каждый слог, слогов пять-семь в секунду. Жест руки объявлен с выдержкой
+/// 0.3 с, но уже через 0.08 с приходит визема — новое событие, — и часы
+/// заводятся заново, причём «откуда» берётся не там, где рука сейчас, а там,
+/// куда она ЕЩЁ ТОЛЬКО ЕХАЛА. Рука мгновенно оказывается в конечной точке.
+/// Речь занимает восемьдесят процентов ролика, значит восемьдесят процентов
+/// жестов не проигрывались вовсе: рука не двигалась, а перескакивала.
+///
+/// Отсюда же пропадал и весь размах: `anticipate_back` — замах, удар, перелёт,
+/// осадка — считается по доле перехода, а доля успевала пройти два кадра.
+///
+/// Как теперь. Кость смотрит НАЗАД и находит СВОЁ последнее объявление: тот
+/// слой, где эта кость упомянута. От него берётся и время начала, и выдержка.
+/// Визема трогает `mouth` — часы заводятся у рта и только у него; рука
+/// продолжает свои 0.3 с, как если бы речи не было.
+///
+/// Перехлёст сложен сюда же. Раньше он гнал по интерполяции на каждую из шести
+/// задержек и выбирал из них нужные кости; теперь задержка кости просто
+/// вычитается из её доли, и проход остаётся один.
+fn dolya_kosti(
+    rig: &CharacterRig,
+    events: &[&PoseEvent],
+    idx: Option<usize>,
+    seichas: f64,
+) -> (skeleton::Pose, skeleton::Pose, HashMap<String, f64>) {
+    let mut ot = skeleton::Pose {
+        name: "ot".into(), bones: HashMap::new(), transition_duration: 0.18,
+    };
+    let mut k = skeleton::Pose {
+        name: "k".into(), bones: HashMap::new(), transition_duration: 0.18,
+    };
+    let mut doli: HashMap<String, f64> = HashMap::new();
+    let idx = match idx {
+        Some(i) if i < events.len() => i,
+        _ => {
+            if let Some(idle) = rig.poses.get("idle") {
+                ot = idle.clone();
+                k = idle.clone();
+            }
+            return (ot, k, doli);
+        }
+    };
 
-fn poza_s_perehlyostom(
-    skeleton: &skeleton::Skeleton,
-    from_pose: Option<&skeleton::Pose>,
-    to_pose: Option<&skeleton::Pose>,
-    pose_t: f64,
-    td: f64,
-) -> Vec<skeleton::BoneState> {
-    // Hand-drawn timing. Short transitions (mouth flaps, blinks) just ease out.
-    // Larger gestures get anticipation (a wind-up away from the target) plus an
-    // overshoot, so poses read as struck rather than slid — the core of the
-    // Freeman feel. Extrapolation past [0,1] is intentional here.
-    let krivaya = |x: f64| if td < 0.15 { ease_out_cubic(x) } else { anticipate_back(x) };
-    let mut states = interpolate_skeleton(skeleton, from_pose, to_pose, krivaya(pose_t));
-    // На коротких переходах (флэп рта, моргание) перехлёст не нужен и вреден:
-    // 22% от 0.04с — это полкадра, зато лишние пять интерполяций на каждый слог.
-    if td < 0.15 {
-        return states;
-    }
-    for lag in ZADERZHKI {
-        let sdvig = ((pose_t - lag) / (1.0 - lag)).clamp(0.0, 1.0);
-        let pozdnie = interpolate_skeleton(skeleton, from_pose, to_pose, krivaya(sdvig));
-        for (s, p) in states.iter_mut().zip(pozdnie.iter()) {
-            if (zaderzhka_kosti(&s.name) - lag).abs() < 1e-9 {
-                *s = p.clone();
+    // ПОСЛЕДНЕЕ ОБЪЯВЛЕНИЕ КОСТИ. Поиск идёт назад по слоям и останавливается
+    // на первой ПОЛНОЙ позе: она задаёт тело целиком, и кость, которой в ней
+    // нет, стоит в покое — искать дальше нечего.
+    let objavlenie = |do_idx: usize, kost: &str| -> Option<(usize, skeleton::BoneTransform)> {
+        for j in (0..=do_idx).rev() {
+            let poza = rig.poses.get(&events[j].pose)?;
+            if let Some(bt) = poza.bones.get(kost) {
+                return Some((j, bt.clone()));
+            }
+            if !events[j].overlay {
+                return None;
             }
         }
+        None
+    };
+    let baza = events[..=idx].iter().rposition(|e| !e.overlay);
+    let vyderzhka = |j: usize| -> f64 {
+        rig.poses.get(&events[j].pose)
+            .map(|p| p.transition_duration)
+            .unwrap_or(0.18)
+            .max(0.01)
+    };
+
+    for kost in imena_kostej(&rig.skeleton) {
+        let nashlos = objavlenie(idx, &kost);
+        // Кость без объявления возвращается в покой, и часы ей заводит та
+        // полная поза, которая её обнулила.
+        let sobytie = nashlos.as_ref().map(|(j, _)| *j).or(baza);
+        let (nachalo, td) = match sobytie {
+            Some(j) => (events[j].time, vyderzhka(j)),
+            None => (0.0, 0.18),
+        };
+        if let Some((_, bt)) = &nashlos {
+            k.bones.insert(kost.clone(), bt.clone());
+        }
+        if let Some(j) = sobytie {
+            if j > 0 {
+                if let Some((_, bt)) = objavlenie(j - 1, &kost) {
+                    ot.bones.insert(kost.clone(), bt);
+                }
+            }
+        }
+        let syraya = if td <= 0.0 { 1.0 } else { ((seichas - nachalo) / td).clamp(0.0, 1.0) };
+        // Перехлёст: кисть трогается позже плеча, плечо позже корпуса. На
+        // коротких переходах (визема, моргание) он вреден — 22% от 0.04 с это
+        // полкадра.
+        let lag = if td < 0.15 { 0.0 } else { zaderzhka_kosti(&kost) };
+        let sdvinutaya = ((syraya - lag) / (1.0 - lag)).clamp(0.0, 1.0);
+        let krivaya = if td < 0.15 { ease_out_cubic(sdvinutaya) } else { anticipate_back(sdvinutaya) };
+        doli.insert(kost, krivaya);
     }
-    states
+    (ot, k, doli)
+}
+
+fn imena_kostej(skeleton: &skeleton::Skeleton) -> Vec<String> {
+    fn obojti(b: &skeleton::Bone, out: &mut Vec<String>) {
+        out.push(b.name.clone());
+        for c in &b.children {
+            obojti(c, out);
+        }
+    }
+    let mut out = Vec::new();
+    obojti(&skeleton.root, &mut out);
+    out
 }
 
 /// Ease-out-back: decelerates and overshoots slightly past the target before
@@ -2473,5 +2469,90 @@ fn draw_color_overlay(pixmap: &mut Pixmap, r: u8, g: u8, b: u8, a: u8) {
             ..Default::default()
         };
         pixmap.draw_pixmap(0, 0, overlay.as_ref(), &paint, Transform::identity(), None);
+    }
+}
+
+#[cfg(test)]
+mod proba {
+    use super::*;
+    use crate::skeleton::{Bone, BoneTransform, Pose, Skeleton};
+
+    fn kost(name: &str, deti: Vec<Bone>) -> Bone {
+        Bone {
+            name: name.into(), part: None, pivot: (0.0, 0.0), offset: (0.0, 0.0),
+            rotation: 0.0, scale: (1.0, 1.0), z_order: 0, children: deti,
+        }
+    }
+
+    fn poza(name: &str, td: f64, kosti: &[(&str, f64)]) -> Pose {
+        let mut bones = HashMap::new();
+        for (k, rot) in kosti {
+            bones.insert((*k).to_string(), BoneTransform {
+                rotation: Some(*rot), offset: None, scale: None, part: None, z_order: None,
+            });
+        }
+        Pose { name: name.into(), bones, transition_duration: td }
+    }
+
+    fn stend() -> CharacterRig {
+        let mut poses = HashMap::new();
+        poses.insert("idle".into(), poza("idle", 0.3, &[]));
+        poses.insert("calm".into(), poza("calm", 0.3, &[("forearm_left", 0.0)]));
+        // Жест руки: выдержка 0.30 с.
+        poses.insert("zhest".into(), poza("zhest", 0.30, &[("forearm_left", 90.0)]));
+        // Визема: трогает ТОЛЬКО рот, выдержка короткая.
+        poses.insert("vizema".into(), poza("vizema", 0.04, &[("mouth", 10.0)]));
+        CharacterRig {
+            name: "stend".into(),
+            skeleton: Skeleton {
+                root: kost("root", vec![kost("forearm_left", vec![]), kost("mouth", vec![])]),
+            },
+            parts: HashMap::new(),
+            poses,
+            height: 100.0,
+            karta: None,
+        }
+    }
+
+    fn sobytie(t: f64, poza: &str, overlay: bool) -> PoseEvent {
+        PoseEvent { time: t, entity: "f".into(), pose: poza.into(), overlay }
+    }
+
+    /// РЕЕСТР §XXXV. Визема не имеет права заводить часы РУКЕ.
+    ///
+    /// Раньше переход считался от последнего события по времени, каким бы оно
+    /// ни было: жест объявлен на 0.30 с, но через 0.08 с приходила визема — и
+    /// рука оказывалась в конечной точке за два кадра вместо семи. Речь
+    /// занимает восемьдесят процентов ролика, значит столько же жестов не
+    /// проигрывалось ни разу.
+    #[test]
+    fn vizema_ne_zavodit_chasy_ruke() {
+        let rig = stend();
+        let sob = vec![
+            sobytie(0.0, "calm", false),
+            sobytie(1.0, "zhest", true),
+            sobytie(1.08, "vizema", true),   // слог
+            sobytie(1.16, "vizema", true),   // ещё слог
+        ];
+        let ssylki: Vec<&PoseEvent> = sob.iter().collect();
+
+        // Смотрим на 1.10 с: с начала жеста прошло 0.10 из 0.30 — рука В ПУТИ.
+        // Доля здесь уже пропущена через кривую размаха, и на замахе она уходит
+        // в минус — это норма, потому проверяется только «не доехала».
+        let (_, _, doli) = dolya_kosti(&rig, &ssylki, Some(2), 1.10);
+        let ruka = doli["forearm_left"];
+        assert!(
+            ruka < 0.5,
+            "рука доехала за 100 мс вместо 300: часы жеста перезавела визема \
+             (доля {ruka:.3})"
+        );
+
+        // Рот при этом СВОИ часы отсчитал: его визема доезжает за 0.04 с.
+        let (_, _, rta) = dolya_kosti(&rig, &ssylki, Some(3), 1.20);
+        assert!(rta["mouth"] > 0.99, "рот обязан доехать за свои 0.04 с");
+
+        // А к концу выдержки рука приходит, речь ей не мешает.
+        let (_, _, pozdnee) = dolya_kosti(&rig, &ssylki, Some(3), 1.35);
+        assert!(pozdnee["forearm_left"] > 0.99, "рука обязана доехать за 0.30 с");
     }
 }

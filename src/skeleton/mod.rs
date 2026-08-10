@@ -281,7 +281,62 @@ pub fn interpolate_skeleton(
     states
 }
 
+/// То же, но У КАЖДОЙ КОСТИ СВОЯ ДОЛЯ ПЕРЕХОДА.
+///
+/// Общий `t` годится, пока всё тело переходит из позы в позу одним событием.
+/// Но у нас поверх позы лежат СЛОИ, и рот во время речи щёлкает по слою на
+/// каждый слог. Одно `t` на всех означает, что часы жеста руки заводятся
+/// заново от каждого щелчка рта, — рука доезжает не за свои 0.3 с, а за
+/// 0.08 с до следующего слога. Рука приходит рывком.
+///
+/// Поэтому доля перехода считается ДЛЯ КАЖДОЙ КОСТИ ОТ СВОЕГО СОБЫТИЯ, и сюда
+/// приходит готовой картой. Кости, которой в карте нет, достаётся `t_obshchee`.
+pub fn interpolate_skeleton_pokostno(
+    skeleton: &Skeleton,
+    from_pose: Option<&Pose>,
+    to_pose: Option<&Pose>,
+    t_obshchee: f64,
+    t_kosti: &HashMap<String, f64>,
+) -> Vec<BoneState> {
+    let mut states = Vec::new();
+    interpolate_bone_pokostno(&skeleton.root, from_pose, to_pose, t_obshchee, t_kosti,
+                              &mut states);
+    states
+}
+
+fn interpolate_bone_pokostno(
+    bone: &Bone,
+    from_pose: Option<&Pose>,
+    to_pose: Option<&Pose>,
+    t_obshchee: f64,
+    t_kosti: &HashMap<String, f64>,
+    states: &mut Vec<BoneState>,
+) {
+    let t = t_kosti.get(&bone.name).copied().unwrap_or(t_obshchee);
+    let mut svoi = Vec::new();
+    interpolate_bone_odna(bone, from_pose, to_pose, t, &mut svoi);
+    states.append(&mut svoi);
+    for child in &bone.children {
+        interpolate_bone_pokostno(child, from_pose, to_pose, t_obshchee, t_kosti, states);
+    }
+}
+
 fn interpolate_bone(
+    bone: &Bone,
+    from_pose: Option<&Pose>,
+    to_pose: Option<&Pose>,
+    t: f64,
+    states: &mut Vec<BoneState>,
+) {
+    interpolate_bone_odna(bone, from_pose, to_pose, t, states);
+    for child in &bone.children {
+        interpolate_bone(child, from_pose, to_pose, t, states);
+    }
+}
+
+/// Одна кость, без детей: обход отделён от расчёта, чтобы поштучная выдержка
+/// могла спускаться по иерархии со своим `t` на каждой кости.
+fn interpolate_bone_odna(
     bone: &Bone,
     from_pose: Option<&Pose>,
     to_pose: Option<&Pose>,
@@ -350,10 +405,6 @@ fn interpolate_bone(
         z_order,
         bend: 0.0,
     });
-
-    for child in &bone.children {
-        interpolate_bone(child, from_pose, to_pose, t, states);
-    }
 }
 
 // ---------------------------------------------------------------------------
