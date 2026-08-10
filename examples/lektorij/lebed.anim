@@ -133,7 +133,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 3
     //  «И это ваш самый спокойный день.»
     together {
-        freeman speaks for 1.88s
+        freeman speaks for 2.56s
         do {
             freeman overlays "ladoni_vniz"
         }
@@ -143,10 +143,10 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 4
     //  «Это не предчувствие. Это статистика.»
     together {
-        freeman speaks for 3.02s
+        freeman speaks for 4.21s
         do {
             freeman overlays "no"
-            wait 1.6s
+            wait 2.23s
             freeman overlays "vzves"
         }
     }
@@ -188,14 +188,14 @@ scene "s2" (duration: 1s, set: pole) {
     //  ПРОХОД ВДОЛЬ ПОЛЯ: дни идут, и рассказчик идёт вместе с ними.
     //  Шаг слоями `shag_bok_*` — рта они не трогают, липсинк цел.
     together {
-        freeman speaks for 4.91s
+        freeman speaks for 4.44s
         do {
             freeman overlays "zakrylsya"
-            freeman moves-to (0.38, 0.92) over 1.6s
+            freeman moves-to (0.38, 0.92) over 1.45s
             freeman overlays "shag_bok_levoj"
-            freeman moves-to (0.26, 0.92) over 1.6s
+            freeman moves-to (0.26, 0.92) over 1.45s
             freeman overlays "shag_bok_pravoj"
-            freeman moves-to (0.20, 0.92) over 1.5s
+            freeman moves-to (0.20, 0.92) over 1.36s
         }
     }
     //  Остановка полной позой тела: слои шага сняты, ноги приставлены.
@@ -254,12 +254,12 @@ scene "s3" (duration: 1s, set: pole) {
     //lip 10
     //  «Она не ошиблась. Сто из ста — отличная статистика.»
     together {
-        freeman speaks for 4.34s
+        freeman speaks for 3.87s
         do {
             freeman overlays "razvel"
-            wait 1.4s
+            wait 1.25s
             freeman overlays "lokti"
-            wait 1.4s
+            wait 1.25s
             freeman overlays "somnenie"
         }
     }
@@ -314,7 +314,7 @@ scene "s4" (duration: 1s, set: kuhnya) {
     //  «Ровно столько раз вам приносили корм.»
     //  Тихо и вниз: несущая строка, громкость ей не нужна.
     together {
-        freeman speaks for 2.07s
+        freeman speaks for 3.03s
         do {
             freeman overlays "doshlo"
         }
@@ -325,14 +325,14 @@ scene "s4" (duration: 1s, set: kuhnya) {
     //  «Спокойно было вчера. Спокойно было в прошлом году. Спокойно было
     //  всегда.» — МАНТРА: три куска с одного слова.
     together {
-        freeman speaks for 5.47s
+        freeman speaks for 6.84s
         do {
             freeman overlays "hips"
-            wait 1.3s
+            wait 1.63s
             freeman overlays "ruki_za_spinu"
-            wait 1.3s
+            wait 1.63s
             freeman overlays "ladoni_vniz"
-            wait 1.3s
+            wait 1.63s
             freeman overlays "ostyl"
         }
     }
@@ -342,12 +342,12 @@ scene "s4" (duration: 1s, set: kuhnya) {
     //  «Это не договор с будущим. Это список прошлых завтраков — один на всё
     //  стадо, и судьба тут ни при чём.»
     together {
-        freeman speaks for 7.55s
+        freeman speaks for 8.72s
         do {
             freeman overlays "no"
-            wait 2.4s
+            wait 2.77s
             freeman overlays "razmer"
-            wait 2.4s
+            wait 2.77s
             freeman overlays "yorik"
         }
     }
@@ -369,12 +369,12 @@ scene "s5" (duration: 1s, set: void) {
     //lip 16
     //  «Что делать — решать вам. Скажу, какой вопрос вы не задавали.»
     together {
-        freeman speaks for 5.11s
+        freeman speaks for 3.92s
         do {
             freeman overlays "otmahnulsya"
-            wait 1.7s
+            wait 1.3s
             freeman overlays "think"
-            wait 1.7s
+            wait 1.3s
             freeman overlays "k_sebe"
         }
     }
@@ -383,10 +383,10 @@ scene "s5" (duration: 1s, set: void) {
     //lip 17
     //  «Не «часто ли бывало хорошо», а «что будет, если один раз плохо».»
     together {
-        freeman speaks for 5.10s
+        freeman speaks for 4.39s
         do {
             freeman overlays "dve_storony"
-            wait 2.7s
+            wait 2.32s
             freeman overlays "klin"
         }
     }
@@ -445,7 +445,7 @@ scene "s6" (duration: 1s, set: zal) {
     //lip 21
     //  «Он не учит предсказывать — этого никто не умеет.»
     together {
-        freeman speaks for 3.77s
+        freeman speaks for 3.11s
         do {
             freeman overlays "no"
         }
@@ -455,12 +455,12 @@ scene "s6" (duration: 1s, set: zal) {
     //lip 22
     //  «Он про то, как жить так, чтобы один плохой день не заканчивал всё.»
     together {
-        freeman speaks for 4.72s
+        freeman speaks for 3.66s
         do {
             freeman overlays "ladoni_vniz"
-            wait 1.6s
+            wait 1.24s
             freeman overlays "vozzvanie"
-            wait 1.6s
+            wait 1.24s
             freeman overlays "open"
         }
     }
@@ -471,10 +471,10 @@ scene "s6" (duration: 1s, set: zal) {
     //lip 23
     //  «И про то, кому верить: советчик должен рисковать своим, а не вашим.»
     together {
-        freeman speaks for 5.67s
+        freeman speaks for 4.57s
         do {
             freeman overlays "dve_storony"
-            wait 3.0s
+            wait 2.42s
             freeman overlays "vozzvanie"
         }
     }
@@ -526,10 +526,10 @@ scene "s7" (duration: 1s, set: kuhnya) {
     //lip 26
     //  «Посчитайте свои дни. Не годы — дни у кормушки.»
     together {
-        freeman speaks for 3.97s
+        freeman speaks for 4.52s
         do {
             freeman overlays "palec_vverh"
-            wait 2.1s
+            wait 2.39s
             freeman overlays "odna_v_bok"
         }
     }
@@ -554,7 +554,7 @@ scene "s7" (duration: 1s, set: kuhnya) {
     //lip 28
     //  «Да…» — рассказчик приходит вторым и подтверждает одним словом.
     together {
-        freeman speaks for 0.19s
+        freeman speaks for 0.76s
         do {
             freeman overlays "ostyl"
         }
@@ -577,10 +577,10 @@ scene "s7" (duration: 1s, set: kuhnya) {
     //lip 29
     //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
     together {
-        freeman speaks for 5.68s
+        freeman speaks for 5.12s
         do {
             freeman overlays "wave"
-            wait 3.0s
+            wait 2.7s
             freeman overlays "manit"
         }
     }
