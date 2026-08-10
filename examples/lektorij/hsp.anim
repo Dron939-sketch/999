@@ -43,7 +43,7 @@
 //  Завод перепишет их по факту озвучки.
 // =============================================================================
 //
-//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: c760752e
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: b622f343
 import character freeman from "../assets/characters/freeman_rig"
 import set komnata from "../assets/sets/hsp-prazdnik-dver.svg"
 import set koridor from "../assets/sets/koridor-lovushka.svg"
@@ -198,8 +198,11 @@ scene "s2" (duration: 1s, set: koridor) {
 scene "s3" (duration: 1s, set: peregovorka) {
     transition static 0.2s
 
-    place freeman at (0.50, 0.95) facing front on floor
-    freeman scales 0.72 over 0.01s
+    //  В ЛЕВЫЙ ПРОХОД, А НЕ ПО ЦЕНТРУ. По центру стол перекрывает фигуру по
+    //  грудь, и масштаб этого не чинит: стол нарисован крупно и стоит между
+    //  камерой и персонажем. Контактный лист показал ровно это.
+    place freeman at (0.13, 0.93) facing front on floor
+    freeman scales 1.15 over 0.01s
     camera medium freeman
     freeman pose "calm"
 
@@ -263,7 +266,7 @@ scene "s5" (duration: 1s, set: kabinet) {
         do {
             freeman overlays "shrug"
             wait 1.9s
-            freeman overlays "despair"
+            freeman overlays "zakrylsya"
             wait 1.9s
             freeman overlays "gorech"
         }
@@ -430,8 +433,8 @@ scene "s7" (duration: 1s, set: komnata) {
 scene "s8" (duration: 1s, set: peregovorka) {
     transition static 0.2s
 
-    place freeman at (0.50, 0.95) facing front on floor
-    freeman scales 0.72 over 0.01s
+    place freeman at (0.13, 0.93) facing front on floor
+    freeman scales 1.15 over 0.01s
     camera medium freeman
     freeman pose "calm"
 
