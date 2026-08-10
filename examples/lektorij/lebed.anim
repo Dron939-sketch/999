@@ -184,7 +184,7 @@ scene "s2" (duration: 1s, set: pole) {
     wait 0.4s
 
     //lip 6
-    //  «Первый день настороже. К десятому уверена: люди добрые.»
+    //  «Первый день она боится. К десятому уверена: люди добрые.»
     //  ПРОХОД ВДОЛЬ ПОЛЯ: дни идут, и рассказчик идёт вместе с ними.
     //  Шаг слоями `shag_bok_*` — рта они не трогают, липсинк цел.
     together {
@@ -495,7 +495,7 @@ scene "s6" (duration: 1s, set: zal) {
     together {
         freeman speaks for 3.96s
         do {
-            freeman overlays "v_upor"
+            freeman overlays "vzglyad"
             wait 2.1s
             freeman overlays "prishchur"
         }
