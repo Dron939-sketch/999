@@ -80,7 +80,8 @@ ROST_MIN = 0.35           # рост фигуры в долях кадра, ни
 LICO_ZANYATO = 0.30       # доля тёмного ВНУТРИ ОВАЛА маски (см. temno_v_ovale)
 TISHINA = 0.02            # амплитуда, ниже которой это тишина
 TISHINA_DLINA = 0.4       # сколько секунд тишины должно найтись
-TISHINA_OKNO = 3.0        # на сколько секунд вокруг метки её искать
+TISHINA_OKNO = 6.0        # на сколько секунд вокруг метки её искать:
+                          # монтаж уезжает от плана на секунды
 
 
 def kadry(istochnik, rab):
@@ -177,7 +178,11 @@ def najti(g, szhimat=True):
             continue
         ys, xs = np.nonzero(lab == k)
         h, w = ys.max() - ys.min() + 1, xs.max() - xs.min() + 1
-        if not (1.05 < h / w < 2.0):      # яйцо стоймя, а не полоса стены
+        # НИЖНЯЯ ГРАНИЦА 0.95, А НЕ 1.05. Маска — яйцо стоймя, но под наклоном
+        # головы и на приближении она читается круглой: в библиотеке гейт
+        # мерил 1.00–1.04 и три секунды подряд сообщал «фигуры не видно»
+        # там, где лицо занимает четверть кадра.
+        if not (0.95 < h / w < 2.0):
             continue
         if c >= 0.80 * h * w:             # без дыр — значит не лицо
             continue
@@ -221,9 +226,24 @@ def vremya(s):
 
 
 def pechat(nazvanie, seki, hvost):
+    """Брак — это ДВЕ секунды подряд и больше; одиночная показывается заметкой.
+
+    ЗАЧЕМ. Кадры берутся раз в секунду, и одна засечка честно попадает в
+    склейку: у ролика есть объявленный переход снежной рябью на 0.2 с, и в
+    рябь фигуре провалиться положено. Две секунды подряд в склейку не
+    попадают — столько длится уже дефект, а не приём. Заметка при этом
+    печатается: одиночную секунду видно, просто она не роняет прогон.
+    """
     if not seki:
         return 0
     kuski = intervaly(seki)
+    odinochki = [k for k in kuski if k[0] == k[1]]
+    kuski = [k for k in kuski if k[1] > k[0]]
+    for a, b in odinochki:
+        print(f"  · {nazvanie}: {vremya(a)} — одиночная секунда, "
+              f"это склейка или рябь, а не дефект")
+    if not kuski:
+        return 0
     vsego = sum(b - a + 1 for a, b in kuski)
     print(f"  ✗ {nazvanie}: {vsego} с")
     for a, b in kuski:
@@ -233,25 +253,45 @@ def pechat(nazvanie, seki, hvost):
 
 
 def tishiny_iz_vo(vo):
-    """Метки тишины из партитуры звука: «| 0:27 | обрыв — глухая тишина | …»."""
+    """Окна тишины берём У СБОРЩИКА ЗВУКА, а не разбираем таблицу заново.
+
+    ЗАЧЕМ. Строка «| 1:55 | кухня, чайник; на паузе после VO-26 — ТИШИНА |»
+    стоит на 1:55, а пауза, которую она называет, — на 2:01, после конца
+    VO-26. Приёмка искала тишину у метки строки, промахивалась на десять
+    секунд и сообщала брак на ролике, где тишина лежала ровно там, где
+    назначена. `sfx.parse_tishiny` разрешает «после VO-N» в настоящий зазор
+    между репликами — тем же кодом, которым дорожка и построена, так что
+    приёмка и сборка больше не читают партитуру по-разному.
+    """
     if not vo:
         return []
-    text = Path(vo).read_text(encoding="utf-8")
-    metki = []
-    for stroka in text.splitlines():
-        if not stroka.startswith("|") or "ишин" not in stroka:
-            continue
-        m = re.search(r"\|\s*(\d+):(\d\d)\s*\|", stroka)
-        if m:
-            metki.append(int(m.group(1)) * 60 + int(m.group(2)))
-    return metki
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        from sfx import parse_tishiny
+    except Exception:                                # noqa: BLE001
+        return []
+    return [(a + b) / 2 for a, b in parse_tishiny(vo)]
 
 
 def zvuk_tishina(video, metki, rab):
+    """Тишину меряем на ДОРОЖКЕ ЗВУКА, а не в готовом миксе.
+
+    ЗАЧЕМ. «Глухая тишина» в партитуре — это обрыв КОМНАТНОГО ТОНА, а не пауза
+    в речи: на переломе рассказчик говорит поверх выключенной комнаты, и в
+    общем миксе там честно стоит голос. Замер по миксу сообщал брак дважды на
+    ролике, где обе тишины лежали на месте: на дорожке `<имя>-sfx.mp3` в тех же
+    точках 5.5 с и 0.4 с абсолютного нуля.
+
+    Окно шире, чем кажется нужным, и это не запас на всякий случай: фактический
+    монтаж короче плана (128 с против 130), сборщик звука переносит метки на
+    факт, и метка из таблицы уезжает от своего места на несколько секунд.
+    """
     if not metki:
         return []
+    dorozhka = Path(str(Path(video).with_suffix("")) + "-sfx.mp3")
+    istochnik = dorozhka if dorozhka.exists() else Path(video)
     wav = rab / "z.wav"
-    subprocess.run(["ffmpeg", "-v", "error", "-i", str(video), "-ac", "1",
+    subprocess.run(["ffmpeg", "-v", "error", "-i", str(istochnik), "-ac", "1",
                     "-ar", "8000", "-f", "wav", str(wav), "-y"], check=True)
     w = wave.open(str(wav))
     a = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(float) / 32768
