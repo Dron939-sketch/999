@@ -1266,10 +1266,18 @@ def run_planka(prod, engine, render_sec, final_mp4):
 
 def build_one(prod, engine, videos_dir, voice_expected=False):
     pid = prod["id"]
+    # ВЫХОДНЫЕ ФАЙЛЫ НАЗЫВАЮТСЯ КУРСОМ, А НЕ ВНУТРЕННИМ ID. `id` — короткое
+    # рабочее имя («lebed»), по нему ходят маркер [only: …], гейты и голдены;
+    # менять его нельзя. Но в релизе лежит два десятка файлов, и «lebed.mp4»
+    # не говорит студии ничего. Имя берётся из поля `kurs` — это слаг курса на
+    # сайте, тот самый, что в адресе страницы.
+    imya = prod.get("kurs") or pid
     log(f"\n=== ПРОДАКШЕН: {pid} — {prod.get('desc', '')}")
-    video_mp4 = videos_dir / f"{pid}.mp4"
-    voice_mp3 = videos_dir / f"{pid}-voice.mp3"
-    final_mp4 = videos_dir / f"{pid}-final.mp4"
+    # «-nemoj» у немой картинки, чистое имя — у готового ролика: раньше немая
+    # версия называлась короче готовой, и скачивали именно её.
+    video_mp4 = videos_dir / f"{imya}-nemoj.mp4"
+    voice_mp3 = videos_dir / f"{imya}-voice.mp3"
+    final_mp4 = videos_dir / f"{imya}.mp4"
     parts_dir = videos_dir / f"{pid}-parts"
 
     # Порядок: картинки → озвучка ЧАСТЯМИ → ХРОНОМЕТРАЖ ПО ФАКТУ (`speaks for`
@@ -1302,7 +1310,7 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
     # растрируется в 2278×1280 КАЖДЫЙ кадр, кэш пиксмапов такого не держит.
     # Включать в прогон в таком виде нельзя — раннер встанет. Включается
     # переменной VERTICAL=1, пока причина не найдена и не устранена.
-    video_vert = videos_dir / f"{pid}-vert.mp4"
+    video_vert = videos_dir / f"{imya}-nemoj-vert.mp4"
     if (os.environ.get("VERTICAL") or "").strip() not in ("", "0"):
         try:
             step_render(src_anim, engine, video_vert, vertical=True)
@@ -1311,10 +1319,10 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
             video_vert = None
     else:
         video_vert = None
-    sfx = step_sfx(prod, video_mp4, videos_dir / f"{pid}-sfx.mp3", src_anim)
+    sfx = step_sfx(prod, video_mp4, videos_dir / f"{imya}-sfx.mp3", src_anim)
     step_mux(prod, video_mp4, voice, sfx, final_mp4)
     if video_vert is not None and Path(video_vert).exists():
-        step_mux(prod, video_vert, voice, sfx, videos_dir / f"{pid}-vert-final.mp4")
+        step_mux(prod, video_vert, voice, sfx, videos_dir / f"{imya}-vert.mp4")
 
     made = []
     for p in (video_mp4, voice_mp3, final_mp4):
