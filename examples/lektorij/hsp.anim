@@ -128,7 +128,7 @@ scene "s1" (duration: 1s, set: komnata) {
     //lip 3
     //  «Так говорят каждому пятому.»
     together {
-        freeman speaks for 1.88s
+        freeman speaks for 2.53s
         do {
             freeman overlays "razmer"
         }
@@ -209,14 +209,14 @@ scene "s3" (duration: 1s, set: peregovorka) {
     //lip 7
     //  «Взрослый первым замечает, что коллеге плохо. Мнительный. Опять.»
     together {
-        freeman speaks for 5.30s
+        freeman speaks for 4.52s
         do {
             freeman overlays "vzglyad"
-            wait 1.3s
+            wait 1.11s
             freeman overlays "lokti"
-            wait 1.3s
+            wait 1.11s
             freeman overlays "prishchur"
-            wait 1.3s
+            wait 1.11s
             freeman overlays "ostyl"
         }
     }
@@ -262,12 +262,12 @@ scene "s5" (duration: 1s, set: kabinet) {
     //lip 9
     //  «Он и к врачу ходил: здоров. Легче не стало — имени всё равно не было.»
     together {
-        freeman speaks for 5.86s
+        freeman speaks for 5.09s
         do {
             freeman overlays "shrug"
-            wait 1.9s
+            wait 1.65s
             freeman overlays "zakrylsya"
-            wait 1.9s
+            wait 1.65s
             freeman overlays "gorech"
         }
     }
@@ -279,10 +279,10 @@ scene "s5" (duration: 1s, set: kabinet) {
     //  «Имя есть, и оно спокойное: высокая чувствительность.»
     //  ПЕРВОЕ ТЕПЛО РОЛИКА. Не утешает — называет.
     together {
-        freeman speaks for 4.53s
+        freeman speaks for 5.30s
         do {
             freeman overlays "raskryl"
-            wait 2.4s
+            wait 2.81s
             freeman overlays "teplo"
         }
     }
@@ -304,12 +304,12 @@ scene "s6" (duration: 1s, set: komnata) {
     //lip 11
     //  «Дело не в тонкой душе и не в толстой шкуре. Дело в лишних кругах.»
     together {
-        freeman speaks for 4.14s
+        freeman speaks for 4.88s
         do {
             freeman overlays "dve_storony"
-            wait 1.3s
+            wait 1.53s
             freeman overlays "no"
-            wait 1.3s
+            wait 1.53s
             freeman overlays "razvel"
         }
     }
@@ -318,7 +318,7 @@ scene "s6" (duration: 1s, set: komnata) {
     //lip 12
     //  «Один и тот же сигнал проходит у вас больше кругов.»
     together {
-        freeman speaks for 3.00s
+        freeman speaks for 3.55s
         do {
             freeman overlays "manit"
         }
@@ -344,12 +344,12 @@ scene "s6" (duration: 1s, set: komnata) {
     //  «Чаша наполняется у всех. Наполняется от шума. Наполняется от чужого
     //  настроения.» — МАНТРА: три куска с одного слова.
     together {
-        freeman speaks for 6.97s
+        freeman speaks for 9.22s
         do {
             freeman overlays "hips"
-            wait 2.3s
+            wait 3.04s
             freeman overlays "ladoni_vniz"
-            wait 2.3s
+            wait 3.04s
             freeman overlays "razmer"
         }
     }
@@ -363,7 +363,7 @@ scene "s6" (duration: 1s, set: komnata) {
 
     //lip 15
     //  «У вас она меньше. Это не поломка — настройка.»
-    freeman speaks for 3.97s
+    freeman speaks for 4.55s
     camera wide
     wait 0.9s
 }
@@ -383,12 +383,12 @@ scene "s7" (duration: 1s, set: komnata) {
     //lip 16
     //  «Что делать — решать вам. Я скажу только, как это зовётся.»
     together {
-        freeman speaks for 4.92s
+        freeman speaks for 4.26s
         do {
             freeman overlays "otmahnulsya"
-            wait 1.6s
+            wait 1.38s
             freeman overlays "open"
-            wait 1.6s
+            wait 1.38s
             freeman overlays "k_sebe"
         }
     }
@@ -397,10 +397,10 @@ scene "s7" (duration: 1s, set: komnata) {
     //lip 17
     //  «Перестаньте называть это чувствительностью: с ней ничего не сделаешь.»
     together {
-        freeman speaks for 4.71s
+        freeman speaks for 4.26s
         do {
             freeman overlays "stop_ladon"
-            wait 2.5s
+            wait 2.26s
             freeman overlays "razvel"
         }
     }
@@ -441,10 +441,10 @@ scene "s8" (duration: 1s, set: peregovorka) {
     //lip 19
     //  «Способ, который предлагали, назывался «привыкнешь».»
     together {
-        freeman speaks for 4.16s
+        freeman speaks for 3.40s
         do {
             freeman overlays "shrug"
-            wait 2.2s
+            wait 1.8s
             freeman overlays "prishchur"
         }
     }
@@ -453,7 +453,7 @@ scene "s8" (duration: 1s, set: peregovorka) {
     //lip 20
     //  «Работает ровно до первого открытого офиса.»
     together {
-        freeman speaks for 3.19s
+        freeman speaks for 3.71s
         do {
             freeman overlays "ostyl"
         }
@@ -489,12 +489,12 @@ scene "s9" (duration: 1s, set: zal) {
     //lip 22
     //  «Он не учит терпеть. Он показывает, где у вашей чаши край.»
     together {
-        freeman speaks for 4.72s
+        freeman speaks for 4.18s
         do {
             freeman overlays "otverg"
-            wait 1.6s
+            wait 1.42s
             freeman overlays "yorik"
-            wait 1.6s
+            wait 1.42s
             freeman overlays "razmer"
         }
     }
@@ -505,10 +505,10 @@ scene "s9" (duration: 1s, set: zal) {
     //lip 23
     //  «Отдельная лекция — где черта, за которой нужен врач.»
     together {
-        freeman speaks for 4.34s
+        freeman speaks for 3.37s
         do {
             freeman overlays "ladoni_vniz"
-            wait 2.3s
+            wait 1.79s
             freeman overlays "chelo"
         }
     }
@@ -597,10 +597,10 @@ scene "s10" (duration: 1s, set: komnata) {
     //lip 28
     //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
     together {
-        freeman speaks for 5.68s
+        freeman speaks for 3.71s
         do {
             freeman overlays "wave"
-            wait 3.0s
+            wait 1.96s
             freeman overlays "manit"
         }
     }
