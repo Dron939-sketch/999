@@ -128,10 +128,10 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //  было: `raskryl` распахивает обе, `vzves` взвешивает, а жеста «вот,
     //  и тут ничего» не было ни одного.
     together {
-        freeman speaks for 2.10s
+        freeman speaks for 1.38s
         do {
             freeman overlays "ladon_pusta"
-            wait 1.2s
+            wait 0.79s
             freeman overlays "vzglyad"
         }
     }
@@ -152,10 +152,10 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 4
     //  «Это не предчувствие. Это статистика.»
     together {
-        freeman speaks for 4.21s
+        freeman speaks for 3.74s
         do {
             freeman overlays "no"
-            wait 2.23s
+            wait 1.98s
             freeman overlays "vzves"
         }
     }
@@ -249,7 +249,7 @@ scene "s2" (duration: 1s, set: pole) {
 
     //lip 8
     //  «Больше всего данных — утром сотого.»
-    freeman speaks for 3.11s
+    freeman speaks for 2.35s
     freeman pose "calm"
     wait 0.9s
 
@@ -328,10 +328,10 @@ scene "s4" (duration: 1s, set: kuhnya) {
     //lip 12
     //  «Сколько лет у вас на работе всё в порядке?»
     together {
-        freeman speaks for 2.44s
+        freeman speaks for 2.90s
         do {
             freeman overlays "vzglyad"
-            wait 1.2s
+            wait 1.43s
             freeman overlays "kozyrek"
         }
     }
@@ -352,14 +352,14 @@ scene "s4" (duration: 1s, set: kuhnya) {
     //  «Спокойно было вчера. Спокойно было в прошлом году. Спокойно было
     //  всегда.» — МАНТРА: три куска с одного слова.
     together {
-        freeman speaks for 6.84s
+        freeman speaks for 5.85s
         do {
             freeman overlays "hips"
-            wait 1.63s
+            wait 1.39s
             freeman overlays "ruki_za_spinu"
-            wait 1.63s
+            wait 1.39s
             freeman overlays "ladoni_vniz"
-            wait 1.63s
+            wait 1.39s
             freeman overlays "ostyl"
         }
     }
@@ -396,12 +396,12 @@ scene "s5" (duration: 1s, set: pustota) {
     //lip 16
     //  «Что делать — решать вам. Скажу, какой вопрос вы не задавали.»
     together {
-        freeman speaks for 3.92s
+        freeman speaks for 4.68s
         do {
             freeman overlays "otmahnulsya"
-            wait 1.3s
+            wait 1.55s
             freeman overlays "think"
-            wait 1.3s
+            wait 1.55s
             freeman overlays "k_sebe"
         }
     }
@@ -423,12 +423,12 @@ scene "s5" (duration: 1s, set: pustota) {
     //  «Что делают вместо этого? Читают прогнозы. Считают риски. Спрашивают
     //  у того, кто кормит.» — ПЕРЕЧЕНЬ, ГДЕ ПОСЛЕДНИЙ ПУНКТ ВЫПАДАЕТ.
     together {
-        freeman speaks for 8.75s
+        freeman speaks for 7.21s
         do {
             freeman overlays "lokti"
-            wait 2.87s
+            wait 2.36s
             freeman overlays "vzves"
-            wait 2.87s
+            wait 2.36s
             freeman overlays "prishchur"
         }
     }
@@ -462,12 +462,12 @@ scene "s6" (duration: 1s, set: zal) {
     //lip 20
     //  «Есть курс «Чёрный лебедь». Десять лекций, и всё бесплатно.»
     together {
-        freeman speaks for 4.70s
+        freeman speaks for 5.59s
         do {
             freeman overlays "raskryl"
-            wait 1.54s
+            wait 1.83s
             freeman overlays "confident"
-            wait 1.54s
+            wait 1.83s
             freeman overlays "teplo"
         }
     }
@@ -502,10 +502,10 @@ scene "s6" (duration: 1s, set: zal) {
     //lip 23
     //  «И про то, кому верить: советчик должен рисковать своим, а не вашим.»
     together {
-        freeman speaks for 4.57s
+        freeman speaks for 5.62s
         do {
             freeman overlays "dve_storony"
-            wait 2.42s
+            wait 2.97s
             freeman overlays "vozzvanie"
         }
     }
@@ -565,12 +565,12 @@ scene "s7" (duration: 1s, set: kuhnya) {
     //  `vzves_r` — рука взвешивает: жест счёта, а не указания. Из
     //  шестидесяти семи нетронутых поз рига.
     together {
-        freeman speaks for 4.52s
+        freeman speaks for 4.05s
         do {
             freeman overlays "palec_vverh"
-            wait 1.6s
+            wait 1.43s
             freeman overlays "vzves_r"
-            wait 1.4s
+            wait 1.25s
             freeman overlays "odna_v_bok"
         }
     }
