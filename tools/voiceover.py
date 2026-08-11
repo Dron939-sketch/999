@@ -28,6 +28,8 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
+import urllib.error
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -190,13 +192,66 @@ def resolve_voice_id(api_key, explicit):
     return vid, f"первый свой голос «{title}» (Фримена в аккаунте не нашлось)"
 
 
+FISH_POPYTOK = 3          # попыток на реплику при СЕРВЕРНОЙ ошибке
+FISH_PAUZA = 2            # первая пауза, с; дальше удвоение
+FISH_BYUDZHET = 240       # сколько секунд на весь прогон можно потратить на
+                          # ожидание между повторами (см. _fish_poprobovat)
+_fish_zhdali = [0.0]      # сколько уже прождали; список — чтобы менять из функции
+
+
+def _fish_poprobovat(payload, headers, chto):
+    """Запрос к Fish с повторами на СЕРВЕРНОЙ ошибке. Возвращает mp3-байты.
+
+    ЗАЧЕМ. `HTTP 500` на одной реплике из двадцати семи уронил всю озвучку
+    «Девяносто девятого дня», и ролик уехал студии без голоса. Повтор в коде
+    был, но рассчитан на другое: он снимал заголовок модели, потому что
+    единственной ожидаемой бедой считалось «модель не принята аккаунтом». На
+    серверный сбой это не лечение — Fish ответил 500 и без заголовка тоже.
+
+    Пятисотые разделяются с четырёхсотыми по смыслу: 4xx — «так не бывает,
+    больше не проси» (там и правда нужен откат на дефолтную модель), 5xx и
+    обрыв связи — «сейчас не могу», и это лечится ожиданием.
+
+    БЮДЖЕТ, А НЕ ПРОСТО СЧЁТЧИК ПОПЫТОК. Реплик под три десятка, таймаут
+    запроса — две минуты; при полностью лежащем Fish отдельные счётчики на
+    реплику держали бы раннер часами и всё равно кончились бы ничем. Общий
+    бюджет ожидания на прогон это обрывает: блип переживаем, лежащий сервис
+    роняет прогон быстро, и красный прогон честнее висящего.
+    """
+    pauza = FISH_PAUZA
+    for popytka in range(1, FISH_POPYTOK + 1):
+        req = urllib.request.Request(
+            API_URL, data=json.dumps(payload).encode("utf-8"),
+            headers=headers, method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=120) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as e:
+            if e.code < 500:
+                raise                      # не наше дело ждать: 4xx не пройдёт
+            prichina = f"HTTP {e.code}"
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            prichina = f"{type(e).__name__}: {e}"
+        if popytka == FISH_POPYTOK or _fish_zhdali[0] + pauza > FISH_BYUDZHET:
+            raise RuntimeError(
+                f"Fish не отвечает ({chto}): {prichina}. "
+                f"Попыток {popytka}, ожидания потрачено {_fish_zhdali[0]:.0f} с "
+                f"из {FISH_BYUDZHET}.")
+        print(f"    [fish] {chto}: {prichina} — повтор {popytka}/{FISH_POPYTOK - 1} "
+              f"через {pauza} с")
+        time.sleep(pauza)
+        _fish_zhdali[0] += pauza
+        pauza *= 2
+
+
 def tts_fish_audio(text, api_key, voice_id=None, model=None):
     """Одна реплика → mp3-байты через Fish Audio (прямой путь завода).
 
     `model` — заголовок выбора движка Fish (s2 — новее и живее s1; решение
-    студии). Если модель недоступна на аккаунте, откат на дефолтную.
-    Если модель недоступна на аккаунте, запрос повторяется без заголовка,
-    чтобы озвучка не падала целиком.
+    студии). Если модель недоступна на аккаунте (4xx), запрос повторяется без
+    заголовка, чтобы озвучка не падала целиком. Серверные сбои и обрывы —
+    забота `_fish_poprobovat`, он их пережидает.
     """
     payload = {"text": text, "format": "mp3"}
     if voice_id:
@@ -207,24 +262,19 @@ def tts_fish_audio(text, api_key, voice_id=None, model=None):
     }
     if model:
         headers["model"] = model
-    req = urllib.request.Request(
-        API_URL, data=json.dumps(payload).encode("utf-8"),
-        headers=headers, method="POST",
-    )
     try:
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            return resp.read()
+        return _fish_poprobovat(payload, headers,
+                                f"модель {model}" if model else "дефолтная модель")
     except Exception as e:
         if not model:
             raise
-        print(f"    [fish] модель {model} не принята ({e}) — повтор на дефолтной")
+        # Формулировка нарочно шире прежней «модель не принята»: сюда приходят
+        # и 4xx (её правда не приняли), и исчерпанные повторы на 5xx. Лог не
+        # должен называть серверный сбой отказом от модели — на этом уже один
+        # раз потеряли полчаса, разбираясь не в ту сторону.
+        print(f"    [fish] на модели {model} не вышло ({e}) — пробую дефолтную")
         headers.pop("model", None)
-        req = urllib.request.Request(
-            API_URL, data=json.dumps(payload).encode("utf-8"),
-            headers=headers, method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            return resp.read()
+        return _fish_poprobovat(payload, headers, "дефолтная модель")
 
 
 def _mp3_duration(path):
