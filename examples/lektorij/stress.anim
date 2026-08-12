@@ -52,8 +52,8 @@
 // =============================================================================
 import character freeman from "../assets/characters/freeman_rig"
 import set kuhnya from "../assets/sets/stress-kuhnya-lampa.svg"
-import set rabota from "../assets/sets/stol-noutbuk.svg"
-import set noch from "../assets/sets/kuhnya-noch.svg"
+import set rabota from "../assets/sets/kuhnya-spisok.svg"
+import set noch from "../assets/sets/parus-kuhnya-noch.svg"
 import set pole from "../assets/sets/field-day.svg"
 import set pustota from "../assets/sets/pustota-bumaga.svg"
 import set zal from "../assets/sets/lektorij-zal.svg"
@@ -172,6 +172,8 @@ scene "s1" (duration: 1s, set: kuhnya) {
         freeman speaks for 2.80s
         do {
             freeman overlays "vdal"
+            wait 1.5s
+            freeman overlays "prishchur"
         }
     }
     wait 0.4s
@@ -179,15 +181,23 @@ scene "s1" (duration: 1s, set: kuhnya) {
 
 
 // ============ СЦЕНА 2: rabota — ДЕНЬ И ВЕЧЕР =============================
-//  Стол с ноутбуком. Лампа стоит и здесь, и здесь она тоже никому не мешает.
+//  ДРУГАЯ СТЕНА ТОЙ ЖЕ КУХНИ: холодильник с записками, мойка под окном. Место
+//  то же, что в первой сцене, — квартира одна, и день идёт в ней, а не в
+//  чужом кадре. За окном светло, и лампа на столешнице горит и здесь.
+//
+//  Стол с ноутбуком, стоявший тут раньше, снят: у той локации мера человека не
+//  снята, и по рисунку её не снять — кружка на столе выходит с полметра, то
+//  есть кадр крупный, и стоящей фигуре в нём не место. Переговорку тоже не
+//  взял: в кадре селектор, а зритель, услышавший «освободите линию», получил
+//  бы на картинке готовый ответ. Якорь обязан остаться без референта.
 scene "s2" (duration: 1s, set: rabota) {
     transition static 0.2s
 
-    place freeman at (0.38, 0.95) facing front on floor
-    freeman scales 1.06 over 0.01s
+    place freeman at (0.78, 0.95) facing front on floor
+    freeman scales 0.95 over 0.01s
 
-    let lampa2 = prop("lampa", "../assets/props/lampa.svg") at (0.80, 0.40) layer 6
-    lampa2 scales 0.22 over 0.01s
+    let lampa2 = prop("lampa", "../assets/props/lampa.svg") at (0.49, 0.425) layer 6
+    lampa2 scales 0.20 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -197,6 +207,8 @@ scene "s2" (duration: 1s, set: rabota) {
         freeman speaks for 2.80s
         do {
             freeman overlays "otschet"
+            wait 1.5s
+            freeman overlays "luna_pravaya"
         }
     }
     wait 0.4s
@@ -204,9 +216,11 @@ scene "s2" (duration: 1s, set: rabota) {
     //  ПЕРЕМЕЩЕНИЕ ПО КАДРУ: от стола к середине. Ролик о том, что человек не
     //  останавливается, — и один проход в нём обязан быть, иначе четыре сцены
     //  подряд стоят на месте и день не идёт.
+    freeman pose "turn34"
+    wait 0.1s
     freeman pose "shag_pravoj"
     wait 0.12s
-    freeman moves-to (0.52, 0.95) over 0.5s ease-in-out
+    freeman moves-to (0.62, 0.95) over 0.5s ease-in-out
     freeman pose "shag_levoj"
     wait 0.12s
     freeman pose "calm"
@@ -219,6 +233,8 @@ scene "s2" (duration: 1s, set: rabota) {
         freeman speaks for 3.10s
         do {
             freeman overlays "vdal_l"
+            wait 1.7s
+            freeman overlays "somnenie"
         }
     }
     camera medium freeman
@@ -227,15 +243,15 @@ scene "s2" (duration: 1s, set: rabota) {
 
 
 // ============ СЦЕНА 3: noch — НОЧЬ И ПЕРЕЛОМ ============================
-//  Кухня ночью. Свисток стал тише, но он там же.
+//  Та же кухня ночью. Свисток стал тише, но он там же.
 scene "s3" (duration: 1s, set: noch) {
     transition static 0.2s
 
     place freeman at (0.50, 0.95) facing front on floor
-    freeman scales 1.08 over 0.01s
+    freeman scales 0.97 over 0.01s
 
-    let lampa3 = prop("lampa", "../assets/props/lampa.svg") at (0.80, 0.42) layer 6
-    lampa3 scales 0.22 over 0.01s
+    let lampa3 = prop("lampa", "../assets/props/lampa.svg") at (0.78, 0.44) layer 6
+    lampa3 scales 0.20 over 0.01s
     camera medium freeman
     freeman pose "calm"
 
@@ -246,6 +262,8 @@ scene "s3" (duration: 1s, set: noch) {
         freeman speaks for 2.40s
         do {
             freeman overlays "ladoni_vniz"
+            wait 1.3s
+            freeman overlays "vniz"
         }
     }
     wait 0.9s
@@ -263,7 +281,9 @@ scene "s3" (duration: 1s, set: noch) {
         freeman speaks for 4.40s
         do {
             freeman overlays "razvel"
-            wait 2.4s
+            wait 1.5s
+            freeman overlays "gorech"
+            wait 1.4s
             freeman overlays "ostyl"
         }
     }
@@ -284,7 +304,7 @@ scene "s4" (duration: 1s, set: pole) {
     let lampa4 = prop("lampa", "../assets/props/lampa.svg") at (0.76, 0.60) layer 6
     lampa4 scales 0.20 over 0.01s
     camera wide
-    freeman pose "calm"
+    freeman pose "idle"
 
     //lip 10
     //  «Отпуск. Десять дней за городом.» — легко. Отпуск как последняя надежда.
@@ -292,6 +312,8 @@ scene "s4" (duration: 1s, set: pole) {
         freeman speaks for 2.90s
         do {
             freeman overlays "raspahnul"
+            wait 1.6s
+            freeman overlays "kozyrek"
         }
     }
     wait 0.4s
@@ -305,6 +327,8 @@ scene "s4" (duration: 1s, set: pole) {
         freeman speaks for 3.20s
         do {
             freeman overlays "u_viska"
+            wait 1.7s
+            freeman overlays "zatylok"
         }
     }
     camera medium freeman
@@ -331,6 +355,8 @@ scene "s5" (duration: 1s, set: kuhnya) {
         freeman speaks for 2.50s
         do {
             freeman overlays "vzglyad"
+            wait 1.3s
+            freeman overlays "ugryumo"
         }
     }
     wait 0.9s
@@ -344,6 +370,8 @@ scene "s5" (duration: 1s, set: kuhnya) {
         freeman speaks for 2.90s
         do {
             freeman overlays "rubit"
+            wait 1.5s
+            freeman overlays "otverg"
         }
     }
     camera close-up freeman
@@ -382,9 +410,9 @@ scene "s6" (duration: 1s, set: pustota) {
     together {
         freeman speaks for 3.40s
         do {
-            freeman overlays "vzglyad"
-            wait 1.8s
-            freeman overlays "smug"
+            freeman overlays "ladon_pusta"
+            wait 1.7s
+            freeman overlays "doshlo"
         }
     }
     wait 0.5s
@@ -399,6 +427,8 @@ scene "s6" (duration: 1s, set: pustota) {
         freeman speaks for 3.60s
         do {
             freeman overlays "razvel"
+            wait 1.9s
+            freeman overlays "ruki_za_spinu"
         }
     }
     wait 0.9s
@@ -434,7 +464,7 @@ scene "s6" (duration: 1s, set: pustota) {
     together {
         freeman speaks for 2.80s
         do {
-            freeman overlays "v_upor"
+            freeman overlays "hips"
         }
     }
     wait 0.9s
@@ -444,7 +474,7 @@ scene "s6" (duration: 1s, set: pustota) {
     together {
         freeman speaks for 3.30s
         do {
-            freeman overlays "ladon_pusta"
+            freeman overlays "manit"
             wait 1.7s
             freeman overlays "palec_vverh"
         }
@@ -474,7 +504,9 @@ scene "s7" (duration: 1s, set: zal) {
         freeman speaks for 6.00s
         do {
             freeman overlays "raskryl"
-            wait 3.2s
+            wait 2.6s
+            freeman overlays "teplo"
+            wait 2.0s
             freeman overlays "ladon_pusta"
         }
     }
@@ -486,6 +518,8 @@ scene "s7" (duration: 1s, set: zal) {
         freeman speaks for 3.80s
         do {
             freeman overlays "otmahnulsya_r"
+            wait 2.0s
+            freeman overlays "no"
         }
     }
     wait 0.5s
@@ -499,6 +533,8 @@ scene "s7" (duration: 1s, set: zal) {
         freeman speaks for 4.80s
         do {
             freeman overlays "otschet"
+            wait 2.4s
+            freeman overlays "dve_storony"
         }
     }
     camera medium freeman
@@ -511,6 +547,8 @@ scene "s7" (duration: 1s, set: zal) {
         freeman speaks for 4.70s
         do {
             freeman overlays "klin"
+            wait 2.4s
+            freeman overlays "chelo"
         }
     }
     wait 0.6s
@@ -525,6 +563,8 @@ scene "s7" (duration: 1s, set: zal) {
         freeman speaks for 3.20s
         do {
             freeman overlays "shrug"
+            wait 1.6s
+            freeman overlays "zatylok_l"
         }
     }
     wait 0.9s
@@ -537,7 +577,7 @@ scene "s7" (duration: 1s, set: zal) {
     together {
         freeman speaks for 3.30s
         do {
-            freeman overlays "v_upor"
+            freeman overlays "obvinil"
         }
     }
     wait 0.9s
@@ -569,7 +609,9 @@ scene "s8" (duration: 1s, set: kuhnya) {
         freeman speaks for 4.60s
         do {
             freeman overlays "palec_vverh"
-            wait 2.3s
+            wait 1.8s
+            freeman overlays "k_sebe"
+            wait 1.5s
             freeman overlays "odna_v_bok"
         }
     }
