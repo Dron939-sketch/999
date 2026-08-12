@@ -1,0 +1,627 @@
+// =============================================================================
+//  «ОСВОБОДИТЕ ЛИНИЮ» — интро к курсу «Стресс-менеджмент», номер 23.
+//  VO — stress-VO.md, маркеры 1..29.
+//
+//  ОДНА МЫСЛЬ НА РОЛИК: вредит не стресс, а отсутствие возврата к покою.
+//  Реакция, которая спасает за минуты, разрушает, если не выключается неделями.
+//  Механизм исправен — не работает выключение.
+//
+//  1. ЯКОРЬ — ЭТО ТЕЗИС КУРСА, СПРЯТАННЫЙ В ПРИКАЗ. «Освободите линию» —
+//     команда из чужой профессии: диспетчер говорит так связисту. Фраза
+//     грамматически полна, а достроить её нечем — линии у зрителя нет.
+//     Посажена в первой секунде, не объясняется двадцать семь реплик,
+//     возвращена ДОСЛОВНО в VO-28 и В ТОЙ ЖЕ ЛОКАЦИИ (STIL-FRIMENA.md §II.8–9).
+//
+//  2. РАЗРЫВ СТОИТ В ОБОИХ КАНАЛАХ. В тексте — приказ. В картинке —
+//     НАСТОЛЬНАЯ ЛАМПА, которая горит во всех локациях: на кухне при свете
+//     дня, в поле днём, в зале. Предмет исправен и не на своём месте. Её
+//     никто не трогает и НИ РАЗУ НЕ НАЗЫВАЕТ СЛОВОМ — назвать значит объяснить
+//     якорь. Проп нарисован вручную: генератор рисует локацию целиком, а тут
+//     нужна одна вещь поверх готового кадра.
+//
+//  3. ТРЕТИЙ КАНАЛ — ЗВУК. Свисток чайника идёт от 0:11 и не смолкает до
+//     перелома: то же «включилось и не выключается», но ухом. Выключить его
+//     никто не приходит.
+//
+//  4. КОЛЬЦО ЗАКРЫВАЕТСЯ ЦЕЛИКОМ. Ролик в ленте зациклен: на втором круге
+//     «освободите линию» значит уже не «какую линию?», а «линия — это я, и она
+//     занята с утра». Смысл перевёрнут, вес вырос — потому кадр и фраза
+//     обязаны сойтись в одном месте.
+//
+//  5. ПАУЗА 1.8 с ПОСЛЕ VO-28 — НЕ ВОЗДУХ, А РАБОЧЕЕ ВРЕМЯ ЗРИТЕЛЯ. И пауза
+//     1.2 с внутри опыта с плечами (VO-14 → VO-15) той же природы: срежется —
+//     и шутка окажется рассказанной, а не проделанной на зрителе.
+//
+//  6. ЦВЕТ ЖИВЁТ В ЛОКАЦИИ, А НЕ В ПРОПЕ. Гейт `tools/cvet.py` считает цветное
+//     пятно только по локациям, реквизит он не видит. Поэтому тёплая лужа
+//     света лежит в самой кухне (`stress-kuhnya-lampa`, 0.13% кадра), а лампа
+//     поверх неё — тушь без цвета, одна и та же во всех локациях.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · в длинной реплике первым слоем называется РУКА (lint_arms);
+//    · фигура НЕ ПРИСЕДАЕТ и НЕ ЛОЖИТСЯ (tools/posture.py) — в VO-8 «тело
+//      лежит» сказано словом, а в кадре персонаж стоит;
+//    · `duration:` ГОВОРЯЩЕЙ СЦЕНЫ — ПОЛ, А НЕ ЦЕЛЬ, и потому равен 1s;
+//    · голый `scales` стоит 0.5с таймлайна — всегда `over 0.01s`;
+//    · слой, трогающий рот, ВНУТРИ реплики перебивает липсинк — только до или
+//      после; мимику полной позой не ставим вовсе (tools/speech_lint.py);
+//    · МАСШТАБ ЧИТАЕТСЯ ВМЕСТЕ С `over` (реестр §XXXI).
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
+//  Завод перепишет их по факту озвучки.
+// =============================================================================
+import character freeman from "../assets/characters/freeman_rig"
+import set kuhnya from "../assets/sets/stress-kuhnya-lampa.svg"
+import set rabota from "../assets/sets/stol-noutbuk.svg"
+import set noch from "../assets/sets/kuhnya-noch.svg"
+import set pole from "../assets/sets/field-day.svg"
+import set pustota from "../assets/sets/pustota-bumaga.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    //  Снег 0.12, как в «Лебеде»: при 0.2 рябь рвёт маску на крапины и
+    //  приёмка по готовому файлу перестаёт находить фигуру.
+    snow: 0.12
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+
+// ============ СЦЕНА 1: kuhnya — ЯКОРЬ ПОСАЖЕН ============================
+//  Кухня утром: чайник на плите, стол справа. На столешнице лежит тёплая лужа
+//  света, и над ней горит лампа — при полном дневном свете. Объяснять её
+//  никто не будет.
+scene "s1" (duration: 1s, set: kuhnya) {
+    place freeman at (0.44, 0.95) facing front on floor
+    freeman scales 1.10 over 0.01s
+
+    let lampa = prop("lampa", "../assets/props/lampa.svg") at (0.816, 0.431) layer 6
+    lampa scales 0.25 over 0.01s
+
+    let nomer = prop("nomer", "../assets/props/nomer-23.svg") at (0.465, 0.545) layer 9
+    nomer scales 0.17 over 0.01s
+    nomer hides
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.19 over 0.05s ease-out
+    nomer scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 1
+    //  «Освободите линию.» — БЕЗ РАЗГОНА, как команду в чужую смену.
+    //  `stop_ladon` — раскрытая ладонь: жест «стой», а не «слушай». Он и
+    //  делает фразу приказом раньше, чем её разберут на слова.
+    together {
+        freeman speaks for 1.60s
+        do {
+            freeman overlays "stop_ladon"
+        }
+    }
+    wait 0.6s
+
+    //lip 2
+    //  «Она у вас занята с утра.» — адрес. Линия ещё ничего не значит, и это
+    //  единственная реплика ролика, где «вы» и «линия» стоят рядом.
+    together {
+        freeman speaks for 1.80s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    camera medium freeman
+    wait 0.6s
+
+    //lip 3
+    //  «И стресс тут ни при чём.» — ролик про стресс третьей репликой снимает
+    //  стресс с обвинения. Вниз, как факт.
+    together {
+        freeman speaks for 2.20s
+        do {
+            freeman overlays "otmahnulsya"
+        }
+    }
+    wait 0.6s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 4
+    //  «Он не враг. Он сигнал.» — закрывает защиту «надо меньше нервничать».
+    together {
+        freeman speaks for 3.20s
+        do {
+            freeman overlays "palec_vverh"
+            wait 1.6s
+            freeman overlays "ladon_pusta"
+        }
+    }
+    camera wide
+    wait 0.6s
+
+    //lip 5
+    //  «Утро. Чайник свистит третью минуту.» — первая из четырёх сцен. Ни
+    //  одной оценки и ни одного «вы»: событие названо мерой, вывод складывает
+    //  зритель. Здесь же вступает свисток и дальше не смолкает.
+    together {
+        freeman speaks for 2.80s
+        do {
+            freeman overlays "vdal"
+        }
+    }
+    wait 0.4s
+}
+
+
+// ============ СЦЕНА 2: rabota — ДЕНЬ И ВЕЧЕР =============================
+//  Стол с ноутбуком. Лампа стоит и здесь, и здесь она тоже никому не мешает.
+scene "s2" (duration: 1s, set: rabota) {
+    transition static 0.2s
+
+    place freeman at (0.38, 0.95) facing front on floor
+    freeman scales 1.06 over 0.01s
+
+    let lampa2 = prop("lampa", "../assets/props/lampa.svg") at (0.80, 0.40) layer 6
+    lampa2 scales 0.22 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 6
+    //  «День. Три сообщения, и все подождут.»
+    together {
+        freeman speaks for 2.80s
+        do {
+            freeman overlays "otschet"
+        }
+    }
+    wait 0.4s
+
+    //  ПЕРЕМЕЩЕНИЕ ПО КАДРУ: от стола к середине. Ролик о том, что человек не
+    //  останавливается, — и один проход в нём обязан быть, иначе четыре сцены
+    //  подряд стоят на месте и день не идёт.
+    freeman pose "shag_pravoj"
+    wait 0.12s
+    freeman moves-to (0.52, 0.95) over 0.5s ease-in-out
+    freeman pose "shag_levoj"
+    wait 0.12s
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 7
+    //  «Вечер. Сериал идёт, вы его не смотрите.» — рифма к VO-5 намеренная:
+    //  четыре сцены обязаны звучать как четыре однотипных наблюдения.
+    together {
+        freeman speaks for 3.10s
+        do {
+            freeman overlays "vdal_l"
+        }
+    }
+    camera medium freeman
+    wait 0.5s
+}
+
+
+// ============ СЦЕНА 3: noch — НОЧЬ И ПЕРЕЛОМ ============================
+//  Кухня ночью. Свисток стал тише, но он там же.
+scene "s3" (duration: 1s, set: noch) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.95) facing front on floor
+    freeman scales 1.08 over 0.01s
+
+    let lampa3 = prop("lampa", "../assets/props/lampa.svg") at (0.80, 0.42) layer 6
+    lampa3 scales 0.22 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 8
+    //  «Ночь. Тело лежит. Вы — нет.» — тело лежит СЛОВОМ, а в кадре персонаж
+    //  стоит: он не садится и не ложится нигде в серии.
+    together {
+        freeman speaks for 2.40s
+        do {
+            freeman overlays "ladoni_vniz"
+        }
+    }
+    wait 0.9s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //  ПЕРЕЛОМ. Обрыв звука в тишину, и камера идёт на угол: событий не
+    //  прибавилось, назвали ОТСУТСТВИЕ.
+    camera angle low freeman
+    //lip 9
+    //  «Ни одной угрозы за весь день. И ни одной остановки.»
+    //  Ровно, без нажима: нажим превращает перелом в упрёк.
+    together {
+        freeman speaks for 4.40s
+        do {
+            freeman overlays "razvel"
+            wait 2.4s
+            freeman overlays "ostyl"
+        }
+    }
+    camera reset
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 4: pole — ОТПУСК ====================================
+//  Поле днём. Лампа стоит в траве и горит. Здесь ей взяться совсем неоткуда,
+//  и это первый кадр, где разрыв бьёт в глаза.
+scene "s4" (duration: 1s, set: pole) {
+    transition static 0.2s
+
+    place freeman at (0.46, 0.95) facing front on floor
+    freeman scales 0.92 over 0.01s
+
+    let lampa4 = prop("lampa", "../assets/props/lampa.svg") at (0.76, 0.60) layer 6
+    lampa4 scales 0.20 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 10
+    //  «Отпуск. Десять дней за городом.» — легко. Отпуск как последняя надежда.
+    together {
+        freeman speaks for 2.90s
+        do {
+            freeman overlays "raspahnul"
+        }
+    }
+    wait 0.4s
+
+    freeman pose "calm"
+    wait 0.12s
+
+    //lip 11
+    //  «На третий вы уже открывали рабочий чат.» — без укора.
+    together {
+        freeman speaks for 3.20s
+        do {
+            freeman overlays "u_viska"
+        }
+    }
+    camera medium freeman
+    wait 0.5s
+}
+
+
+// ============ СЦЕНА 5: kuhnya — ВЕРНУЛИСЬ ===============================
+//  Та же кухня, та же лужа света. Дом звучит тем же звуком, что и до отъезда.
+scene "s5" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.44, 0.95) facing front on floor
+    freeman scales 1.10 over 0.01s
+
+    let lampa5 = prop("lampa", "../assets/props/lampa.svg") at (0.816, 0.431) layer 6
+    lampa5 scales 0.25 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 12
+    //  «Вернулись. Тише не стало.»
+    together {
+        freeman speaks for 2.50s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.9s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 13
+    //  «Спринт кончается. Ваш — нет.» — закон ролика, тихо. Здесь он и держится.
+    together {
+        freeman speaks for 2.90s
+        do {
+            freeman overlays "rubit"
+        }
+    }
+    camera close-up freeman
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 6: pustota — ОПЫТ НА ЗРИТЕЛЕ ========================
+//  Белый кадр: опыт ставится вне помещения. Ни тона, ни комнаты — чтобы между
+//  зрителем и его собственными плечами не стояло ничего.
+scene "s6" (duration: 1s, set: pustota) {
+    transition static 0.3s
+
+    place freeman at (0.50, 0.95) facing front on floor
+    freeman scales 1.04 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 14
+    //  «Расслабьте плечи.» — опыт занимает секунду и реквизита не требует.
+    //  Легко и буднично: объявишь шутку голосом — она умрёт до добивки.
+    together {
+        freeman speaks for 2.00s
+        do {
+            freeman overlays "ladoni_vniz"
+        }
+    }
+
+    //  ПАУЗА 1.2 с. Зритель проверяет плечи. Меньше — не успеет, и шутка
+    //  окажется рассказанной, а не проделанной на нём.
+    wait 1.2s
+
+    //lip 15
+    //  «Получилось? Значит, они были подняты.» — выиграть опыт нельзя:
+    //  не вышло — плечи держатся, вышло — держались до этой секунды.
+    together {
+        freeman speaks for 3.40s
+        do {
+            freeman overlays "vzglyad"
+            wait 1.8s
+            freeman overlays "smug"
+        }
+    }
+    wait 0.5s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 16
+    //  «Никто не просил их поднимать. И опустить не попросит.» — предел
+    //  способа: команды снаружи не будет.
+    together {
+        freeman speaks for 3.60s
+        do {
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.9s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 17
+    //  «Нагрузку считать вы научились.»
+    together {
+        freeman speaks for 2.70s
+        do {
+            freeman overlays "vzves_r"
+        }
+    }
+    wait 0.5s
+
+    //lip 18
+    //  «Попробуйте посчитать возврат.» — другая мерка вместо другого совета.
+    together {
+        freeman speaks for 2.50s
+        do {
+            freeman overlays "vzves"
+        }
+    }
+    wait 0.5s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 19
+    //  «За сколько минут вы спускаетесь?» — вопрос в лоб, без разбега.
+    together {
+        freeman speaks for 2.80s
+        do {
+            freeman overlays "v_upor"
+        }
+    }
+    wait 0.9s
+
+    //lip 20
+    //  «Не знаете. А это и есть ваша мерка.» — два удара, и это не упрёк.
+    together {
+        freeman speaks for 3.30s
+        do {
+            freeman overlays "ladon_pusta"
+            wait 1.7s
+            freeman overlays "palec_vverh"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 7: zal — ПРЕЗЕНТАЦИЯ ================================
+//  Зал Лектория. Лампа стоит на краю сцены и горит и здесь.
+scene "s7" (duration: 1s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.48, 0.95) facing front on floor
+    freeman scales 1.00 over 0.01s
+
+    let lampa6 = prop("lampa", "../assets/props/lampa.svg") at (0.19, 0.52) layer 6
+    lampa6 scales 0.20 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 21
+    //  «Есть курс «Стресс-менеджмент». Десять лекций в Лектории Мейстера, и
+    //  всё бесплатно.» — цена названа отдельной строкой, без подмигивания.
+    together {
+        freeman speaks for 6.00s
+        do {
+            freeman overlays "raskryl"
+            wait 3.2s
+            freeman overlays "ladon_pusta"
+        }
+    }
+    wait 0.45s
+
+    //lip 22
+    //  «Жизни без стресса он не обещает — такой не бывает.»
+    together {
+        freeman speaks for 3.80s
+        do {
+            freeman overlays "otmahnulsya_r"
+        }
+    }
+    wait 0.5s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 23
+    //  «Он про возврат: сон, движение и отдых, который правда отдых.»
+    together {
+        freeman speaks for 4.80s
+        do {
+            freeman overlays "otschet"
+        }
+    }
+    camera medium freeman
+    wait 0.5s
+
+    //lip 24
+    //  «И про то, где кончается усталость и начинается выгорание.» — граница
+    //  обратимого и необратимого, без смягчения и без нажима.
+    together {
+        freeman speaks for 4.70s
+        do {
+            freeman overlays "klin"
+        }
+    }
+    wait 0.6s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 25
+    //  «У меня плеч нет. Мне легко советовать.» — ролик записывает СЕБЯ в тот
+    //  же ряд. Без подмигивания.
+    together {
+        freeman speaks for 3.20s
+        do {
+            freeman overlays "shrug"
+        }
+    }
+    wait 0.9s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 26
+    //  «Кому это переслать, вы поняли раньше меня.» — в упор.
+    together {
+        freeman speaks for 3.30s
+        do {
+            freeman overlays "v_upor"
+        }
+    }
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 8: kuhnya — ЖАЛО, ВОЗВРАТ ЯКОРЯ, КОЛЬЦО =============
+//  Кадр VO-1 целиком. Кольцо смыкается и в картинке, и в тексте: то же место,
+//  та же лампа, те же два слова.
+scene "s8" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.44, 0.95) facing front on floor
+    freeman scales 1.10 over 0.01s
+
+    let lampa7 = prop("lampa", "../assets/props/lampa.svg") at (0.816, 0.431) layer 6
+    lampa7 scales 0.25 over 0.01s
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-23.svg") at (0.465, 0.545) layer 9
+    nomer2 scales 0.17 over 0.01s
+    nomer2 hides
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 27
+    //  «Сегодня вечером — двадцать минут, когда вас нельзя позвать.» —
+    //  измеримое действие на сегодня, а не намерение.
+    together {
+        freeman speaks for 4.60s
+        do {
+            freeman overlays "palec_vverh"
+            wait 2.3s
+            freeman overlays "odna_v_bok"
+        }
+    }
+    wait 0.9s
+
+    //  КРУПНО НА ЛАМПУ. Предмет, молчавший весь ролик и ни разу не названный,
+    //  впервые занимает кадр — ровно там, где зритель ищет свою линию.
+    camera pan-to (0.816, 0.431) over 0.8s ease-in-out
+    wait 0.3s
+
+    //lip 28
+    //  «Освободите линию.» — дословно, тем же тоном, что в начале.
+    together {
+        freeman speaks for 1.60s
+        do {
+            freeman overlays "stop_ladon"
+        }
+    }
+    camera zoom-to lampa7 over 0.6s ease-out
+
+    //  ПАУЗА 1.8 с. Здесь зритель складывает вывод сам: линия — это он.
+    //  Рассказчик молчит, потому что назвать связку значит её отобрать.
+    //  Резать паузу нельзя ни при каком монтаже.
+    wait 1.8s
+
+    //lip 29
+    //  «Она одна.» — рассказчик приходит вторым и подтверждает мысль ЗРИТЕЛЯ
+    //  в два слова.
+    together {
+        freeman speaks for 1.40s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+
+    //  КОЛЬЦО ЗАКРЫВАЕТСЯ ПОВТОРОМ. Последний кадр тождествен первому — то же
+    //  место, та же лампа, та же поза, метка курса на груди, — и ролик в ленте
+    //  уходит на второй круг. Первая реплика возвращается сама, но уже с
+    //  другим весом: «освободите линию» значит теперь «линия — это я».
+    //  Подписи здесь нет: она объявляла бы конец там, где конца по замыслу
+    //  быть не должно.
+    camera wide
+    wait 0.6s
+
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.19 over 0.05s ease-out
+    nomer2 scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    freeman pose "calm"
+    wait 1.1s
+}
