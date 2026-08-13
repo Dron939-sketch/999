@@ -51,7 +51,7 @@
 //  Завод перепишет их по факту озвучки.
 // =============================================================================
 //
-//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 4d365168
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 4df328e4
 import character freeman from "../assets/characters/freeman_rig"
 import set kuhnya from "../assets/sets/stress-kuhnya-lampa.svg"
 import set rabota from "../assets/sets/kuhnya-spisok.svg"
@@ -120,7 +120,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //  `stop_ladon` — раскрытая ладонь: жест «стой», а не «слушай». Он и
     //  делает фразу приказом раньше, чем её разберут на слова.
     together {
-        freeman speaks for 1.60s
+        freeman speaks for 2.32s
         do {
             freeman overlays "stop_ladon"
         }
@@ -143,7 +143,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //  «И стресс тут ни при чём.» — ролик про стресс третьей репликой снимает
     //  стресс с обвинения. Вниз, как факт.
     together {
-        freeman speaks for 2.20s
+        freeman speaks for 1.65s
         do {
             freeman overlays "otmahnulsya"
         }
@@ -156,10 +156,10 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 4
     //  «Он не враг. Он сигнал: тело готовится — это его дело.» — закрывает защиту «надо меньше нервничать».
     together {
-        freeman speaks for 3.20s
+        freeman speaks for 5.67s
         do {
             freeman overlays "palec_vverh"
-            wait 1.6s
+            wait 2.83s
             freeman overlays "ladon_pusta"
         }
     }
@@ -206,10 +206,10 @@ scene "s2" (duration: 1s, set: rabota) {
     //lip 6
     //  «День. Три сообщения, и все подождут.»
     together {
-        freeman speaks for 2.80s
+        freeman speaks for 3.42s
         do {
             freeman overlays "otschet"
-            wait 1.5s
+            wait 1.83s
             freeman overlays "luna_pravaya"
         }
     }
@@ -264,10 +264,10 @@ scene "s3" (duration: 1s, set: noch) {
     //  «Ночь. Тело лежит. Вы — нет.» — тело лежит СЛОВОМ, а в кадре персонаж
     //  стоит: он не садится и не ложится нигде в серии.
     together {
-        freeman speaks for 2.40s
+        freeman speaks for 3.32s
         do {
             freeman overlays "ladoni_vniz"
-            wait 1.3s
+            wait 1.8s
             freeman overlays "vniz"
         }
     }
@@ -300,11 +300,22 @@ scene "s3" (duration: 1s, set: noch) {
 // ============ СЦЕНА 4: pole — ОТПУСК ====================================
 //  Поле днём. Лампа стоит в траве и горит. Здесь ей взяться совсем неоткуда,
 //  и это первый кадр, где разрыв бьёт в глаза.
+//
+//  ФИГУРА КРУПНЕЕ, ЧЕМ ПРОСИТ МЕРА ЛОКАЦИИ, И ЭТО НАРОЧНО. Мера поля 0.37
+//  кадра, гейт масштаба держит её с допуском ±15%; гейт готового файла с
+//  другой стороны требует не мельче 35%, иначе фигура — точка посреди плана.
+//  Окно между ними узкое, и первый сданный файл в него не попал: маску не
+//  нашли две секунды подряд. Ставлю у верхнего края допуска, а на второй
+//  реплике камера идёт ближе — поле уже показано, дальше в нём нужен человек.
+//
+//  Переход укорочен с 0.2 до 0.12 с: рябь склейки съедала целую секунду, и
+//  вместе с мелкой фигурой это давало гейту две секунды подряд без маски —
+//  ровно то, что он и обязан ловить.
 scene "s4" (duration: 1s, set: pole) {
-    transition static 0.2s
+    transition static 0.12s
 
     place freeman at (0.46, 0.95) facing front on floor
-    freeman scales 0.64 over 0.01s
+    freeman scales 0.70 over 0.01s
 
     let lampa4 = prop("lampa", "../assets/props/lampa.svg") at (0.76, 0.68) layer 6
     lampa4 scales 0.55 over 0.01s
@@ -321,6 +332,7 @@ scene "s4" (duration: 1s, set: pole) {
             freeman overlays "kozyrek"
         }
     }
+    camera medium freeman
     wait 0.4s
 
     freeman pose "calm"
@@ -336,7 +348,6 @@ scene "s4" (duration: 1s, set: pole) {
             freeman overlays "zatylok"
         }
     }
-    camera medium freeman
     wait 0.5s
 }
 
@@ -357,10 +368,10 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 12
     //  «Тише не стало на второй день. Тише не стало на десятый. Тише не стало и дома.»
     together {
-        freeman speaks for 2.50s
+        freeman speaks for 7.08s
         do {
             freeman overlays "vzglyad"
-            wait 1.3s
+            wait 3.68s
             freeman overlays "ugryumo"
         }
     }
@@ -400,7 +411,7 @@ scene "s6" (duration: 1s, set: pustota) {
     //  вслух. Без него монолог, который знает ответ и его не даёт, читается
     //  как кокетство; с ним — как условие игры.
     together {
-        freeman speaks for 3.10s
+        freeman speaks for 2.01s
         do {
             freeman overlays "razvel"
         }
@@ -411,10 +422,10 @@ scene "s6" (duration: 1s, set: pustota) {
     //  «Мерьте не нагрузку, а возврат — он и решает, во что всё это выльется.»
     //  ВЗЛЁТ: другая мерка вместо другого совета.
     together {
-        freeman speaks for 3.00s
+        freeman speaks for 4.88s
         do {
             freeman overlays "vzves_r"
-            wait 1.7s
+            wait 2.77s
             freeman overlays "vzves"
         }
     }
@@ -426,7 +437,7 @@ scene "s6" (duration: 1s, set: pustota) {
     //lip 16
     //  «За сколько минут вы спускаетесь?» — вопрос в лоб, без разбега.
     together {
-        freeman speaks for 2.80s
+        freeman speaks for 2.09s
         do {
             freeman overlays "hips"
         }
@@ -436,10 +447,10 @@ scene "s6" (duration: 1s, set: pustota) {
     //lip 17
     //  «Не знаете. А это и есть ваша мерка.» — два удара, и это не упрёк.
     together {
-        freeman speaks for 3.30s
+        freeman speaks for 2.85s
         do {
             freeman overlays "manit"
-            wait 1.7s
+            wait 1.47s
             freeman overlays "palec_vverh"
         }
     }
@@ -455,7 +466,7 @@ scene "s6" (duration: 1s, set: pustota) {
     //  «Расслабьте плечи.» — опыт занимает секунду и реквизита не требует.
     //  Легко и буднично: объявишь шутку голосом — она умрёт до добивки.
     together {
-        freeman speaks for 2.00s
+        freeman speaks for 1.36s
         do {
             freeman overlays "ladoni_vniz"
         }
@@ -469,10 +480,10 @@ scene "s6" (duration: 1s, set: pustota) {
     //  «Получилось? Значит, они были подняты.» — выиграть опыт нельзя:
     //  не вышло — плечи держатся, вышло — держались до этой секунды.
     together {
-        freeman speaks for 3.40s
+        freeman speaks for 3.92s
         do {
             freeman overlays "ladon_pusta"
-            wait 1.7s
+            wait 1.96s
             freeman overlays "doshlo"
         }
     }
@@ -485,7 +496,7 @@ scene "s6" (duration: 1s, set: pustota) {
     //  «Опустились. Ровно до следующего сообщения.» — ПРЕДЕЛ способа. Без него шутка
     //  смеётся над человеком; с ним — называет цену приёма.
     together {
-        freeman speaks for 3.00s
+        freeman speaks for 4.00s
         do {
             freeman overlays "ruki_za_spinu"
         }
@@ -541,10 +552,10 @@ scene "s7" (duration: 1s, set: zal) {
     //lip 23
     //  «Он про возврат: сон, движение и отдых, который правда отдых.»
     together {
-        freeman speaks for 4.80s
+        freeman speaks for 4.23s
         do {
             freeman overlays "otschet"
-            wait 2.4s
+            wait 2.12s
             freeman overlays "dve_storony"
         }
     }
@@ -571,10 +582,10 @@ scene "s7" (duration: 1s, set: zal) {
     //  «У меня и плеч-то нет. Нарисованному легко советовать.» — ролик записывает СЕБЯ в тот
     //  же ряд. Без подмигивания.
     together {
-        freeman speaks for 3.20s
+        freeman speaks for 5.25s
         do {
             freeman overlays "shrug"
-            wait 1.6s
+            wait 2.63s
             freeman overlays "zatylok_l"
         }
     }
