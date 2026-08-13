@@ -50,10 +50,12 @@
 //  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
 //  Завод перепишет их по факту озвучки.
 // =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 4d365168
 import character freeman from "../assets/characters/freeman_rig"
 import set kuhnya from "../assets/sets/stress-kuhnya-lampa.svg"
 import set rabota from "../assets/sets/kuhnya-spisok.svg"
-import set noch from "../assets/sets/parus-kuhnya-noch.svg"
+import set noch from "../assets/sets/kuhnya-noch.svg"
 import set pole from "../assets/sets/field-day.svg"
 import set pustota from "../assets/sets/pustota-bumaga.svg"
 import set zal from "../assets/sets/lektorij-zal.svg"
@@ -92,8 +94,8 @@ scene "s1" (duration: 1s, set: kuhnya) {
     place freeman at (0.44, 0.95) facing front on floor
     freeman scales 1.10 over 0.01s
 
-    let lampa = prop("lampa", "../assets/props/lampa.svg") at (0.816, 0.431) layer 6
-    lampa scales 0.25 over 0.01s
+    let lampa = prop("lampa", "../assets/props/lampa.svg") at (0.816, 0.415) layer 6
+    lampa scales 1.00 over 0.01s
 
     let nomer = prop("nomer", "../assets/props/nomer-23.svg") at (0.465, 0.545) layer 9
     nomer scales 0.17 over 0.01s
@@ -114,7 +116,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     wait 0.1s
 
     //lip 1
-    //  «Освободите линию.» — БЕЗ РАЗГОНА, как команду в чужую смену.
+    //  «Освободите линию. Вашу.» — БЕЗ РАЗГОНА, как команду в чужую смену.
     //  `stop_ladon` — раскрытая ладонь: жест «стой», а не «слушай». Он и
     //  делает фразу приказом раньше, чем её разберут на слова.
     together {
@@ -126,7 +128,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     wait 0.6s
 
     //lip 2
-    //  «Она у вас занята с утра.» — адрес. Линия ещё ничего не значит, и это
+    //  «Она занята с утра.» — адрес. Линия ещё ничего не значит, и это
     //  единственная реплика ролика, где «вы» и «линия» стоят рядом.
     together {
         freeman speaks for 1.80s
@@ -152,7 +154,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     wait 0.15s
 
     //lip 4
-    //  «Он не враг. Он сигнал.» — закрывает защиту «надо меньше нервничать».
+    //  «Он не враг. Он сигнал: тело готовится — это его дело.» — закрывает защиту «надо меньше нервничать».
     together {
         freeman speaks for 3.20s
         do {
@@ -196,8 +198,8 @@ scene "s2" (duration: 1s, set: rabota) {
     place freeman at (0.78, 0.95) facing front on floor
     freeman scales 0.95 over 0.01s
 
-    let lampa2 = prop("lampa", "../assets/props/lampa.svg") at (0.49, 0.425) layer 6
-    lampa2 scales 0.20 over 0.01s
+    let lampa2 = prop("lampa", "../assets/props/lampa.svg") at (0.45, 0.420) layer 6
+    lampa2 scales 0.85 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -216,7 +218,7 @@ scene "s2" (duration: 1s, set: rabota) {
     //  ПЕРЕМЕЩЕНИЕ ПО КАДРУ: от стола к середине. Ролик о том, что человек не
     //  останавливается, — и один проход в нём обязан быть, иначе четыре сцены
     //  подряд стоят на месте и день не идёт.
-    freeman pose "turn34"
+    freeman overlays "turn34"
     wait 0.1s
     freeman pose "shag_pravoj"
     wait 0.12s
@@ -243,15 +245,18 @@ scene "s2" (duration: 1s, set: rabota) {
 
 
 // ============ СЦЕНА 3: noch — НОЧЬ И ПЕРЕЛОМ ============================
-//  Та же кухня ночью. Свисток стал тише, но он там же.
+//  Кухня ночью: тёмное окно, свет из-под абажура на столе. Взята она, а не
+//  `parus-kuhnya-noch`: та светлая и читается как цех, а реплика говорит
+//  «Ночь» — картинка не имеет права спорить со словом. Мера человека для этой
+//  локации снята сегодня же, по спинке стула.
 scene "s3" (duration: 1s, set: noch) {
     transition static 0.2s
 
-    place freeman at (0.50, 0.95) facing front on floor
-    freeman scales 0.97 over 0.01s
+    place freeman at (0.42, 0.98) facing front on floor
+    freeman scales 1.18 over 0.01s
 
-    let lampa3 = prop("lampa", "../assets/props/lampa.svg") at (0.78, 0.44) layer 6
-    lampa3 scales 0.20 over 0.01s
+    let lampa3 = prop("lampa", "../assets/props/lampa.svg") at (0.26, 0.576) layer 6
+    lampa3 scales 1.15 over 0.01s
     camera medium freeman
     freeman pose "calm"
 
@@ -299,10 +304,10 @@ scene "s4" (duration: 1s, set: pole) {
     transition static 0.2s
 
     place freeman at (0.46, 0.95) facing front on floor
-    freeman scales 0.92 over 0.01s
+    freeman scales 0.64 over 0.01s
 
-    let lampa4 = prop("lampa", "../assets/props/lampa.svg") at (0.76, 0.60) layer 6
-    lampa4 scales 0.20 over 0.01s
+    let lampa4 = prop("lampa", "../assets/props/lampa.svg") at (0.76, 0.68) layer 6
+    lampa4 scales 0.55 over 0.01s
     camera wide
     freeman pose "idle"
 
@@ -344,13 +349,13 @@ scene "s5" (duration: 1s, set: kuhnya) {
     place freeman at (0.44, 0.95) facing front on floor
     freeman scales 1.10 over 0.01s
 
-    let lampa5 = prop("lampa", "../assets/props/lampa.svg") at (0.816, 0.431) layer 6
-    lampa5 scales 0.25 over 0.01s
+    let lampa5 = prop("lampa", "../assets/props/lampa.svg") at (0.816, 0.415) layer 6
+    lampa5 scales 1.00 over 0.01s
     camera wide
     freeman pose "calm"
 
     //lip 12
-    //  «Вернулись. Тише не стало.»
+    //  «Тише не стало на второй день. Тише не стало на десятый. Тише не стало и дома.»
     together {
         freeman speaks for 2.50s
         do {
@@ -379,7 +384,7 @@ scene "s5" (duration: 1s, set: kuhnya) {
 }
 
 
-// ============ СЦЕНА 6: pustota — ОПЫТ НА ЗРИТЕЛЕ ========================
+// ============ СЦЕНА 6: pustota — ОТКАЗ, МЕРКА И ОПЫТ НА ЗРИТЕЛЕ =========
 //  Белый кадр: опыт ставится вне помещения. Ни тона, ни комнаты — чтобы между
 //  зрителем и его собственными плечами не стояло ничего.
 scene "s6" (duration: 1s, set: pustota) {
@@ -391,6 +396,62 @@ scene "s6" (duration: 1s, set: pustota) {
     freeman pose "calm"
 
     //lip 14
+    //  «Считать за вас никто не станет.» — ОТКАЗ ДАВАТЬ ИНСТРУКЦИЮ, сказанный
+    //  вслух. Без него монолог, который знает ответ и его не даёт, читается
+    //  как кокетство; с ним — как условие игры.
+    together {
+        freeman speaks for 3.10s
+        do {
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.5s
+
+    //lip 15
+    //  «Мерьте не нагрузку, а возврат — он и решает, во что всё это выльется.»
+    //  ВЗЛЁТ: другая мерка вместо другого совета.
+    together {
+        freeman speaks for 3.00s
+        do {
+            freeman overlays "vzves_r"
+            wait 1.7s
+            freeman overlays "vzves"
+        }
+    }
+    wait 0.5s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 16
+    //  «За сколько минут вы спускаетесь?» — вопрос в лоб, без разбега.
+    together {
+        freeman speaks for 2.80s
+        do {
+            freeman overlays "hips"
+        }
+    }
+    wait 0.9s
+
+    //lip 17
+    //  «Не знаете. А это и есть ваша мерка.» — два удара, и это не упрёк.
+    together {
+        freeman speaks for 3.30s
+        do {
+            freeman overlays "manit"
+            wait 1.7s
+            freeman overlays "palec_vverh"
+        }
+    }
+    wait 0.9s
+
+    freeman pose "calm"
+    wait 0.15s
+
+    //  ШУТКА СТОИТ ПОСЛЕ РЕШЕНИЯ И ДО ЖАЛА. Опыт проделывается тогда, когда
+    //  зритель уже знает, ЧТО мерить, — иначе он смеётся над тем, чего ещё не
+    //  услышал (SCRIPT-FREEMAN, порядок битов).
+    //lip 18
     //  «Расслабьте плечи.» — опыт занимает секунду и реквизита не требует.
     //  Легко и буднично: объявишь шутку голосом — она умрёт до добивки.
     together {
@@ -404,7 +465,7 @@ scene "s6" (duration: 1s, set: pustota) {
     //  окажется рассказанной, а не проделанной на нём.
     wait 1.2s
 
-    //lip 15
+    //lip 19
     //  «Получилось? Значит, они были подняты.» — выиграть опыт нельзя:
     //  не вышло — плечи держатся, вышло — держались до этой секунды.
     together {
@@ -420,63 +481,13 @@ scene "s6" (duration: 1s, set: pustota) {
     freeman pose "calm"
     wait 0.15s
 
-    //lip 16
-    //  «Никто не просил их поднимать. И опустить не попросит.» — предел
-    //  способа: команды снаружи не будет.
-    together {
-        freeman speaks for 3.60s
-        do {
-            freeman overlays "razvel"
-            wait 1.9s
-            freeman overlays "ruki_za_spinu"
-        }
-    }
-    wait 0.9s
-
-    freeman pose "calm"
-    wait 0.15s
-
-    //lip 17
-    //  «Нагрузку считать вы научились.»
-    together {
-        freeman speaks for 2.70s
-        do {
-            freeman overlays "vzves_r"
-        }
-    }
-    wait 0.5s
-
-    //lip 18
-    //  «Попробуйте посчитать возврат.» — другая мерка вместо другого совета.
-    together {
-        freeman speaks for 2.50s
-        do {
-            freeman overlays "vzves"
-        }
-    }
-    wait 0.5s
-
-    freeman pose "calm"
-    wait 0.15s
-
-    //lip 19
-    //  «За сколько минут вы спускаетесь?» — вопрос в лоб, без разбега.
-    together {
-        freeman speaks for 2.80s
-        do {
-            freeman overlays "hips"
-        }
-    }
-    wait 0.9s
-
     //lip 20
-    //  «Не знаете. А это и есть ваша мерка.» — два удара, и это не упрёк.
+    //  «Опустились. Ровно до следующего письма.» — ПРЕДЕЛ способа. Без него шутка
+    //  смеётся над человеком; с ним — называет цену приёма.
     together {
-        freeman speaks for 3.30s
+        freeman speaks for 3.00s
         do {
-            freeman overlays "manit"
-            wait 1.7s
-            freeman overlays "palec_vverh"
+            freeman overlays "ruki_za_spinu"
         }
     }
     camera wide
@@ -490,10 +501,10 @@ scene "s7" (duration: 1s, set: zal) {
     transition static 0.2s
 
     place freeman at (0.48, 0.95) facing front on floor
-    freeman scales 1.00 over 0.01s
+    freeman scales 0.86 over 0.01s
 
-    let lampa6 = prop("lampa", "../assets/props/lampa.svg") at (0.19, 0.52) layer 6
-    lampa6 scales 0.20 over 0.01s
+    let lampa6 = prop("lampa", "../assets/props/lampa.svg") at (0.17, 0.70) layer 6
+    lampa6 scales 0.76 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -557,7 +568,7 @@ scene "s7" (duration: 1s, set: zal) {
     wait 0.15s
 
     //lip 25
-    //  «У меня плеч нет. Мне легко советовать.» — ролик записывает СЕБЯ в тот
+    //  «У меня и плеч-то нет. Нарисованному легко советовать.» — ролик записывает СЕБЯ в тот
     //  же ряд. Без подмигивания.
     together {
         freeman speaks for 3.20s
@@ -593,8 +604,8 @@ scene "s8" (duration: 1s, set: kuhnya) {
     place freeman at (0.44, 0.95) facing front on floor
     freeman scales 1.10 over 0.01s
 
-    let lampa7 = prop("lampa", "../assets/props/lampa.svg") at (0.816, 0.431) layer 6
-    lampa7 scales 0.25 over 0.01s
+    let lampa7 = prop("lampa", "../assets/props/lampa.svg") at (0.816, 0.415) layer 6
+    lampa7 scales 1.00 over 0.01s
 
     let nomer2 = prop("nomer", "../assets/props/nomer-23.svg") at (0.465, 0.545) layer 9
     nomer2 scales 0.17 over 0.01s
@@ -638,7 +649,7 @@ scene "s8" (duration: 1s, set: kuhnya) {
     wait 1.8s
 
     //lip 29
-    //  «Она одна.» — рассказчик приходит вторым и подтверждает мысль ЗРИТЕЛЯ
+    //  «Она одна…» — рассказчик приходит вторым и подтверждает мысль ЗРИТЕЛЯ
     //  в два слова.
     together {
         freeman speaks for 1.40s
