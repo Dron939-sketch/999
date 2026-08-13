@@ -232,10 +232,10 @@ scene "s2" (duration: 1s, set: rabota) {
     //  «Вечер. Сериал идёт, вы его не смотрите.» — рифма к VO-5 намеренная:
     //  четыре сцены обязаны звучать как четыре однотипных наблюдения.
     together {
-        freeman speaks for 3.10s
+        freeman speaks for 3.58s
         do {
             freeman overlays "vdal_l"
-            wait 1.7s
+            wait 1.96s
             freeman overlays "somnenie"
         }
     }
@@ -341,10 +341,10 @@ scene "s4" (duration: 1s, set: pole) {
     //lip 11
     //  «На третий вы уже открывали рабочий чат.» — без укора.
     together {
-        freeman speaks for 3.20s
+        freeman speaks for 2.72s
         do {
             freeman overlays "u_viska"
-            wait 1.7s
+            wait 1.44s
             freeman overlays "zatylok"
         }
     }
@@ -368,10 +368,10 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 12
     //  «Тише не стало на второй день. Тише не стало на десятый. Тише не стало и дома.»
     together {
-        freeman speaks for 7.76s
+        freeman speaks for 8.46s
         do {
             freeman overlays "vzglyad"
-            wait 4.03s
+            wait 4.4s
             freeman overlays "ugryumo"
         }
     }
@@ -447,10 +447,10 @@ scene "s6" (duration: 1s, set: pustota) {
     //lip 17
     //  «Не знаете. А это и есть ваша мерка.» — два удара, и это не упрёк.
     together {
-        freeman speaks for 2.85s
+        freeman speaks for 3.63s
         do {
             freeman overlays "manit"
-            wait 1.47s
+            wait 1.87s
             freeman overlays "palec_vverh"
         }
     }
@@ -496,7 +496,7 @@ scene "s6" (duration: 1s, set: pustota) {
     //  «Опустились. Ровно до следующего сообщения.» — ПРЕДЕЛ способа. Без него шутка
     //  смеётся над человеком; с ним — называет цену приёма.
     together {
-        freeman speaks for 4.00s
+        freeman speaks for 4.60s
         do {
             freeman overlays "ruki_za_spinu"
         }
@@ -523,12 +523,12 @@ scene "s7" (duration: 1s, set: zal) {
     //  «Есть курс «Стресс-менеджмент». Десять лекций в Лектории Мейстера, и
     //  всё бесплатно.» — цена названа отдельной строкой, без подмигивания.
     together {
-        freeman speaks for 6.00s
+        freeman speaks for 4.23s
         do {
             freeman overlays "raskryl"
-            wait 2.6s
+            wait 1.83s
             freeman overlays "teplo"
-            wait 2.0s
+            wait 1.41s
             freeman overlays "ladon_pusta"
         }
     }
@@ -582,10 +582,10 @@ scene "s7" (duration: 1s, set: zal) {
     //  «У меня и плеч-то нет. Нарисованному легко советовать.» — ролик записывает СЕБЯ в тот
     //  же ряд. Без подмигивания.
     together {
-        freeman speaks for 5.25s
+        freeman speaks for 4.73s
         do {
             freeman overlays "shrug"
-            wait 2.63s
+            wait 2.37s
             freeman overlays "zatylok_l"
         }
     }
