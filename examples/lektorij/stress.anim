@@ -171,10 +171,10 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //  одной оценки и ни одного «вы»: событие названо мерой, вывод складывает
     //  зритель. Здесь же вступает свисток и дальше не смолкает.
     together {
-        freeman speaks for 2.80s
+        freeman speaks for 3.42s
         do {
             freeman overlays "vdal"
-            wait 1.5s
+            wait 1.83s
             freeman overlays "prishchur"
         }
     }
@@ -232,10 +232,10 @@ scene "s2" (duration: 1s, set: rabota) {
     //  «Вечер. Сериал идёт, вы его не смотрите.» — рифма к VO-5 намеренная:
     //  четыре сцены обязаны звучать как четыре однотипных наблюдения.
     together {
-        freeman speaks for 3.58s
+        freeman speaks for 3.00s
         do {
             freeman overlays "vdal_l"
-            wait 1.96s
+            wait 1.64s
             freeman overlays "somnenie"
         }
     }
@@ -264,10 +264,10 @@ scene "s3" (duration: 1s, set: noch) {
     //  «Ночь. Тело лежит. Вы — нет.» — тело лежит СЛОВОМ, а в кадре персонаж
     //  стоит: он не садится и не ложится нигде в серии.
     together {
-        freeman speaks for 3.81s
+        freeman speaks for 3.29s
         do {
             freeman overlays "ladoni_vniz"
-            wait 2.07s
+            wait 1.79s
             freeman overlays "vniz"
         }
     }
@@ -480,10 +480,10 @@ scene "s6" (duration: 1s, set: pustota) {
     //  «Получилось? Значит, они были подняты.» — выиграть опыт нельзя:
     //  не вышло — плечи держатся, вышло — держались до этой секунды.
     together {
-        freeman speaks for 3.92s
+        freeman speaks for 2.64s
         do {
             freeman overlays "ladon_pusta"
-            wait 1.96s
+            wait 1.32s
             freeman overlays "doshlo"
         }
     }
@@ -523,12 +523,12 @@ scene "s7" (duration: 1s, set: zal) {
     //  «Есть курс «Стресс-менеджмент». Десять лекций в Лектории Мейстера, и
     //  всё бесплатно.» — цена названа отдельной строкой, без подмигивания.
     together {
-        freeman speaks for 4.23s
+        freeman speaks for 5.62s
         do {
             freeman overlays "raskryl"
-            wait 1.83s
+            wait 2.43s
             freeman overlays "teplo"
-            wait 1.41s
+            wait 1.87s
             freeman overlays "ladon_pusta"
         }
     }
@@ -628,12 +628,12 @@ scene "s8" (duration: 1s, set: kuhnya) {
     //  «Сегодня вечером — двадцать минут, когда вас нельзя позвать.» —
     //  измеримое действие на сегодня, а не намерение.
     together {
-        freeman speaks for 4.60s
+        freeman speaks for 3.89s
         do {
             freeman overlays "palec_vverh"
-            wait 1.8s
+            wait 1.52s
             freeman overlays "k_sebe"
-            wait 1.5s
+            wait 1.27s
             freeman overlays "odna_v_bok"
         }
     }
