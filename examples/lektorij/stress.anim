@@ -120,7 +120,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //  `stop_ladon` — раскрытая ладонь: жест «стой», а не «слушай». Он и
     //  делает фразу приказом раньше, чем её разберут на слова.
     together {
-        freeman speaks for 2.32s
+        freeman speaks for 3.00s
         do {
             freeman overlays "stop_ladon"
         }
@@ -156,10 +156,10 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 4
     //  «Он не враг. Он сигнал: тело готовится — это его дело.» — закрывает защиту «надо меньше нервничать».
     together {
-        freeman speaks for 5.67s
+        freeman speaks for 5.07s
         do {
             freeman overlays "palec_vverh"
-            wait 2.83s
+            wait 2.53s
             freeman overlays "ladon_pusta"
         }
     }
@@ -264,10 +264,10 @@ scene "s3" (duration: 1s, set: noch) {
     //  «Ночь. Тело лежит. Вы — нет.» — тело лежит СЛОВОМ, а в кадре персонаж
     //  стоит: он не садится и не ложится нигде в серии.
     together {
-        freeman speaks for 3.32s
+        freeman speaks for 3.81s
         do {
             freeman overlays "ladoni_vniz"
-            wait 1.8s
+            wait 2.07s
             freeman overlays "vniz"
         }
     }
@@ -368,10 +368,10 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 12
     //  «Тише не стало на второй день. Тише не стало на десятый. Тише не стало и дома.»
     together {
-        freeman speaks for 7.08s
+        freeman speaks for 7.76s
         do {
             freeman overlays "vzglyad"
-            wait 3.68s
+            wait 4.03s
             freeman overlays "ugryumo"
         }
     }
@@ -537,10 +537,10 @@ scene "s7" (duration: 1s, set: zal) {
     //lip 22
     //  «Жизни без стресса он не обещает — такой не бывает.»
     together {
-        freeman speaks for 3.80s
+        freeman speaks for 3.29s
         do {
             freeman overlays "otmahnulsya_r"
-            wait 2.0s
+            wait 1.73s
             freeman overlays "no"
         }
     }
@@ -552,10 +552,10 @@ scene "s7" (duration: 1s, set: zal) {
     //lip 23
     //  «Он про возврат: сон, движение и отдых, который правда отдых.»
     together {
-        freeman speaks for 4.23s
+        freeman speaks for 4.88s
         do {
             freeman overlays "otschet"
-            wait 2.12s
+            wait 2.45s
             freeman overlays "dve_storony"
         }
     }
