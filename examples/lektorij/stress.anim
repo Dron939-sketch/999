@@ -120,7 +120,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //  `stop_ladon` — раскрытая ладонь: жест «стой», а не «слушай». Он и
     //  делает фразу приказом раньше, чем её разберут на слова.
     together {
-        freeman speaks for 3.00s
+        freeman speaks for 2.32s
         do {
             freeman overlays "stop_ladon"
         }
@@ -232,10 +232,10 @@ scene "s2" (duration: 1s, set: rabota) {
     //  «Вечер. Сериал идёт, вы его не смотрите.» — рифма к VO-5 намеренная:
     //  четыре сцены обязаны звучать как четыре однотипных наблюдения.
     together {
-        freeman speaks for 3.00s
+        freeman speaks for 3.50s
         do {
             freeman overlays "vdal_l"
-            wait 1.64s
+            wait 1.91s
             freeman overlays "somnenie"
         }
     }
@@ -283,12 +283,12 @@ scene "s3" (duration: 1s, set: noch) {
     //  «Ни одной угрозы за весь день. И ни одной остановки.»
     //  Ровно, без нажима: нажим превращает перелом в упрёк.
     together {
-        freeman speaks for 4.40s
+        freeman speaks for 4.86s
         do {
             freeman overlays "razvel"
-            wait 1.5s
+            wait 1.66s
             freeman overlays "gorech"
-            wait 1.4s
+            wait 1.55s
             freeman overlays "ostyl"
         }
     }
@@ -370,10 +370,10 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 12
     //  «Тише не стало на второй день. Тише не стало на десятый. Тише не стало и дома.»
     together {
-        freeman speaks for 8.46s
+        freeman speaks for 7.47s
         do {
             freeman overlays "vzglyad"
-            wait 4.4s
+            wait 3.89s
             freeman overlays "ugryumo"
         }
     }
@@ -424,10 +424,10 @@ scene "s6" (duration: 1s, set: pustota) {
     //  «Мерьте не нагрузку, а возврат — он и решает, во что всё это выльется.»
     //  ВЗЛЁТ: другая мерка вместо другого совета.
     together {
-        freeman speaks for 4.88s
+        freeman speaks for 4.36s
         do {
             freeman overlays "vzves_r"
-            wait 2.77s
+            wait 2.48s
             freeman overlays "vzves"
         }
     }
@@ -449,10 +449,10 @@ scene "s6" (duration: 1s, set: pustota) {
     //lip 17
     //  «Не знаете. А это и есть ваша мерка.» — два удара, и это не упрёк.
     together {
-        freeman speaks for 3.63s
+        freeman speaks for 2.98s
         do {
             freeman overlays "manit"
-            wait 1.87s
+            wait 1.53s
             freeman overlays "palec_vverh"
         }
     }
@@ -482,10 +482,10 @@ scene "s6" (duration: 1s, set: pustota) {
     //  «Получилось? Значит, они были подняты.» — выиграть опыт нельзя:
     //  не вышло — плечи держатся, вышло — держались до этой секунды.
     together {
-        freeman speaks for 2.64s
+        freeman speaks for 3.79s
         do {
             freeman overlays "ladon_pusta"
-            wait 1.32s
+            wait 1.89s
             freeman overlays "doshlo"
         }
     }
@@ -498,7 +498,7 @@ scene "s6" (duration: 1s, set: pustota) {
     //  «Опустились. Ровно до следующего сообщения.» — ПРЕДЕЛ способа. Без него шутка
     //  смеётся над человеком; с ним — называет цену приёма.
     together {
-        freeman speaks for 4.60s
+        freeman speaks for 4.08s
         do {
             freeman overlays "ruki_za_spinu"
         }
@@ -525,12 +525,12 @@ scene "s7" (duration: 1s, set: zal) {
     //  «Есть курс «Стресс-менеджмент». Десять лекций в Лектории Мейстера, и
     //  всё бесплатно.» — цена названа отдельной строкой, без подмигивания.
     together {
-        freeman speaks for 5.62s
+        freeman speaks for 4.65s
         do {
             freeman overlays "raskryl"
-            wait 2.43s
+            wait 2.01s
             freeman overlays "teplo"
-            wait 1.87s
+            wait 1.55s
             freeman overlays "ladon_pusta"
         }
     }
@@ -554,10 +554,10 @@ scene "s7" (duration: 1s, set: zal) {
     //lip 23
     //  «Он про возврат: сон, движение и отдых, который правда отдых.»
     together {
-        freeman speaks for 4.88s
+        freeman speaks for 4.10s
         do {
             freeman overlays "otschet"
-            wait 2.45s
+            wait 2.06s
             freeman overlays "dve_storony"
         }
     }
