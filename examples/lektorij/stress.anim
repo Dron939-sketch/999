@@ -341,7 +341,7 @@ scene "s4" (duration: 1s, set: pustota) {
     }
     wait 0.7s
 
-    freeman pose "myslitel"
+    freeman pose "luna_levaya"
     wait 0.15s
 
     //  ШУТКА СТОИТ ПОСЛЕ РЕШЕНИЯ И ДО ЖАЛА. Опыт проделывается тогда, когда
