@@ -188,10 +188,10 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //  одной оценки и ни одного «вы»: событие названо мерой, вывод складывает
     //  зритель. Здесь же вступает свисток и дальше не смолкает.
     together {
-        freeman speaks for 3.42s
+        freeman speaks for 2.77s
         do {
             freeman overlays "vdal"
-            wait 1.83s
+            wait 1.48s
             freeman overlays "prishchur"
         }
     }
@@ -223,10 +223,10 @@ scene "s2" (duration: 1s, set: noch) {
     //  редакция говорила «Тело лежит. Вы — нет», и вычитка это сняла: «тело» и
     //  «вы» — один человек, и фраза читалась как противоречие.
     together {
-        freeman speaks for 2.80s
+        freeman speaks for 3.92s
         do {
             freeman overlays "ladoni_vniz"
-            wait 1.4s
+            wait 1.96s
             freeman overlays "vniz"
         }
     }
@@ -274,12 +274,12 @@ scene "s3" (duration: 1s, set: kuhnya) {
     //  доказательства. Сцены отпуска в минутной редакции нет, и слово держится
     //  само: это элемент перечисления, а не отсылка к снятому кадру.
     together {
-        freeman speaks for 4.00s
+        freeman speaks for 4.55s
         do {
             freeman overlays "otschet"
-            wait 1.4s
+            wait 1.59s
             freeman overlays "ugryumo"
-            wait 1.3s
+            wait 1.48s
             freeman overlays "luna_pravaya"
         }
     }
@@ -304,10 +304,10 @@ scene "s4" (duration: 1s, set: pustota) {
     //  вслух. Без него монолог, который знает ответ и его не даёт, читается
     //  как кокетство; с ним — как условие игры.
     together {
-        freeman speaks for 2.60s
+        freeman speaks for 1.93s
         do {
             freeman overlays "razvel"
-            wait 1.4s
+            wait 1.04s
             freeman overlays "otverg"
         }
     }
@@ -332,10 +332,10 @@ scene "s4" (duration: 1s, set: pustota) {
     //lip 10
     //  «За сколько минут вы спускаетесь?» — вопрос в лоб, без разбега.
     together {
-        freeman speaks for 2.80s
+        freeman speaks for 2.17s
         do {
             freeman overlays "hips"
-            wait 1.5s
+            wait 1.16s
             freeman overlays "obvinil"
         }
     }
@@ -381,10 +381,10 @@ scene "s4" (duration: 1s, set: pustota) {
     //  «Опустились. Ровно до следующего сообщения.» — ПРЕДЕЛ способа. Без него
     //  шутка смеётся над человеком; с ним — называет цену приёма.
     together {
-        freeman speaks for 3.20s
+        freeman speaks for 4.47s
         do {
             freeman overlays "ruki_za_spinu"
-            wait 1.7s
+            wait 2.37s
             freeman overlays "kozyrek"
         }
     }
@@ -445,10 +445,10 @@ scene "s5" (duration: 1s, set: zal) {
     //  «У меня и плеч-то нет. Нарисованному легко советовать.» — ролик
     //  записывает СЕБЯ в тот же ряд. Без подмигивания.
     together {
-        freeman speaks for 3.50s
+        freeman speaks for 4.26s
         do {
             freeman overlays "shrug"
-            wait 1.7s
+            wait 2.07s
             freeman overlays "zatylok_l"
         }
     }
