@@ -35,6 +35,8 @@
 //  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
 //  Завод перепишет их по факту озвучки.
 // =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 2feba5dc
 import character freeman from "../assets/characters/freeman_rig"
 import set voronka from "../assets/sets/nachalnik-stol-voronka.svg"
 import set pustota from "../assets/sets/pustota-bumaga.svg"
@@ -231,7 +233,7 @@ scene "s3" (duration: 1s, set: pustota) {
     transition static 0.12s
 
     place freeman at (0.50, 0.95) facing front on floor
-    freeman scales 0.86 over 0.01s
+    freeman scales 1.04 over 0.01s
     camera medium freeman
     freeman pose "calm"
     wait 0.15s
@@ -259,8 +261,11 @@ scene "s3" (duration: 1s, set: pustota) {
 scene "s4" (duration: 1s, set: dvoe) {
     transition static 0.12s
 
-    place freeman at (0.34, 0.94) facing front on floor
-    freeman scales 0.82 over 0.01s
+    //  Ставится к левому краю: мера этой локации — 0.77 кадра, фигура выходит
+    //  крупной, и от середины она закрывала бы собой ровно то, ради чего кадр
+    //  взят, — пустую столешницу и два стула лицом к лицу.
+    place freeman at (0.23, 0.93) facing front on floor
+    freeman scales 1.34 over 0.01s
     camera wide
     freeman pose "calm"
     wait 0.15s
@@ -334,8 +339,8 @@ scene "s4" (duration: 1s, set: dvoe) {
 scene "s5" (duration: 1s, set: zal) {
     transition static 0.12s
 
-    place freeman at (0.46, 0.93) facing front on floor
-    freeman scales 0.90 over 0.01s
+    place freeman at (0.48, 0.95) facing front on floor
+    freeman scales 0.86 over 0.01s
     camera medium freeman
     freeman pose "calm"
     wait 0.15s
