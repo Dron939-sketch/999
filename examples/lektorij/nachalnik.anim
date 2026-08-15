@@ -98,10 +98,10 @@ scene "s1" (duration: 1s, set: voronka) {
     //  громкой связи. `ladon_pusta` — раскрытая пустая ладонь: она показывает
     //  ровно то, о чём реплика, и не объясняет её.
     together {
-        freeman speaks for 2.90s
+        freeman speaks for 2.27s
         do {
             freeman overlays "ladon_pusta"
-            wait 1.7s
+            wait 1.33s
             freeman overlays "vzglyad"
         }
     }
@@ -164,10 +164,10 @@ scene "s1" (duration: 1s, set: voronka) {
     //  «Объяснить ему — час. Переделать — сорок минут.» — его собственный счёт,
     //  и он верный. Всё дальнейшее стоит на том, что зритель с числами согласился.
     together {
-        freeman speaks for 2.50s
+        freeman speaks for 3.45s
         do {
             freeman overlays "vzves"
-            wait 1.35s
+            wait 1.86s
             freeman overlays "vzves_r"
         }
     }
@@ -225,12 +225,12 @@ scene "s2" (duration: 1s, set: voronka) {
     //  «Быстрее сделать самому. Быстрее. И ещё раз быстрее.» — МАНТРА. Повтор
     //  внутри реплики, ровно, без нарастания: круг не разгоняется, он крутится.
     together {
-        freeman speaks for 4.94s
+        freeman speaks for 5.69s
         do {
             freeman overlays "otschet"
-            wait 1.72s
+            wait 1.98s
             freeman overlays "manit"
-            wait 1.72s
+            wait 1.98s
             freeman overlays "manit_l"
         }
     }
@@ -345,10 +345,10 @@ scene "s4" (duration: 1s, set: dvoe) {
     //  «Работает ровно до завтра. Завтра — та же задача.» — ПРЕДЕЛ способа.
     //  Экономия настоящая, но её хватает ровно на один вечер.
     together {
-        freeman speaks for 3.74s
+        freeman speaks for 4.39s
         do {
             freeman overlays "otverg"
-            wait 1.98s
+            wait 2.32s
             freeman overlays "vdal"
         }
     }
@@ -399,10 +399,10 @@ scene "s5" (duration: 1s, set: zal) {
     //  САМОРЕФЕРЕНЦИЯ. Ролик записывает себя в ту же ленту, из которой говорит,
     //  и снимает с себя пафос дешевле любой другой правки.
     together {
-        freeman speaks for 5.90s
+        freeman speaks for 5.22s
         do {
             freeman overlays "shrug"
-            wait 3.09s
+            wait 2.74s
             freeman overlays "wave"
         }
     }
