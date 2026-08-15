@@ -98,7 +98,8 @@
 
 **Промт:**
 
-> A small plain office room seen straight on, with four identical desks. THREE of
+> WIDE 16:9 LANDSCAPE FRAME, twice as wide as it is tall — this is a cinema
+> still, NOT a square picture. A small plain office room seen straight on, with four identical desks. THREE of
 > the desks are completely bare and clean — nothing on them at all, chairs pushed
 > neatly in, untouched. The FOURTH desk, in the centre, is buried: an enormous
 > unstable tower of paper, folders and boxes piled on it, rising far above head
@@ -131,6 +132,15 @@
 
 **Три чистых стола обязаны быть ЧИСТЫМИ.** Не «поменьше бумаг», а пустые
 столешницы. Разница должна быть видна с первого взгляда и на маленьком экране.
+
+**КАДР ОБЯЗАН БЫТЬ ШИРОКИМ, И ЭТО НЕ ПРИДИРКА.** Первая присланная картинка
+пришла квадратом 1024×1024, и обрезать её до 16:9 нельзя ни одним способом:
+башня бумаг уходит вверх до 15% высоты, пол — вниз до 88%, а широкое окно
+вмещает от квадрата только 56%. Что ни отрежь — либо башня перестаёт быть выше
+человека и метафора умирает, либо персонажу негде стоять. Поэтому требование
+ширины вынесено в ПЕРВУЮ строку промта: генератор читает начало внимательнее
+конца, и на соседнем промте («стол на двоих») это сработало — он пришёл честным
+16:9 с первого раза.
 
 ---
 
