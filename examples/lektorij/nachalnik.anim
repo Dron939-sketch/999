@@ -155,7 +155,7 @@ scene "s1" (duration: 1s, set: voronka) {
         do {
             freeman overlays "vniz"
             wait 1.4s
-            freeman overlays "weary"
+            freeman overlays "ladoni_vniz"
         }
     }
     wait 0.7s
@@ -203,9 +203,10 @@ scene "s2" (duration: 1s, set: voronka) {
     camera wide
     wait 0.7s
 
-    //  ПОЗА, КОТОРОЙ В РЯДУ НЕ БЫЛО: `luna_bok_1` — корпус развёрнут вбок, рука
-    //  описывает круг. Мантра про круг обязана идти телом, а не только голосом.
-    freeman pose "luna_bok_1"
+    //  ПОЗА, КОТОРОЙ В РЯДУ НЕ БЫЛО: `bok_pravo_govorit_pravoj` — он говорит не
+    //  зрителю, а в сторону заваленного стола. Мантра про круг идёт телом.
+    //  `luna_bok_1` стояла здесь до приёмки и закрывала маску кистью целиком.
+    freeman pose "bok_pravo_govorit_pravoj"
     wait 0.12s
 
     //lip 7
@@ -264,8 +265,8 @@ scene "s4" (duration: 1s, set: dvoe) {
     //  Ставится к левому краю: мера этой локации — 0.77 кадра, фигура выходит
     //  крупной, и от середины она закрывала бы собой ровно то, ради чего кадр
     //  взят, — пустую столешницу и два стула лицом к лицу.
-    place freeman at (0.23, 0.93) facing front on floor
-    freeman scales 1.34 over 0.01s
+    place freeman at (0.23, 0.98) facing front on floor
+    freeman scales 1.25 over 0.01s
     camera wide
     freeman pose "calm"
     wait 0.15s
@@ -283,10 +284,12 @@ scene "s4" (duration: 1s, set: dvoe) {
     }
     wait 0.7s
 
-    //  ПОЗА, КОТОРОЙ В РЯДУ НЕ БЫЛО: `bok_levo_govorit` — он говорит вбок, на
-    //  пустой стул напротив. Смета зачитывается не зрителю, а тому, кого за
-    //  этим столом нет.
-    freeman pose "bok_levo_govorit"
+    //  ПОЗА, КОТОРОЙ В РЯДУ НЕ БЫЛО: `bok_pravo_govorit_levoj` — он говорит вбок,
+    //  на пустой стул напротив. Смета зачитывается не зрителю, а тому, кого за
+    //  этим столом нет. Профиль ВПРАВО, и это не вкусовщина: стол и дальний стул
+    //  стоят справа от него, а линт разворота держит левый профиль в браке —
+    //  макушка уходит за кромку на 0.029 кадра.
+    freeman pose "bok_pravo_govorit_levoj"
     wait 0.12s
     camera close-up freeman
     wait 0.1s
@@ -299,7 +302,7 @@ scene "s4" (duration: 1s, set: dvoe) {
         do {
             freeman overlays "otschet"
             wait 1.5s
-            freeman overlays "smug"
+            freeman overlays "lokti"
         }
     }
     wait 1.2s
@@ -366,7 +369,7 @@ scene "s5" (duration: 1s, set: zal) {
         do {
             freeman overlays "no"
             wait 2.3s
-            freeman overlays "stern"
+            freeman overlays "rubit"
         }
     }
     camera close-up freeman
@@ -381,7 +384,7 @@ scene "s5" (duration: 1s, set: zal) {
         do {
             freeman overlays "shrug"
             wait 2.2s
-            freeman overlays "hero_sly"
+            freeman overlays "wave"
         }
     }
     camera reset
