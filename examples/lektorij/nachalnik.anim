@@ -151,10 +151,10 @@ scene "s1" (duration: 1s, set: voronka) {
     //  «Вечер. Вы переделываете чужой отчёт.» — единственная сцена ролика. Ни
     //  оценки, ни укора: событие названо, вывод складывает зритель.
     together {
-        freeman speaks for 2.50s
+        freeman speaks for 3.03s
         do {
             freeman overlays "vniz"
-            wait 1.4s
+            wait 1.7s
             freeman overlays "ladoni_vniz"
         }
     }
@@ -192,10 +192,10 @@ scene "s2" (duration: 1s, set: voronka) {
     //  играются одинаково ровно: нажим во второй превращает наблюдение в
     //  приговор зрителю, и он начинает защищаться вместо того, чтобы считать.
     together {
-        freeman speaks for 4.00s
+        freeman speaks for 5.20s
         do {
             freeman overlays "razmer"
-            wait 1.7s
+            wait 2.21s
             freeman overlays "dve_storony"
         }
     }
@@ -220,12 +220,12 @@ scene "s2" (duration: 1s, set: voronka) {
     //  «Быстрее сделать самому. Быстрее. И ещё раз быстрее.» — МАНТРА. Повтор
     //  внутри реплики, ровно, без нарастания: круг не разгоняется, он крутится.
     together {
-        freeman speaks for 4.30s
+        freeman speaks for 4.94s
         do {
             freeman overlays "otschet"
-            wait 1.5s
+            wait 1.72s
             freeman overlays "manit"
-            wait 1.5s
+            wait 1.72s
             freeman overlays "manit_l"
         }
     }
@@ -325,10 +325,10 @@ scene "s4" (duration: 1s, set: dvoe) {
     //  «Расход — один человек, который не научился.» — добивка. Пауза перед ней
     //  делает всю работу: зритель успевает достроить смету сам.
     together {
-        freeman speaks for 3.00s
+        freeman speaks for 3.60s
         do {
             freeman overlays "odna_v_bok"
-            wait 1.6s
+            wait 1.92s
             freeman overlays "gorech"
         }
     }
@@ -340,10 +340,10 @@ scene "s4" (duration: 1s, set: dvoe) {
     //  «Работает ровно до завтра. Завтра — та же задача.» — ПРЕДЕЛ способа.
     //  Экономия настоящая, но её хватает ровно на один вечер.
     together {
-        freeman speaks for 3.20s
+        freeman speaks for 3.74s
         do {
             freeman overlays "otverg"
-            wait 1.7s
+            wait 1.98s
             freeman overlays "vdal"
         }
     }
@@ -394,10 +394,10 @@ scene "s5" (duration: 1s, set: zal) {
     //  САМОРЕФЕРЕНЦИЯ. Ролик записывает себя в ту же ленту, из которой говорит,
     //  и снимает с себя пафос дешевле любой другой правки.
     together {
-        freeman speaks for 4.20s
+        freeman speaks for 5.90s
         do {
             freeman overlays "shrug"
-            wait 2.2s
+            wait 3.09s
             freeman overlays "wave"
         }
     }
@@ -426,10 +426,10 @@ scene "s6" (duration: 1s, set: voronka) {
     //  «Завтра отдайте одну задачу целиком. С правом сделать хуже вас.» —
     //  ЖАЛО. Измеримое действие на завтра, а не «учитесь делегировать».
     together {
-        freeman speaks for 4.50s
+        freeman speaks for 5.22s
         do {
             freeman overlays "k_sebe_r"
-            wait 2.4s
+            wait 2.79s
             freeman overlays "raspahnul"
         }
     }
