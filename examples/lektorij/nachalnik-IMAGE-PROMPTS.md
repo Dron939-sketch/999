@@ -96,51 +96,84 @@
 дальше работает фоном. Этот опознаётся как положение, и зритель соглашается с
 тезисом до того, как услышит первое слово.
 
+**Перед прогоном: в самом генераторе выставить формат кадра 16:9 (landscape).**
+Словами в промте это не держится — см. разбор ниже, три квадрата подряд.
+
 **Промт:**
 
-> WIDE 16:9 LANDSCAPE FRAME, twice as wide as it is tall — this is a cinema
-> still, NOT a square picture. A small plain office room seen straight on, with four identical desks. THREE of
-> the desks are completely bare and clean — nothing on them at all, chairs pushed
-> neatly in, untouched. The FOURTH desk, in the centre, is buried: an enormous
-> unstable tower of paper, folders and boxes piled on it, rising far above head
-> height, leaning slightly, sheets sticking out at all angles, more paper heaped
-> on the floor around its legs. The contrast between the one buried desk and the
-> three clean ones is the whole point of the picture and must be immediate. Plain
-> walls, no window, no clock. The room is small and close, the four desks nearly
-> fill the width of the frame; camera near, not a wide panorama of a hundred
-> workplaces. The bottom sixth of the frame is EMPTY FLOOR, clear of furniture
-> and clear of paper, so a character can stand on it and cast a shadow. Drawn in the style of the animated series "Mr. Freeman":
-> hand-drawn black ink, BOLD heavy boiling outline, thick confident strokes,
-> flat fills only (NO gradients, NO soft light, NO shading), extremely high
-> contrast, STRICTLY BLACK AND WHITE — monochrome only, limited palette of light
-> grey paper (#d4d7cf) and black ink (#141410), NO COLOUR anywhere in the image,
-> not a single coloured object; graphic / illustrative, NOT photorealistic;
-> slightly rough, redrawn-by-hand feel; minimal detail, few strong shapes; NO
-> people, NO figures, NO text, NO letters, NO numbers, NO logos; the drawing
-> FILLS the whole canvas edge to edge, wide 16:9 landscape, NO borders, NO frame,
-> NO margins, NOT square.
+> WIDE 16:9 LANDSCAPE FRAME, twice as wide as it is tall — a cinema still, NOT a
+> square picture. A small plain office room seen straight on. FOUR identical
+> desks stand SIDE BY SIDE IN A ROW ACROSS THE FRAME, spread along its full
+> width, each with its own chair. THREE of the desks are completely bare and
+> clean — nothing on them at all, chairs pushed neatly in, untouched. ONE desk,
+> second from the left, is buried under a heap of paper, folders and boxes. The
+> heap is WIDE AND LOW, not a tall thin tower: it is about twice the height of
+> the desk it stands on and no higher, spreading sideways over the desk top,
+> leaning slightly, sheets sticking out at all angles. It reaches only into the
+> upper third of the frame; there is clear empty wall above it. The floor around
+> the desks is CLEAN AND BARE — no paper on the floor, nothing lying about. The
+> contrast between the one buried desk and the three clean ones is the whole
+> point of the picture and must be immediate. Plain walls, no window, no clock.
+> The composition is HORIZONTAL — the row of desks is the long axis of the
+> picture, much wider than anything is tall. Camera near, not a wide panorama of
+> a hundred workplaces. The bottom quarter of the frame is EMPTY FLOOR, clear of
+> furniture and clear of paper, so a character can stand on it and cast a shadow.
+> Drawn in the style of the animated series "Mr. Freeman": hand-drawn black ink,
+> BOLD heavy boiling outline, thick confident strokes, flat fills only (NO
+> gradients, NO soft light, NO shading), extremely high contrast, STRICTLY BLACK
+> AND WHITE — monochrome only, limited palette of light grey paper (#d4d7cf) and
+> black ink (#141410), NO COLOUR anywhere in the image, not a single coloured
+> object; graphic / illustrative, NOT photorealistic; slightly rough,
+> redrawn-by-hand feel; minimal detail, few strong shapes; NO people, NO figures,
+> NO text, NO letters, NO numbers, NO logos; the drawing FILLS the whole canvas
+> edge to edge, wide 16:9 landscape, NO borders, NO frame, NO margins, NOT
+> square.
 
 **Чего в кадре быть не должно.** Людей и силуэтов. Часов на стене и окна с
 ночью за ним: время суток тут ни при чём, и всякая попытка объяснить кадр
 буквально («он засиделся») подменяет метафору документальностью. Компьютеров и
 мониторов — они уводят в отрасль, а зритель курса может быть и мастером цеха.
-Табличек, надписей, логотипов.
+Табличек, надписей, логотипов. И бумаги на полу: она ничего не добавляет к
+метафоре, зато занимает нижнюю четверть кадра — ровно ту, на которой обязан
+стоять персонаж.
 
-**Стопка должна быть выше человека.** Это мера, а не декорация: столько чужой
-работы он взял на себя. Если стопка вровень со столом, кадр читается как
+**Стопка должна быть выше человека — но высоту ей даёт стол, а не сама стопка.**
+Столешница 0,74 м, куча вдвое выше неё — это 2,2 м от пола против 1,7 м роста:
+выше головы, и мера сохранена. Просить «огромную башню до потолка» больше нельзя,
+и вот почему: вертикальный предмет тянет за собой вертикальный холст. Пока в
+промте стояло «enormous tower rising far above head height», генератор трижды
+отдавал квадрат — он рисовал ровно то, что просили, и подбирал под это формат.
+Куча широкая и низкая на длинном ряду столов просит горизонтальный кадр сама.
+Чего по-прежнему нельзя: стопка вровень со столом — тогда кадр читается как
 «беспорядок», и метафора умирает.
 
 **Три чистых стола обязаны быть ЧИСТЫМИ.** Не «поменьше бумаг», а пустые
 столешницы. Разница должна быть видна с первого взгляда и на маленьком экране.
 
-**КАДР ОБЯЗАН БЫТЬ ШИРОКИМ, И ЭТО НЕ ПРИДИРКА.** Первая присланная картинка
-пришла квадратом 1024×1024, и обрезать её до 16:9 нельзя ни одним способом:
-башня бумаг уходит вверх до 15% высоты, пол — вниз до 88%, а широкое окно
-вмещает от квадрата только 56%. Что ни отрежь — либо башня перестаёт быть выше
-человека и метафора умирает, либо персонажу негде стоять. Поэтому требование
-ширины вынесено в ПЕРВУЮ строку промта: генератор читает начало внимательнее
-конца, и на соседнем промте («стол на двоих») это сработало — он пришёл честным
-16:9 с первого раза.
+**КАДР ОБЯЗАН БЫТЬ ШИРОКИМ, И ЭТО НЕ ПРИДИРКА.** Три присланные картинки пришли
+квадратами 1024×1024, и ни одну нельзя обрезать до 16:9. Арифметика простая и
+всякий раз одна: окно 16:9 при полной ширине квадрата — это 576 строк из 1024,
+то есть **56% высоты**. Значит, всё нарисованное обязано уместиться примерно в
+половину высоты квадрата, чтобы осталась ещё полоса пустого пола под ноги
+персонажу. В последней картинке нарисованное занимает от верха башни (13%) до
+нижнего края бумаг на полу (79%) — **две трети высоты**. Не лезет с запасом, и
+дальше выбор только между двумя смертями кадра: срезать верх — башня перестаёт
+быть выше человека, срезать низ — персонажу негде стоять.
+
+**Диагноз, а не невезение.** Требование ширины стояло в ПЕРВОЙ строке промта, и
+всё равно приехал квадрат. Дело не в том, что генератор не дочитал: он рисовал
+именно то, что просили, — «огромную башню, уходящую высоко над головой» и бумагу,
+разбросанную по полу. Такой предмет вертикален, и под вертикальный предмет модель
+выбирает вертикальный (то есть квадратный) холст. Формат кадра задаётся не
+словами о формате, а **пропорциями того, что в кадре**. Поэтому промт переписан:
+ряд из четырёх столов вдоль всей ширины — длинная ось теперь горизонтальная; куча
+широкая и вдвое выше стола, не башня; пол чистый, бумаги на нём нет (она и съела
+нижнюю полосу).
+
+**И отдельно: формат выставить в самом генераторе.** Соседний промт («стол на
+двоих») пришёл честным 688×384 с первого раза — но это композиция сама по себе
+горизонтальная, стол поперёк кадра. Там повезло совпадению. Здесь совпадения не
+будет, пока формат не задан ручкой.
 
 ---
 
