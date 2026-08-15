@@ -36,7 +36,7 @@
 //  Завод перепишет их по факту озвучки.
 // =============================================================================
 //
-//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 2feba5dc
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: b5943739
 import character freeman from "../assets/characters/freeman_rig"
 import set voronka from "../assets/sets/nachalnik-stol-voronka.svg"
 import set pustota from "../assets/sets/pustota-bumaga.svg"
@@ -265,8 +265,8 @@ scene "s4" (duration: 1s, set: dvoe) {
     //  Ставится к левому краю: мера этой локации — 0.77 кадра, фигура выходит
     //  крупной, и от середины она закрывала бы собой ровно то, ради чего кадр
     //  взят, — пустую столешницу и два стула лицом к лицу.
-    place freeman at (0.23, 0.98) facing front on floor
-    freeman scales 1.25 over 0.01s
+    place freeman at (0.23, 0.99) facing front on floor
+    freeman scales 1.12 over 0.01s
     camera wide
     freeman pose "calm"
     wait 0.15s
