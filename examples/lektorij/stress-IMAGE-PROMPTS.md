@@ -41,17 +41,18 @@
 проценты за часть композиции и написал «78%» тушью на стене. Масштаб задан
 отношениями предметов, проценты — только в служебных скобках.
 
-## Общий стилевой суффикс (добавлять в КАЖДЫЙ промт)
+## Стиль вшит В КАЖДЫЙ промт, отдельного суффикса больше нет
 
-> in the style of the animated series "Mr. Freeman": hand-drawn black ink, bold
-> boiling outline, flat fills only (NO gradients, NO soft light, NO shading),
-> extremely high contrast, limited palette — light grey paper (#d4d7cf) and
-> black ink (#141410), STRICTLY NO COLOUR anywhere in the image; graphic /
-> illustrative, NOT photorealistic; slightly rough, redrawn-by-hand feel;
-> minimal detail, few strong shapes; NO people, NO figures, NO text, NO letters,
-> NO numbers, NO logos; the lower quarter of the frame is EMPTY LIGHT FLOOR so a
-> character can stand on it and cast a shadow; wide 16:9 landscape composition,
-> horizontal frame, NOT square.
+Раньше стилевая часть лежала здесь отдельным блоком с пометкой «добавлять в
+каждый промт». Так делать нельзя: промт, который надо собрать из двух кусков,
+копируют одним куском — и генератор отдаёт цветную картинку, потому что про
+чёрно-белое было написано в другом месте. Ровно это и случилось на первой же
+передаче промта студии.
+
+Теперь каждый промт ниже — САМОДОСТАТОЧНЫЙ: копируется целиком и работает сам.
+Требование монохрома стоит внутри него дважды, словами «STRICTLY BLACK AND
+WHITE» и «NO COLOUR anywhere», потому что одного упоминания генератор
+регулярно не слышит.
 
 **Цвет в кадре не нужен, и это не упущение.** Единственное цветное пятно ролика
 — тёплая лужа лампового света на столе — накладывается мной поверх готовой
@@ -82,7 +83,8 @@
 > three and a half metres — so the furniture nearly fills the width; the table top
 > sits a bit above waist height, the stove the same, the fridge is twice the table
 > height. Everyday and lived-in, not styled: no plants, no decor, no shelves of
-> jars. The lower quarter of the frame is empty light floor.
+> jars. The lower quarter of the frame is EMPTY LIGHT FLOOR so a character can
+> stand on it and cast a shadow. Drawn in the style of the animated series "Mr. Freeman": hand-drawn black ink, bold boiling outline, flat fills only (NO gradients, NO soft light, NO shading), extremely high contrast, STRICTLY BLACK AND WHITE — monochrome only, limited palette of light grey paper (#d4d7cf) and black ink (#141410), NO COLOUR anywhere in the image, not a single coloured object; graphic / illustrative, NOT photorealistic; slightly rough, redrawn-by-hand feel; minimal detail, few strong shapes; NO people, NO figures, NO text, NO letters, NO numbers, NO logos; wide 16:9 landscape composition, horizontal frame, NOT square.
 
 **Чего в кадре быть не должно.** Телефона, радиоприёмника, любого аппарата со
 шнуром и вообще всего, что похоже на связь: зритель слышит «Освободите линию» и
@@ -111,7 +113,8 @@
 > corner at the right edge. Only the time of day differs: it is night, the window
 > is a solid black rectangle, and a single bare ceiling bulb hangs over the table
 > casting a plain cone of light. Everything else identical. The lower quarter of
-> the frame is empty light floor.
+> the frame is EMPTY LIGHT FLOOR so a character can stand on it and cast a
+> shadow. Drawn in the style of the animated series "Mr. Freeman": hand-drawn black ink, bold boiling outline, flat fills only (NO gradients, NO soft light, NO shading), extremely high contrast, STRICTLY BLACK AND WHITE — monochrome only, limited palette of light grey paper (#d4d7cf) and black ink (#141410), NO COLOUR anywhere in the image, not a single coloured object; graphic / illustrative, NOT photorealistic; slightly rough, redrawn-by-hand feel; minimal detail, few strong shapes; NO people, NO figures, NO text, NO letters, NO numbers, NO logos; wide 16:9 landscape composition, horizontal frame, NOT square.
 
 **Чего в кадре быть не должно.** Того же, что и в утренней: связи, аппаратов,
 настольных ламп. И никакой кровати — «тело в кровати» сказано словом, а
