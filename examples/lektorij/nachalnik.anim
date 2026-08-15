@@ -1,0 +1,466 @@
+// =============================================================================
+//  «ВАШИ РУКИ БОЛЬШЕ НЕ ПОНАДОБЯТСЯ» — интро к курсу «Управление людьми»,
+//  номер 24. VO — nachalnik-VO.md, маркеры 1..18.
+//
+//  ОДНА МЫСЛЬ НА РОЛИК: повышение — не награда за прежнюю работу, а смена
+//  профессии. Инструмент сменился: раньше руки, теперь чужие руки. Об этом
+//  человеку не сообщили, и он полгода делает прежнюю работу на новой
+//  должности.
+//
+//  1. ЯКОРЬ — ЭТО ТЕЗИС КУРСА, СПРЯТАННЫЙ В ОБЪЯВЛЕНИЕ. «Ваши руки больше не
+//     понадобятся» — сказано о том, чем зритель гордится, и не сказано, кем и
+//     почему. Первое прочтение всегда неверное («увольняют», «заменят
+//     машиной»), и именно поэтому фраза держится. Посажена в VO-1, не
+//     объясняется шестнадцать реплик, возвращена ДОСЛОВНО в VO-17 и В ТОЙ ЖЕ
+//     ЛОКАЦИИ (STIL-FRIMENA.md §II.8–9).
+//
+//  2. РАЗРЫВ СТОИТ В ОБОИХ КАНАЛАХ. В тексте — объявление. В картинке —
+//     РАБОЧИЕ ПЕРЧАТКИ на вершине башни офисных бумаг: предмет прежней
+//     профессии лежит на предмете новой. Их никто не трогает и НИ РАЗУ НЕ
+//     НАЗЫВАЕТ СЛОВОМ — назвать значит объяснить якорь. Нарисованы прямо в
+//     локации, а не пропом: они появляются только здесь, а гейт цвета читает
+//     пятно ТОЛЬКО по локациям (`tools/cvet.py`). Они же единственное цветное
+//     пятно ролика — 0.65% кадра при потолке 3%.
+//
+//  3. ПЕРВЫЙ КАДР — КАДР ЗРИТЕЛЯ. Не «офис вечером» (это опись имущества), а
+//     ОДИН СТОЛ, ЗАВАЛЕННЫЙ ВЫШЕ ЧЕЛОВЕЧЕСКОГО РОСТА, СРЕДИ ТРЁХ ЧИСТЫХ. Он
+//     узнаёт не помещение, а положение: всё стекается к одному, и это выглядит
+//     как трудолюбие. Тезис курса стоит в кадре до первого слова.
+//
+//  4. МЕРА ЧЕЛОВЕКА У ВОРОНКИ — 0.56 (реестр §XL требует 0.5 и выше для
+//     говорящей сцены). Столы стоят у задней стены, персонаж говорит на
+//     переднем плане: ставить его надо в переднюю треть пола, иначе движок
+//     грунтует фигуру по глубине и рост уезжает.
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
+//  Завод перепишет их по факту озвучки.
+// =============================================================================
+import character freeman from "../assets/characters/freeman_rig"
+import set voronka from "../assets/sets/nachalnik-stol-voronka.svg"
+import set pustota from "../assets/sets/pustota-bumaga.svg"
+import set dvoe from "../assets/sets/nachalnik-stol-na-dvoih.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.12
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+
+// ============ СЦЕНА 1: voronka — ЯКОРЬ ПОСАЖЕН ===========================
+//  Четыре одинаковых стола в ряд, три чистые и пустые, третий слева завален до
+//  потолка. На вершине башни — рабочие перчатки. Персонаж стоит у ЧИСТОГО
+//  стола: он между тем, что забрал, и теми, у кого забрал.
+scene "s1" (duration: 1s, set: voronka) {
+    place freeman at (0.30, 0.96) facing front on floor
+    freeman scales 0.94 over 0.01s
+
+    let nomer = prop("nomer", "../assets/props/nomer-24.svg") at (0.325, 0.545) layer 9
+    nomer scales 0.17 over 0.01s
+    nomer hides
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.19 over 0.05s ease-out
+    nomer scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 1
+    //  «Ваши руки больше не понадобятся.» — БЕЗ РАЗГОНА, как объявление по
+    //  громкой связи. `ladon_pusta` — раскрытая пустая ладонь: она показывает
+    //  ровно то, о чём реплика, и не объясняет её.
+    together {
+        freeman speaks for 2.90s
+        do {
+            freeman overlays "ladon_pusta"
+            wait 1.7s
+            freeman overlays "vzglyad"
+        }
+    }
+    camera medium freeman
+    wait 0.45s
+
+    //lip 2
+    //  «Вас повысили полгода назад.» — сводка, без поздравления. Опора: зритель
+    //  узнаёт свой случай и свой срок.
+    together {
+        freeman speaks for 1.80s
+        do {
+            freeman overlays "otschet"
+            wait 1.0s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.45s
+
+    //lip 3
+    //  «Это не награда за прошлое.» — закрывает защиту «меня оценили». Сухо, о
+    //  факте, а не о человеке: первый прогон вычитки поймал здесь укол.
+    together {
+        freeman speaks for 2.10s
+        do {
+            freeman overlays "no"
+            wait 1.2s
+            freeman overlays "somnenie"
+        }
+    }
+    camera wide
+    wait 0.7s
+
+    //  ПЕРЕМЕЩЕНИЕ ПО КАДРУ. Он идёт от чистого стола к заваленному — единственный
+    //  проход ролика, и он же его сюжет в одном движении.
+    freeman overlays "turn34"
+    wait 0.1s
+    freeman pose "shag_pravoj"
+    wait 0.12s
+    freeman moves-to (0.42, 0.96) over 0.55s ease-in-out
+    freeman pose "shag_levoj"
+    wait 0.12s
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 4
+    //  «Вечер. Вы переделываете чужой отчёт.» — единственная сцена ролика. Ни
+    //  оценки, ни укора: событие названо, вывод складывает зритель.
+    together {
+        freeman speaks for 2.50s
+        do {
+            freeman overlays "vniz"
+            wait 1.4s
+            freeman overlays "weary"
+        }
+    }
+    wait 0.7s
+
+    //lip 5
+    //  «Объяснить ему — час. Переделать — сорок минут.» — его собственный счёт,
+    //  и он верный. Всё дальнейшее стоит на том, что зритель с числами согласился.
+    together {
+        freeman speaks for 2.50s
+        do {
+            freeman overlays "vzves"
+            wait 1.35s
+            freeman overlays "vzves_r"
+        }
+    }
+    wait 1.2s
+}
+
+
+// ============ СЦЕНА 2: voronka — ПЕРЕЛОМ И КРУГ ==========================
+//  Склейка на переломе: шелест бумаги обрывается, остаётся гул. Кадр тот же,
+//  ракурс другой — камера снизу, чтобы башня встала над ним в полный рост.
+scene "s2" (duration: 1s, set: voronka) {
+    transition static 0.12s
+
+    place freeman at (0.42, 0.96) facing front on floor
+    freeman scales 0.94 over 0.01s
+    camera angle low freeman
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 6
+    //  «Вы стали работать больше. Команда работает меньше.» — ПЕРЕЛОМ. Обе половины
+    //  играются одинаково ровно: нажим во второй превращает наблюдение в
+    //  приговор зрителю, и он начинает защищаться вместо того, чтобы считать.
+    together {
+        freeman speaks for 4.00s
+        do {
+            freeman overlays "razmer"
+            wait 1.7s
+            freeman overlays "dve_storony"
+        }
+    }
+    camera reset
+    camera wide
+    wait 0.7s
+
+    //  ПОЗА, КОТОРОЙ В РЯДУ НЕ БЫЛО: `luna_bok_1` — корпус развёрнут вбок, рука
+    //  описывает круг. Мантра про круг обязана идти телом, а не только голосом.
+    freeman pose "luna_bok_1"
+    wait 0.12s
+
+    //lip 7
+    //  «Быстрее сделать самому. Быстрее. И ещё раз быстрее.» — МАНТРА. Повтор
+    //  внутри реплики, ровно, без нарастания: круг не разгоняется, он крутится.
+    together {
+        freeman speaks for 4.30s
+        do {
+            freeman overlays "otschet"
+            wait 1.5s
+            freeman overlays "manit"
+            wait 1.5s
+            freeman overlays "manit_l"
+        }
+    }
+    freeman pose "calm"
+    wait 0.7s
+}
+
+
+// ============ СЦЕНА 3: pustota — ОТКАЗ ДАВАТЬ ИНСТРУКЦИЮ =================
+//  Белый кадр. Отказ звучит вне помещения: ролик снимает с себя роль учителя,
+//  и делать это в его комнате нельзя — там всё ещё стоит его беда.
+scene "s3" (duration: 1s, set: pustota) {
+    transition static 0.12s
+
+    place freeman at (0.50, 0.95) facing front on floor
+    freeman scales 0.86 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 8
+    //  «Совет «делегируйте» вы слышали. Что отдать — решать вам.» — ОТКАЗ,
+    //  сказанный вслух. Без него монолог, который знает ответ и не даёт его,
+    //  читается как кокетство (STIL-FRIMENA.md §II.4).
+    together {
+        freeman speaks for 3.60s
+        do {
+            freeman overlays "otmahnulsya"
+            wait 1.9s
+            freeman overlays "ladoni_vniz"
+        }
+    }
+    wait 0.45s
+}
+
+
+// ============ СЦЕНА 4: dvoe — ВЗЛЁТ, ШУТКА, ПРЕДЕЛ =======================
+//  Пустая столешница и ровно два стула лицом к лицу: работа, в которой нечего
+//  делать руками. Кадр читается как чужой ровно до секунды, когда зритель
+//  понимает, что он его.
+scene "s4" (duration: 1s, set: dvoe) {
+    transition static 0.12s
+
+    place freeman at (0.34, 0.94) facing front on floor
+    freeman scales 0.82 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 9
+    //  «Ваш результат — это то, что сделали другие.» — ВЗЛЁТ. Другая единица
+    //  вместо другого совета. Вторую половину ниже первой.
+    together {
+        freeman speaks for 3.10s
+        do {
+            freeman overlays "k_sebe"
+            wait 1.7s
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.7s
+
+    //  ПОЗА, КОТОРОЙ В РЯДУ НЕ БЫЛО: `bok_levo_govorit` — он говорит вбок, на
+    //  пустой стул напротив. Смета зачитывается не зрителю, а тому, кого за
+    //  этим столом нет.
+    freeman pose "bok_levo_govorit"
+    wait 0.12s
+    camera close-up freeman
+    wait 0.1s
+
+    //lip 10
+    //  «Экономия в тот вечер — двадцать минут.» — МЕРА НЕ ИЗ ТОЙ СИСТЕМЫ,
+    //  станок 3 (BANK-SHUTOK.md). Буднично, как строку в смете.
+    together {
+        freeman speaks for 2.60s
+        do {
+            freeman overlays "otschet"
+            wait 1.5s
+            freeman overlays "smug"
+        }
+    }
+    wait 1.2s
+
+    //lip 11
+    //  «Расход — один человек, который не научился.» — добивка. Пауза перед ней
+    //  делает всю работу: зритель успевает достроить смету сам.
+    together {
+        freeman speaks for 3.00s
+        do {
+            freeman overlays "odna_v_bok"
+            wait 1.6s
+            freeman overlays "gorech"
+        }
+    }
+    camera wide
+    freeman pose "calm"
+    wait 0.45s
+
+    //lip 12
+    //  «Работает ровно до завтра. Завтра — та же задача.» — ПРЕДЕЛ способа.
+    //  Экономия настоящая, но её хватает ровно на один вечер.
+    together {
+        freeman speaks for 3.20s
+        do {
+            freeman overlays "otverg"
+            wait 1.7s
+            freeman overlays "vdal"
+        }
+    }
+    wait 0.7s
+}
+
+
+// ============ СЦЕНА 5: zal — ПРЕЗЕНТАЦИЯ, ГРАНИЦА, РОЛИК О СЕБЕ =========
+//  Зал Лектория: презентация звучит в другом месте, и оно нарочно не его.
+scene "s5" (duration: 1s, set: zal) {
+    transition static 0.12s
+
+    place freeman at (0.46, 0.93) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 13
+    //  «Есть курс «Управление людьми» — десять лекций в Лектории Мейстера,
+    //  бесплатно.» — без подмигивания, как факт. Цена отдельной строкой.
+    together {
+        freeman speaks for 4.70s
+        do {
+            freeman overlays "raskryl"
+            wait 2.5s
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.45s
+
+    //lip 14
+    //  «Команда удобной не станет. Послушная — результата не даёт.» — ГРАНИЦА.
+    //  Курс отказывается от обещания, которого от него ждут.
+    together {
+        freeman speaks for 4.30s
+        do {
+            freeman overlays "no"
+            wait 2.3s
+            freeman overlays "stern"
+        }
+    }
+    camera close-up freeman
+    wait 0.45s
+
+    //lip 15
+    //  «Мне легко: я нарисованный. Моя судьба — крутиться у вас в ленте.» —
+    //  САМОРЕФЕРЕНЦИЯ. Ролик записывает себя в ту же ленту, из которой говорит,
+    //  и снимает с себя пафос дешевле любой другой правки.
+    together {
+        freeman speaks for 4.20s
+        do {
+            freeman overlays "shrug"
+            wait 2.2s
+            freeman overlays "hero_sly"
+        }
+    }
+    camera reset
+    wait 0.7s
+}
+
+
+// ============ СЦЕНА 6: voronka — ЖАЛО, ВОЗВРАТ ЯКОРЯ, КОЛЬЦО =============
+//  Возвращаемся туда же, где начали, и в ту же точку пола: кольцо смыкается и
+//  в кадре, и в тексте.
+scene "s6" (duration: 1s, set: voronka) {
+    transition static 0.12s
+
+    place freeman at (0.30, 0.96) facing front on floor
+    freeman scales 0.94 over 0.01s
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-24.svg") at (0.325, 0.545) layer 9
+    nomer2 scales 0.17 over 0.01s
+    nomer2 hides
+    camera wide
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 16
+    //  «Завтра отдайте одну задачу целиком. С правом сделать хуже вас.» —
+    //  ЖАЛО. Измеримое действие на завтра, а не «учитесь делегировать».
+    together {
+        freeman speaks for 4.50s
+        do {
+            freeman overlays "k_sebe_r"
+            wait 2.4s
+            freeman overlays "raspahnul"
+        }
+    }
+    wait 0.7s
+
+    //  КРУПНО НА ПЕРЧАТКИ. Разрыв, посаженный в первой секунде, оплачивается
+    //  здесь: предмет прежней профессии на предмете новой, и рядом дословно
+    //  повторённая первая реплика.
+    camera medium freeman
+    camera pan-to (0.635, 0.20) over 0.6s ease-in-out
+    wait 0.1s
+
+    //lip 17
+    //  «Ваши руки больше не понадобятся.» — ВОЗВРАТ ЯКОРЯ. Дословно и тем же
+    //  тоном, что в начале: узнавание работает на совпадении, а не на смысле.
+    together {
+        freeman speaks for 2.90s
+        do {
+            freeman overlays "ladon_pusta"
+            wait 1.7s
+            freeman overlays "vzglyad"
+        }
+    }
+    camera reset
+    camera wide
+
+    //  ПАУЗА 1.8 с. Зритель складывает «мне сменили профессию и не сказали».
+    //  Заполнить нечем — это его работа.
+    freeman pose "calm"
+    wait 1.8s
+
+    //lip 18
+    //  «Вам не сказали…» — ПОДТВЕРЖДЕНИЕ. Рассказчик приходит вторым и коротко.
+    //  Вниз, с обрывом.
+    together {
+        freeman speaks for 1.20s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+    wait 1.2s
+
+    //  КОЛЬЦО. Кадр собирается тождественным первому: то же место, та же точка
+    //  пола, та же поза, та же метка курса — и ролик уходит на второй круг.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.19 over 0.05s ease-out
+    nomer2 scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer2 hides
+    freeman pose "calm"
+    wait 0.9s
+}
