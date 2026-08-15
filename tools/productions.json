@@ -61,6 +61,13 @@
    "anim": "examples/lektorij/myshlenie-intro.anim",
    "vo": "examples/lektorij/myshlenie-intro-VO.md",
    "images": []
+  },
+  {
+   "id": "osoznannost-intro",
+   "desc": "Подводка к курсу «Осознанность»: телевизор, который никто не смотрит, — блуждающий ум. На «вернулся» экраны гаснут, под жало ящик включается снова.",
+   "anim": "examples/lektorij/osoznannost-intro.anim",
+   "vo": "examples/lektorij/osoznannost-intro-VO.md",
+   "images": []
   }
  ]
 }
