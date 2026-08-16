@@ -233,7 +233,7 @@ scene "zabor" (duration: 58s, set: pole) {
             wait 1.4s
             camera wide
             board rotates 74 over 0.9s ease-in    // доска пошла, и её уже не держат
-            board moves-to (0.80, 0.60) over 0.9s ease-in
+            board moves-to (0.79, 0.74) over 0.9s ease-in   // легла на светлую землю: чёрный силуэт виден
             camera shake 0.12s intensity 1
             freeman pose "hips"                   // стоит к новой дыре спиной
             wait 1.4s
