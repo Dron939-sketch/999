@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 150" width="340" height="150">
+<!-- Заплатка на щель — доска наискось с двумя гвоздями. Тушь по LOCATION_STYLE.md. -->
+<defs><filter id="ink" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<g filter="url(#ink)">
+  <rect x="12" y="48" width="316" height="54" rx="8" fill="#141410" transform="rotate(-7 170 75)"/>
+  <!-- шляпки гвоздей — светлые кресты на тёмной доске -->
+  <g stroke="#d4d7cf" stroke-width="7" stroke-linecap="round">
+    <path d="M52 66 l18 18 M70 66 l-18 18"/>
+    <path d="M272 52 l18 18 M290 52 l-18 18"/>
+  </g>
+</g>
+</svg>

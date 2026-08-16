@@ -68,6 +68,13 @@
    "anim": "examples/lektorij/osoznannost-intro.anim",
    "vo": "examples/lektorij/osoznannost-intro-VO.md",
    "images": []
+  },
+  {
+   "id": "lazejka-intro",
+   "desc": "Подводка к курсу «Лазейка»: забор цел, а в нём щель — правило это текст, и у текста есть край. На взлёте доска прибита, под жало рядом открывается новый просвет.",
+   "anim": "examples/lektorij/lazejka-intro.anim",
+   "vo": "examples/lektorij/lazejka-intro-VO.md",
+   "images": []
   }
  ]
 }

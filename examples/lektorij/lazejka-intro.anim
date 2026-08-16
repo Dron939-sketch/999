@@ -1,0 +1,260 @@
+// =============================================================================
+//  «ЛАЗЕЙКА» — продающее интро курса
+//
+//  ФИШКА — ЗАБОР, В КОТОРОМ ЕСТЬ ЩЕЛЬ (PRODAZHA.md §2). Правило — это текст,
+//  а у текста есть край. Забор цел, ни одна доска не выбита — и всё равно
+//  сквозь него ходят. Весь монтаж построен на этом:
+//
+//    · открытие СО СПИНЫ: он разглядывает забор, зритель смотрит туда же и
+//      сам находит щель раньше, чем о ней скажут;
+//    · на хуке ОБОРАЧИВАЕТСЯ — «всё выполнили, а вышло не так» сказано тому,
+//      кто только что сам увидел дыру в целом заборе;
+//    · на отрицании ИДЁТ НА КАМЕРУ, уходя от забора, — как зритель уходит от
+//      мысли «у нас-то все всё поняли»;
+//    · на пулемёте сквозь щель ОДИН ЗА ДРУГИМ проходят три случая: уроки в
+//      семь, девять утра, «я же не звонила». Ни слова про «нарушение» — видно,
+//      что нарушения нет;
+//    · на развороте ракурс СНИЗУ: он один против забора, щель была в тексте
+//      с самого начала;
+//    · на взлёте ПРИБИВАЕТ ДОСКУ поперёк щели — правило чинится, если знать,
+//      где смотреть. Три удара молотка — единственный твёрдый звук ролика;
+//    · под жало рядом открывается НОВЫЙ ПРОСВЕТ, и он стоит к нему спиной.
+//      Вопрос «сколько дыр в правиле, которое ты вчера поставил?» повисает
+//      над дырой, которую зритель уже видит.
+//
+//  Проверка фишки: выключи звук — понятно, о чём ролик.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set titry from "../assets/sets/lektorij-final.svg"
+import set pole from "../assets/sets/field-empty.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b9bbb4
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.35
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.14
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+}
+
+scene "zabor" (duration: 58s, set: pole) {
+    transition static 0.35s
+
+    place freeman at (0.38, 0.72) facing front
+    freeman scales 0.62 over 0.01s
+    // Забор стоит за спиной героя во весь кадр — доски целы, щель по центру справа.
+    let zabor = prop("fence-gap", "../assets/props/fence-gap.svg") at (0.5, 0.54) layer 1
+    zabor scales 0.92 over 0.01s
+    // Доска-заплатка ждёт своего взлёта за кадром (ружьё Чехова — стреляет в VO-6).
+    let doska = prop("plank", "../assets/props/plank.svg") at (0.5, -1.0) layer 3
+    doska scales 0.34 over 0.01s
+    let slovo = text("А ГДЕ ЩЕЛЬ?", 108) at (0.5, -2.0) layer 6
+    slovo scales 2.4 over 0.01s
+
+    // ── БЕЗ СЛОВ: он стоит СПИНОЙ и разглядывает забор ────────────────────
+    camera wide
+    freeman pose "spina"
+    wait 1.2s
+
+    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1): всё ещё спиной ──────────────────────
+    //lip 1
+    together {
+        freeman speaks for 3.3s
+        do {
+            wait 1.6s
+            camera medium freeman
+        }
+    }
+
+    // ── ХУК (VO-2): ОБОРАЧИВАЕТСЯ. «Всё выполнили. И вышло не так» ────────
+    //lip 2
+    together {
+        freeman speaks for 6.0s
+        do {
+            wait 1.2s                  // первая фраза — ещё к забору
+            freeman pose "polu_spina"
+            wait 0.7s
+            camera close-up freeman
+            freeman pose "chetvert_levo"
+            wait 0.9s
+            freeman pose "v_upor"
+            wait 0.8s
+            freeman pose "point"       // палец в зрителя: «ты договорился»
+            camera medium freeman
+        }
+    }
+
+    // ── ОТРИЦАНИЕ (VO-3): ИДЁТ НА КАМЕРУ, уходя от забора ─────────────────
+    freeman pose "calm"
+    freeman overlays "smug"
+    //lip 3
+    together {
+        freeman speaks for 6.0s
+        do {
+            camera wide
+            freeman moves-to (0.45, 0.77) over 2.2s
+            wait 0.3s
+            camera medium freeman
+            freeman pose "idet"        // идёт на камеру, переставляя ноги
+            freeman overlays "doubt"
+            freeman moves-to (0.43, 0.83) over 2.0s
+            wait 0.4s
+            camera close-up freeman
+            freeman pose "hips"        // «а понимать и не надо было»
+            freeman overlays "hero_skeptic"
+        }
+    }
+
+    // ── ПУЛЕМЁТ (VO-4): сквозь щель один за другим проходят три случая ────
+    freeman pose "no"
+    //lip 4
+    together {
+        freeman speaks for 8.6s
+        do {
+            camera wide
+            wait 1.5s
+            camera shake 0.14s intensity 1   // прошёл первый: «смотрит в стену»
+            wait 1.3s
+            camera medium freeman
+            freeman pose "shrug"             // «жвачка до десяти» — а что такого
+            camera shake 0.14s intensity 1
+            wait 1.4s
+            camera wide
+            freeman pose "facepalm"          // «не звонит. Пишет.»
+            camera shake 0.14s intensity 1
+            wait 1.6s
+            camera close-up freeman
+        }
+    }
+    freeman overlays "flash_disgust"
+    wait 0.08s
+    freeman overlays "stern"
+    wait 0.4s
+
+    // ── РАЗВОРОТ (VO-5): ракурс СНИЗУ, он один против забора ──────────────
+    //lip 5
+    together {
+        freeman speaks for 7.9s
+        do {
+            camera angle low freeman
+            freeman pose "chetvert_pravo"
+            wait 1.8s
+            camera wide
+            freeman overlays "flash_pupils"
+            wait 0.16s
+            freeman pose "point"       // «дыра в тексте» — палец в щель
+            wait 1.6s
+            camera medium freeman
+            freeman overlays "stern"
+        }
+    }
+    wait 0.5s
+
+    // ── ВЗЛЁТ (VO-6): ПРИБИВАЕТ ДОСКУ поперёк щели ────────────────────────
+    freeman pose "raskryl"
+    //lip 6
+    together {
+        freeman speaks for 7.9s
+        do {
+            camera wide
+            wait 3.4s                  // «Тот уговор уже обошли.»
+            doska moves-to (0.665, 0.5) over 0.5s ease-out   // доска легла на щель
+            freeman pose "lunge"       // замах
+            camera shake 0.12s intensity 2                   // удар
+            wait 0.7s
+            camera shake 0.12s intensity 2                   // удар
+            wait 0.7s
+            doska rotates 3 over 0.2s
+            camera shake 0.12s intensity 2                   // удар — доска села
+            wait 0.9s
+            camera medium freeman
+            freeman pose "open"
+            freeman overlays "hero_wow"
+        }
+    }
+
+    // ── ВЗЛЁТ-добивка (VO-7) ──────────────────────────────────────────────
+    //lip 7
+    together {
+        freeman speaks for 7.3s
+        do {
+            camera medium freeman
+            wait 1.6s
+            freeman pose "point"       // «десять лекций»
+            wait 2.6s
+            freeman pose "raskryl"     // «читать чужое, писать своё»
+            camera close-up freeman
+            wait 1.8s
+            freeman pose "open"
+            camera wide
+        }
+    }
+
+    // ── СЛОВО-УДАР «А ГДЕ ЩЕЛЬ?» + негатив-панч ───────────────────────────
+    slovo moves-to (0.5, 0.24) over 0.01s
+    slovo scales 1.0 over 0.18s ease-in
+    transition invert 0.16s
+    camera shake 0.3s intensity 3
+    wait 0.8s
+    slovo moves-to (0.5, -2.0) over 0.22s ease-in
+    freeman overlays "flash_grin"
+    wait 0.08s
+
+    // ── ЖАЛО-CTA (VO-8): рядом открывается НОВЫЙ ПРОСВЕТ ──────────────────
+    //  Забор отъезжает вбок: заплатанная щель уходит из кадра, а с другого
+    //  края въезжает нетронутый пролёт — и в нём тот же зазор. Герой стоит
+    //  к нему спиной и не оборачивается.
+    freeman pose "calm"
+    freeman pose "lunge"
+    //lip 8
+    together {
+        freeman speaks for 6.0s
+        do {
+            camera medium freeman
+            wait 1.2s
+            freeman pose "point"       // «сколько дыр в правиле»
+            freeman overlays "hero_sly"
+            wait 1.4s
+            zabor moves-to (0.17, 0.54) over 1.1s ease-out   // новый просвет въехал
+            camera shake 0.12s intensity 1
+            wait 0.7s
+            freeman pose "hips"
+            camera close-up freeman
+        }
+    }
+    freeman overlays "hero_wink"
+    wait 0.5s
+    camera reset over 0.5s
+    freeman pose "calm"
+    wait 0.8s
+}
+
+scene "titry" (duration: 5s, set: titry) {
+    transition static 0.45s
+    place freeman at (0.5, 3.0) facing front
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 1.0s
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6 over 0.01s
+    stamp rotates -7 over 0.01s
+    stamp scales 0.94 over 0.22s ease-in
+    stamp scales 1.0 over 0.1s ease-out
+    stamp rotates -4 over 0.12s
+    wait 2.2s
+    transition fade-black 0.8s
+}
