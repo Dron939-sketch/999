@@ -144,8 +144,10 @@ scene "s1" (duration: 1s, set: voronka) {
         freeman speaks for 2.44s
         do {
             freeman overlays "vzves"
-            wait 1.3s
+            wait 1.1s
             freeman overlays "vzves_r"
+            wait 0.9s
+            freeman overlays "poimal"
         }
     }
     wait 0.9s
@@ -212,7 +214,7 @@ scene "s2" (duration: 1s, set: voronka) {
         do {
             freeman overlays "razvel"
             wait 2.1s
-            freeman overlays "vdal"
+            freeman overlays "dve_storony"
         }
     }
     wait 0.5s
@@ -239,12 +241,21 @@ scene "s3" (duration: 1s, set: voronka) {
         freeman speaks for 2.93s
         do {
             freeman overlays "shrug"
-            wait 1.6s
+            wait 1.3s
             freeman overlays "otmahnulsya"
+            wait 1.0s
+            freeman overlays "klin"
         }
     }
     camera close-up freeman
     wait 1.2s
+
+    //  ВЗГЛЯД СТАВИТСЯ ДО РЕПЛИКИ, И ЭТО НЕ `v_upor`. Тот разворачивает корпус
+    //  на 15° и голову на 14°, а плащ висит на торсе: гейт подола намерил -13
+    //  пикселей, двадцать процентов видимой длины ног. Удар держится не позой,
+    //  а глазами и паузой перед ним.
+    freeman overlays "stern"
+    wait 0.1s
 
     //lip 8
     //  «Её собрали вы.» — ПЕРЕЛОМ. Три слова, в упор, без нажима. Пауза перед
@@ -253,7 +264,7 @@ scene "s3" (duration: 1s, set: voronka) {
     together {
         freeman speaks for 1.46s
         do {
-            freeman overlays "v_upor"
+            freeman overlays "vzglyad"
         }
     }
     camera wide
@@ -307,6 +318,8 @@ scene "s4" (duration: 1s, set: dvoe) {
         freeman speaks for 2.68s
         do {
             freeman overlays "otschet"
+            wait 1.5s
+            freeman overlays "lokti"
         }
     }
     camera close-up freeman
@@ -432,6 +445,8 @@ scene "s6" (duration: 1s, set: voronka) {
         freeman speaks for 1.46s
         do {
             freeman overlays "ostyl"
+            wait 0.9s
+            freeman overlays "zatylok"
         }
     }
     wait 1.0s
