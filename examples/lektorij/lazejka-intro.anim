@@ -53,14 +53,17 @@ config {
 scene "zabor" (duration: 58s, set: pole) {
     transition static 0.35s
 
-    place freeman at (0.38, 0.72) facing front
+    place freeman at (0.24, 0.72) facing front
     freeman scales 0.62 over 0.01s
     // Забор стоит за спиной героя во весь кадр — доски целы, щель по центру справа.
-    let zabor = prop("fence-gap", "../assets/props/fence-gap.svg") at (0.5, 0.54) layer 1
-    zabor scales 0.92 over 0.01s
+    let zabor = prop("fence-gap", "../assets/props/fence-gap.svg") at (0.5, 0.507) layer 1
+    zabor scales 1.57 over 0.01s
     // Доска-заплатка ждёт своего взлёта за кадром (ружьё Чехова — стреляет в VO-6).
     let doska = prop("plank", "../assets/props/plank.svg") at (0.5, -1.0) layer 3
-    doska scales 0.34 over 0.01s
+    doska scales 1.0 over 0.01s
+    // Эта доска держит вторую щель. На жале она отвалится (ружьё Чехова).
+    let board = prop("board", "../assets/props/board.svg") at (0.5, 0.507) layer 2
+    board scales 1.57 over 0.01s
     let slovo = text("А ГДЕ ЩЕЛЬ?", 108) at (0.5, -2.0) layer 6
     slovo scales 2.4 over 0.01s
 
@@ -105,12 +108,12 @@ scene "zabor" (duration: 58s, set: pole) {
         freeman speaks for 6.0s
         do {
             camera wide
-            freeman moves-to (0.45, 0.77) over 2.2s
+            freeman moves-to (0.30, 0.77) over 2.2s
             wait 0.3s
             camera medium freeman
             freeman pose "idet"        // идёт на камеру, переставляя ноги
             freeman overlays "doubt"
-            freeman moves-to (0.43, 0.83) over 2.0s
+            freeman moves-to (0.28, 0.83) over 2.0s
             wait 0.4s
             camera close-up freeman
             freeman pose "hips"        // «а понимать и не надо было»
@@ -171,7 +174,7 @@ scene "zabor" (duration: 58s, set: pole) {
         do {
             camera wide
             wait 3.4s                  // «Тот уговор уже обошли.»
-            doska moves-to (0.665, 0.5) over 0.5s ease-out   // доска легла на щель
+            doska moves-to (0.365, 0.507) over 0.5s ease-out   // доска легла на щель
             freeman pose "lunge"       // замах
             camera shake 0.12s intensity 2                   // удар
             wait 0.7s
@@ -214,9 +217,9 @@ scene "zabor" (duration: 58s, set: pole) {
     wait 0.08s
 
     // ── ЖАЛО-CTA (VO-8): рядом открывается НОВЫЙ ПРОСВЕТ ──────────────────
-    //  Забор отъезжает вбок: заплатанная щель уходит из кадра, а с другого
-    //  края въезжает нетронутый пролёт — и в нём тот же зазор. Герой стоит
-    //  к нему спиной и не оборачивается.
+    //  Пока он договаривает, справа САМА ОТВАЛИВАЕТСЯ доска — та, на которой
+    //  держалась вторая щель. Он стоит к ней спиной и не оборачивается:
+    //  вопрос «сколько дыр?» повисает над дырой, которую видно прямо сейчас.
     freeman pose "calm"
     freeman pose "lunge"
     //lip 8
@@ -228,11 +231,12 @@ scene "zabor" (duration: 58s, set: pole) {
             freeman pose "point"       // «сколько дыр в правиле»
             freeman overlays "hero_sly"
             wait 1.4s
-            zabor moves-to (0.17, 0.54) over 1.1s ease-out   // новый просвет въехал
+            camera wide
+            board rotates 74 over 0.9s ease-in    // доска пошла, и её уже не держат
+            board moves-to (0.80, 0.60) over 0.9s ease-in
             camera shake 0.12s intensity 1
-            wait 0.7s
-            freeman pose "hips"
-            camera close-up freeman
+            freeman pose "hips"                   // стоит к новой дыре спиной
+            wait 1.4s
         }
     }
     freeman overlays "hero_wink"
