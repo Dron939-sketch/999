@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 420" width="2400" height="420">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58 382" width="58" height="382">
 <!-- Одна доска забора — та, что на жале отваливается и открывает новый просвет.
-     Холст совпадает с fence-gap.svg, доска стоит ровно во второй щели
-     (1642–1700): так проп садится в забор без ручной подгонки координат,
-     а его поворот читается как «доска отошла сама».
+     Холст ПЛОТНЫЙ, по самой доске: moves-to/rotates двигают проп за его центр,
+     и на широком холсте (как у fence-gap) доска улетала бы за кадр.
+     Позиция во второй щели забора выставлена в сценарии.
      Тушь по LOCATION_STYLE.md. -->
-<defs><filter id="ink" x="-6%" y="-6%" width="112%" height="112%"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="19" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<defs><filter id="ink" x="-20%" y="-6%" width="140%" height="112%"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="19" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
 <g filter="url(#ink)">
-  <rect x="1642" y="30" width="58" height="382" rx="6" fill="#141410"/>
+  <rect x="0" y="0" width="58" height="382" rx="6" fill="#141410"/>
 </g>
 </svg>

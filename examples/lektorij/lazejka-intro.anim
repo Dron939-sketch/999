@@ -62,7 +62,7 @@ scene "zabor" (duration: 58s, set: pole) {
     let doska = prop("plank", "../assets/props/plank.svg") at (0.5, -1.0) layer 3
     doska scales 1.0 over 0.01s
     // Эта доска держит вторую щель. На жале она отвалится (ружьё Чехова).
-    let board = prop("board", "../assets/props/board.svg") at (0.5, 0.507) layer 2
+    let board = prop("board", "../assets/props/board.svg") at (0.778, 0.518) layer 2
     board scales 1.57 over 0.01s
     let slovo = text("А ГДЕ ЩЕЛЬ?", 108) at (0.5, -2.0) layer 6
     slovo scales 2.4 over 0.01s
