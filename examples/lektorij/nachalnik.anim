@@ -41,6 +41,8 @@
 //  слоговой таблицы, и прошлый ролик из-за этого вышел на 23 секунды длиннее
 //  прогноза. Завод перепишет числа по факту.
 // =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: ec3aa9a0
 import character freeman from "../assets/characters/freeman_rig"
 import set voronka from "../assets/sets/nachalnik-stol-voronka.svg"
 import set dvoe from "../assets/sets/nachalnik-stol-na-dvoih.svg"
