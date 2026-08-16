@@ -141,12 +141,12 @@ scene "s1" (duration: 1s, set: voronka) {
     //  «Объяснить — час. Сделать — сорок минут.» — его собственный счёт, и он
     //  верный. Всё дальнейшее стоит на том, что зритель с числами согласился.
     together {
-        freeman speaks for 2.44s
+        freeman speaks for 3.34s
         do {
             freeman overlays "vzves"
-            wait 1.1s
+            wait 1.51s
             freeman overlays "vzves_r"
-            wait 0.9s
+            wait 1.23s
             freeman overlays "poimal"
         }
     }
@@ -292,10 +292,10 @@ scene "s4" (duration: 1s, set: dvoe) {
     //  «Считайте не свой день, а их. Решать вам.» — ВЗЛЁТ и ОТКАЗ одной
     //  репликой: другая единица результата, а что с ней делать — не моё дело.
     together {
-        freeman speaks for 2.68s
+        freeman speaks for 3.87s
         do {
             freeman overlays "k_sebe"
-            wait 1.5s
+            wait 2.16s
             freeman overlays "ladon_pusta"
         }
     }
@@ -329,10 +329,10 @@ scene "s4" (duration: 1s, set: dvoe) {
     //  «Цена — человек. Работает ровно до завтра.» — добивка и предел способа
     //  одной репликой. Экономия настоящая, но её хватает на один вечер.
     together {
-        freeman speaks for 2.93s
+        freeman speaks for 3.40s
         do {
             freeman overlays "odna_v_bok"
-            wait 1.6s
+            wait 1.85s
             freeman overlays "otverg"
         }
     }
