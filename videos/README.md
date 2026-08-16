@@ -36,6 +36,8 @@ Workflow `.github/workflows/render.yml`:
 | `freeman-monologue.mp4` | `examples/freeman-monologue.anim` | Мистер Фримен: монолог в камеру (витрина стиля) |
 | `fredi-expressions.mp4` | `examples/lektorij/fredi-expressions-demo.anim` | Фреди: библиотека мимики |
 | `lekciya-2-frejd.mp4` | `examples/lektorij/lekciya-2-frejd-psihodinamika.anim` | Пилот лекции (Фрейд, курс «Теории личности») |
+| `osoznannost-intro.mp4` | `examples/lektorij/osoznannost-intro.anim` | Подводка к курсу «Осознанность»: телевизор, который никто не смотрит |
+| `lazejka-intro.mp4` | `examples/lektorij/lazejka-intro.anim` | Подводка к курсу «Лазейка»: забор цел, а щель есть |
 
 Добавить ролик в конвейер — дописать строку в список `RENDERS` в
 `.github/workflows/render.yml`.
