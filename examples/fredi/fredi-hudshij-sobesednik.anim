@@ -101,7 +101,7 @@ scene "spalnya" (duration: 208s, set: spalnya) {
         do {
             freeman pose "no"
             wait 1.8s
-            camera close-up freeman
+            camera medium freeman
             freeman overlays "smug"
             wait 1.8s
             freeman pose "v_upor"
@@ -127,7 +127,7 @@ scene "spalnya" (duration: 208s, set: spalnya) {
     together {
         freeman speaks for 6.3s
         do {
-            camera close-up freeman
+            camera medium freeman
             freeman overlays "stern"
             wait 1.8s
             freeman pose "v_upor"
@@ -202,7 +202,7 @@ scene "spalnya" (duration: 208s, set: spalnya) {
     together {
         freeman speaks for 5.6s
         do {
-            camera close-up freeman
+            camera medium freeman
             freeman pose "v_upor"
             freeman overlays "stern"
             wait 2.0s
@@ -231,7 +231,7 @@ scene "spalnya" (duration: 208s, set: spalnya) {
     together {
         freeman speaks for 10.3s
         do {
-            camera close-up freeman
+            camera medium freeman
             freeman pose "calm"
             freeman overlays "hero_skeptic"
             wait 2.6s
@@ -250,7 +250,7 @@ scene "spalnya" (duration: 208s, set: spalnya) {
         freeman speaks for 8.3s
         do {
             freeman pose "lunge"
-            camera close-up freeman
+            camera medium freeman
             freeman overlays "hero_sly"
             wait 2.4s
             freeman overlays "flash_grin"
@@ -375,7 +375,7 @@ scene "spalnya" (duration: 208s, set: spalnya) {
     together {
         freeman speaks for 12.9s
         do {
-            camera close-up freeman
+            camera medium freeman
             wait 2.4s
             freeman pose "raskryl"
             wait 2.4s
