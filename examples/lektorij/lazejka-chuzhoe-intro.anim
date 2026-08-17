@@ -177,7 +177,7 @@ scene "shlagbaum" (duration: 58s, set: pole) {
             wait 3.6s
             freeman pose "open"        // он с той стороны, запрет цел
             freeman overlays "hero_wow"
-            camera medium freeman
+            camera wide                // обход виден только на общем плане
         }
     }
 
@@ -217,15 +217,15 @@ scene "shlagbaum" (duration: 58s, set: pole) {
     together {
         freeman speaks for 6.0s
         do {
-            camera medium freeman
+            camera wide                // сразу общий: он за стрелой, она опущена
             wait 1.2s
             freeman pose "point"       // «сколько раз ты стоял»
             freeman overlays "hero_sly"
             wait 1.4s
-            camera wide
-            wait 1.6s
+            camera medium freeman      // короткий акцент на лице
+            wait 1.2s
+            camera wide                // и обратно: финальный кадр — общий
             freeman pose "hips"
-            camera close-up freeman
         }
     }
     freeman overlays "hero_wink"
