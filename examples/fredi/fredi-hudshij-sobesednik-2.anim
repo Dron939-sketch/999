@@ -21,8 +21,10 @@
 //      Держится строгой мимикой и общим планом, без иронии;
 //    · жало — «Пип.» в темноту.
 //
-//  Локация: спальня в три часа ночи (fredi-spalnya.svg). Тона средне-серые, а
-//  не чёрные: оба персонажа — сплошные силуэты и на тёмной комнате пропали бы.
+//  Локация: рисованная спальня в три часа ночи (fredi-spalnya.svg). Тона
+//  средне-серые, а не чёрные: оба персонажа — сплошные силуэты и на тёмной
+//  комнате пропали бы. Говорящий стоит на светлом пятне от уличного фонаря —
+//  единственном месте кадра, где силуэт читается целиком.
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
@@ -54,13 +56,13 @@ scene "spalnya" (duration: 52s, set: spalnya) {
     transition static 0.35s
 
     // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
-    place sleeper at (0.72, 0.755) facing front
+    place sleeper at (0.73, 0.60) facing front
     sleeper scales 0.5 over 0.01s
     sleeper pose "lezhit"
     sleeper overlays "weary"
 
     // Фреди — на светлом пятне от фонаря слева: только там виден силуэт.
-    place freeman at (0.26, 0.72) facing front
+    place freeman at (0.28, 0.72) facing front
     freeman scales 0.6 over 0.01s
     let imya = text("ФРЕДИ", 90) at (0.5, -2.0) layer 6
     imya scales 0.5 over 0.01s
