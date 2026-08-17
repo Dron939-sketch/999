@@ -52,7 +52,7 @@ config {
     rim-light: 0.0
 }
 
-scene "spalnya" (duration: 118s, set: spalnya) {
+scene "spalnya" (duration: 137s, set: spalnya) {
     transition static 0.35s
 
     // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
