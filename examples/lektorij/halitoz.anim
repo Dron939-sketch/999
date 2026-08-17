@@ -57,7 +57,7 @@
 //  переписанных заводом чисел ролика 24). Завод перепишет их по факту озвучки.
 // =============================================================================
 //
-//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 56bb6062
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 59df7be7
 import character freeman from "../assets/characters/freeman_rig"
 import set kuhnya from "../assets/sets/halitoz-kuhnya-foto.svg"
 
