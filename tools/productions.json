@@ -82,6 +82,13 @@
    "anim": "examples/lektorij/lazejka-chuzhoe-intro.anim",
    "vo": "examples/lektorij/lazejka-chuzhoe-intro-VO.md",
    "images": []
+  },
+  {
+   "id": "fredi-hudshij-sobesednik",
+   "desc": "Реклама приложения «Фреди»: худший собеседник в твоей жизни — ты сам. Двое в кадре (говорящий и лежащий в 3 ночи), спальня, 3:33 — не интро курса.",
+   "anim": "examples/fredi/fredi-hudshij-sobesednik.anim",
+   "vo": "examples/fredi/fredi-hudshij-sobesednik-VO.md",
+   "images": []
   }
  ]
 }

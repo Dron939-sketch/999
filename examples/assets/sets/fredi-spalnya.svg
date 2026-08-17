@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+<!-- ВРЕМЕННАЯ спальня в три часа ночи. Заменяется растровой картинкой
+     (промт — examples/fredi/FREDI-IMAGE-PROMPTS.md §1): обёртка ляжет под тем
+     же именем, сценарий менять не придётся.
+     Стиль LOCATION_STYLE.md: плоские тона, чёрная тушь, свет — один флэт-полигон.
+     Тона средне-серые, а не чёрные: персонажи здесь сплошные силуэты и на
+     тёмной комнате пропадут. -->
+<defs><filter id="ink" x="-4%" y="-4%" width="108%" height="108%"><feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="2" seed="61" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+  <!-- плоскости: потолок темнее, стена светлее, пол средний -->
+  <rect width="1280" height="150" fill="#5f625b"/>
+  <rect y="150" width="1280" height="360" fill="#a2a59d"/>
+  <rect y="510" width="1280" height="210" fill="#b0b3ab"/>
+<g filter="url(#ink)">
+  <!-- линии стыков -->
+  <rect y="146" width="1280" height="7" fill="#141410"/>
+  <rect y="506" width="1280" height="7" fill="#141410"/>
+  <!-- окно слева -->
+  <rect x="96" y="196" width="232" height="238" fill="#141410"/>
+  <rect x="112" y="212" width="200" height="206" fill="#c9ccc3"/>
+  <rect x="204" y="212" width="12" height="206" fill="#141410"/>
+  <rect x="112" y="306" width="200" height="10" fill="#141410"/>
+  <!-- ОДИН флэт-полигон света от фонаря: пятно на стене и полу слева -->
+  <path d="M112 434 L312 434 L392 720 L86 720 Z" fill="#f2f4ec" opacity="0.42"/>
+  <!-- кровать справа, вид сбоку. Верх матраса на 0.75 высоты (540px) -->
+  <rect x="700" y="536" width="520" height="26" fill="#141410"/>
+  <rect x="706" y="562" width="508" height="74" fill="#8f938a"/>
+  <rect x="700" y="632" width="520" height="14" fill="#141410"/>
+  <rect x="712" y="646" width="26" height="66" fill="#141410"/>
+  <rect x="1182" y="646" width="26" height="66" fill="#141410"/>
+  <!-- спинка и откинутое одеяло -->
+  <rect x="1188" y="440" width="32" height="112" fill="#141410"/>
+  <path d="M706 536 L900 536 L960 560 L706 560 Z" fill="#141410" opacity="0.85"/>
+  <!-- тьма под кроватью и в дальнем углу -->
+  <rect x="700" y="646" width="520" height="20" fill="#17170f" opacity="0.8"/>
+  <rect x="1220" y="150" width="60" height="360" fill="#17170f" opacity="0.55"/>
+</g>
+</svg>
