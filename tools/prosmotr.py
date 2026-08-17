@@ -280,7 +280,7 @@ def pechat(nazvanie, seki, hvost):
     return vsego
 
 
-def tishiny_iz_vo(vo):
+def tishiny_iz_vo(vo, dlina=None):
     """Окна тишины берём У СБОРЩИКА ЗВУКА, а не разбираем таблицу заново.
 
     ЗАЧЕМ. Строка «| 1:55 | кухня, чайник; на паузе после VO-26 — ТИШИНА |»
@@ -290,15 +290,94 @@ def tishiny_iz_vo(vo):
     назначена. `sfx.parse_tishiny` разрешает «после VO-N» в настоящий зазор
     между репликами — тем же кодом, которым дорожка и построена, так что
     приёмка и сборка больше не читают партитуру по-разному.
+
+    И ВСЁ РАВНО ЧИТАЛИ ПО-РАЗНОМУ — НА ОДИН ШАГ ПОЗЖЕ. Разбирать партитуру
+    одним кодом оказалось мало: сборщик после разбора ПЕРЕВОДИТ окна с
+    планового монтажа на фактический (`sfx.remap_cues`), а приёмка сравнивала
+    фактическую дорожку с ПЛАНОВЫМИ метками. На ролике 25 сборщик заглушил
+    76.5–81.1с и 133.0–162.0с — ровно там, где пауза и стоит, — а приёмка
+    искала тишину на 99.0с и сообщила брак: промах 22 секунды при окне
+    поиска, рассчитанном на две (в комментарии ниже так и написано: «128 с
+    против 130»).
+
+    ЭТО ЛОВИЛО КАЖДЫЙ ПЕРВЫЙ РЕНДЕР. Числа `speaks for` в свежей раскадровке
+    — прогноз по слогам; на факт их переписывает шаг, который идёт ПОСЛЕ
+    просмотра готового файла. Пока прогноз расходился с фактом больше, чем на
+    окно поиска, просмотр валил корректный файл, а шаг, который убрал бы
+    расхождение, до работы не доходил. Круг замыкался, и разорвать его правкой
+    ролика было нельзя.
+
+    Поэтому окна переводятся тем же `remap_cues` и по тем же опорам, что у
+    сборщика: `.<id>.lipsynced.anim.times.json` — факт от `animdsl timing`,
+    `.map.json` — какой блок какой репликой озвучен. Файлов нет (просмотр
+    гоняют на скачанном ролике без рабочей папки) — работаем по плану, как
+    раньше, и говорим об этом вслух.
     """
     if not vo:
         return []
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     try:
-        from sfx import parse_tishiny
+        from sfx import parse_tishiny, parse_vo_times, remap_cues, sfx_table_span
     except Exception:                                # noqa: BLE001
         return []
-    return [(a + b) / 2 for a, b in parse_tishiny(vo)]
+    okna = parse_tishiny(vo)
+    if not okna:
+        return []
+    okna = _na_fakt(vo, okna, dlina, parse_vo_times, remap_cues, sfx_table_span)
+    return [(a + b) / 2 for a, b in okna]
+
+
+def _na_fakt(vo, okna, dlina, parse_vo_times, remap_cues, sfx_table_span):
+    """Перевести окна тишины с плана на факт по часам движка. Нет часов — план."""
+    import json as _json
+    anim = None
+    try:
+        d = _json.loads((ROOT / "tools/productions.json").read_text(encoding="utf-8"))
+        for prod in d["productions"]:
+            if prod.get("vo") and Path(prod["vo"]).name == Path(vo).name:
+                anim = ROOT / prod["anim"]
+                break
+    except Exception:                                # noqa: BLE001
+        return okna
+    if anim is None:
+        return okna
+    times = anim.parent / f".{anim.stem}.lipsynced.anim.times.json"
+    karta = anim.parent / f".{anim.stem}.lipsynced.anim.map.json"
+    if not times.is_file():
+        print(f"      [тишина] часов движка нет ({times.name}) — метки "
+              f"остались плановыми, промах возможен")
+        return okna
+    try:
+        blocks = _json.loads(times.read_text(encoding="utf-8")).get("blocks", [])
+        real_all = [(b["start"], b["end"]) for b in blocks]
+        planned_all = parse_vo_times(vo)
+        if karta.is_file():
+            order = _json.loads(karta.read_text(encoding="utf-8"))
+            pary = [(planned_all[n - 1], real_all[i])
+                    for i, n in enumerate(order)
+                    if i < len(real_all) and 1 <= n <= len(planned_all)]
+            planned = [a for a, _ in pary]
+            real = [b for _, b in pary]
+        else:
+            planned, real = planned_all, real_all
+        if not real or len(real) != len(planned):
+            print(f"      [тишина] реплик в плане {len(planned)}, в факте "
+                  f"{len(real)} — метки остались плановыми")
+            return okna
+        plan_total = sfx_table_span(vo) or planned[-1][1]
+        kraya = [(x, "t") for para in okna for x in para]
+        kraya = remap_cues(kraya, planned, real, plan_total,
+                           dlina or real[-1][1])
+        tochki = [x for x, _ in kraya]
+        novye = list(zip(tochki[0::2], tochki[1::2]))
+        sdvig = max((abs(a[0] - b[0]) for a, b in zip(okna, novye)), default=0.0)
+        if sdvig >= 0.05:
+            print(f"      [тишина] метки переведены на фактический монтаж "
+                  f"(максимальный сдвиг {sdvig:.1f}с)")
+        return novye
+    except Exception as e:                           # noqa: BLE001
+        print(f"      [тишина] перевод не выполнен ({e}) — метки плановые")
+        return okna
 
 
 def zvuk_tishina(video, metki, rab):
@@ -510,7 +589,10 @@ def main(argv):
                 print("      Общая доля речи в норме, но держится на части "
                       "ролика: похоже, поштучный синтез потерял часть реплик.")
 
-        bed = zvuk_tishina(a.video, tishiny_iz_vo(a.vo), rab)
+        # Длина готового файла нужна переводу меток: хвост после последней
+        # реплики тянется по ОБЩЕЙ длине, а не по концу речи. Листы снимаются
+        # раз в секунду, поэтому их число и есть длина в секундах.
+        bed = zvuk_tishina(a.video, tishiny_iz_vo(a.vo, len(fajly)), rab)
         for t, bylo, mn in bed:
             plohih += 1
             print(f"  ✗ назначенная тишина на {vremya(t)} не звучит: самая "

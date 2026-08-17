@@ -108,10 +108,10 @@ scene "s1" (duration: 1s, set: kuhnya) {
     freeman pose "calm"
     wait 0.1s
 
-    //lip 1
-    //  «Привет-привет. Ты вовремя.»
     freeman overlays "hero_grin"
     wait 0.1s
+    //lip 1
+    //  «Привет-привет. Ты вовремя.»
     together {
         freeman speaks for 1.95s
         do {
@@ -199,10 +199,10 @@ scene "s2" (duration: 1s, set: kuhnya) {
     }
     wait 0.4s
 
-    //lip 8
-    //  «Даже друзья тебе не скажут. А я скажу.»
     freeman overlays "flash_wink"
     wait 0.1s
+    //lip 8
+    //  «Даже друзья тебе не скажут. А я скажу.»
     together {
         freeman speaks for 3.17s
         do {
@@ -282,10 +282,10 @@ scene "s3" (duration: 1s, set: kuhnya) {
     }
     wait 0.7s
 
-    //lip 14
-    //  «Красиво? Красиво.»
     freeman overlays "hero_grin"
     wait 0.1s
+    //lip 14
+    //  «Красиво? Красиво.»
     together {
         freeman speaks for 1.46s
         do {
@@ -327,12 +327,21 @@ scene "s4" (duration: 1s, set: kuhnya) {
         }
     }
     camera medium freeman
+    //  РУКА ВОЗВРАЩАЕТСЯ, И ЭТО НЕ ПРИДИРКА (реестр §XXXIX: у каждой кости
+    //  свои часы). `manit_l` поднимает upper_arm_left на 68°, а дальше идут
+    //  `stern` и `vzglyad` — слои, которые рук НЕ НАЗЫВАЮТ. Кость смотрит
+    //  назад, находит своё последнее объявление и держит 68° шесть секунд
+    //  подряд: жест превращается в забытую руку, и на готовом кадре она
+    //  читается доской, перечёркивающей маску. Полная поза между репликами —
+    //  законное место (речь она не задевает) и единственное, что руки
+    //  называет.
+    freeman pose "calm"
     wait 0.4s
 
-    //lip 17
-    //  «Я сделаю с тобой ровно то же самое.»
     freeman overlays "stern"
     wait 0.1s
+    //lip 17
+    //  «Я сделаю с тобой ровно то же самое.»
     together {
         freeman speaks for 3.17s
         do {
@@ -467,10 +476,10 @@ scene "s6" (duration: 1s, set: kuhnya) {
     freeman pose "calm"
     wait 0.15s
 
-    //lip 26
-    //  «И тебе даже нравится: думать — больно, листать — приятно.»
     freeman overlays "hero_grin"
     wait 0.1s
+    //lip 26
+    //  «И тебе даже нравится: думать — больно, листать — приятно.»
     together {
         freeman speaks for 4.15s
         do {
@@ -489,10 +498,10 @@ scene "s6" (duration: 1s, set: kuhnya) {
     }
     wait 1.8s
 
-    //lip 28
-    //  «Поздравляю. Это и есть халитоз.»
     freeman overlays "smug"
     wait 0.1s
+    //lip 28
+    //  «Поздравляю. Это и есть халитоз.»
     together {
         freeman speaks for 2.68s
         do {
@@ -592,6 +601,9 @@ scene "s7" (duration: 1s, set: kuhnya) {
             freeman overlays "k_sebe_r"
         }
     }
+    //  Та же забытая рука с другой стороны: `k_sebe_r` держит upper_arm_right
+    //  на 76°, а следующий слой `teplo` рук не называет.
+    freeman pose "calm"
     wait 0.4s
 
     //lip 36
@@ -604,10 +616,10 @@ scene "s7" (duration: 1s, set: kuhnya) {
     }
     wait 0.7s
 
-    //lip 37
-    //  «Худшая бизнес-модель в истории.»
     freeman overlays "smug"
     wait 0.1s
+    //lip 37
+    //  «Худшая бизнес-модель в истории.»
     together {
         freeman speaks for 2.68s
         do {
