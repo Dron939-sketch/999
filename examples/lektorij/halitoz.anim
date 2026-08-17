@@ -6,18 +6,22 @@
 //  чужом примере, а потом проделывают со зрителем при свидетелях. Разница ровно
 //  одна: та проблема была выдумана, эта настоящая, и денег за неё не берут.
 //
-//  1. РАЗРЫВ СТОИТ В МАТЕРИАЛЕ КАДРА, И ЭТОГО В СЕРИИ НЕ БЫЛО НИ РАЗУ. Двадцать
-//     четыре ролика подряд рисованный персонаж стоял в рисованной локации. Здесь
-//     он стоит в СНЯТОЙ комнате: плоская тушь на фотографической глубине. Глаз
-//     ловит несовместимость раньше, чем поймёт, что видит, — и это же тезис
-//     ролика: нарисованный говорит про настоящую жизнь, а настоящую жизнь тебе
-//     нарисовали.
+//  1. РАЗРЫВ ОБЪЯВЛЕН ФЛАКОНОМ — АПТЕЧНЫМ ПУЗЫРЬКОМ ИЗ ДВАДЦАТЫХ на сегодняшней
+//     столешнице: единственная нарисованная вещь среди снятых, единственное
+//     цветное пятно (0.06% кадра), контекстом не объяснённая ничем. Он стоит в
+//     кадре с первой секунды, за четыре реплики до того, как в монологе появится
+//     «человек с флаконом» (VO-5), и оплачивается в VO-30 — «разница между мной и
+//     парнем с флаконом ровно одна», — где на этот пузырёк встаёт весь тезис. В
+//     финальном кадре он остаётся, и на втором круге зритель видит его знающим
+//     глазом.
 //
-//  2. ВТОРЫМ СЛОЕМ — АПТЕЧНЫЙ ФЛАКОН на столешнице: единственная нарисованная
-//     вещь среди снятых, единственное цветное пятно (0.06% кадра) и предмет из
-//     двадцатых на сегодняшней кухне. Он стоит в кадре с первой секунды, за
-//     четыре реплики до того, как в монологе появится «человек с флаконом», и
-//     остаётся в финальном кадре. Словом не назван ни разу.
+//  2. ВТОРОЙ СЛОЙ РАЗРЫВА — МАТЕРИАЛ КАДРА, И ЭТОГО В СЕРИИ НЕ БЫЛО НИ РАЗУ.
+//     Двадцать четыре ролика подряд рисованный персонаж стоял в рисованной
+//     локации. Здесь он стоит в СНЯТОЙ комнате: плоская тушь на фотографической
+//     глубине. Глаз ловит несовместимость раньше, чем поймёт, что видит, — и это
+//     же тезис ролика: нарисованный говорит про настоящую жизнь, а настоящую
+//     жизнь тебе нарисовали. Машина такой разрыв не меряет: он видно и только
+//     видно, поэтому гейту объявлен флакон.
 //
 //  3. ЛОКАЦИЯ ОДНА НА ВЕСЬ РОЛИК, И ЭТО РЕШЕНИЕ, А НЕ ЭКОНОМИЯ. Он не выходит с
 //     твоей кухни две с половиной минуты. Склейки идут внутри одного места и
@@ -28,9 +32,13 @@
 //     пикселей темнее 40 — чёрный плащ там пропадает целиком, и ни одна мерка
 //     этого не поймает: все они читают силуэт по туши.
 //
-//  5. МЕРА ЧЕЛОВЕКА 0.73, СХОДИТСЯ ПРИ scales 1.38 И СТУПНЯХ НА 0.97. Полоса
-//     пола узкая (0.852..1.0), множитель глубины меняется резко: при 1.27
-//     фигура давала 0.62, при 1.50 — 0.86.
+//  5. МЕРА ЧЕЛОВЕКА 0.73, И ФИГУРА СТОИТ НИЖЕ МЕРЫ НАМЕРЕННО. Полоса пола узкая
+//     (0.852..1.0), множитель глубины меняется резко: при scales 1.38 и ступнях
+//     на 0.97 рост выходил ровно в меру, 0.73, — и гейт запаса срезал макушку на
+//     пяти сценах из восьми, потому что самая высокая поза даёт ещё восемь
+//     процентов сверху. Стоит 1.10 при ступнях на 0.99: рост около 0.66, это
+//     внутри допуска ±15% от меры, а над головой появилось поле. Гейт роста и
+//     гейт запаса тянут в разные стороны, и проверять их надо парой.
 //
 //  7. ПЛАНЫ ВЗЯТЫ ПО ШКАЛЕ ЭТОЙ ЛОКАЦИИ, А НЕ ПО ПРИВЫЧКЕ. Мера человека здесь
 //     0.73 кадра — комната тесная, — и `camera medium` (зум 2.2) срезает макушку:
@@ -49,7 +57,7 @@
 //  переписанных заводом чисел ролика 24). Завод перепишет их по факту озвучки.
 // =============================================================================
 //
-//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 58c187b4
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 56bb6062
 import character freeman from "../assets/characters/freeman_rig"
 import set kuhnya from "../assets/sets/halitoz-kuhnya-foto.svg"
 
@@ -79,8 +87,8 @@ config {
 
 // ============ СЦЕНА 1: s1 — приветствие, хук, отрицание ============
 scene "s1" (duration: 1s, set: kuhnya) {
-    place freeman at (0.30, 0.97) facing front on floor
-    freeman scales 1.38 over 0.01s
+    place freeman at (0.30, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
 
     let nomer = prop("nomer", "../assets/props/nomer-25.svg") at (0.325, 0.545) layer 9
     nomer scales 0.17 over 0.01s
@@ -102,10 +110,12 @@ scene "s1" (duration: 1s, set: kuhnya) {
 
     //lip 1
     //  «Привет-привет. Ты вовремя.»
+    freeman overlays "hero_grin"
+    wait 0.1s
     together {
         freeman speaks for 1.95s
         do {
-            freeman overlays "hero_grin"
+            freeman overlays "vzglyad"
         }
     }
     wait 0.4s
@@ -140,7 +150,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
         do {
             freeman overlays "no"
             wait 1.83s
-            freeman overlays "v_upor"
+            freeman overlays "prishchur"
         }
     }
     camera wide
@@ -151,8 +161,8 @@ scene "s1" (duration: 1s, set: kuhnya) {
 scene "s2" (duration: 1s, set: kuhnya) {
     transition static 0.12s
 
-    place freeman at (0.34, 0.97) facing front on floor
-    freeman scales 1.38 over 0.01s
+    place freeman at (0.34, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
     camera two-shot freeman
     freeman pose "calm"
     wait 0.15s
@@ -191,10 +201,12 @@ scene "s2" (duration: 1s, set: kuhnya) {
 
     //lip 8
     //  «Даже друзья тебе не скажут. А я скажу.»
+    freeman overlays "flash_wink"
+    wait 0.1s
     together {
         freeman speaks for 3.17s
         do {
-            freeman overlays "flash_wink"
+            freeman overlays "vzglyad"
         }
     }
     wait 0.4s
@@ -214,8 +226,8 @@ scene "s2" (duration: 1s, set: kuhnya) {
 scene "s3" (duration: 1s, set: kuhnya) {
     transition static 0.12s
 
-    place freeman at (0.30, 0.97) facing front on floor
-    freeman scales 1.38 over 0.01s
+    place freeman at (0.30, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
     camera wide
     freeman pose "calm"
     wait 0.15s
@@ -272,10 +284,12 @@ scene "s3" (duration: 1s, set: kuhnya) {
 
     //lip 14
     //  «Красиво? Красиво.»
+    freeman overlays "hero_grin"
+    wait 0.1s
     together {
         freeman speaks for 1.46s
         do {
-            freeman overlays "hero_grin"
+            freeman overlays "vzglyad"
         }
     }
     wait 0.4s
@@ -296,8 +310,8 @@ scene "s3" (duration: 1s, set: kuhnya) {
 scene "s4" (duration: 1s, set: kuhnya) {
     transition static 0.12s
 
-    place freeman at (0.38, 0.97) facing front on floor
-    freeman scales 1.38 over 0.01s
+    place freeman at (0.38, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
     camera two-shot freeman
     freeman pose "calm"
     wait 0.15s
@@ -317,10 +331,12 @@ scene "s4" (duration: 1s, set: kuhnya) {
 
     //lip 17
     //  «Я сделаю с тобой ровно то же самое.»
+    freeman overlays "stern"
+    wait 0.1s
     together {
         freeman speaks for 3.17s
         do {
-            freeman overlays "stern"
+            freeman overlays "vzglyad"
         }
     }
     wait 0.4s
@@ -341,8 +357,8 @@ scene "s4" (duration: 1s, set: kuhnya) {
 scene "s5" (duration: 1s, set: kuhnya) {
     transition static 0.12s
 
-    place freeman at (0.34, 0.97) facing front on floor
-    freeman scales 1.38 over 0.01s
+    place freeman at (0.34, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
     camera wide
     freeman pose "calm"
     wait 0.15s
@@ -353,7 +369,7 @@ scene "s5" (duration: 1s, set: kuhnya) {
     wait 0.1s
     freeman pose "shag_pravoj"
     wait 0.12s
-    freeman moves-to (0.44, 0.97) over 0.5s ease-in-out
+    freeman moves-to (0.44, 0.99) over 0.5s ease-in-out
     freeman pose "shag_levoj"
     wait 0.12s
     freeman pose "calm"
@@ -386,7 +402,7 @@ scene "s5" (duration: 1s, set: kuhnya) {
     together {
         freeman speaks for 3.90s
         do {
-            freeman overlays "v_upor"
+            freeman overlays "prishchur"
         }
     }
     camera wide
@@ -445,19 +461,19 @@ scene "s5" (duration: 1s, set: kuhnya) {
 scene "s6" (duration: 1s, set: kuhnya) {
     transition static 0.12s
 
-    place freeman at (0.38, 0.97) facing front on floor
-    freeman scales 1.38 over 0.01s
+    place freeman at (0.38, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
     camera two-shot freeman
     freeman pose "calm"
     wait 0.15s
 
     //lip 26
     //  «И тебе даже нравится: думать — больно, листать — приятно.»
+    freeman overlays "hero_grin"
+    wait 0.1s
     together {
         freeman speaks for 4.15s
         do {
-            freeman overlays "hero_grin"
-            wait 2.07s
             freeman overlays "gorech"
         }
     }
@@ -475,10 +491,12 @@ scene "s6" (duration: 1s, set: kuhnya) {
 
     //lip 28
     //  «Поздравляю. Это и есть халитоз.»
+    freeman overlays "smug"
+    wait 0.1s
     together {
         freeman speaks for 2.68s
         do {
-            freeman overlays "smug"
+            freeman overlays "vzglyad"
         }
     }
     wait 0.4s
@@ -499,8 +517,8 @@ scene "s6" (duration: 1s, set: kuhnya) {
 scene "s7" (duration: 1s, set: kuhnya) {
     transition static 0.12s
 
-    place freeman at (0.30, 0.97) facing front on floor
-    freeman scales 1.38 over 0.01s
+    place freeman at (0.30, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
     camera wide
     freeman pose "calm"
     wait 0.15s
@@ -588,10 +606,12 @@ scene "s7" (duration: 1s, set: kuhnya) {
 
     //lip 37
     //  «Худшая бизнес-модель в истории.»
+    freeman overlays "smug"
+    wait 0.1s
     together {
         freeman speaks for 2.68s
         do {
-            freeman overlays "smug"
+            freeman overlays "vzglyad"
         }
     }
     wait 0.4s
@@ -611,8 +631,8 @@ scene "s7" (duration: 1s, set: kuhnya) {
 scene "s8" (duration: 1s, set: kuhnya) {
     transition static 0.12s
 
-    place freeman at (0.30, 0.97) facing front on floor
-    freeman scales 1.38 over 0.01s
+    place freeman at (0.30, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
     camera two-shot freeman
     freeman pose "calm"
     wait 0.15s
