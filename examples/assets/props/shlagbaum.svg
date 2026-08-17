@@ -19,9 +19,9 @@
     <rect x="1130" y="180" width="170" height="56" rx="6"/>
   </g>
   <rect x="130" y="194" width="1170" height="14" fill="#141410"/>
-  <rect x="600" y="236" width="8" height="34" fill="#141410"/>
-  <rect x="856" y="236" width="8" height="34" fill="#141410"/>
-  <rect x="574" y="268" width="316" height="104" rx="10" fill="#141410"/>
-  <rect x="590" y="284" width="284" height="72" rx="6" fill="#d4d7cf"/>
+  <rect x="560" y="236" width="8" height="34" fill="#141410"/>
+  <rect x="940" y="236" width="8" height="34" fill="#141410"/>
+  <rect x="430" y="268" width="640" height="104" rx="10" fill="#141410"/>
+  <rect x="446" y="284" width="608" height="72" rx="6" fill="#d4d7cf"/>
 </g>
 </svg>

@@ -55,8 +55,10 @@ scene "shlagbaum" (duration: 58s, set: pole) {
     bar scales 1.4 over 0.01s
     // Надпись на табличке. Ждёт разворота: сначала зритель видит запрет, и
     // только потом слышит, что запрет не про него (ружьё Чехова).
+    // Кегль движок игнорирует — размер надписи задаёт ТОЛЬКО scales.
+    // 0.27 подобрано замером: текст ровно в белом поле таблички.
     let nadpis = text("ПРОЕЗД ЗАПРЕЩЁН", 34) at (0.5, -2.0) layer 4
-    nadpis scales 1.0 over 0.01s
+    nadpis scales 0.27 over 0.01s
     let slovo = text("А ТЫ ПЕШКОМ", 104) at (0.5, -2.0) layer 6
     slovo scales 2.4 over 0.01s
 
@@ -147,9 +149,9 @@ scene "shlagbaum" (duration: 58s, set: pole) {
             freeman pose "chetvert_pravo"
             wait 1.8s
             camera wide
-            nadpis moves-to (0.412, 0.60) over 0.01s   // легла на табличку
-            nadpis scales 1.6 over 0.01s
-            nadpis scales 1.0 over 0.16s ease-in       // штамп-удар
+            nadpis moves-to (0.387, 0.645) over 0.01s  // легла на табличку
+            nadpis scales 0.42 over 0.01s
+            nadpis scales 0.27 over 0.16s ease-in      // штамп-удар
             camera shake 0.14s intensity 2
             freeman overlays "flash_pupils"
             wait 0.16s
