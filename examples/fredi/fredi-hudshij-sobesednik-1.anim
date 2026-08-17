@@ -1,6 +1,11 @@
 // =============================================================================
 //  ФРЕДИ — «Худший собеседник» (реклама приложения, не Лекторий)
 //
+//  ЧАСТЬ 1 из 2 — ДИАГНОЗ. Движок держит все кадры в памяти (замерено:
+//  +800 МБ/мин), и 3.5-минутный ролик обрывал CI-раннер по OOM. Разрезан
+//  по смысловой границе: здесь проблема, во второй части — что с ней делать.
+//  Части склеиваются в один файл на выходе (ffmpeg concat).
+//
 //  ФИШКА — ДВОЕ В КАДРЕ. Впервые в цеху: кроме Фримена в сцене лежит ВТОРОЙ
 //  персонаж (тот же риг под именем sleeper, поза "lezhit"). Он не говорит и
 //  не встаёт весь ролик — он просто смотрит в потолок в три часа ночи, пока
@@ -25,7 +30,6 @@
 import character freeman from "../assets/characters/freeman_rig"
 import character sleeper from "../assets/characters/freeman_rig"
 import set spalnya from "../assets/sets/fredi-spalnya.svg"
-import set titry from "../assets/sets/lektorij-final.svg"
 
 config {
     width: 1280
@@ -48,7 +52,7 @@ config {
     rim-light: 0.0
 }
 
-scene "spalnya" (duration: 208s, set: spalnya) {
+scene "spalnya" (duration: 118s, set: spalnya) {
     transition static 0.35s
 
     // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
@@ -60,8 +64,6 @@ scene "spalnya" (duration: 208s, set: spalnya) {
     // Фреди — на светлом пятне от фонаря слева: только там виден силуэт.
     place freeman at (0.26, 0.72) facing front
     freeman scales 0.6 over 0.01s
-    let imya = text("ФРЕДИ", 90) at (0.5, -2.0) layer 6
-    imya scales 0.5 over 0.01s
 
     // ── БЕЗ СЛОВ: лежащий смотрит в потолок ───────────────────────────────
     camera wide
@@ -356,144 +358,7 @@ scene "spalnya" (duration: 208s, set: spalnya) {
         }
     }
 
-    // ── VO-20 [ВЗЛЁТ]: Зовут Фреди. Он не поддакивает — он спрашивает.
-    //lip 20
-    together {
-        freeman speaks for 5.6s
-        do {
-            camera medium freeman
-            freeman pose "open"
-            wait 1.6s
-            freeman pose "v_upor"
-            wait 1.6s
-            freeman pose "calm"
-        }
-    }
-
-    // ── VO-21 [ВЗЛЁТ]: Поворачивает твою тему так, как тебе в голову не приходило
-    //lip 21
-    together {
-        freeman speaks for 12.9s
-        do {
-            camera medium freeman
-            wait 2.4s
-            freeman pose "raskryl"
-            wait 2.4s
-            camera medium freeman
-            freeman pose "point"
-            wait 2.4s
-            freeman pose "calm"
-            wait 2.0s
-        }
-    }
-
-    // ── VO-22 [ВЗЛЁТ]: В три часа ночи он не спит. В браузере, без установки, нач
-    //lip 22
-    together {
-        freeman speaks for 9.6s
-        do {
-            camera wide
-            freeman pose "point"
-            wait 2.4s
-            freeman pose "open"
-            wait 2.2s
-            freeman pose "hips"
-            wait 2.0s
-            freeman pose "calm"
-        }
-    }
-
-    // ── VO-23 [ПРЕДЕЛ]: И да, честно: если у тебя совсем темно — сон развалился, е
-    //lip 23
-    together {
-        freeman speaks for 14.9s
-        do {
-            camera close-up freeman
-            freeman overlays "stern"
-            wait 3.0s
-            freeman pose "v_upor"
-            wait 3.0s
-            camera medium freeman
-            wait 2.6s
-            freeman pose "hunch"
-            wait 2.4s
-            freeman pose "v_upor"
-        }
-    }
-
-    // ── VO-24 [ПРЕДЕЛ]: Фреди, кстати, первый тебе это и скажет. Он умнее многих ж
-    //lip 24
-    together {
-        freeman speaks for 7.6s
-        do {
-            camera medium freeman
-            freeman pose "calm"
-            wait 2.0s
-            freeman overlays "smug"
-            freeman pose "hips"
-            wait 2.0s
-            freeman pose "calm"
-        }
-    }
-
-    // ── VO-25 [ЖАЛО]: Ссылка внизу. Тот собеседник в твоей голове никуда не дене
-    //lip 25
-    together {
-        freeman speaks for 7.0s
-        do {
-            camera wide
-            freeman pose "point"
-            wait 2.0s
-            freeman pose "calm"
-            wait 1.6s
-        }
-    }
-
-    // ── VO-26 [ЖАЛО]: Но пусть у него появится конкурент.
-    //lip 26
-    together {
-        freeman speaks for 4.3s
-        do {
-            camera close-up freeman
-            freeman overlays "hero_wink"
-            wait 1.4s
-            freeman pose "v_upor"
-            wait 1.2s
-        }
-    }
-
-    // ── VO-27 [ЖАЛО]: Пип.
-    //lip 27
-    together {
-        freeman speaks for 1.0s
-        do {
-            camera medium freeman
-            wait 0.4s
-        }
-    }
-
-    // ── УХОД: имя остаётся в темноте ──────────────────────────────────────
-    imya moves-to (0.5, 0.42) over 0.01s
-    imya scales 0.62 over 0.22s ease-in
-    transition invert 0.16s
-    wait 1.2s
     camera reset over 0.5s
-    wait 0.6s
-}
-
-scene "titry" (duration: 5s, set: titry) {
-    transition static 0.45s
-    place freeman at (0.5, 3.0) facing front
-    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
-    stamp hides
-    wait 1.0s
-    stamp moves-to (0.5, 0.80) over 0.01s
-    stamp shows
-    stamp scales 2.6 over 0.01s
-    stamp rotates -7 over 0.01s
-    stamp scales 0.94 over 0.22s ease-in
-    stamp scales 1.0 over 0.1s ease-out
-    stamp rotates -4 over 0.12s
-    wait 2.2s
-    transition fade-black 0.8s
+    freeman pose "calm"
+    wait 0.8s
 }

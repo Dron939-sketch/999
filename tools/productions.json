@@ -84,10 +84,17 @@
    "images": []
   },
   {
-   "id": "fredi-hudshij-sobesednik",
-   "desc": "Реклама приложения «Фреди»: худший собеседник в твоей жизни — ты сам. Двое в кадре (говорящий и лежащий в 3 ночи), спальня, 3:33 — не интро курса.",
-   "anim": "examples/fredi/fredi-hudshij-sobesednik.anim",
-   "vo": "examples/fredi/fredi-hudshij-sobesednik-VO.md",
+   "id": "fredi-hudshij-sobesednik-1",
+   "desc": "Фреди, часть 1 из 2 — ДИАГНОЗ: худший собеседник в твоей жизни это ты сам. Двое в кадре, спальня в 3 ночи. Разрез из-за памяти движка (см. VO §ПОЧЕМУ ДВЕ ЧАСТИ).",
+   "anim": "examples/fredi/fredi-hudshij-sobesednik-1.anim",
+   "vo": "examples/fredi/fredi-hudshij-sobesednik-1-VO.md",
+   "images": []
+  },
+  {
+   "id": "fredi-hudshij-sobesednik-2",
+   "desc": "Фреди, часть 2 из 2 — ЧТО ДЕЛАТЬ: имя Фреди, бит про живого врача, жало. Титры здесь. Склеивается с частью 1 через ffmpeg concat.",
+   "anim": "examples/fredi/fredi-hudshij-sobesednik-2.anim",
+   "vo": "examples/fredi/fredi-hudshij-sobesednik-2-VO.md",
    "images": []
   }
  ]
