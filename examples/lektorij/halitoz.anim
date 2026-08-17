@@ -224,9 +224,9 @@ scene "s3" (duration: 1s, set: kuhnya) {
     wait 0.1s
 
     //lip 10
-    //  «Его выручка — с сотни тысяч до восьми миллионов.»
+    //  «У продавца выручка — с сотни тысяч до восьми миллионов.»
     together {
-        freeman speaks for 3.90s
+        freeman speaks for 4.39s
         do {
             freeman overlays "razmer"
             wait 1.71s
@@ -420,7 +420,7 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 24
     //  «Каждый день кто-то давит на длинное плечо рычага.»
     together {
-        freeman speaks for 3.90s
+        freeman speaks for 4.39s
         do {
             freeman overlays "razmer"
             wait 1.95s
