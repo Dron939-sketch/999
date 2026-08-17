@@ -1,6 +1,10 @@
 // =============================================================================
 //  «ЛАЗЕЙКА», второе интро — ЧУЖИЕ ПРАВИЛА
 //
+//  ЛОКАЦИЯ — рисованный кадр lazejka-shlagbaum.svg: шлагбаум стоит поперёк
+//  пустого поля, перекрывать ему нечего. Стрела кончается на 0.727 ширины —
+//  правая треть открыта, и туда герой выходит на взлёте.
+//
 //  ФИШКА — ШЛАГБАУМ, А ТЫ ПЕШКОМ (PRODAZHA.md §2). Запрет настоящий и написан
 //  чётко; дыры в нём нет. Он просто не про героя — и весь монтаж об этом:
 //
@@ -9,8 +13,8 @@
 //      секунду назад сам смотрел в этот шлагбаум;
 //    · на отрицании ИДЁТ НА КАМЕРУ, уходя от стрелы, — как зритель уходит
 //      от мысли «так положено»;
-//    · на развороте ВПЕЧАТЫВАЕТСЯ надпись «ПРОЕЗД ЗАПРЕЩЁН»: зритель читает
-//      слово «проезд» раньше, чем услышит про него в реплике;
+//    · на развороте ВПЕЧАТЫВАЕТСЯ надпись «ПРОЕЗДА НЕТ» на среднем плане:
+//      зритель читает «проезд» раньше, чем услышит про него в реплике;
 //    · на взлёте он ОБХОДИТ шлагбаум справа — стрела кончается, дальше поле.
 //      Ни одна деталь не сдвинута: правило цело, человек прошёл;
 //    · под жало он уже с той стороны, стрела по-прежнему опущена. Вопрос
@@ -22,7 +26,7 @@
 
 import character freeman from "../assets/characters/freeman_rig"
 import set titry from "../assets/sets/lektorij-final.svg"
-import set pole from "../assets/sets/field-empty.svg"
+import set pole from "../assets/sets/lazejka-shlagbaum.svg"
 
 config {
     width: 1280
@@ -30,7 +34,7 @@ config {
     fps: 24
     background: #b9bbb4
     monochrome: true
-    mono-contrast: 2.2
+    mono-contrast: 1.7
     snow: 0.35
     on-twos: 2
     line-boil: 0.55
@@ -50,15 +54,12 @@ scene "shlagbaum" (duration: 58s, set: pole) {
 
     place freeman at (0.30, 0.72) facing front
     freeman scales 0.62 over 0.01s
-    // Шлагбаум: столб слева, стрела уходит вправо и КОНЧАЕТСЯ — там проход.
-    let bar = prop("shlagbaum", "../assets/props/shlagbaum.svg") at (0.36, 0.545) layer 1
-    bar scales 1.4 over 0.01s
     // Надпись на табличке. Ждёт разворота: сначала зритель видит запрет, и
     // только потом слышит, что запрет не про него (ружьё Чехова).
     // Кегль движок игнорирует — размер надписи задаёт ТОЛЬКО scales.
-    // 0.27 подобрано замером: текст ровно в белом поле таблички.
-    let nadpis = text("ПРОЕЗД ЗАПРЕЩЁН", 34) at (0.5, -2.0) layer 4
-    nadpis scales 0.27 over 0.01s
+    // 0.19 подобрано замером под белое поле таблички на локации.
+    let nadpis = text("ПРОЕЗДА НЕТ", 34) at (0.5, -2.0) layer 4
+    nadpis scales 0.19 over 0.01s
     let slovo = text("А ТЫ ПЕШКОМ", 104) at (0.5, -2.0) layer 6
     slovo scales 2.4 over 0.01s
 
@@ -148,10 +149,10 @@ scene "shlagbaum" (duration: 58s, set: pole) {
             camera angle low freeman
             freeman pose "chetvert_pravo"
             wait 1.8s
-            camera wide
-            nadpis moves-to (0.387, 0.645) over 0.01s  // легла на табличку
-            nadpis scales 0.42 over 0.01s
-            nadpis scales 0.27 over 0.16s ease-in      // штамп-удар
+            camera wide                                // табличка в кадре целиком
+            nadpis moves-to (0.449, 0.593) over 0.01s  // легла в поле таблички
+            nadpis scales 0.29 over 0.01s
+            nadpis scales 0.19 over 0.16s ease-in      // штамп-удар
             camera shake 0.14s intensity 2
             freeman overlays "flash_pupils"
             wait 0.16s
