@@ -28,7 +28,6 @@
 import character freeman from "../assets/characters/freeman_rig"
 import character sleeper from "../assets/characters/freeman_rig"
 import set spalnya from "../assets/sets/fredi-spalnya.svg"
-import set titry from "../assets/sets/lektorij-final.svg"
 
 config {
     width: 1280
@@ -51,7 +50,7 @@ config {
     rim-light: 0.0
 }
 
-scene "spalnya" (duration: 68s, set: spalnya) {
+scene "spalnya" (duration: 52s, set: spalnya) {
     transition static 0.35s
 
     // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
@@ -76,8 +75,10 @@ scene "spalnya" (duration: 68s, set: spalnya) {
 
     // ── VO-20 [ВЗЛЁТ]: Зовут Фреди. Он не поддакивает — он спрашивает.
     //lip 1
+    imya moves-to (0.5, 0.30) over 0.01s
+    imya scales 0.62 over 0.24s ease-in
     together {
-        freeman speaks for 5.6s
+        freeman speaks for 4.4s
         do {
             camera medium freeman
             freeman pose "open"
@@ -91,7 +92,7 @@ scene "spalnya" (duration: 68s, set: spalnya) {
     // ── VO-21 [ВЗЛЁТ]: Поворачивает твою тему так, как тебе в голову не приходило
     //lip 2
     together {
-        freeman speaks for 12.9s
+        freeman speaks for 10.5s
         do {
             camera medium freeman
             wait 1.6s
@@ -116,7 +117,7 @@ scene "spalnya" (duration: 68s, set: spalnya) {
     // ── VO-22 [ВЗЛЁТ]: В три часа ночи он не спит. В браузере, без установки, нач
     //lip 3
     together {
-        freeman speaks for 9.6s
+        freeman speaks for 7.7s
         do {
             camera wide
             freeman pose "point"
@@ -138,7 +139,7 @@ scene "spalnya" (duration: 68s, set: spalnya) {
     // ── VO-23 [ПРЕДЕЛ]: И да, честно: если у тебя совсем темно — сон развалился, е
     //lip 4
     together {
-        freeman speaks for 14.9s
+        freeman speaks for 12.2s
         do {
             camera close-up freeman
             freeman overlays "stern"
@@ -168,7 +169,7 @@ scene "spalnya" (duration: 68s, set: spalnya) {
     // ── VO-24 [ПРЕДЕЛ]: Фреди, кстати, первый тебе это и скажет. Он умнее многих ж
     //lip 5
     together {
-        freeman speaks for 7.6s
+        freeman speaks for 6.1s
         do {
             camera medium freeman
             freeman pose "calm"
@@ -187,7 +188,7 @@ scene "spalnya" (duration: 68s, set: spalnya) {
     // ── VO-25 [ЖАЛО]: Ссылка внизу. Тот собеседник в твоей голове никуда не дене
     //lip 6
     together {
-        freeman speaks for 7.0s
+        freeman speaks for 5.5s
         do {
             camera wide
             freeman pose "point"
@@ -202,7 +203,7 @@ scene "spalnya" (duration: 68s, set: spalnya) {
     // ── VO-26 [ЖАЛО]: Но пусть у него появится конкурент.
     //lip 7
     together {
-        freeman speaks for 4.3s
+        freeman speaks for 3.3s
         do {
             camera close-up freeman
             freeman overlays "hero_wink"
@@ -215,37 +216,15 @@ scene "spalnya" (duration: 68s, set: spalnya) {
     // ── VO-27 [ЖАЛО]: Пип.
     //lip 8
     together {
-        freeman speaks for 1.0s
+        freeman speaks for 0.8s
         do {
             camera medium freeman
             wait 0.4s
         }
     }
 
-    // ── УХОД: имя остаётся в темноте ──────────────────────────────────────
-    imya moves-to (0.5, 0.42) over 0.01s
-    imya scales 0.62 over 0.22s ease-in
+    // ── УХОД: негатив-вспышка, имя уже в кадре ────────────────────────────
     transition invert 0.16s
-    wait 1.2s
-    camera reset over 0.5s
-    wait 0.6s
+    wait 0.8s
 }
 
-scene "titry" (duration: 5s, set: titry) {
-    transition static 0.45s
-    place freeman at (0.5, 3.0) facing front
-    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
-    stamp hides
-    wait 1.0s
-    stamp moves-to (0.5, 0.80) over 0.01s
-    stamp shows
-    stamp scales 2.6 over 0.01s
-    stamp rotates -7 over 0.01s
-    stamp scales 0.94 over 0.22s ease-in
-    stamp scales 1.0 over 0.1s ease-out
-    stamp rotates -4 over 0.12s
-    wait 1.1s
-            freeman pose "calm"
-            wait 1.1s
-    transition fade-black 0.8s
-}

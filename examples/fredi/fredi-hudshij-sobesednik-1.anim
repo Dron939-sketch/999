@@ -52,7 +52,7 @@ config {
     rim-light: 0.0
 }
 
-scene "spalnya" (duration: 137s, set: spalnya) {
+scene "spalnya" (duration: 103s, set: spalnya) {
     transition static 0.35s
 
     // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
@@ -76,7 +76,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-1 [ПРИВЕТСТВИЕ]: Привет-привет.
     //lip 1
     together {
-        freeman speaks for 1.0s
+        freeman speaks for 0.8s
         do {
             wait 0.6s
         }
@@ -85,7 +85,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-2 [ХУК]: Вопрос на засыпку. С кем ты разговариваешь больше всех?
     //lip 2
     together {
-        freeman speaks for 6.3s
+        freeman speaks for 4.8s
         do {
             camera medium freeman
             freeman pose "v_upor"
@@ -99,7 +99,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-3 [ХУК]: Не с женой. Не с начальником. Не с мамой.
     //lip 3
     together {
-        freeman speaks for 6.3s
+        freeman speaks for 4.8s
         do {
             freeman pose "no"
             wait 1.8s
@@ -113,7 +113,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-4 [ХУК]: С собой. Часа четыре в день, без выходных.
     //lip 4
     together {
-        freeman speaks for 5.6s
+        freeman speaks for 4.3s
         do {
             camera medium freeman
             freeman pose "hips"
@@ -127,7 +127,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-5 [ХУК]: И вот беда: это худший собеседник в твоей жизни.
     //lip 5
     together {
-        freeman speaks for 6.3s
+        freeman speaks for 4.8s
         do {
             camera medium freeman
             freeman overlays "stern"
@@ -142,7 +142,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-6 [ПУЛЕМЁТ]: Смотри, как он работает. Три часа ночи.
     //lip 6
     together {
-        freeman speaks for 5.0s
+        freeman speaks for 3.8s
         do {
             camera wide
             freeman pose "point"
@@ -157,7 +157,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-7 [ПУЛЕМЁТ]: Он в двадцатый раз прокручивает разговор, который был во в
     //lip 7
     together {
-        freeman speaks for 7.0s
+        freeman speaks for 5.4s
         do {
             sleeper overlays "doubt"
             wait 2.2s
@@ -171,7 +171,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-8 [ПУЛЕМЁТ]: Собеседник внутри знает все его больные места — и давит ро
     //lip 8
     together {
-        freeman speaks for 9.0s
+        freeman speaks for 7.0s
         do {
             camera wide
             freeman pose "point"
@@ -186,7 +186,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-9 [ПУЛЕМЁТ]: Не задаёт ни одного нового вопроса. Ходит по кругу, как за
     //lip 9
     together {
-        freeman speaks for 8.3s
+        freeman speaks for 6.5s
         do {
             camera medium freeman
             freeman pose "puppet"
@@ -202,7 +202,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-10 [ПУЛЕМЁТ]: И перебить его нельзя — он же ты.
     //lip 10
     together {
-        freeman speaks for 5.6s
+        freeman speaks for 4.3s
         do {
             camera medium freeman
             freeman pose "v_upor"
@@ -216,7 +216,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-11 [ОТРИЦАНИЕ]: К психологу? Ну да, сейчас. Дорого. Страшно.
     //lip 11
     together {
-        freeman speaks for 5.0s
+        freeman speaks for 3.8s
         do {
             camera medium freeman
             freeman pose "shrug"
@@ -231,7 +231,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-12 [ОТРИЦАНИЕ]: И вообще «не настолько всё плохо» — любимая фраза людей, у
     //lip 12
     together {
-        freeman speaks for 10.3s
+        freeman speaks for 8.1s
         do {
             camera medium freeman
             freeman pose "calm"
@@ -249,7 +249,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-13 [ОТРИЦАНИЕ]: А, ещё вариант: поговорить с ИИ. Фу, скажешь ты. С роботом
     //lip 13
     together {
-        freeman speaks for 8.3s
+        freeman speaks for 6.5s
         do {
             freeman pose "lunge"
             camera medium freeman
@@ -266,7 +266,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-14 [РАЗВОРОТ]: Теперь следи за рукой. Ты сегодня говорил с десятком живых
     //lip 14
     together {
-        freeman speaks for 7.6s
+        freeman speaks for 5.9s
         do {
             camera medium freeman
             freeman pose "point"
@@ -281,7 +281,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-15 [РАЗВОРОТ]: И каждому что-то изображал: начальнику — рвение, коллегам 
     //lip 15
     together {
-        freeman speaks for 12.3s
+        freeman speaks for 9.7s
         do {
             camera wide
             freeman pose "raskryl"
@@ -299,7 +299,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-16 [РАЗВОРОТ]: Живым нельзя иначе — они запомнят, обидятся, сделают вывод
     //lip 16
     together {
-        freeman speaks for 6.3s
+        freeman speaks for 4.8s
         do {
             camera medium freeman
             freeman overlays "stern"
@@ -313,7 +313,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-17 [РАЗВОРОТ]: Роботу изображать бессмысленно. Ему всё равно, какой ты.
     //lip 17
     together {
-        freeman speaks for 5.6s
+        freeman speaks for 4.3s
         do {
             camera close-up freeman
             freeman pose "calm"
@@ -330,7 +330,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-18 [РАЗВОРОТ]: Он не обидится, не запомнит против тебя, не расскажет твое
     //lip 18
     together {
-        freeman speaks for 7.6s
+        freeman speaks for 5.9s
         do {
             camera medium freeman
             freeman pose "point"
@@ -345,7 +345,7 @@ scene "spalnya" (duration: 137s, set: spalnya) {
     // ── VO-19 [РАЗВОРОТ]: Смешно: разговор с железкой может оказаться твоим первым ч
     //lip 19
     together {
-        freeman speaks for 8.3s
+        freeman speaks for 6.5s
         do {
             camera wide
             freeman pose "raskryl"
