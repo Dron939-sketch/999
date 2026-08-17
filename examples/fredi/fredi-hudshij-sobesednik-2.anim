@@ -92,7 +92,7 @@ scene "spalnya" (duration: 52s, set: spalnya) {
     // ── VO-21 [ВЗЛЁТ]: Поворачивает твою тему так, как тебе в голову не приходило
     //lip 2
     together {
-        freeman speaks for 10.5s
+        freeman speaks for 8.9s
         do {
             camera medium freeman
             wait 1.6s
@@ -117,7 +117,7 @@ scene "spalnya" (duration: 52s, set: spalnya) {
     // ── VO-22 [ВЗЛЁТ]: В три часа ночи он не спит. В браузере, без установки, нач
     //lip 3
     together {
-        freeman speaks for 7.7s
+        freeman speaks for 6.5s
         do {
             camera wide
             freeman pose "point"
@@ -139,7 +139,7 @@ scene "spalnya" (duration: 52s, set: spalnya) {
     // ── VO-23 [ПРЕДЕЛ]: И да, честно: если у тебя совсем темно — сон развалился, е
     //lip 4
     together {
-        freeman speaks for 12.2s
+        freeman speaks for 10.3s
         do {
             camera close-up freeman
             freeman overlays "stern"
@@ -169,7 +169,7 @@ scene "spalnya" (duration: 52s, set: spalnya) {
     // ── VO-24 [ПРЕДЕЛ]: Фреди, кстати, первый тебе это и скажет. Он умнее многих ж
     //lip 5
     together {
-        freeman speaks for 6.1s
+        freeman speaks for 5.1s
         do {
             camera medium freeman
             freeman pose "calm"
@@ -188,7 +188,7 @@ scene "spalnya" (duration: 52s, set: spalnya) {
     // ── VO-25 [ЖАЛО]: Ссылка внизу. Тот собеседник в твоей голове никуда не дене
     //lip 6
     together {
-        freeman speaks for 5.5s
+        freeman speaks for 4.7s
         do {
             camera wide
             freeman pose "point"
@@ -203,7 +203,7 @@ scene "spalnya" (duration: 52s, set: spalnya) {
     // ── VO-26 [ЖАЛО]: Но пусть у него появится конкурент.
     //lip 7
     together {
-        freeman speaks for 3.3s
+        freeman speaks for 2.8s
         do {
             camera close-up freeman
             freeman overlays "hero_wink"
@@ -216,7 +216,7 @@ scene "spalnya" (duration: 52s, set: spalnya) {
     // ── VO-27 [ЖАЛО]: Пип.
     //lip 8
     together {
-        freeman speaks for 0.8s
+        freeman speaks for 0.7s
         do {
             camera medium freeman
             wait 0.4s

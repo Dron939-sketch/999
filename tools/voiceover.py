@@ -43,6 +43,12 @@ FREDERICK_TOKEN = os.environ.get("FREDERICK_ADMIN_TOKEN") or ""
 # реплики у него нет. Аварийный тумблер на случай, если движок начнёт читать
 # знак вслух: VO_NO_ACCENTS=1 срезает разметку перед отправкой, а сценарий
 # при этом остаётся источником правды и править его не надо.
+# Базовый темп речи ролика (1.0 — как синтезировал Fish). Умножается на
+# ремарочный множитель, у которого свой кламп ±12%: ремарки задают СМЕНУ подачи
+# внутри ролика, а этот множитель — общую скорость. Задаётся полем "tempo" в
+# productions.json (studio.py передаёт его в --tempo).
+BASE_TEMPO = 1.0
+
 ACCENT = "́"
 STRIP_ACCENTS = (os.environ.get("VO_NO_ACCENTS") or "").strip() not in ("", "0")
 
@@ -260,7 +266,7 @@ def direct_line(mp3_bytes, remark):
         tempo *= 0.97
     # Кламп: несколько подсказок не должны складываться в кисель. Диапазон
     # ±12% — слышно как смена подачи, но дикция остаётся внятной.
-    tempo = min(1.12, max(0.88, tempo))
+    tempo = min(1.12, max(0.88, tempo)) * BASE_TEMPO
     if abs(tempo - 1.0) > 0.005:
         af.append(f"atempo={tempo:.3f}")
     if not af:
@@ -357,6 +363,8 @@ def main(argv):
     ap.add_argument("--parts-dir", help="Куда сохранить mp3 по репликам (vo-<N>.mp3) для липсинка")
     ap.add_argument("--no-assemble", action="store_true",
                     help="только сгенерить части (сборка позже по временам движка)")
+    ap.add_argument("--tempo", type=float, default=1.0,
+                    help="базовый темп речи ролика (1.0 = как синтезировал Fish)")
     ap.add_argument("--assemble-only", action="store_true",
                     help="только собрать из готовых частей по --times-json/--map-json")
     ap.add_argument("--times-json", help="JSON от `animdsl timing` (фактические времена)")

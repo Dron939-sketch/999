@@ -150,7 +150,8 @@ def step_voice(prod, out_voice, parts_dir):
     # Мягко: сбой озвучки НЕ рушит завод — просто немой ролик + лог причины.
     try:
         run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
-             "-o", str(out_voice), "--parts-dir", str(parts_dir)])
+             "-o", str(out_voice), "--parts-dir", str(parts_dir),
+             "--tempo", str(prod.get("tempo", 1.0))])
         return out_voice
     except subprocess.CalledProcessError as e:
         log(f"  [озвучка] не удалась ({e}) — оставляю немой ролик. "
@@ -174,7 +175,7 @@ def step_voice_parts(prod, parts_dir):
     try:
         run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
              "-o", str(parts_dir / "_unused.mp3"), "--parts-dir", str(parts_dir),
-             "--no-assemble"])
+             "--tempo", str(prod.get("tempo", 1.0)), "--no-assemble"])
         return True
     except subprocess.CalledProcessError as e:
         log(f"  [озвучка] не удалась ({e}) — немой ролик.")
@@ -193,6 +194,7 @@ def step_assemble_voice(prod, prepped_anim, parts_dir, out_voice, engine):
         run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
              "-o", str(out_voice), "--assemble-only",
              "--parts-dir", str(parts_dir),
+             "--tempo", str(prod.get("tempo", 1.0)),
              "--times-json", str(times), "--map-json", str(mapf)])
         return out_voice
     except subprocess.CalledProcessError as e:
