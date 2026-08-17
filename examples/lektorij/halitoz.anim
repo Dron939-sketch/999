@@ -113,7 +113,7 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 1
     //  «Привет-привет. Ты вовремя.»
     together {
-        freeman speaks for 1.95s
+        freeman speaks for 2.48s
         do {
             freeman overlays "vzglyad"
         }
@@ -146,10 +146,10 @@ scene "s1" (duration: 1s, set: kuhnya) {
     //lip 4
     //  «Ты думаешь, это про рекламу. Это про тебя.»
     together {
-        freeman speaks for 3.66s
+        freeman speaks for 4.47s
         do {
             freeman overlays "no"
-            wait 1.83s
+            wait 2.23s
             freeman overlays "prishchur"
         }
     }
@@ -180,7 +180,7 @@ scene "s2" (duration: 1s, set: kuhnya) {
     //lip 6
     //  «Говорит: у тебя изо рта пахнет.»
     together {
-        freeman speaks for 2.68s
+        freeman speaks for 2.22s
         do {
             freeman overlays "otvraschenie"
         }
@@ -238,10 +238,10 @@ scene "s3" (duration: 1s, set: kuhnya) {
     //lip 10
     //  «У продавца выручка — с сотни тысяч до восьми миллионов.»
     together {
-        freeman speaks for 4.39s
+        freeman speaks for 3.00s
         do {
             freeman overlays "razmer"
-            wait 1.71s
+            wait 1.17s
             freeman overlays "dve_storony"
         }
     }
@@ -260,10 +260,10 @@ scene "s3" (duration: 1s, set: kuhnya) {
     //lip 12
     //  «Запах был всегда. Ещё до рекламы.»
     together {
-        freeman speaks for 2.68s
+        freeman speaks for 3.53s
         do {
             freeman overlays "ladoni_vniz"
-            wait 1.34s
+            wait 1.76s
             freeman overlays "ostyl"
         }
     }
@@ -273,10 +273,10 @@ scene "s3" (duration: 1s, set: kuhnya) {
     //lip 13
     //  «Проблему — сделали. Решение — продали.»
     together {
-        freeman speaks for 3.17s
+        freeman speaks for 4.05s
         do {
             freeman overlays "k_sebe"
-            wait 1.59s
+            wait 2.03s
             freeman overlays "razvel"
         }
     }
@@ -287,7 +287,7 @@ scene "s3" (duration: 1s, set: kuhnya) {
     //lip 14
     //  «Красиво? Красиво.»
     together {
-        freeman speaks for 1.46s
+        freeman speaks for 2.27s
         do {
             freeman overlays "vzglyad"
         }
@@ -319,10 +319,10 @@ scene "s4" (duration: 1s, set: kuhnya) {
     //lip 16
     //  «А теперь смотри внимательно, что я сделаю.»
     together {
-        freeman speaks for 3.41s
+        freeman speaks for 2.72s
         do {
             freeman overlays "vzglyad"
-            wait 1.71s
+            wait 1.36s
             freeman overlays "manit_l"
         }
     }
@@ -353,7 +353,7 @@ scene "s4" (duration: 1s, set: kuhnya) {
     //lip 18
     //  «Прямо сейчас. При свидетелях.»
     together {
-        freeman speaks for 2.20s
+        freeman speaks for 2.95s
         do {
             freeman overlays "vzglyad"
         }
@@ -399,7 +399,7 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 20
     //  «Не запах. Хуже.»
     together {
-        freeman speaks for 1.22s
+        freeman speaks for 1.99s
         do {
             freeman overlays "no"
         }
@@ -409,7 +409,7 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 21
     //  «Ты не знаешь, как устроена твоя собственная жизнь.»
     together {
-        freeman speaks for 3.90s
+        freeman speaks for 3.24s
         do {
             freeman overlays "prishchur"
         }
@@ -435,7 +435,7 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 23
     //  «Ссоришься ты по сценарию, который писал не ты.»
     together {
-        freeman speaks for 3.90s
+        freeman speaks for 3.13s
         do {
             freeman overlays "dve_storony"
         }
@@ -445,10 +445,10 @@ scene "s5" (duration: 1s, set: kuhnya) {
     //lip 24
     //  «Каждый день кто-то давит на длинное плечо рычага.»
     together {
-        freeman speaks for 4.39s
+        freeman speaks for 3.32s
         do {
             freeman overlays "razmer"
-            wait 1.95s
+            wait 1.47s
             freeman overlays "ladoni_vniz"
         }
     }
@@ -481,7 +481,7 @@ scene "s6" (duration: 1s, set: kuhnya) {
     //lip 26
     //  «И тебе даже нравится: думать — больно, листать — приятно.»
     together {
-        freeman speaks for 4.15s
+        freeman speaks for 3.66s
         do {
             freeman overlays "gorech"
         }
@@ -491,7 +491,7 @@ scene "s6" (duration: 1s, set: kuhnya) {
     //lip 27
     //  «Чувствуешь? Вот прямо сейчас неприятно стало.»
     together {
-        freeman speaks for 3.41s
+        freeman speaks for 4.08s
         do {
             freeman overlays "vzglyad"
         }
@@ -503,7 +503,7 @@ scene "s6" (duration: 1s, set: kuhnya) {
     //lip 28
     //  «Поздравляю. Это и есть халитоз.»
     together {
-        freeman speaks for 2.68s
+        freeman speaks for 3.37s
         do {
             freeman overlays "vzglyad"
         }
@@ -538,7 +538,7 @@ scene "s7" (duration: 1s, set: kuhnya) {
     //lip 30
     //  «Разница между мной и парнем с флаконом ровно одна.»
     together {
-        freeman speaks for 3.90s
+        freeman speaks for 3.34s
         do {
             freeman overlays "raspahnul"
         }
@@ -560,7 +560,7 @@ scene "s7" (duration: 1s, set: kuhnya) {
     //lip 32
     //  «Он брал деньги. Я нарисованный — мне не надо.»
     together {
-        freeman speaks for 3.41s
+        freeman speaks for 4.00s
         do {
             freeman overlays "ladon_pusta"
         }
@@ -609,7 +609,7 @@ scene "s7" (duration: 1s, set: kuhnya) {
     //lip 36
     //  «Бесплатно. Без регистрации.»
     together {
-        freeman speaks for 2.20s
+        freeman speaks for 3.24s
         do {
             freeman overlays "teplo"
         }
@@ -690,10 +690,10 @@ scene "s8" (duration: 1s, set: kuhnya) {
     //lip 41
     //  «Ссылка внизу. Нажмёшь — начнёшь видеть рычаги.»
     together {
-        freeman speaks for 3.17s
+        freeman speaks for 4.00s
         do {
             freeman overlays "vniz"
-            wait 1.59s
+            wait 2.0s
             freeman overlays "raspahnul"
         }
     }
@@ -726,7 +726,7 @@ scene "s8" (duration: 1s, set: kuhnya) {
     //lip 44
     //  «Пип…»
     together {
-        freeman speaks for 0.24s
+        freeman speaks for 0.97s
         do {
             freeman overlays "vzglyad"
         }
