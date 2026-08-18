@@ -75,10 +75,10 @@ scene "igra" (duration: 5s, set: doska) {
     karta scales 1.5 over 0.01s
     karta hides
 
-    // ── VO-1 [ВЗЛЁТ]: Поэтому рассказывать я тебе ничего не буду…
+    // ── VO-1 [ВЗЛЁТ]: Рассказывать я тебе ничего не буду…
     //lip 1
     together {
-        freeman speaks for 7.4s
+        freeman speaks for 6.4s
         do {
             camera medium freeman
             freeman pose "shrug"
@@ -113,7 +113,7 @@ scene "igra" (duration: 5s, set: doska) {
     ui0 shows
     //lip 3
     together {
-        freeman speaks for 10.1s
+        freeman speaks for 8.6s
         do {
             camera wide
             freeman pose "point"
@@ -133,7 +133,7 @@ scene "igra" (duration: 5s, set: doska) {
     // ── VO-4 [ВЗЛЁТ]: Три. На весь месяц. Сутки на подумать ломают почти любой приём…
     //lip 4
     together {
-        freeman speaks for 11.2s
+        freeman speaks for 9.0s
         do {
             camera medium freeman
             freeman pose "hips"
@@ -238,7 +238,7 @@ scene "igra" (duration: 5s, set: doska) {
     karta shows
     //lip 9
     together {
-        freeman speaks for 9.6s
+        freeman speaks for 8.1s
         do {
             camera wide
             freeman pose "point"

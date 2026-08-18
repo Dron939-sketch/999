@@ -165,14 +165,14 @@ scene "kalendar" (duration: 5s, set: doska) {
 
     wait 0.5s
 
-    // ── VO-5 [РАЗВОРОТ]: Ты попадаешься не потому, что глупый…
+    // ── VO-5 [РАЗВОРОТ]: Ты попадаешься не потому, что глупый… Усталость знанием не лечится.
     //  Встаёт: диагноз произносится стоя.
     // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
     // `mouth`, что и липсинк, и до конца фразы рот замирает.
     freeman overlays "stern"
     //lip 5
     together {
-        freeman speaks for 5.9s
+        freeman speaks for 8.6s
         do {
             camera wide
             freeman moves-to (0.16, 0.66) over 0.5s
@@ -182,27 +182,17 @@ scene "kalendar" (duration: 5s, set: doska) {
             freeman pose "point"
             wait 2.2s
             freeman pose "v_upor"
+            wait 2.0s
+            camera close-up freeman
+            freeman pose "low_angle"
         }
     }
 
     wait 0.35s
 
-    // ── VO-6 [РАЗВОРОТ]: Глупость лечится знанием. Усталость знанием не лечится.
-    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
-    // `mouth`, что и липсинк, и до конца фразы рот замирает.
-    freeman overlays "stern"
-    //lip 6
-    together {
-        freeman speaks for 3.7s
-        do {
-            camera close-up freeman
-            freeman pose "low_angle"
-            wait 1.8s
-            freeman pose "v_upor"
-        }
-    }
 
     wait 0.5s
+
 }
 
 // ── СЦЕНА 2. ПУСТОЕ ПОЛЕ И РЕШЁТКА ──────────────────────────────────────────
@@ -218,12 +208,12 @@ scene "pole" (duration: 5s, set: pole) {
     place resh at (0.56, 1.75) layer 6
     resh scales 2.6 over 0.01s
 
-    // ── VO-7 [ОТРИЦАНИЕ]: Так. Стоп. Я вижу, что ты сейчас решил.
+    // ── VO-6 [ОТРИЦАНИЕ]: Так. Стоп. Я вижу, что ты сейчас решил.
     //  Отворачивается и глядит через плечо: смена отношения, а не жеста.
     // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
     // `mouth`, что и липсинк, и до конца фразы рот замирает.
     freeman overlays "hero_skeptic"
-    //lip 7
+    //lip 6
     together {
         freeman speaks for 4.8s
         do {
@@ -236,8 +226,8 @@ scene "pole" (duration: 5s, set: pole) {
 
     wait 0.3s
 
-    // ── VO-8 [ОТРИЦАНИЕ]: Ты решил больше никому не верить. Поздравляю…
-    //lip 8
+    // ── VO-7 [ОТРИЦАНИЕ]: Ты решил больше никому не верить. Поздравляю…
+    //lip 7
     together {
         freeman speaks for 6.9s
         resh moves-to (0.56, 0.52) over 2.6s ease-out
@@ -253,10 +243,10 @@ scene "pole" (duration: 5s, set: pole) {
 
     wait 0.35s
 
-    // ── VO-9 [ОТРИЦАНИЕ]: Потому что через неделю тебе предложат работу…
-    //lip 9
+    // ── VO-8 [ОТРИЦАНИЕ]: Через неделю тебе предложат работу. Честно, без давления…
+    //lip 8
     together {
-        freeman speaks for 9.0s
+        freeman speaks for 6.4s
         do {
             camera medium freeman
             freeman pose "open"
@@ -271,13 +261,13 @@ scene "pole" (duration: 5s, set: pole) {
 
     wait 0.3s
 
-    // ── VO-10 [ОТРИЦАНИЕ]: И ты откажешь. На всякий случай…
+    // ── VO-9 [ОТРИЦАНИЕ]: И ты откажешь. На всякий случай…
     // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
     // `mouth`, что и липсинк, и до конца фразы рот замирает.
     freeman overlays "sad"
-    //lip 10
+    //lip 9
     together {
-        freeman speaks for 11.2s
+        freeman speaks for 8.5s
         do {
             camera wide
             freeman pose "no"
@@ -295,9 +285,9 @@ scene "pole" (duration: 5s, set: pole) {
 
     wait 0.4s
 
-    // ── VO-11 [ОТРИЦАНИЕ]: Свобода — это не «не верить». Свобода — это различать.
+    // ── VO-10 [ОТРИЦАНИЕ]: Свобода — это не «не верить». Свобода — это различать.
     //  Решётка осыпается вниз, за ней пустое поле: там ничего и не было.
-    //lip 11
+    //lip 10
     together {
         freeman speaks for 4.8s
         resh moves-to (0.56, 1.85) over 1.2s ease-in
@@ -310,22 +300,6 @@ scene "pole" (duration: 5s, set: pole) {
     }
 
     wait 0.4s
-
-    // ── VO-12 [ОТРИЦАНИЕ]: Разница между этими двумя словами стоит примерно всей твоей жизни.
-    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
-    // `mouth`, что и липсинк, и до конца фразы рот замирает.
-    freeman overlays "stern"
-    //lip 12
-    together {
-        freeman speaks for 5.3s
-        do {
-            camera close-up freeman
-            freeman pose "v_upor"
-            wait 2.6s
-            wait 0.16s
-        }
-    }
-    freeman overlays "stern"
 
     camera reset over 0.5s
     wait 0.5s
