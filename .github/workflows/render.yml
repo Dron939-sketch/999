@@ -28,6 +28,15 @@ concurrency:
 jobs:
   render:
     runs-on: ubuntu-latest
+    # `[skip render]` в сообщении коммита — не гнать завод вообще. Маркер уже
+    # ставили в коммитах с правкой текстов и таблиц, но workflow про него не
+    # знал: разбирался только `[only: <id>]`, а пустой выбор означает «гнать
+    # ВЕСЬ манифест». То есть каждая правка README запускала пятнадцать
+    # рендеров вместо нуля. Проверка стоит на уровне job: ни один шаг не
+    # начинается, раннер освобождается сразу.
+    if: >-
+      github.event_name != 'push' ||
+      !contains(github.event.head_commit.message, '[skip render]')
 
     steps:
       - name: Checkout code
