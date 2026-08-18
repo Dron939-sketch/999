@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 150" width="44" height="150">
+<!-- Булавка: шляпка сверху, остриё вниз. Холст плотный по игле —
+     transform двигает проп за центр холста (урок board.svg). -->
+<defs><filter id="ink7" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<g filter="url(#ink7)">
+  <circle cx="22" cy="18" r="16" fill="#141410"/>
+  <polygon points="19,30 25,30 23,148 21,148" fill="#141410"/>
+</g>
+</svg>
