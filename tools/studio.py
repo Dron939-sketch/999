@@ -35,6 +35,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 from contextlib import redirect_stdout
 from pathlib import Path
 
@@ -886,6 +887,34 @@ def lint_turnaround(prods):
                                   "играют ролики — см. таблицу выше"]), []
 
 
+def lint_lipmap(prod):
+    """Приёмщик карты липсинка: каждый `//lip N` обязан дойти до `speaks for`.
+
+    Голос собирается ПО КАРТЕ блоков, а не по номерам реплик: `assemble_by_timing`
+    сопоставляет i-й блок движка с i-м номером из map.json. Если один маркер по
+    дороге потерялся — между ним и речью встала строка, которую препроцессор не
+    считает строительной, — карта короче на единицу, и ВСЯ дорожка уезжает на
+    реплику вперёд. Слышно это только на просмотре целиком, а метрики молчат:
+    ролик не немой, длины сходятся, липсинк формально «по звуку».
+
+    Так молча разъехались вторая часть «Худшего собеседника» (карта [2..8]
+    вместо [1..8]: пропы `imya moves-to` стояли между маркером и речью) и
+    «Перепрошивка». Проверка статическая, до рендера.
+    """
+    src = ROOT / prod["anim"]
+    if not src.is_file() or not prod.get("vo"):
+        return [], []
+    with tempfile.TemporaryDirectory() as td:
+        r = subprocess.run(
+            [sys.executable, str(TOOLS / "prep_lipsync.py"), str(src),
+             "-o", os.path.join(td, "probe.anim")],
+            capture_output=True, text=True)
+    if r.returncode:
+        msg = (r.stdout + r.stderr).strip().splitlines()
+        return [f"{prod['id']}: {msg[-1].strip() if msg else 'липсинк не разобрал сценарий'}"], []
+    return [], []
+
+
 def lint_location(prod):
     """Приёмщик локаций: проверяет сеты продакшена на «готовность». (hard, soft).
 
@@ -1106,6 +1135,9 @@ def main(argv):
         lh, ls = lint_location(prod)      # приёмщик локаций
         all_hard += lh
         all_soft += ls
+        mh, ms = lint_lipmap(prod)        # приёмщик карты липсинка
+        all_hard += mh
+        all_soft += ms
         nh, ns = lint_imena_poz(prod)     # приёмщик имён поз
         all_hard += nh
         all_soft += ns

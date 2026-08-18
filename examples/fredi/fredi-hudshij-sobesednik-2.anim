@@ -86,9 +86,11 @@ scene "kuhnya" (duration: 16.4s, set: kuhnya) {
     freeman pose "v_upor"
 
     // ── VO-20 [ВЗЛЁТ]: Зовут Фреди. Он не поддакивает — он спрашивает.
-    //lip 1
+    // Имя выезжает ДО маркера: prep_lipsync терпит между `//lip` и `speaks`
+    // только строительные строки, и на этих двух маркер обнулялся.
     imya moves-to (0.5, 0.30) over 0.01s
     imya scales 0.62 over 0.24s ease-in
+    //lip 1
     together {
         freeman speaks for 4.4s
         do {
