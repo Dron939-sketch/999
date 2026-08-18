@@ -1171,7 +1171,8 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
 
 def main(argv):
     ap = argparse.ArgumentParser(description="Завод Лектория: ролики со звуком")
-    ap.add_argument("only", nargs="?", help="id одного продакшена (иначе — все)")
+    ap.add_argument("only", nargs="?",
+                    help="id продакшена или несколько через запятую (иначе — все)")
     ap.add_argument("--manifest", default=str(DEFAULT_MANIFEST))
     ap.add_argument("--engine", default=str(DEFAULT_ENGINE))
     ap.add_argument("--videos", default=str(ROOT / "videos"))
@@ -1183,9 +1184,14 @@ def main(argv):
     manifest = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
     prods = manifest["productions"]
     if args.only:
-        prods = [p for p in prods if p["id"] == args.only]
+        # Несколько id через запятую: многочастные ролики (Фреди, «Переход»)
+        # раньше приходилось гнать по одному пушу на часть, а каждый новый push
+        # снимает предыдущий прогон (concurrency: cancel-in-progress). Из-за
+        # этого сборка трёхчастного ролика занимала три очереди подряд.
+        want = [x.strip() for x in args.only.split(",") if x.strip()]
+        prods = [p for p in prods if p["id"] in want]
         if not prods:
-            sys.exit(f"нет продакшена с id={args.only}")
+            sys.exit(f"нет продакшенов с id={args.only}")
 
     engine = Path(args.engine)
     if not engine.exists():
