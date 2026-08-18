@@ -153,7 +153,8 @@ def step_voice(prod, out_voice, parts_dir):
     try:
         run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
              "-o", str(out_voice), "--parts-dir", str(parts_dir),
-             "--tempo", str(prod.get("tempo", 1.0))])
+             "--tempo", str(prod.get("tempo", 1.0)),
+             "--silence", str(prod.get("silence", 0.0))])
         return out_voice
     except subprocess.CalledProcessError as e:
         log(f"  [озвучка] не удалась ({e}) — оставляю немой ролик. "
@@ -177,7 +178,8 @@ def step_voice_parts(prod, parts_dir):
     try:
         run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
              "-o", str(parts_dir / "_unused.mp3"), "--parts-dir", str(parts_dir),
-             "--tempo", str(prod.get("tempo", 1.0)), "--no-assemble"])
+             "--tempo", str(prod.get("tempo", 1.0)),
+             "--silence", str(prod.get("silence", 0.0)), "--no-assemble"])
         return True
     except subprocess.CalledProcessError as e:
         log(f"  [озвучка] не удалась ({e}) — немой ролик.")
@@ -197,6 +199,7 @@ def step_assemble_voice(prod, prepped_anim, parts_dir, out_voice, engine):
              "-o", str(out_voice), "--assemble-only",
              "--parts-dir", str(parts_dir),
              "--tempo", str(prod.get("tempo", 1.0)),
+             "--silence", str(prod.get("silence", 0.0)),
              "--times-json", str(times), "--map-json", str(mapf)])
         return out_voice
     except subprocess.CalledProcessError as e:
@@ -926,6 +929,53 @@ def lint_hod(prod, rig_dir=None):
     return [], []
 
 
+def lint_rot(prod, rig_dir=None):
+    """Приёмщик РТА: мимика внутри реплики стирает липсинк. (hard, soft).
+
+    Липсинк подставляет вместо `speaks for` дорожку `lips "visX"` — она правит
+    кость `mouth` кадр за кадром. Почти каждая мимическая поза правит ТУ ЖЕ
+    кость: из 54 лицевых поз рига без рта только `blink`. Поэтому `overlays`,
+    поставленный ВНУТРИ реплики, перебивает рот на своё выражение, и до конца
+    фразы губы не двигаются вообще.
+
+    ЗАМЕРЕНО на «Переходе»: в финальной сцене межкадровая разница в области
+    лица во время речи 0.67 при 2.55 в паузе — то есть на реплике лицо стоит
+    неподвижнее, чем в тишине. Отсюда и «рот не совпадает»: он не отстаёт, он
+    просто выключен.
+
+    Мимику ставить ДО реплики или в паузу после неё; внутри реплики допустим
+    только `blink`, который рта не трогает.
+    """
+    anim = ROOT / prod.get("anim", "")
+    poses = _rig_poses(rig_dir)
+    if not anim.exists() or not poses:
+        return [], []
+    mouthful = {n for n, p in poses.items() if "mouth" in p.get("bones", {})}
+    lines = anim.read_text(encoding="utf-8").split("\n")
+    bad, in_lip, depth, cur = [], False, 0, None
+    for ln in lines:
+        code = ln.split("//")[0] if not ln.strip().startswith("//") else ""
+        m = re.match(r"^\s*//lip\s+(\d+)\s*$", ln)
+        if m:
+            in_lip, depth, cur = True, 0, m.group(1)
+            continue
+        if not in_lip:
+            continue
+        depth += code.count("{") - code.count("}")
+        for ov in re.findall(r'overlays\s+"([a-z_0-9]+)"', code):
+            if ov in mouthful:
+                bad.append(f"//lip {cur} → overlays \"{ov}\"")
+        if depth <= 0 and ("}" in code):
+            in_lip = False
+    if bad:
+        return [f"{prod['id']}: мимика внутри реплики стирает липсинк — "
+                f"{'; '.join(bad[:6])}{' и ещё ' + str(len(bad) - 6) if len(bad) > 6 else ''}. "
+                f"Кость `mouth` правят и липсинк, и мимика: с этого места и до конца "
+                f"фразы рот не двигается. Ставить мимику ДО реплики или в паузу; "
+                f"внутри допустим только `blink`"], []
+    return [], []
+
+
 def lint_turnaround(prods):
     """Приёмщик РАЗВОРОТА: одна ли это фигура на всех ракурсах. (hard, soft).
 
@@ -1251,6 +1301,9 @@ def main(argv):
         hh, hs = lint_hod(prod)           # приёмщик хода по кадру
         all_hard += hh
         all_soft += hs
+        th2, ts2 = lint_rot(prod)         # приёмщик рта (мимика внутри реплики)
+        all_hard += th2
+        all_soft += ts2
     th, ts = lint_turnaround(prods)       # приёмщик разворота (один на риг)
     all_hard += th
     all_soft += ts

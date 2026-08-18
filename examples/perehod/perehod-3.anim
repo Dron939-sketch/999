@@ -46,8 +46,8 @@ config {
 scene "igra" (duration: 62s, set: doska) {
     transition static 0.4s
 
-    place freeman at (0.16, 0.80) facing front
-    freeman scales 0.62 over 0.01s
+    place freeman at (0.16, 0.66) facing front layer 9
+    freeman scales 0.78 over 0.01s
     camera wide
     freeman pose "calm"
 
@@ -81,22 +81,24 @@ scene "igra" (duration: 62s, set: doska) {
         }
     }
 
-    wait 0.7s
+    wait 0.35s
 
     // ── VO-2 [ВЗЛЁТ]: Проживи.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "flash_pupils"
     //lip 2
     together {
         freeman speaks for 1.0s
         do {
             camera close-up freeman
             freeman pose "v_upor"
-            freeman overlays "flash_pupils"
             wait 0.16s
-            freeman overlays "stern"
         }
     }
+    freeman overlays "stern"
 
-    wait 1.2s
+    wait 0.6s
 
     // ── VO-3 [ВЗЛЁТ]: Месяц. Десять решений, со второго по двадцать девятое…
     //  Интерфейс впервые.
@@ -118,7 +120,7 @@ scene "igra" (duration: 62s, set: doska) {
         }
     }
 
-    wait 0.6s
+    wait 0.3s
 
     // ── VO-4 [ВЗЛЁТ]: Три. На весь месяц. Сутки на подумать ломают почти любой приём…
     //lip 4
@@ -132,7 +134,7 @@ scene "igra" (duration: 62s, set: doska) {
             wait 2.6s
             camera wide
             freeman pose "idet"
-            freeman moves-to (0.28, 0.80) over 1.8s
+            freeman moves-to (0.28, 0.66) over 1.8s
             wait 2.4s
             freeman pose "point"
             wait 2.2s
@@ -140,10 +142,13 @@ scene "igra" (duration: 62s, set: doska) {
         }
     }
 
-    wait 0.7s
+    wait 0.35s
 
     // ── VO-5 [ВЗЛЁТ]: К концу месяца ты устанешь по-настоящему…
     //  Бегунок сил ползёт влево: 92% → 55% → 16%.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "weary"
     //lip 5
     together {
         freeman speaks for 6.9s
@@ -151,7 +156,6 @@ scene "igra" (duration: 62s, set: doska) {
             camera wide
             freeman pose "hunch"
             wait 2.4s
-            freeman overlays "weary"
             wait 2.2s
             freeman pose "ugryumo"
         }
@@ -165,7 +169,7 @@ scene "igra" (duration: 62s, set: doska) {
         }
     }
 
-    wait 0.6s
+    wait 0.3s
 
     // ── VO-6 [ВЗЛЁТ]: Посчитать — недоступно. Уточнить — недоступно…
     ned shows
@@ -184,22 +188,27 @@ scene "igra" (duration: 62s, set: doska) {
         }
     }
 
-    wait 0.7s
+    wait 0.35s
 
     // ── VO-7 [ВЗЛЁТ]: Красиво?
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "hero_sly"
     //lip 7
     together {
         freeman speaks for 1.0s
         do {
             camera close-up freeman
-            freeman overlays "hero_sly"
             wait 0.8s
         }
     }
 
-    wait 1.0s
+    wait 0.5s
 
     // ── VO-8 [ВЗЛЁТ]: Две сцены из десяти — честные. Какие именно — не скажу.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "smug"
     //lip 8
     together {
         freeman speaks for 5.3s
@@ -208,13 +217,12 @@ scene "igra" (duration: 62s, set: doska) {
             freeman pose "bok_pravo"
             wait 2.4s
             freeman pose "v_upor"
-            freeman overlays "smug"
             wait 2.0s
             freeman pose "calm"
         }
     }
 
-    wait 0.7s
+    wait 0.35s
 
     // ── VO-9 [ВЗЛЁТ]: А в конце тебе покажут карту…
     ned hides
@@ -237,7 +245,7 @@ scene "igra" (duration: 62s, set: doska) {
         }
     }
 
-    wait 0.8s
+    wait 0.4s
     karta hides
 }
 
@@ -245,24 +253,26 @@ scene "igra" (duration: 62s, set: doska) {
 scene "final" (duration: 32s) {
     transition static 0.5s
 
-    place freeman at (0.50, 0.80) facing front
-    freeman scales 0.72 over 0.01s
+    place freeman at (0.50, 0.80) facing front layer 9
+    freeman scales 0.80 over 0.01s
     camera close-up freeman
     freeman pose "v_upor"
 
     // ── VO-10 [ЖАЛО]: Первый заход будет неприятным. Это не поломка…
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "stern"
     //lip 10
     together {
         freeman speaks for 5.9s
         do {
             camera close-up freeman
-            freeman overlays "stern"
             wait 3.0s
             freeman pose "v_upor"
         }
     }
 
-    wait 0.8s
+    wait 0.4s
 
     // ── VO-11 [ЖАЛО]: Игра называется «Переход».
     let nazvanie = text("ПЕРЕХОД", 90) at (0.5, -1.4) layer 7
@@ -277,9 +287,12 @@ scene "final" (duration: 32s) {
         }
     }
 
-    wait 1.0s
+    wait 0.5s
 
     // ── VO-12 [ЖАЛО]: И да. Если пройдёшь десять из десяти с первого раза — не радуйся.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "hero_sly"
     //lip 12
     together {
         freeman speaks for 6.9s
@@ -287,7 +300,6 @@ scene "final" (duration: 32s) {
             camera medium freeman
             freeman pose "bok_levo"
             wait 2.2s
-            freeman overlays "hero_sly"
             wait 1.8s
             freeman pose "chetvert_pravo"
             wait 1.4s
@@ -296,20 +308,22 @@ scene "final" (duration: 32s) {
     }
 
     // Пауза. Полсекунды.
-    wait 0.6s
+    wait 0.3s
 
     // ── VO-13 [ЖАЛО]: Просто ты играл выспавшийся.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "stern"
     //lip 13
     together {
         freeman speaks for 2.1s
         do {
             camera close-up freeman
-            freeman overlays "stern"
             wait 1.6s
         }
     }
 
-    wait 0.9s
+    wait 0.45s
 
     // ── VO-14 [ЖАЛО]: Проверь себя двадцать третьего.
     //lip 14
@@ -323,10 +337,10 @@ scene "final" (duration: 32s) {
     }
 
     // Чернота. Титр с адресом приходит уже после того, как голос замолчал.
-    wait 0.8s
+    wait 0.4s
     let adres = text("meysternlp.ru/fredi/?m=perehod", 44) at (0.5, 1.4) layer 7
     adres scales 0.17 over 0.01s
     adres moves-to (0.5, 0.62) over 0.4s ease-out
     transition invert 0.16s
-    wait 1.6s
+    wait 0.8s
 }
