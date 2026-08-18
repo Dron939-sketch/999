@@ -30,6 +30,7 @@ studio.py — «завод» Лектория: одна команда → го�
 
 import argparse
 import io
+import collections
 import json
 import os
 import re
@@ -802,6 +803,18 @@ DISTINCT_BODIES_MIN = 9
 # висящими руками бóльшую часть хронометража; ровно это студия и назвала
 # «нет динамики».
 DEFAULT_BODY_SHARE_MAX = 0.35
+# Потолок концентрации: три самые частые позы не должны съедать больше половины
+# монтажа. Замер по манифесту: у большинства роликов 24–45%, у обеих частей
+# «Худшего собеседника» — 57% (calm / v_upor / point), и это самые длинные
+# ролики, где однообразие копится.
+TOP3_POSE_SHARE_MAX = 0.50
+# Ролик длиннее этого обязан показать корпус не только анфас.
+RAKURS_MIN_SEC = 30
+# И длиннее этого — сойти с точки хотя бы раз.
+HOD_MIN_SEC = 60
+# Позы, меняющие РАКУРС корпуса, а не жест: профиль, три четверти, спина.
+RAKURS_POSES = ("chetvert_", "bok_", "spina", "polu_spina", "turn34",
+                "high_angle", "low_angle")
 
 
 def lint_dinamika(prod, rig_dir=None):
@@ -812,7 +825,7 @@ def lint_dinamika(prod, rig_dir=None):
         return [], []
     text = anim_code(anim.read_text(encoding="utf-8"))
     seq = re.findall(r'(pose|overlays)\s+"([a-z_0-9]+)"', text)
-    secs = sum(float(x) for x in re.findall(r"duration:\s*(\d+)s", text))
+    secs = sum(float(x) for x in re.findall(r"duration:\s*([\d.]+)s", text))
     if secs < 5 or not seq:
         return [], []
 
@@ -844,12 +857,73 @@ def lint_dinamika(prod, rig_dir=None):
         soft.append(f"{prod['id']}: разных силуэтов {len(set(sigs))} при норме "
                     f"{DISTINCT_BODIES_MIN} (имён поз {len({n for _, n in seq})}) — "
                     f"в риге 70 поз с телом, монтаж их не видит")
+    names = [n for k, n in seq if k == "pose"]
+    if len(names) >= 10:
+        top3 = sum(v for _, v in collections.Counter(names).most_common(3))
+        if top3 / len(names) > TOP3_POSE_SHARE_MAX:
+            top = ", ".join(n for n, _ in collections.Counter(names).most_common(3))
+            soft.append(f"{prod['id']}: три позы держат {top3 / len(names) * 100:.0f}% "
+                        f"монтажа при потолке {TOP3_POSE_SHARE_MAX * 100:.0f}% "
+                        f"({top}) — смены силуэта есть, но это качание между теми же "
+                        f"тремя стойками. В риге 70 поз с телом, 29 не были в кадре "
+                        f"ни разу")
     if share > DEFAULT_BODY_SHARE_MAX:
         soft.append(f"{prod['id']}: {share * 100:.0f}% событий оставляют тело в "
                     f"дефолтной стойке при потолке {DEFAULT_BODY_SHARE_MAX * 100:.0f}% "
                     f"— это и есть «анфас с висящей рукой». Мимику через `overlays`, "
                     f"жест телом на каждый удар")
     return [], soft
+
+
+
+def lint_rakurs(prod, rig_dir=None):
+    """Приёмщик РАКУРСА: показан ли корпус не только анфас. (hard, soft).
+
+    Замер по манифесту: `facing front` стоит в четырнадцати роликах из
+    пятнадцати, и другого положения корпуса в них нет. Риг умеет три четверти,
+    профиль в обе стороны, спину с оглядкой, низкий и высокий ракурс — 29 поз
+    с телом не были в кадре ни разу. Отсюда и «бедно по визуалу»: смены поз
+    идут, но зритель всё время смотрит на одну и ту же плоскую проекцию.
+    """
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return [], []
+    text = anim_code(anim.read_text(encoding="utf-8"))
+    secs = sum(float(x) for x in re.findall(r"duration:\s*([\d.]+)s", text))
+    if secs < RAKURS_MIN_SEC:
+        return [], []
+    states = set(re.findall(r"facing\s+(\w+)", text))
+    states |= {n for n in re.findall(r'pose\s+"([a-z_0-9]+)"', text)
+               if n.startswith(RAKURS_POSES)}
+    if len(states) < 2:
+        return [], [f"{prod['id']}: корпус за {secs:.0f}с ни разу не поворачивается "
+                    f"(только {', '.join(sorted(states)) or 'анфас'}) — три четверти, "
+                    f"профиль и спина в риге есть. Плоская проекция весь ролик "
+                    f"читается как бедная картинка, даже когда поз много"]
+    return [], []
+
+
+def lint_hod(prod, rig_dir=None):
+    """Приёмщик ХОДА: сходит ли фигура с точки в длинном ролике. (hard, soft).
+
+    В «Худшем собеседнике» (2:58) говорящий не сдвинулся ни разу: `place` в
+    начале сцены и всё. Композиция кадра тогда одна на весь ролик, и сколько
+    бы поз ни сменилось, глазу не за что зацепиться.
+    """
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return [], []
+    text = anim_code(anim.read_text(encoding="utf-8"))
+    secs = sum(float(x) for x in re.findall(r"duration:\s*([\d.]+)s", text))
+    if secs < HOD_MIN_SEC:
+        return [], []
+    chars = set(re.findall(r"import\s+character\s+(\w+)", text))
+    moves = [m for m in re.findall(r"^\s*(\w+)\s+moves-to", text, re.M) if m in chars]
+    if not moves:
+        return [], [f"{prod['id']}: за {secs:.0f}с фигура ни разу не сходит с точки "
+                    f"— композиция кадра одна на весь ролик. Ход по кадру меняет её "
+                    f"сильнее любой смены позы"]
+    return [], []
 
 
 def lint_turnaround(prods):
@@ -1165,6 +1239,12 @@ def main(argv):
         dh, ds = lint_dinamika(prod)      # приёмщик динамики
         all_hard += dh
         all_soft += ds
+        kh, ks = lint_rakurs(prod)        # приёмщик ракурса корпуса
+        all_hard += kh
+        all_soft += ks
+        hh, hs = lint_hod(prod)           # приёмщик хода по кадру
+        all_hard += hh
+        all_soft += hs
     th, ts = lint_turnaround(prods)       # приёмщик разворота (один на риг)
     all_hard += th
     all_soft += ts
