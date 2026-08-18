@@ -21,15 +21,26 @@
 //      Держится строгой мимикой и общим планом, без иронии;
 //    · жало — «Пип.» в темноту.
 //
-//  Локация: рисованная спальня в три часа ночи (fredi-spalnya.svg). Тона
-//  средне-серые, а не чёрные: оба персонажа — сплошные силуэты и на тёмной
-//  комнате пропали бы. Говорящий стоит на светлом пятне от уличного фонаря —
-//  единственном месте кадра, где силуэт читается целиком.
+//  ЛОКАЦИИ — ЧЕТЫРЕ СЦЕНЫ (продолжение разбивки первой части):
+//
+//    · кухня        VO-1, VO-2 — та же, что в конце первой части: шов склейки
+//                                проходит внутри локации и не читается.
+//                                Здесь же ложится имя «ФРЕДИ»;
+//    · спальня      VO-3       — «в три часа ночи он не спит», лежащий там же;
+//    · поликлиника  VO-4, VO-5 — бит ПРЕДЕЛ. Единственное место без иронии,
+//                                и локация буквальная: дверь, в которую входят;
+//    · спальня      VO-6…VO-8  — жало там же, где начали.
+//
+//  Во всех наборах тона средне-серые, а не чёрные: оба персонажа — сплошные
+//  силуэты и на тёмной комнате пропали бы. Говорящий стоит на светлом пятне
+//  с жёсткой кромкой — единственном месте кадра, где силуэт читается целиком.
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
 import character sleeper from "../assets/characters/freeman_rig"
-import set spalnya from "../assets/sets/fredi-spalnya.svg"
+import set spalnya     from "../assets/sets/fredi-spalnya.svg"
+import set kuhnya      from "../assets/sets/fredi-kuhnya.svg"
+import set poliklinika from "../assets/sets/fredi-poliklinika.svg"
 
 config {
     width: 1280
@@ -52,20 +63,19 @@ config {
     rim-light: 0.0
 }
 
-scene "spalnya" (duration: 52s, set: spalnya) {
+scene "kuhnya" (duration: 16.4s, set: kuhnya) {
+    //  Шов с частью 1 проходит внутри кухни: зритель стыка не увидит.
+    //  Здесь же ложится имя — на «первом честном разговоре за день».
     transition static 0.35s
 
-    // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
-    place sleeper at (0.73, 0.60) facing front
-    sleeper scales 0.5 over 0.01s
-    sleeper pose "lezhit"
-    sleeper overlays "weary"
-
-    // Фреди — на светлом пятне от фонаря слева: только там виден силуэт.
+    // Фреди — на светлом пятне слева: только там силуэт читается целиком.
     place freeman at (0.28, 0.72) facing front
     freeman scales 0.6 over 0.01s
+    // Имя ложится в кадр на реплике, которая его называет.
     let imya = text("ФРЕДИ", 90) at (0.5, -2.0) layer 6
     imya scales 0.5 over 0.01s
+    camera wide
+    freeman pose "calm"
 
     // ── БЕЗ СЛОВ: лежащий смотрит в потолок ───────────────────────────────
     camera wide
@@ -115,6 +125,22 @@ scene "spalnya" (duration: 52s, set: spalnya) {
             wait 1.0s
         }
     }
+}
+
+scene "spalnya" (duration: 7.5s, set: spalnya) {
+    //  «В три часа ночи он не спит» — лежащий всё ещё там, где мы его оставили.
+    transition static 0.35s
+
+    // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
+    place sleeper at (0.73, 0.60) facing front
+    sleeper scales 0.5 over 0.01s
+    sleeper pose "lezhit"
+    sleeper overlays "weary"
+
+    // Фреди — на светлом пятне от фонаря слева: только там виден силуэт.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
 
     // ── VO-22 [ВЗЛЁТ]: В три часа ночи он не спит. В браузере, без установки, нач
     //lip 3
@@ -137,6 +163,18 @@ scene "spalnya" (duration: 52s, set: spalnya) {
             freeman pose "calm"
         }
     }
+}
+
+scene "poliklinika" (duration: 19.5s, set: poliklinika) {
+    //  Бит ПРЕДЕЛ. Единственное место ролика без иронии — и локация
+    //  буквальная: дверь, в которую входят, а не метафора.
+    transition static 0.35s
+
+    // Фреди — на светлом пятне слева: только там силуэт читается целиком.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+    freeman pose "calm"
 
     // ── VO-23 [ПРЕДЕЛ]: И да, честно: если у тебя совсем темно — сон развалился, е
     //lip 4
@@ -186,6 +224,26 @@ scene "spalnya" (duration: 52s, set: spalnya) {
             freeman pose "calm"
         }
     }
+}
+
+scene "spalnya-2" (duration: 9.4s, set: spalnya) {
+    //  Жало там же, где начали. Имя уже в кадре — с ним и уходим в темноту.
+    transition static 0.35s
+
+    // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
+    place sleeper at (0.73, 0.60) facing front
+    sleeper scales 0.5 over 0.01s
+    sleeper pose "lezhit"
+    sleeper overlays "weary"
+
+    // Фреди — на светлом пятне от фонаря слева: только там виден силуэт.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    // Пропы живут внутри сцены: на жале имя ставим сразу на место,
+    // без выезда — оно уже прозвучало и просто досматривает ролик.
+    let imya = text("ФРЕДИ", 90) at (0.5, 0.30) layer 6
+    imya scales 0.62 over 0.01s
+    camera wide
 
     // ── VO-25 [ЖАЛО]: Ссылка внизу. Тот собеседник в твоей голове никуда не дене
     //lip 6
@@ -229,4 +287,3 @@ scene "spalnya" (duration: 52s, set: spalnya) {
     transition invert 0.16s
     wait 0.8s
 }
-

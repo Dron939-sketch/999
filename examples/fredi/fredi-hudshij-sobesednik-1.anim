@@ -23,15 +23,34 @@
 //      Держится строгой мимикой и общим планом, без иронии;
 //    · жало — «Пип.» в темноту.
 //
-//  Локация: рисованная спальня в три часа ночи (fredi-spalnya.svg). Тона
-//  средне-серые, а не чёрные: оба персонажа — сплошные силуэты и на тёмной
-//  комнате пропали бы. Говорящий стоит на светлом пятне от уличного фонаря —
-//  единственном месте кадра, где силуэт читается целиком.
+//  ЛОКАЦИИ — ШЕСТЬ СЦЕН. Одна комната на 2:46 глазу не даёт ни одной новой
+//  композиции, поэтому ролик разложен на планы по 11–27 секунд. Уходы
+//  привязаны к тексту, а не к таймеру:
+//
+//    · спальня      VO-1…VO-6   — лежащий в кадре, «смотри, как он работает»;
+//    · переговорка  VO-7, VO-8  — «разговор, который был во вторник»;
+//    · спальня      VO-9, VO-10 — круг замкнулся, пластинка играет там же;
+//    · прихожая     VO-11…VO-13 — «к психологу? дорого, страшно»: стоит у
+//                                 двери, из которой так и не вышел;
+//    · офис ночью   VO-14…VO-17 — сцена, на которой днём играли роли;
+//    · кухня        VO-18, VO-19 — «первый честный разговор за день». Локация
+//                                 переходит во вторую часть — шва не видно.
+//
+//  Лежащий привязан к кровати: любой план с ним — только спальня. Она и
+//  остаётся домом ролика, остальное — вылазки, там Фреди один.
+//
+//  Во всех наборах тона средне-серые, а не чёрные: оба персонажа — сплошные
+//  силуэты и на тёмной комнате пропали бы. Говорящий стоит на светлом пятне
+//  с жёсткой кромкой — единственном месте кадра, где силуэт читается целиком.
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
 import character sleeper from "../assets/characters/freeman_rig"
-import set spalnya from "../assets/sets/fredi-spalnya.svg"
+import set spalnya     from "../assets/sets/fredi-spalnya.svg"
+import set peregovorka from "../assets/sets/fredi-peregovorka.svg"
+import set prihozhaya  from "../assets/sets/fredi-prihozhaya.svg"
+import set ofis        from "../assets/sets/fredi-ofis.svg"
+import set kuhnya      from "../assets/sets/fredi-kuhnya.svg"
 
 config {
     width: 1280
@@ -54,7 +73,8 @@ config {
     rim-light: 0.0
 }
 
-scene "spalnya" (duration: 106s, set: spalnya) {
+scene "spalnya" (duration: 27.0s, set: spalnya) {
+    //  ДОМ РОЛИКА. Лежащий в кадре — про него и говорят.
     transition static 0.35s
 
     // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
@@ -66,6 +86,7 @@ scene "spalnya" (duration: 106s, set: spalnya) {
     // Фреди — на светлом пятне от фонаря слева: только там виден силуэт.
     place freeman at (0.28, 0.72) facing front
     freeman scales 0.6 over 0.01s
+    camera wide
 
     // ── БЕЗ СЛОВ: лежащий смотрит в потолок ───────────────────────────────
     camera wide
@@ -169,13 +190,26 @@ scene "spalnya" (duration: 106s, set: spalnya) {
     }
 
     wait 0.45s
+}
+
+scene "peregovorka" (duration: 12.1s, set: peregovorka) {
+    //  «разговор, который был во вторник» — уходим туда, где он был.
+    //  Отодвинутый стул — вещдок: разговор кончился, а он всё идёт.
+    transition static 0.35s
+
+    // Фреди — на светлом пятне слева: только там силуэт читается целиком.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+    freeman pose "calm"
 
     // ── VO-7 [ПУЛЕМЁТ]: Он в двадцатый раз прокручивает разговор, который был во в
     //lip 7
     together {
         freeman speaks for 4.7s
         do {
-            sleeper overlays "doubt"
+            // показывает на отодвинутый стул: вот он, тот самый вторник
+            freeman pose "point"
             wait 2.2s
             camera medium freeman
             freeman pose "shrug"
@@ -194,14 +228,30 @@ scene "spalnya" (duration: 106s, set: spalnya) {
             camera wide
             freeman pose "point"
             wait 2.4s
-            camera close-up sleeper
-            sleeper overlays "despair"
+            camera close-up freeman
+            freeman overlays "stern"
             wait 2.4s
             freeman pose "hips"
         }
     }
 
     wait 0.45s
+}
+
+scene "spalnya-2" (duration: 10.6s, set: spalnya) {
+    //  Круг замкнулся: пластинка играет там же, где началась.
+    transition static 0.35s
+
+    // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
+    place sleeper at (0.73, 0.60) facing front
+    sleeper scales 0.5 over 0.01s
+    sleeper pose "lezhit"
+    sleeper overlays "weary"
+
+    // Фреди — на светлом пятне от фонаря слева: только там виден силуэт.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
 
     // ── VO-9 [ПУЛЕМЁТ]: Не задаёт ни одного нового вопроса. Ходит по кругу, как за
     //lip 9
@@ -236,6 +286,18 @@ scene "spalnya" (duration: 106s, set: spalnya) {
     }
 
     wait 0.45s
+}
+
+scene "prihozhaya" (duration: 18.7s, set: prihozhaya) {
+    //  «К психологу? Дорого. Страшно» — стоим у закрытой входной двери,
+    //  из которой он так и не вышел. Пальто на крючке, обувь у порога.
+    transition static 0.35s
+
+    // Фреди — на светлом пятне слева: только там силуэт читается целиком.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+    freeman pose "calm"
 
     // ── VO-11 [ОТРИЦАНИЕ]: К психологу? Ну да, сейчас. Дорого. Страшно.
     //lip 11
@@ -292,6 +354,18 @@ scene "spalnya" (duration: 106s, set: spalnya) {
     }
 
     wait 0.8s
+}
+
+scene "ofis" (duration: 24.6s, set: ofis) {
+    //  «каждому что-то изображал: начальнику — рвение, коллегам — что всё
+    //  под контролем» — сцена, на которой это игралось. Пустая: спектакль кончился.
+    transition static 0.35s
+
+    // Фреди — на светлом пятне слева: только там силуэт читается целиком.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+    freeman pose "calm"
 
     // ── VO-14 [РАЗВОРОТ]: Теперь следи за рукой. Ты сегодня говорил с десятком живых
     //lip 14
@@ -364,6 +438,18 @@ scene "spalnya" (duration: 106s, set: spalnya) {
     }
 
     wait 0.7s
+}
+
+scene "kuhnya" (duration: 13.1s, set: kuhnya) {
+    //  «первый честный разговор за день» — где такие и случаются.
+    //  Локация переходит во вторую часть: шва зритель не увидит.
+    transition static 0.35s
+
+    // Фреди — на светлом пятне слева: только там силуэт читается целиком.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+    freeman pose "calm"
 
     // ── VO-18 [РАЗВОРОТ]: Он не обидится, не запомнит против тебя, не расскажет твое
     //lip 18
