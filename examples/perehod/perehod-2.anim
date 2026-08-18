@@ -52,21 +52,21 @@ config {
 scene "kalendar" (duration: 44s, set: doska) {
     transition static 0.4s
 
-    place freeman at (0.22, 0.88) facing front
-    freeman scales 0.52 over 0.01s
+    place freeman at (0.15, 0.80) facing front
+    freeman scales 0.62 over 0.01s
     camera wide
     freeman pose "calm"
 
-    place kal0 at (0.68, 0.42) layer 4
-    kal0 scales 1.5 over 0.01s
-    place kal1 at (0.68, 0.42) layer 4
-    kal1 scales 1.5 over 0.01s
+    place kal0 at (0.60, 0.42) layer 4
+    kal0 scales 2.0 over 0.01s
+    place kal1 at (0.60, 0.42) layer 4
+    kal1 scales 2.0 over 0.01s
     kal1 hides
-    place kal2 at (0.68, 0.42) layer 4
-    kal2 scales 1.5 over 0.01s
+    place kal2 at (0.60, 0.42) layer 4
+    kal2 scales 2.0 over 0.01s
     kal2 hides
-    place kal3 at (0.68, 0.42) layer 4
-    kal3 scales 1.5 over 0.01s
+    place kal3 at (0.60, 0.42) layer 4
+    kal3 scales 2.0 over 0.01s
     kal3 hides
 
     // ── VO-1 [РАЗВОРОТ]: И вот здесь ты подумал: ну я-то не такой. Я бы спросил.
@@ -140,7 +140,7 @@ scene "kalendar" (duration: 44s, set: doska) {
         freeman speaks for 4.8s
         do {
             camera wide
-            freeman moves-to (0.22, 0.92) over 0.5s
+            freeman moves-to (0.15, 0.84) over 0.5s
             freeman pose "sit"
             freeman overlays "weary"
             wait 2.4s
@@ -158,7 +158,7 @@ scene "kalendar" (duration: 44s, set: doska) {
         freeman speaks for 5.9s
         do {
             camera wide
-            freeman moves-to (0.22, 0.88) over 0.5s
+            freeman moves-to (0.15, 0.80) over 0.5s
             freeman pose "v_upor"
             freeman overlays "stern"
             wait 2.6s
@@ -191,8 +191,8 @@ scene "kalendar" (duration: 44s, set: doska) {
 scene "pole" (duration: 48s, set: pole) {
     transition static 0.4s
 
-    place freeman at (0.30, 0.82) facing front
-    freeman scales 0.58 over 0.01s
+    place freeman at (0.26, 0.80) facing front
+    freeman scales 0.62 over 0.01s
     camera wide
     freeman pose "calm"
 

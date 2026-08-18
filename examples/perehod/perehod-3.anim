@@ -14,6 +14,7 @@
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
+import set  doska from "../assets/sets/perehod-doska.svg"
 import prop ui0   from "../assets/props/perehod-ui-0.svg"
 import prop ui1   from "../assets/props/perehod-ui-1.svg"
 import prop ui2   from "../assets/props/perehod-ui-2.svg"
@@ -42,28 +43,28 @@ config {
 }
 
 // ── СЦЕНА 1. ИГРА ───────────────────────────────────────────────────────────
-scene "igra" (duration: 62s) {
+scene "igra" (duration: 62s, set: doska) {
     transition static 0.4s
 
-    place freeman at (0.24, 0.86) facing front
-    freeman scales 0.54 over 0.01s
+    place freeman at (0.16, 0.80) facing front
+    freeman scales 0.62 over 0.01s
     camera wide
     freeman pose "calm"
 
-    place ui0 at (0.66, 0.24) layer 4
-    ui0 scales 1.35 over 0.01s
+    place ui0 at (0.60, 0.22) layer 4
+    ui0 scales 0.95 over 0.01s
     ui0 hides
-    place ui1 at (0.66, 0.24) layer 4
-    ui1 scales 1.35 over 0.01s
+    place ui1 at (0.60, 0.22) layer 4
+    ui1 scales 0.95 over 0.01s
     ui1 hides
-    place ui2 at (0.66, 0.24) layer 4
-    ui2 scales 1.35 over 0.01s
+    place ui2 at (0.60, 0.22) layer 4
+    ui2 scales 0.95 over 0.01s
     ui2 hides
-    place ned at (0.66, 0.62) layer 4
-    ned scales 1.25 over 0.01s
+    place ned at (0.62, 0.64) layer 4
+    ned scales 1.15 over 0.01s
     ned hides
-    place karta at (0.62, 0.60) layer 4
-    karta scales 1.45 over 0.01s
+    place karta at (0.60, 0.42) layer 4
+    karta scales 1.5 over 0.01s
     karta hides
 
     // ── VO-1 [ВЗЛЁТ]: Поэтому рассказывать я тебе ничего не буду…
@@ -131,7 +132,7 @@ scene "igra" (duration: 62s) {
             wait 2.6s
             camera wide
             freeman pose "idet"
-            freeman moves-to (0.34, 0.86) over 1.8s
+            freeman moves-to (0.28, 0.80) over 1.8s
             wait 2.4s
             freeman pose "point"
             wait 2.2s
