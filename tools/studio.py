@@ -310,6 +310,26 @@ def has_audio(path):
     return bool(_ffprobe(path, "stream=codec_type", select="a:0"))
 
 
+def find_silences(path, min_len=2.5, thr="-38dB"):
+    """Провалы тишины длиннее min_len секунд: [(старт, длина), ...].
+
+    Нужен, чтобы ловить замороженный кадр от завышенной `duration` сцены.
+    Без ffmpeg молча возвращает пусто — гейт не должен падать сам.
+    """
+    if not have_ffmpeg() or not Path(path).exists():
+        return []
+    try:
+        r = subprocess.run(["ffmpeg", "-i", str(path), "-af",
+                            f"silencedetect=noise={thr}:d={min_len}", "-f", "null", "-"],
+                           capture_output=True, text=True)
+    except Exception:
+        return []
+    out = r.stderr
+    starts = [float(x) for x in re.findall(r"silence_start: ([\d.-]+)", out)]
+    ends = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", out)]
+    return [(a, b - a) for a, b in zip(starts, ends) if b - a >= min_len]
+
+
 def qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced):
     """Гейт качества. Возвращает (hard, soft) — списки сообщений.
 
@@ -337,6 +357,18 @@ def qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced):
                 soft.append(f"{prod['id']}: заявлен vo, но голос не сгенерился "
                             "(вероятно недоступен TTS) — отдаём немой рендер")
         else:
+            # ПРОВАЛЫ ТИШИНЫ. `duration` сцены — это ПОЛ, а не потолок:
+            # содержимое длиннее играет целиком, содержимое короче движок
+            # доигрывает ЗАМОРОЖЕННЫМ кадром. Если объявленная длительность
+            # больше фактической, в ролике появляется дыра: картинка стоит,
+            # звука нет. У «Перехода» так вышли провалы на 10.1 и 5.9 секунды
+            # во второй части — 16 секунд мёртвого кадра из 75.
+            for start, dur in find_silences(final_mp4, min_len=2.5):
+                hard.append(f"{prod['id']}: провал тишины {dur:.1f}с на "
+                            f"{int(start // 60)}:{start % 60:04.1f} — почти наверняка "
+                            f"`duration` сцены больше её содержимого, и движок "
+                            f"доигрывает замороженным кадром. Ставь duration ЗАВЕДОМО "
+                            f"НИЖЕ содержимого: длину сцены задаёт содержимое")
             vd, ad = media_duration(video_mp4), media_duration(final_mp4)
             if vd > 0 and abs(ad - vd) / vd > 0.20:
                 # Рассинхрон при СУЩЕСТВУЮЩЕМ звуке — дефект сборки. HARD.
@@ -828,7 +860,7 @@ def lint_dinamika(prod, rig_dir=None):
         return [], []
     text = anim_code(anim.read_text(encoding="utf-8"))
     seq = re.findall(r'(pose|overlays)\s+"([a-z_0-9]+)"', text)
-    secs = sum(float(x) for x in re.findall(r"duration:\s*([\d.]+)s", text))
+    secs = _anim_seconds(anim)
     if secs < 5 or not seq:
         return [], []
 
@@ -892,7 +924,7 @@ def lint_rakurs(prod, rig_dir=None):
     if not anim.exists():
         return [], []
     text = anim_code(anim.read_text(encoding="utf-8"))
-    secs = sum(float(x) for x in re.findall(r"duration:\s*([\d.]+)s", text))
+    secs = _anim_seconds(anim)
     if secs < RAKURS_MIN_SEC:
         return [], []
     states = set(re.findall(r"facing\s+(\w+)", text))
@@ -917,7 +949,7 @@ def lint_hod(prod, rig_dir=None):
     if not anim.exists():
         return [], []
     text = anim_code(anim.read_text(encoding="utf-8"))
-    secs = sum(float(x) for x in re.findall(r"duration:\s*([\d.]+)s", text))
+    secs = _anim_seconds(anim)
     if secs < HOD_MIN_SEC:
         return [], []
     chars = set(re.findall(r"import\s+character\s+(\w+)", text))
@@ -1009,6 +1041,27 @@ def lint_turnaround(prods):
             log("  " + line.rstrip())
     return ([] if code == 0 else ["разворот: нарушения на ракурсах, которые "
                                   "играют ролики — см. таблицу выше"]), []
+
+
+def _anim_seconds(anim_path):
+    """Фактическая длина сценария по движку, а не по объявленным `duration`.
+
+    `duration` сцены — ПОЛ: содержимое длиннее играет целиком, содержимое
+    короче доигрывается замороженным кадром. Поэтому сумма объявленных
+    длительностей не равна длине ролика ни в одну сторону, и приёмщикам
+    динамики по ней считать нельзя. Если движок не собран — откатываемся
+    на старую оценку по `duration:`.
+    """
+    eng = ROOT / "target" / "release" / "animdsl"
+    if eng.exists():
+        try:
+            out = subprocess.run([str(eng), "timing", str(anim_path)],
+                                 capture_output=True, text=True, check=True).stdout
+            return float(json.loads(out)["total"])
+        except Exception:
+            pass
+    text = Path(anim_path).read_text(encoding="utf-8")
+    return sum(float(x) for x in re.findall(r"duration:\s*([\d.]+)s", text))
 
 
 def lint_lipmap(prod):

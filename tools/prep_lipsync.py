@@ -255,7 +255,15 @@ def process(text, parts_dir):
             else:
                 depth += line.count("{") - line.count("}")
                 if depth <= 0:
-                    stretch, depth = None, None
+                    # Блок катов кончился, но `together` ещё открыт: у реплики
+                    # может быть НЕСКОЛЬКО параллельных веток `do` — жесты в
+                    # одной, подмена пропов в другой. Раньше растягивалась
+                    # только первая, вторая держала старую длину и распирала
+                    # реплику: у «Перехода» так вышел провал в 5.9 секунды —
+                    # звук кончился, а календарь ещё листался.
+                    depth = None
+                    out.append(line)
+                    continue
                 else:
                     line = TIMED.sub(
                         lambda mm: f"{mm.group(1)}{round(float(mm.group(2)) * k, 2)}s",
