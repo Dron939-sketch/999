@@ -50,22 +50,26 @@
    лишняя мебель, посуда, провода — вон.
 6. **Без цвета.**
 
-## Общий стилевой суффикс (дописывать к каждому промту)
+## Про стиль в промтах
 
-> in the style of the animated series "Mr. Freeman": hand-drawn black ink,
-> thick wobbly hand-inked outline, flat fills only (NO gradients, NO soft
-> light, NO shading), stark high-contrast black and white, black ink
-> (#141410) on a pale off-white background, NO colour at all; graphic and
-> illustrative, NOT photorealistic; slightly rough, redrawn-by-hand feel;
-> minimal detail, a lot of empty space around the object; full-bleed square
-> composition, no border, no frame, no margin.
+Раньше стиль задавался отсылкой «в стиле сериала Mr. Freeman». Генератор может
+её не знать — тогда он берёт что-то своё, и карточки приезжают в чужой манере.
+Поэтому ниже промты ПОЛНЫЕ: стиль описан словами, отсылок нет, каждый промт
+самодостаточен и копируется целиком.
 
-## Общий негативный промт
+## Общий негативный промт (один на все четыре)
 
-> text, letters, words, numbers, digits, price tag text, watermark,
-> signature, face, head, eyes, person, people, crowd, colour, gradients,
-> soft shadows, glow, photorealism, 3D render, clutter, background scenery,
-> border, frame, white margin
+```
+colour, color, coloured, tinted, sepia, warm tones, blue tones, gradient,
+gradients, airbrush, soft shading, cross-hatching, hatching, stippling,
+texture, paper texture, grain, drop shadow, glow, bloom, lens flare,
+photorealistic, photograph, 3D render, CGI, painterly, watercolour, oil
+painting, sketchy pencil lines, text, letters, words, numbers, digits,
+labels, captions, signage, logo, watermark, signature, face, head, eyes,
+mouth, person, people, figure, crowd, hands everywhere, clutter, extra
+objects, background scenery, room, furniture, border, frame, white margin,
+vignette
+```
 
 ---
 
@@ -73,57 +77,127 @@
 
 Реплика: «тебе позвонили и сказали, что одобрение сгорит в пятницу».
 
-> A hand holding an old-fashioned mobile phone pressed against an ear, seen
-> from the side. Only the hand, the phone and the edge of the ear and jaw are
-> drawn — NO face, no eyes, no head above the ear, no body. The phone is a
-> plain rectangle with a blank screen: nothing on the screen, no icons, no
-> numbers. Everything else is empty pale background — the object floats alone
-> with a lot of space around it, like a specimen on a card. [+ стилевой суффикс]
+```
+A black and white hand-drawn ink illustration of a hand holding an
+old-fashioned mobile phone pressed against an ear, seen from the side. Only
+the hand, the phone, and the edge of the ear and jawline are drawn — there is
+NO face, no eyes, no mouth, no head above the ear, no body, no shoulder. The
+wrist and the ear are cut off by empty space, as if this fragment was clipped
+out of a larger drawing and mounted alone. The phone is a plain rectangle and
+its screen is completely blank: no icons, no numbers, no letters, nothing on
+it.
 
-Что критично: кисть и ухо срезаны кадром, будто образец отрезали от целого.
-Целая фигура в кадре превратит карточку во вторую сцену и отберёт внимание у
-говорящего.
+Drawing style: pure black ink on plain pale off-white paper, monochrome,
+absolutely no colour of any kind. One thick, slightly uneven, hand-inked
+outline that wobbles and changes width along its length, like a brush pen
+drawing. Fills are flat and solid — solid black or flat mid-grey — with no
+gradients, no soft shading, no cross-hatching, no texture, no drop shadows.
+Extremely high contrast, only three tones in the whole image: pale background,
+one mid-grey, solid black. Bold, graphic, poster-like, very few details.
+
+Composition: square 1:1, the subject sits alone in the middle with a great
+deal of empty pale background around it. No border, no frame, no margin, no
+caption, no text anywhere in the image.
+```
+
+Что критично: кисть и ухо срезаны пустотой — это делает карточку образцом, а
+не второй сценой. Целая фигура в кадре отберёт внимание у говорящего.
+
+---
 
 ## 2. ВИТРИНА С ПОСЛЕДНЕЙ → `perehod-obr-vitrina.png`
 
 Реплика: «на полке лежала последняя, и очередь дышала в затылок».
 
-> A single shop shelf behind a pane of glass, seen straight on. On the shelf
-> ONE plain rectangular box is left, standing alone; the rest of the shelf is
-> empty, with clean gaps where the other boxes stood. A small blank price
-> label sticks up beside it — the label is COMPLETELY EMPTY, no writing, no
-> numbers. No people, no reflections of people. Everything around is empty
-> pale background. [+ стилевой суффикс]
+```
+A black and white hand-drawn ink illustration of a single shop shelf behind a
+pane of glass, seen straight on. On the shelf ONE plain rectangular box stands
+alone. The rest of the shelf is empty, with clear gaps where other boxes used
+to stand — those gaps are the point of the picture and must be obvious. A
+small blank price label sticks up from the shelf edge beside the box: the
+label is completely EMPTY, no writing, no numbers, no symbols. No people, no
+hands, no reflections of people in the glass.
 
-Что критично: пустые места на полке. Именно они говорят «последняя», а не
-сама коробка — без них это просто товар.
+Drawing style: pure black ink on plain pale off-white paper, monochrome,
+absolutely no colour of any kind. One thick, slightly uneven, hand-inked
+outline that wobbles and changes width along its length, like a brush pen
+drawing. Fills are flat and solid — solid black or flat mid-grey — with no
+gradients, no soft shading, no cross-hatching, no texture, no drop shadows.
+Extremely high contrast, only three tones in the whole image: pale background,
+one mid-grey, solid black. Bold, graphic, poster-like, very few details. The
+glass is shown by two or three straight black lines, not by reflections or
+transparency effects.
+
+Composition: square 1:1, the shelf sits alone with a great deal of empty pale
+background above and below it. No border, no frame, no margin, no caption, no
+text anywhere in the image.
+```
+
+Что критично: пустые места на полке. Именно они говорят «последняя», а не сама
+коробка — без них это просто товар.
+
+---
 
 ## 3. КУХОННЫЙ СТОЛ С ТЕЛЕФОНОМ → `perehod-obr-kuhnya.png`
 
 Реплика: «тебе просто напомнили, что нормальные дети звонят».
 
-> A plain kitchen table seen from above at a slight angle. On it a mobile
-> phone lies face up with a COMPLETELY BLANK screen — no text, no icons, no
-> notification — and beside it one cup. Nothing else on the table at all: no
-> plates, no crumbs, no cloth. No hands, no people. The table edges fade into
-> empty pale background. [+ стилевой суффикс]
+```
+A black and white hand-drawn ink illustration of a plain kitchen table seen
+from above at a slight angle. On the table a mobile phone lies face up with a
+completely BLANK screen — no text, no icons, no notification, nothing on it —
+and beside the phone stands one plain cup. There is nothing else on the table
+at all: no plates, no crumbs, no cloth, no cutlery, no food. No hands, no
+people, no chairs. The far edges of the table dissolve into empty background.
+
+Drawing style: pure black ink on plain pale off-white paper, monochrome,
+absolutely no colour of any kind. One thick, slightly uneven, hand-inked
+outline that wobbles and changes width along its length, like a brush pen
+drawing. Fills are flat and solid — solid black or flat mid-grey — with no
+gradients, no soft shading, no cross-hatching, no texture, no drop shadows.
+Extremely high contrast, only three tones in the whole image: pale background,
+one mid-grey, solid black. Bold, graphic, poster-like, very few details.
+
+Composition: square 1:1, the table top sits alone with a great deal of empty
+pale background around it. No border, no frame, no margin, no caption, no text
+anywhere in the image.
+```
 
 Что критично: экран пустой. Любой значок на нём — это надпись, а надписи в
-этом ролике ставит движок.
+этом ролике ставит движок читаемым шрифтом.
+
+---
 
 ## 4. НОУТБУК В ТЕМНОТЕ → `perehod-obr-noutbuk.png`
 
 Реплика: «ты не спросил — они не показали».
 
-> An open laptop seen head-on, standing alone on a bare surface. The screen is
-> a plain pale rectangle with NOTHING on it: no text, no windows, no icons, no
-> cursor. From the screen ONE hard-edged wedge of pale light falls forward
-> onto the surface in front of the laptop — flat, with sharp straight edges,
-> no glow, no bloom. Nothing else in the frame: no mouse, no cables, no cup,
-> no hands, no people. Empty pale background around. [+ стилевой суффикс]
+```
+A black and white hand-drawn ink illustration of an open laptop seen head-on,
+standing alone on a bare flat surface. The screen is a plain pale rectangle
+with NOTHING on it: no text, no windows, no icons, no cursor, no menu bar. From
+the screen ONE hard-edged wedge of pale light falls forward onto the surface in
+front of the laptop — the wedge is a flat pale shape with sharp straight
+edges, like a cut-out piece of paper, with no glow, no blur, no bloom and no
+soft falloff. The surface around the wedge stays plain and untouched. Nothing
+else is in the picture: no mouse, no cables, no cup, no papers, no hands, no
+people, no room behind.
 
-Что критично: клин света с жёсткой кромкой. Он единственный намекает, что
-дело ночью, и он же рифмуется с кадром 0:55, где в лицо светит телефон.
+Drawing style: pure black ink on plain pale off-white paper, monochrome,
+absolutely no colour of any kind. One thick, slightly uneven, hand-inked
+outline that wobbles and changes width along its length, like a brush pen
+drawing. Fills are flat and solid — solid black or flat mid-grey — with no
+gradients, no soft shading, no cross-hatching, no texture, no drop shadows.
+Extremely high contrast, only three tones in the whole image: pale background,
+one mid-grey, solid black. Bold, graphic, poster-like, very few details.
+
+Composition: square 1:1, the laptop sits alone with a great deal of empty pale
+background around it. No border, no frame, no margin, no caption, no text
+anywhere in the image.
+```
+
+Что критично: клин света с жёсткой кромкой, без свечения. Он единственный
+намекает, что дело ночью, и рифмуется с кадром 0:55, где телефон светит в лицо.
 
 ---
 
