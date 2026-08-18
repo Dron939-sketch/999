@@ -41,9 +41,9 @@ Workflow `.github/workflows/render.yml`:
 | `lazejka-chuzhoe-intro.mp4` | `examples/lektorij/lazejka-chuzhoe-intro.anim` | «Лазейка», угол читателя: шлагбаум, а ты пешком |
 | `fredi-hudshij-sobesednik-1.mp4` | `examples/fredi/fredi-hudshij-sobesednik-1.anim` | Фреди, часть 1 — диагноз: худший собеседник это ты сам. Шесть локаций: спальня → переговорка → спальня → прихожая → офис → кухня |
 | `fredi-hudshij-sobesednik-2.mp4` | `examples/fredi/fredi-hudshij-sobesednik-2.anim` | Фреди, часть 2 — что делать. Четыре локации: кухня (шов с частью 1) → спальня → поликлиника → спальня. Склеивается с частью 1 (`ffmpeg concat`), готовый файл 2:58 |
-| `perehod-1.mp4` | `examples/perehod/perehod-1.anim` | «Переход», часть 1 — заход и механизм: гербарий, образцы под булавками. 1:21.8 |
-| `perehod-2.mp4` | `examples/perehod/perehod-2.anim` | «Переход», часть 2 — выгорающий календарь, посадка на бите усталости, решётка из знаков вопроса. 1:28.5 |
-| `perehod-3.mp4` | `examples/perehod/perehod-3.anim` | «Переход», часть 3 — интерфейс игры, «нужно 35, у вас 23», карта месяца, титр. 1:44.8. Склейка трёх частей — 4:35 |
+| `perehod-1.mp4` | `examples/perehod/perehod-1.anim` | «Переход», часть 1 — заход и механизм: гербарий, образцы под булавками. 1:15.1 |
+| `perehod-2.mp4` | `examples/perehod/perehod-2.anim` | «Переход», часть 2 — выгорающий календарь, посадка на бите усталости, решётка из знаков вопроса. 1:15.3 |
+| `perehod-3.mp4` | `examples/perehod/perehod-3.anim` | «Переход», часть 3 — интерфейс игры, «нужно 35, у вас 23», карта месяца, титр. 1:34.0. Склейка трёх частей — 4:04 |
 
 Добавить ролик в конвейер — дописать строку в список `RENDERS` в
 `.github/workflows/render.yml`.
