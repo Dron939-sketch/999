@@ -137,28 +137,28 @@ scene "doska" (duration: 54s, set: doska) {
 
     // Фигура входит слева и ХОДИТ вдоль доски: композиция кадра меняется
     // за счёт хода, а не только за счёт рук.
-    place freeman at (0.14, 0.88) facing front
-    freeman scales 0.5 over 0.01s
+    place freeman at (0.13, 0.80) facing front
+    freeman scales 0.62 over 0.01s
     camera wide
     freeman pose "idet"
 
     // Образцы ждут за правой кромкой — влетают по одному.
-    place obr1 at (1.45, 0.30) layer 4
-    obr1 scales 0.62 over 0.01s
-    place obr2 at (1.45, 0.52) layer 4
-    obr2 scales 0.62 over 0.01s
-    place obr3 at (1.45, 0.30) layer 4
-    obr3 scales 0.62 over 0.01s
-    place obr4 at (1.45, 0.52) layer 4
-    obr4 scales 0.62 over 0.01s
-    place pin1 at (1.45, 0.16) layer 5
-    pin1 scales 0.34 over 0.01s
-    place pin2 at (1.45, 0.38) layer 5
-    pin2 scales 0.34 over 0.01s
-    place pin3 at (1.45, 0.16) layer 5
-    pin3 scales 0.34 over 0.01s
-    place pin4 at (1.45, 0.38) layer 5
-    pin4 scales 0.34 over 0.01s
+    place obr1 at (1.55, 0.30) layer 4
+    obr1 scales 0.95 over 0.01s
+    place obr2 at (1.85, 0.70) layer 4
+    obr2 scales 0.55 over 0.01s
+    place obr3 at (1.70, 0.30) layer 4
+    obr3 scales 0.75 over 0.01s
+    place obr4 at (1.55, 0.70) layer 4
+    obr4 scales 0.95 over 0.01s
+    place pin1 at (1.55, 0.10) layer 5
+    pin1 scales 0.32 over 0.01s
+    place pin2 at (1.85, 0.56) layer 5
+    pin2 scales 0.32 over 0.01s
+    place pin3 at (1.70, 0.13) layer 5
+    pin3 scales 0.32 over 0.01s
+    place pin4 at (1.55, 0.50) layer 5
+    pin4 scales 0.32 over 0.01s
 
     wait 0.8s
 
@@ -166,11 +166,11 @@ scene "doska" (duration: 54s, set: doska) {
     //lip 5
     together {
         freeman speaks for 7.4s
-        obr1 moves-to (0.44, 0.28) over 0.5s ease-out
-        pin1 moves-to (0.44, 0.14) over 0.6s ease-out
+        obr1 moves-to (0.38, 0.30) over 0.5s ease-out
+        pin1 moves-to (0.38, 0.10) over 0.6s ease-out
         do {
             freeman pose "shag_pravoj"
-            freeman moves-to (0.20, 0.88) over 1.4s
+            freeman moves-to (0.20, 0.80) over 1.4s
             wait 1.6s
             camera wide
             freeman pose "point"
@@ -187,11 +187,11 @@ scene "doska" (duration: 54s, set: doska) {
     //lip 6
     together {
         freeman speaks for 6.9s
-        obr2 moves-to (0.72, 0.30) over 0.5s ease-out
-        pin2 moves-to (0.72, 0.16) over 0.6s ease-out
+        obr2 moves-to (0.76, 0.70) over 0.5s ease-out
+        pin2 moves-to (0.76, 0.56) over 0.6s ease-out
         do {
             freeman pose "shag_levoj"
-            freeman moves-to (0.28, 0.88) over 1.6s
+            freeman moves-to (0.26, 0.80) over 1.6s
             wait 1.8s
             camera medium freeman
             freeman pose "gopnik"
@@ -208,12 +208,12 @@ scene "doska" (duration: 54s, set: doska) {
     //lip 7
     together {
         freeman speaks for 8.0s
-        obr3 moves-to (0.44, 0.60) over 0.5s ease-out
-        pin3 moves-to (0.44, 0.46) over 0.6s ease-out
+        obr3 moves-to (0.74, 0.30) over 0.5s ease-out
+        pin3 moves-to (0.74, 0.13) over 0.6s ease-out
         do {
             camera wide
             freeman pose "shag_pravoj"
-            freeman moves-to (0.36, 0.88) over 1.6s
+            freeman moves-to (0.32, 0.80) over 1.6s
             wait 1.8s
             freeman pose "otvraschenie"
             wait 2.2s
@@ -229,8 +229,8 @@ scene "doska" (duration: 54s, set: doska) {
     //lip 8
     together {
         freeman speaks for 7.4s
-        obr4 moves-to (0.72, 0.62) over 0.5s ease-out
-        pin4 moves-to (0.72, 0.48) over 0.6s ease-out
+        obr4 moves-to (0.38, 0.70) over 0.5s ease-out
+        pin4 moves-to (0.38, 0.50) over 0.6s ease-out
         do {
             camera medium freeman
             freeman pose "v_upor"
@@ -249,13 +249,13 @@ scene "doska" (duration: 54s, set: doska) {
     // ── VO-9 [ПУЛЕМЁТ]: Тебе аккуратно подали одно число вместо другого…
     //  Два числа: красивое приходит в кадр, честное — не приходит.
     let krasivo = text("9 400 в месяц", 60) at (0.60, -1.2) layer 7
-    krasivo scales 0.26 over 0.01s
+    krasivo scales 0.30 over 0.01s
     let chestno = text("214 000 переплаты", 60) at (0.60, -1.2) layer 7
-    chestno scales 0.26 over 0.01s
+    chestno scales 0.30 over 0.01s
     //lip 9
     together {
         freeman speaks for 11.2s
-        krasivo moves-to (0.60, 0.20) over 0.6s ease-out
+        krasivo moves-to (0.55, 0.07) over 0.6s ease-out
         do {
             camera wide
             freeman pose "raskryl"
@@ -269,7 +269,7 @@ scene "doska" (duration: 54s, set: doska) {
             freeman pose "v_upor"
         }
     }
-    chestno moves-to (0.60, 0.74) over 0.6s ease-out
+    chestno moves-to (0.55, 0.92) over 0.6s ease-out
 
     wait 0.7s
 
@@ -286,15 +286,15 @@ scene "doska" (duration: 54s, set: doska) {
             wait 1.8s
         }
     }
-    pin1 moves-to (0.44, -0.25) over 0.4s
-    pin2 moves-to (0.72, -0.25) over 0.4s
-    pin3 moves-to (0.44, -0.25) over 0.4s
-    pin4 moves-to (0.72, -0.25) over 0.4s
-    obr1 moves-to (0.44, 1.35) over 0.9s ease-in
-    obr2 moves-to (0.72, 1.35) over 0.9s ease-in
-    obr3 moves-to (0.44, 1.35) over 0.9s ease-in
-    obr4 moves-to (0.72, 1.35) over 0.9s ease-in
-    krasivo moves-to (0.60, 1.35) over 0.9s ease-in
-    chestno moves-to (0.60, 1.35) over 0.9s ease-in
+    pin1 moves-to (0.38, -0.25) over 0.4s
+    pin2 moves-to (0.76, -0.25) over 0.4s
+    pin3 moves-to (0.74, -0.25) over 0.4s
+    pin4 moves-to (0.38, -0.25) over 0.4s
+    obr1 moves-to (0.38, 1.5) over 0.9s ease-in
+    obr2 moves-to (0.76, 1.5) over 0.9s ease-in
+    obr3 moves-to (0.74, 1.5) over 0.9s ease-in
+    obr4 moves-to (0.38, 1.5) over 0.9s ease-in
+    krasivo moves-to (0.55, 1.5) over 0.9s ease-in
+    chestno moves-to (0.55, 1.5) over 0.9s ease-in
     wait 1.1s
 }
