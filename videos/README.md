@@ -39,8 +39,8 @@ Workflow `.github/workflows/render.yml`:
 | `osoznannost-intro.mp4` | `examples/lektorij/osoznannost-intro.anim` | Подводка к курсу «Осознанность»: телевизор, который никто не смотрит |
 | `lazejka-intro.mp4` | `examples/lektorij/lazejka-intro.anim` | Подводка к курсу «Лазейка»: забор цел, а щель есть |
 | `lazejka-chuzhoe-intro.mp4` | `examples/lektorij/lazejka-chuzhoe-intro.anim` | «Лазейка», угол читателя: шлагбаум, а ты пешком |
-| `fredi-hudshij-sobesednik-1.mp4` | `examples/fredi/fredi-hudshij-sobesednik-1.anim` | Фреди, часть 1 — диагноз: худший собеседник это ты сам |
-| `fredi-hudshij-sobesednik-2.mp4` | `examples/fredi/fredi-hudshij-sobesednik-2.anim` | Фреди, часть 2 — что делать. Склеивается с частью 1 (`ffmpeg concat`) |
+| `fredi-hudshij-sobesednik-1.mp4` | `examples/fredi/fredi-hudshij-sobesednik-1.anim` | Фреди, часть 1 — диагноз: худший собеседник это ты сам. Шесть локаций: спальня → переговорка → спальня → прихожая → офис → кухня |
+| `fredi-hudshij-sobesednik-2.mp4` | `examples/fredi/fredi-hudshij-sobesednik-2.anim` | Фреди, часть 2 — что делать. Четыре локации: кухня (шов с частью 1) → спальня → поликлиника → спальня. Склеивается с частью 1 (`ffmpeg concat`), готовый файл 2:58 |
 
 Добавить ролик в конвейер — дописать строку в список `RENDERS` в
 `.github/workflows/render.yml`.
