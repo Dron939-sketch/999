@@ -161,9 +161,14 @@ def hits(rows, raw=""):
                 "фразы длинные — рублёный ритм оригинала теряется"))
 
     # триада: три и более коротких предложения подряд (пулемёт)
-    triad = any(all(len(s.split()) <= 3 for s in sents[i:i + 3]) for i in range(len(sents) - 2))
-    out.append((10, triad, "есть пулемётная триада",
-                "нет серии из трёх коротких ударов подряд"))
+    # Триаду спрашиваем только там, где пулемёт вообще есть. В части, где
+    # идут взлёт и жало, серии коротких ударов быть и не должно — а проверка
+    # всё равно снимала десять очков с каждой второй части.
+    if "ПУЛЕМ" in beats_all:
+        triad = any(all(len(s.split()) <= 3 for s in sents[i:i + 3])
+                    for i in range(len(sents) - 2))
+        out.append((10, triad, "есть пулемётная триада",
+                    "нет серии из трёх коротких ударов подряд"))
 
     out.append((8, bool(HIGH.search(text_all) and LOW.search(text_all)),
                 "столкновение регистров",
@@ -180,10 +185,13 @@ def hits(rows, raw=""):
     limit = 14.0 if has_hello else 7.0
     ok_first = t_first is not None and t_first <= 7.0
     ok_hook = t_hook is not None and t_hook <= limit
-    out.append((7, ok_first and ok_hook,
-                f"первая реплика ≤7с, хук ≤{limit:.0f}с"
-                + (" (с фирменным приветствием)" if has_hello else ""),
-                f"первая реплика на {t_first}с, хук на {t_hook}с — зритель уже ушёл"))
+    # Только первая часть: во второй хука нет по устройству, и проверка
+    # валилась на отсутствующем бите, а не на реальной ошибке.
+    if first_part:
+        out.append((7, ok_first and ok_hook,
+                    f"первая реплика ≤7с, хук ≤{limit:.0f}с"
+                    + (" (с фирменным приветствием)" if has_hello else ""),
+                    f"первая реплика на {t_first}с, хук на {t_hook}с — зритель уже ушёл"))
     turn = next((r for r in rows if "РАЗВОРОТ" in r["beat"].upper()), None)
     t_turn = first_time(turn["time"]) if turn else None
     if parts == 1:
@@ -194,7 +202,14 @@ def hits(rows, raw=""):
     out.append((5, not SUMMING.search(text_all), "нет подведения итогов",
                 "есть «подводя итог»/«таким образом» — мораль проговорена, глубина схлопывается"))
     if last_part:
-        out.append((5, bool(FINALE_OK.search(last["text"])), "финал — удар, а не точка",
+        # Удар — это вопрос, восклицание, обрыв ИЛИ короткий приказ: «Проверь
+        # себя двадцать третьего.» бьёт не хуже вопроса, а по знаку препинания
+        # неотличима от ровной точки. Приказ узнаём по первому слову: русский
+        # императив кончается на -й, -и или -ь.
+        words = last["text"].strip("«»\"' ").split()
+        order = bool(words) and len(words) <= 7 and re.search(r"[йиь]$", words[0], re.I)
+        out.append((5, bool(FINALE_OK.search(last["text"])) or bool(order),
+                    "финал — удар, а не точка",
                     "последняя реплика заканчивается ровной точкой: нет вопроса, вызова или обрыва"))
 
     bad = [name for name, pat in FORBIDDEN.items() if re.search(pat, text_all, re.I)]

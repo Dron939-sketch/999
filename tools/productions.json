@@ -98,6 +98,30 @@
    "vo": "examples/fredi/fredi-hudshij-sobesednik-2-VO.md",
    "images": [],
    "tempo": 1.15
+  },
+  {
+   "id": "perehod-1",
+   "desc": "«Переход», часть 1 из 3 — ЗАХОД И МЕХАНИЗМ: назови три решения, которые принял сам. Гербарий: каждое «не считается» садится на доску под булавку. Темп речи 1.30.",
+   "anim": "examples/perehod/perehod-1.anim",
+   "vo": "examples/perehod/perehod-1-VO.md",
+   "images": [],
+   "tempo": 1.3
+  },
+  {
+   "id": "perehod-2",
+   "desc": "«Переход», часть 2 из 3 — ГЛАВНЫЙ УДАР И ВТОРАЯ КРАЙНОСТЬ: выгорающий календарь, опора на бите усталости, решётка из знаков вопроса. Темп речи 1.30.",
+   "anim": "examples/perehod/perehod-2.anim",
+   "vo": "examples/perehod/perehod-2-VO.md",
+   "images": [],
+   "tempo": 1.3
+  },
+  {
+   "id": "perehod-3",
+   "desc": "«Переход», часть 3 из 3 — ИГРА И ЖАЛО: интерфейс в трёх стадиях, «нужно 35, у вас 23», карта месяца, титр. Темп речи 1.30.",
+   "anim": "examples/perehod/perehod-3.anim",
+   "vo": "examples/perehod/perehod-3-VO.md",
+   "images": [],
+   "tempo": 1.3
   }
  ]
 }
