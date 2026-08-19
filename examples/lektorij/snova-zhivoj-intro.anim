@@ -67,7 +67,7 @@ scene "pustota" (duration: 42s, set: pole) {
         do {
             camera angle high freeman
             wait 0.85s
-            freeman pose "hunch"          // плечи внутрь — «выключен»
+            freeman overlays "hunch"          // плечи внутрь — «выключен»
             camera medium freeman
         }
     }
@@ -81,7 +81,7 @@ scene "pustota" (duration: 42s, set: pole) {
         do {
             camera close-up freeman
             wait 0.9s
-            freeman pose "no"             // развёл руками: «а что не так?»
+            freeman overlays "no"             // развёл руками: «а что не так?»
             camera extreme-close-up freeman
         }
     }
@@ -99,7 +99,7 @@ scene "pustota" (duration: 42s, set: pole) {
         do {
             camera medium freeman
             wait 1.1s
-            freeman pose "shag_levoj"     // марионетка переставляет ногу
+            freeman overlays "shag_levoj"     // марионетка переставляет ногу
             camera close-up freeman
         }
     }
@@ -112,7 +112,7 @@ scene "pustota" (duration: 42s, set: pole) {
         do {
             camera medium freeman
             wait 1.1s
-            freeman pose "hips"           // руки в боки — «и так каждый день»
+            freeman overlays "hips"           // руки в боки — «и так каждый день»
             camera close-up freeman
         }
     }
@@ -125,7 +125,7 @@ scene "pustota" (duration: 42s, set: pole) {
         do {
             camera extreme-close-up freeman
             wait 1.1s
-            freeman pose "despair"        // руки вверх и врозь
+            freeman overlays "despair"        // руки вверх и врозь
             camera wide
         }
     }
@@ -144,10 +144,10 @@ scene "pustota" (duration: 42s, set: pole) {
         do {
             camera angle low freeman
             wait 1.5s
-            freeman pose "point"          // тычет пальцем в зрителя
+            freeman overlays "point"          // тычет пальцем в зрителя
             camera extreme-close-up freeman
             wait 1.5s
-            freeman pose "yarost_telom"   // удар всем корпусом
+            freeman overlays "yarost_telom"   // удар всем корпусом
             camera medium freeman
         }
     }
@@ -165,7 +165,7 @@ scene "pustota" (duration: 42s, set: pole) {
         do {
             camera extreme-close-up freeman
             wait 1.8s
-            freeman pose "open"           // раскрыл ладони — предложение
+            freeman overlays "open"           // раскрыл ладони — предложение
             camera wide
         }
     }
@@ -189,10 +189,10 @@ scene "pustota" (duration: 42s, set: pole) {
         do {
             camera medium freeman
             wait 1.8s
-            freeman pose "v_upor"         // ладонь в камеру: «стой»
+            freeman overlays "v_upor"         // ладонь в камеру: «стой»
             camera close-up freeman
             wait 1.7s
-            freeman pose "gopnik"         // вразвалку — «ну так что?»
+            freeman overlays "gopnik"         // вразвалку — «ну так что?»
             camera wide
         }
     }

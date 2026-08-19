@@ -1,0 +1,262 @@
+// =============================================================================
+//  «КАК ДУМАТЬ» — продающее интро вводного курса
+//  (meysternlp.ru/blog/lektorij/kak-dumat).
+//  Собран по методике завода, лекало — snova-zhivoj-intro:
+//    · персонаж — канон (SIMILARITY.md), поле ПУСТОЕ светлое;
+//    · режиссура (HOLLYWOOD.md): каты ВНУТРИ реплик, ракурсы high/low,
+//      флэш-морды, слово-удар + инверсия, отъезд-одиночество;
+//    · сценарий (SCRIPT-FREEMAN.md): хук → пулемёт → разворот → взлёт → жало,
+//      тайм-якоря 3–7–21; VO — kak-dumat-intro-VO.md, //lip 1..8;
+//    · тема: попугай — повторяет чужое, своих слов нет. Открытие: фигура
+//      заведённо повторяет один жест; пулемёт повторён слово в слово.
+//  БЕЗ СВЕРХКРУПНЫХ ПЛАНОВ. У extreme-close-up зум по новой карте фигуры ~18,
+//  и растр сета на нём взрывается — три прогона CI легли именно на этом
+//  (см. разбор в PR: renderer растит растр как svg_w x final_scale). Пока окно
+//  кадра не введено, самый тесный план здесь — close-up: ролик обязан
+//  рендериться заводом, а не только локально.
+//
+//  ФОКУС СО SCALES НА ТЕСНЫХ ПЛАНАХ. Кадр планов с целью НЕ зависит от
+//  scales: frame_shot берёт зум как fill/(span·scales), и фигура заполняет
+//  кадр одинаково при любом масштабе. А вот СТОИМОСТЬ зависит: растр сета
+//  растёт с зумом, и close-up на scales 0.72 рендерится в полтора раза
+//  дольше, чем на 1.6 (замер: 19 против ~7 с/сек ролика). Поэтому перед
+//  каждым тесным катом масштаб поднимается, а перед общим — возвращается
+//  к 0.72: композиция «мелкая фигурка в пустоте» живёт только на wide,
+//  где зум всегда 1 и фигура в кадре ровно в свой scales.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set titry from "../assets/sets/lektorij-final.svg"
+import set pole from "../assets/sets/field-empty.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab        // тон земли: поле задаёт сет field-empty
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.35
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0           // канон: лицо плоское
+    rim-light: 0.0
+}
+
+// ============================ СЦЕНА 1: СКЛАД ================================
+scene "sklad" (duration: 42s, set: pole) {
+    transition static 0.35s
+
+    place freeman at (0.5, 0.62) facing front
+    freeman scales 0.72
+    let hand = prop("hand", "../assets/props/hand-point.svg") at (-1.5, 1.5) layer 5
+    let slovo = text("ПОПУГАЙ?", 160) at (0.5, -2.0) layer 6
+    slovo scales 2.6
+
+    // ── t=0..3.5 БЕЗ СЛОВ: заведённая фигура повторяет один жест ──────────
+    //  «Попугай» показан до того, как назван: марионеточный кивок туда-сюда,
+    //  ровный, как метроном. Общий план — фигурка мелкая и механическая.
+    freeman scales 0.72
+    camera wide
+    freeman pose "puppet"
+    wait 0.9s
+    freeman pose "puppet_jerk"
+    wait 0.8s
+    freeman pose "puppet"
+    wait 0.7s
+    freeman scales 1.2
+    camera medium freeman
+    freeman pose "calm"
+    wait 0.6s
+
+    // ── ХУК (VO-1): требование в упор, фигура ВПРАВО-треть ────────────────
+    freeman moves-to (0.63, 0.62) over 0.01s
+    freeman pose "v_upor"
+    freeman overlays "stern"
+    //lip 1
+    together {
+        freeman speaks for 1.9s
+        do {
+            camera angle high freeman
+            wait 0.95s
+            freeman overlays "point"          // палец в зрителя: «своими словами»
+            freeman scales 1.2
+            camera medium freeman
+        }
+    }
+    // ── ХУК-добивка (VO-2): КАТ крупный, фигура ВЛЕВО-треть ───────────────
+    freeman moves-to (0.37, 0.62) over 0.01s
+    freeman pose "think"
+    freeman overlays "smug"
+    //lip 2
+    together {
+        freeman speaks for 1.6s
+        do {
+            freeman scales 1.6
+            camera close-up freeman
+            wait 0.8s
+            freeman overlays "no"             // развёл руками: «ну, бывает»
+        }
+    }
+    freeman overlays "flash_dead"
+    wait 0.08s
+    freeman overlays "hero_skeptic"
+    wait 0.5s
+
+    // ── ПУЛЕМЁТ 1 (VO-3): «Услышал. Запомнил. Повторил. Забыл.» ───────────
+    freeman moves-to (0.5, 0.62) over 0.01s
+    freeman pose "puppet"
+    //lip 3
+    together {
+        freeman speaks for 2.2s
+        do {
+            freeman scales 1.2
+            camera medium freeman
+            wait 1.1s
+            freeman overlays "shag_levoj"     // марионетка переставляет ногу
+            freeman scales 1.6
+            camera close-up freeman
+        }
+    }
+    // ── ПУЛЕМЁТ 2 (VO-4): ТЕ ЖЕ слова, ТЕ ЖЕ позы — ролик попугайничает ───
+    freeman moves-to (0.5, 0.62) over 0.01s
+    freeman pose "puppet_jerk"
+    //lip 4
+    together {
+        freeman speaks for 2.2s
+        do {
+            freeman scales 1.2
+            camera medium freeman
+            wait 1.1s
+            freeman overlays "shag_levoj"     // тот же шаг: повтор — сам приём
+            freeman scales 1.6
+            camera close-up freeman
+        }
+    }
+    // ── ПУЛЕМЁТ финал (VO-5): склад доверху ───────────────────────────────
+    freeman pose "za_golovu"
+    freeman overlays "stern"
+    //lip 5
+    together {
+        freeman speaks for 2.2s
+        do {
+            freeman scales 1.6
+            camera close-up freeman
+            wait 1.1s
+            freeman overlays "despair"        // руки вверх: завален чужим
+            freeman scales 0.72
+            camera wide
+        }
+    }
+    camera shake 0.35s intensity 2
+    freeman overlays "flash_disgust"
+    wait 0.08s
+    freeman overlays "stern"
+    wait 0.7s
+
+    // ── t≈21 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука в камеру ───────
+    //  «Ты не глупый» — вина снимается, оправдание забирается.
+    freeman moves-to (0.44, 0.62) over 0.01s
+    freeman pose "v_upor"
+    //lip 6
+    together {
+        freeman speaks for 4.5s
+        do {
+            camera angle low freeman
+            wait 1.5s
+            freeman overlays "point"          // тычет пальцем: «тебя. не учили.»
+            freeman scales 1.6
+            camera close-up freeman
+            wait 1.5s
+            freeman overlays "open"           // раскрыл ладони: «некому было»
+            freeman scales 1.2
+            camera medium freeman
+        }
+    }
+    hand moves-to (0.72, 0.72) over 0.01s
+    camera shake 0.3s intensity 2
+    wait 0.7s
+    hand moves-to (-1.5, 1.5) over 0.01s
+    wait 0.5s
+
+    // ── ВЗЛЁТ (VO-7): мысль вслух — невидимое видно ───────────────────────
+    freeman pose "raskryl"
+    //lip 7
+    together {
+        freeman speaks for 3.5s
+        do {
+            freeman scales 1.6
+            camera close-up freeman
+            wait 1.8s
+            freeman overlays "open"           // ладони раскрыты — предложение
+            freeman scales 0.72
+            camera wide
+        }
+    }
+    // ── СЛОВО-УДАР «ПОПУГАЙ?» + негатив-панч ──────────────────────────────
+    freeman scales 0.72
+    camera wide
+    slovo moves-to (0.5, 0.32) over 0.01s
+    slovo scales 1.0 over 0.18s ease-in
+    transition invert 0.16s
+    camera shake 0.3s intensity 3
+    wait 0.9s
+    slovo moves-to (0.5, -2.0) over 0.22s ease-in
+    freeman overlays "flash_pupils"
+    wait 0.08s
+
+    // ── ЖАЛО-CTA (VO-8): наезд-удар, подколка «своими словами» ────────────
+    freeman moves-to (0.5, 0.62) over 0.01s
+    freeman pose "lunge"
+    //lip 8
+    together {
+        freeman speaks for 5.5s
+        do {
+            freeman scales 1.2
+            camera medium freeman
+            wait 1.8s
+            freeman overlays "v_upor"         // ладонь в камеру: «стой»
+            freeman scales 1.6
+            camera close-up freeman
+            wait 1.7s
+            freeman overlays "gopnik"         // вразвалку — «ну так что?»
+            freeman scales 0.72
+            camera wide
+        }
+    }
+    camera zoom-to freeman over 0.18s ease-in
+    freeman overlays "hero_wink"
+    wait 0.6s
+    // отъезд-одиночество: снова крошечная фигура в пустоте
+    camera reset over 0.5s
+    freeman pose "calm"
+    wait 0.8s
+}
+
+// ============================ СЦЕНА 2: ТИТРЫ ================================
+scene "titry" (duration: 6s, set: titry) {
+    transition static 0.45s
+
+    place freeman at (0.5, 3.0) facing front
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 1.2s
+
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6
+    stamp rotates -7
+    stamp scales 0.94 over 0.22s ease-in
+    stamp scales 1.0 over 0.1s ease-out
+    stamp rotates -4 over 0.12s
+
+    wait 2.5s
+    transition fade-black 0.8s
+}

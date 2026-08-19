@@ -347,8 +347,8 @@ scene "negotiation" (duration: 22s, set: cafe-ruins) {
     wait 0.2s
 
     together {
-        zara pose "cowering"
-        dex pose "cowering"
+        zara overlays "cowering"
+        dex overlays "cowering"
         camera zoom-to nyx over 1s ease-in
     }
     wait 1s
@@ -425,7 +425,7 @@ scene "standoff" (duration: 24s, set: wasteland) {
     // Zara steps forward to meet her. No fear.
     together {
         zara moves-to (0.4, 0.5) over 1.5s ease-in
-        zara pose "commanding"
+        zara overlays "commanding"
     }
     wait 0.5s
 
@@ -465,9 +465,9 @@ scene "epilogue" (duration: 16s, set: cafe-ruins) {
 
     // They're all here. An uneasy truce.
     together {
-        zara pose "idle"
-        nyx pose "cautious"
-        dex pose "cautious"
+        zara overlays "idle"
+        nyx overlays "cautious"
+        dex overlays "cautious"
     }
     wait 1.5s
 

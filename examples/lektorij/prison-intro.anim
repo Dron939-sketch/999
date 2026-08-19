@@ -183,7 +183,7 @@ scene "cell" (duration: 40s, set: cell) {
         do {
             camera extreme-close-up freeman
             wait 1.0s
-            freeman pose "otvraschenie"    // отмахнулся от «здравого смысла»
+            freeman overlays "otvraschenie"    // отмахнулся от «здравого смысла»
             camera medium freeman
         }
     }
@@ -221,7 +221,7 @@ scene "cell" (duration: 40s, set: cell) {
         do {
             camera extreme-close-up freeman
             wait 1.8s
-            freeman pose "open"            // раскрыл ладони на взлёте
+            freeman overlays "open"            // раскрыл ладони на взлёте
             camera wide
         }
     }
@@ -245,10 +245,10 @@ scene "cell" (duration: 40s, set: cell) {
         do {
             camera medium freeman
             wait 1.8s
-            freeman pose "point"           // подколка — тычет в зрителя
+            freeman overlays "point"           // подколка — тычет в зрителя
             camera close-up freeman
             wait 1.7s
-            freeman pose "hips"            // руки в боки: «ну так что?»
+            freeman overlays "hips"            // руки в боки: «ну так что?»
             camera wide
         }
     }

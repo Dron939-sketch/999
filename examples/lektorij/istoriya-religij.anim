@@ -1,0 +1,411 @@
+// =============================================================================
+//  «СЛЕДУЮЩИЙ ВЫ» — интро к курсу «История религий».
+//  VO — istoriya-religij-VO.md, //lip 1..11.
+//
+//  УСТРОЙСТВО РОЛИКА
+//
+//  1. ЭТО МЫСЛЕННЫЙ ОПЫТ, А НЕ ПРОПОВЕДЬ. Зрителю предлагают поверить на
+//     минуту, что он вернётся в теле собственного внука, и спрашивают, что он
+//     оставит детям — чтобы те передали это ему же. Вопрос смешной; отвечая
+//     на него, зритель впервые заглядывает за собственную смерть. Ровно это
+//     и делали религии, и ровно об этом курс.
+//
+//  2. ВЕЛОСИПЕД — СКВОЗНОЙ ПРЕДМЕТ, А НЕ ШУТКА. Он стоит в детской с первой
+//     секунды, попадает в опись наследства наравне с образованием и знаниями
+//     и закрывает ролик. Предмет, прошедший через весь монолог, работает
+//     сильнее любой формулировки: зритель сам достраивает, что «оставить
+//     следующему» — это не про абстракции.
+//
+//  3. ЛОКАЦИЯ МЕНЯЕТСЯ ПОД МЫСЛЬ. Детская (комната ЖДЁТ того, кто ещё не
+//     родился) → чердак (всё, что оставили ДО нас, и ни один ящик не вскрыт)
+//     → поле с плитой (разговор перестаёт быть игрой) → ПУСТОТА (главная
+//     фраза) → склон с деревом и пнём (одно место, два решения) → зал
+//     Лектория → снова детская.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · речь НА ХОДУ — поза `bok_*_govorit` (корпус в профиль, маска к
+//      зрителю) плюс шаг СЛОЕМ `shag_bok_*`. Полная поза сбрасывает липсинк,
+//      и рот прыгал бы на каждом шаге (tools/speech_lint.py);
+//    · проход закрывается ПОЛНОЙ ПОЗОЙ, иначе брошенный слой шага висит и
+//      фигура доигрывает полушаг стоя (tools/walk.py --check);
+//    · фигура НЕ ПРИСЕДАЕТ — ни у велосипеда, ни у плиты. Поза, роняющая
+//      рост больше чем на 8%, валит прогон (tools/posture.py);
+//    · все `place` идут через `on floor` и у каждой локации есть
+//      `*.surfaces.json` — заданная точка это СТУПНИ. Единственное исключение
+//      объявлено в сцене пустоты и объяснено там же;
+//    · тень: `ground-shadow` даёт пятно контакта под ступнями, `cast-shadow`
+//      кладёт силуэт на пол. Без них фигура читается наклеенной на фон;
+//    · БЕЗ СВЕРХКРУПНЫХ ПЛАНОВ: растр сета на ECU-зуме взрывается (PR #15).
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set detskaya from "../assets/sets/detskaya.svg"
+import set cherdak from "../assets/sets/cherdak.svg"
+import set kamen from "../assets/sets/kamen-memento.svg"
+import set void from "../assets/sets/void-black.svg"
+import set sklon from "../assets/sets/derevo-pen.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+import set titry from "../assets/sets/lektorij-final.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+// ============ СЦЕНА 1: ДЕТСКАЯ — КОМНАТА, КОТОРАЯ ЖДЁТ ======================
+scene "detskaya" (duration: 11s, set: detskaya) {
+    transition static 0.2s
+
+    place freeman at (0.40, 0.90) facing front on floor
+    freeman scales 0.78
+    camera wide
+
+    //  Секунда без слов: комната, кровать, велосипед у стены. Зритель успевает
+    //  заметить, что здесь никого нет, — и тогда появляется голос.
+    freeman pose "calm"
+    wait 0.4s
+
+    // ── ПРИВЕТСТВИЕ (VO-1): ласково, как приглашают поиграть ──────────────
+    //lip 1
+    together {
+        freeman speaks for 4.1s
+        do {
+            camera medium freeman
+            wait 1.4s
+            freeman overlays "open"        // раскрыл ладони: «вы ведь не торопитесь?»
+            wait 1.4s
+            freeman overlays "hips"        // руки в боки — жест без рта, липсинк цел
+        }
+    }
+    camera wide
+    wait 0.1s
+
+    // ── ХУК (VO-2): «вы вернётесь. В теле собственного внука» ─────────────
+    //  Подходит к велосипеду — предмет назван не словом, а взглядом.
+    freeman pose "v_upor"
+    freeman moves-to (0.58, 0.90) over 0.5s
+    //lip 2
+    together {
+        freeman speaks for 3.6s
+        do {
+            wait 1.2s
+            freeman overlays "point"       // указал на велосипед: вот чьё это будет
+            camera medium freeman
+            wait 1.2s
+            freeman overlays "v_upor"      // ладонь в камеру: «в теле собственного внука»
+        }
+    }
+    freeman overlays "flash_pupils"        // зрачки на два кадра: дошло
+    wait 0.08s
+    // ── ХУК-добивка (VO-3): «не пугайтесь, это мысленный опыт» ────────────
+    freeman pose "calm"
+    freeman overlays "smug"
+    //lip 3
+    together {
+        freeman speaks for 3.6s
+        do {
+            camera wide
+            wait 1.8s
+            freeman overlays "no"          // развёл руками: «всего лишь»
+        }
+    }
+    //  ПАУЗА-ОБМАНКА: зритель расслабился на «всего лишь». Следующая реплика
+    //  бьёт по расслабленному.
+    wait 0.45s
+}
+
+// ============ СЦЕНА 2: ЧЕРДАК — ЧУЖОЕ НАСЛЕДСТВО ============================
+scene "cherdak" (duration: 9s, set: cherdak) {
+    transition static 0.2s
+
+    place freeman at (0.34, 0.92) facing front on floor
+    freeman scales 0.72
+    camera wide
+    freeman pose "v_upor"
+    wait 0.15s
+
+    // ── ВОПРОС (VO-4): в упор, к зрителю ─────────────────────────────────
+    //lip 4
+    together {
+        freeman speaks for 4.6s
+        do {
+            camera medium freeman
+            wait 1.5s
+            freeman overlays "point"       // «чтобы они передали это ВАМ»
+            wait 1.5s
+            freeman overlays "raskryl"
+        }
+    }
+    camera wide
+    freeman pose "bok_pravo_govorit"
+    wait 0.1s
+
+    // ── ПУЛЕМЁТ (VO-5): опись наследства НА ХОДУ, вдоль коробок ──────────
+    //  Ящики закрыты, и он идёт мимо них, перечисляя, что могло бы в них
+    //  лежать. Улика предъявляется походя.
+    //lip 5
+    together {
+        freeman speaks for 4.6s
+        do {
+            freeman moves-to (0.62, 0.92) over 3.8s
+            freeman overlays "shag_bok_levoj"
+            wait 0.55s
+            freeman overlays "shag_bok_pravoj"
+            wait 0.55s
+            camera medium freeman
+            freeman overlays "shag_bok_levoj"
+            wait 0.55s
+            freeman overlays "shag_bok_pravoj"
+            wait 0.55s
+            camera wide
+            freeman overlays "shag_bok_levoj"
+            wait 0.55s
+            freeman overlays "shag_bok_pravoj"
+            wait 0.55s
+            freeman overlays "shag_bok_levoj"
+        }
+    }
+    //  Остановка полной позой: слой шага снят, ноги приставлены.
+    freeman pose "calm"
+    //  ПАУЗА ПОСЛЕ «ВЕЛОСИПЕДА»: смешное слово в конце описи — и тишина, в
+    //  которой становится не смешно.
+    wait 0.5s
+}
+
+// ============ СЦЕНА 3: ПОЛЕ С ПЛИТОЙ — ИГРА КОНЧИЛАСЬ =======================
+//  Одна плита без надписи сильнее целого кладбища: кладбище про многих, плита
+//  про одного — и этот один зритель. Надписи нет намеренно: любая надпись
+//  сделала бы её про кого-то другого.
+scene "plita" (duration: 7s, set: kamen) {
+    transition static 0.2s
+
+    //  КАМЕНЬ ТЕПЕРЬ ЧАСТЬ ЛОКАЦИИ, А НЕ ПРЕДМЕТ. Студия прислала готовый
+    //  рисунок надгробия, и он сильнее вектора: камень нарисован крупно, с
+    //  землёй и осыпью у основания. Надпись MEMENTO MORI впечатана прямо в
+    //  картинку — так она гарантированно того же размера и той же руки, что и
+    //  сам камень, а не наклеена поверх.
+    //  Фигура стоит СЛЕВА от камня и мельче него: надгробие крупнее человека —
+    //  это и есть отношение, ради которого сцена снята.
+    place freeman at (0.22, 0.93) facing front on floor
+    freeman scales 0.62
+    camera wide
+    freeman pose "think"
+    wait 0.15s
+
+    // ── РАЗВОРОТ (VO-6): «вы впервые подумали дальше собственной смерти» ──
+    //lip 6
+    together {
+        freeman speaks for 6.2s
+        do {
+            wait 2.0s
+            freeman overlays "myslitel"    // «зато вы впервые подумали»
+            wait 2.0s
+            freeman overlays "v_upor"      // «не доживать — оставлять»
+        }
+    }
+    freeman pose "calm"
+    wait 0.05s
+}
+
+// ================== СЦЕНА 4: ПУСТОТА — ГЛАВНАЯ ФРАЗА ========================
+//  ЧЁРНЫЙ КАДР, БЕЛАЯ МАСКА. Балахон чёрный и сливается с фоном целиком — от
+//  фигуры остаётся только лицо. Мир исчезает вместе с отговорками: деть глаз
+//  некуда. Врезка ровно на одну фразу, ту, ради которой ролик и сделан.
+scene "temnota" (duration: 5.5s, set: void) {
+    //  Резкая склейка: между полем и пустотой должен быть обрыв, а не переход.
+    transition static 0.12s
+
+    //  ЕДИНСТВЕННЫЙ `place` БЕЗ `on floor`. Пола здесь нет, кадр держит МАСКА,
+    //  а не фигура: посадка по ступням увела бы маску в верхнюю четверть кадра
+    //  (карта фигуры: ступни +0.495 от якоря, центр маски +0.004). Точка
+    //  задаётся по якорю и целится в центр, ноги уходят за нижнюю кромку.
+    //  План ОБЩИЙ: на нём зум равен единице и маска встаёт ровно туда, куда
+    //  посажена.
+    place freeman at (0.5, 0.44) facing front
+    freeman scales 2.2
+    camera wide
+
+    freeman pose "v_upor"
+    wait 0.5s
+    // ── УДАР В ЧЁРНОМ (VO-7) ─────────────────────────────────────────────
+    //lip 7
+    together {
+        freeman speaks for 5.7s
+        do {
+            wait 2.6s
+            freeman overlays "point"       // «чтобы ВЫ жили дальше неё»
+        }
+    }
+    freeman overlays "flash_pupils"
+    wait 0.08s
+}
+
+// ============ СЦЕНА 5: СКЛОН — ОДНО МЕСТО, ДВА РЕШЕНИЯ ======================
+scene "sklon" (duration: 9s, set: sklon) {
+    transition static 0.2s
+
+    place freeman at (0.5, 0.90) facing front on floor
+    freeman scales 0.74
+    camera wide
+
+    //  ДРАМАТИЧЕСКАЯ ПАУЗА ПЕРЕД ПРИТЧЕЙ. До неё прозвучало, ЗАЧЕМ религии
+    //  придумали; сейчас покажут, как это выглядит на деле. Реплика, начатая
+    //  сразу после склейки, читалась бы продолжением; пауза делает её ответом.
+    //  Персонаж стоит РОВНО МЕЖДУ деревом и пнём — оба варианта по бокам от
+    //  него, а решать зрителю.
+    freeman pose "think"
+    wait 1.2s
+
+    // ── ПРИТЧА (VO-8): «сажает дерево / спиливает и продаёт» ─────────────
+    freeman pose "calm"
+    //lip 8
+    together {
+        freeman speaks for 6.7s
+        do {
+            wait 2.4s
+            freeman overlays "open"        // ладонь к дереву
+            wait 2.4s
+            freeman overlays "otvraschenie" // и к пню — с брезгливостью
+        }
+    }
+    wait 0.1s
+}
+
+// ============ СЦЕНА 6: ЗАЛ ЛЕКТОРИЯ — ВЗЛЁТ И ПРЕЗЕНТАЦИЯ ===================
+scene "zal" (duration: 11s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.44, 0.93) facing front on floor
+    freeman scales 0.72
+    camera wide
+    freeman pose "raskryl"
+    wait 0.1s
+
+    // ── ВЗЛЁТ (VO-9): «верить необязательно. Оставлять — придётся» ───────
+    //lip 9
+    together {
+        freeman speaks for 4.4s
+        do {
+            camera medium freeman
+            wait 1.4s
+            freeman overlays "open"
+            wait 1.4s
+            freeman overlays "confident"   // «долги или библиотеку»
+        }
+    }
+    camera wide
+    wait 0.15s
+
+    // ── ПРЕЗЕНТАЦИЯ (VO-10): называет курс ──────────────────────────────
+    freeman pose "calm"
+    //lip 10
+    together {
+        freeman speaks for 5.3s
+        do {
+            camera medium freeman
+            wait 1.7s
+            freeman overlays "wave"        // «История религий»
+            wait 1.7s
+            freeman overlays "open"        // «бесплатно»
+        }
+    }
+    camera wide
+    wait 0.15s
+}
+
+// ============ СЦЕНА 7: ДЕТСКАЯ — ЖАЛО И ВЕЛОСИПЕД ===========================
+scene "final" (duration: 10s, set: detskaya) {
+    transition static 0.2s
+
+    place freeman at (0.44, 0.90) facing front on floor
+    freeman scales 0.78
+    camera wide
+    freeman pose "calm"
+    freeman overlays "smug"
+    wait 0.2s
+
+    // ── ЖАЛО (VO-11): «а велосипед всё-таки оставьте» ───────────────────
+    //lip 11
+    together {
+        freeman speaks for 4.0s
+        do {
+            camera medium freeman
+            wait 1.3s
+            freeman overlays "point"       // показал на велосипед
+            wait 1.3s
+            freeman overlays "shrug"       // «вдруг это правда?»
+        }
+    }
+    freeman overlays "hero_wink"
+    wait 0.2s
+
+    // ── ПОДОШЁЛ, ПОПРАВИЛ ВЕЛОСИПЕД, УШЁЛ ───────────────────────────────
+    //  НЕ ПРИСЕДАЕТ и не наклоняется: у фигуры с тонкими ногами и длинным
+    //  балахоном любое сгибание читается осадкой (гейт осанки роняет прогон
+    //  на просадке больше 8%). Тянется к велосипеду стоя — жест, а не поза.
+    camera wide
+    freeman pose "bok_pravo"
+    freeman moves-to (0.66, 0.90) over 0.8s
+    freeman overlays "shag_bok_levoj"
+    wait 0.4s
+    freeman overlays "shag_bok_pravoj"
+    wait 0.4s
+    freeman pose "point"                   // поправил
+    wait 0.6s
+
+    //  Уходит В ПРОФИЛЬ, влево, за кадр: спина к зрителю читалась бы обидой,
+    //  профиль — просто «мне туда». Велосипед остаётся в кадре.
+    freeman pose "bok_levo"
+    freeman moves-to (0.02, 0.90) over 1.6s
+    freeman overlays "shag_bok_levoj"
+    wait 0.4s
+    freeman overlays "shag_bok_pravoj"
+    wait 0.4s
+    freeman overlays "shag_bok_levoj"
+    wait 0.4s
+    freeman overlays "shag_bok_pravoj"
+    wait 0.4s
+    //  Проход заканчивается СТОЙКОЙ: слои держатся до полной позы, и последний
+    //  кадр застывал бы на разведённых ногах.
+    freeman pose "bok_levo"
+    wait 0.2s
+}
+
+// ========================== СЦЕНА 8: ТИТРЫ ==================================
+scene "titry" (duration: 3s, set: titry) {
+    transition static 0.25s
+
+    place freeman at (0.5, 3.0) facing front
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 0.35s
+
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6
+    stamp rotates -7
+    stamp scales 0.94 over 0.2s ease-in
+    stamp scales 1.0 over 0.1s ease-out
+    stamp rotates -4 over 0.12s
+
+    wait 0.9s
+    transition fade-black 0.35s
+}

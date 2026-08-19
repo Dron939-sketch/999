@@ -1,0 +1,238 @@
+// =============================================================================
+//  «ПЕРЕЧИТАЛ ≠ ВЫУЧИЛ» — ИНСАЙТ-РОЛИК (первый в жанре).
+//  VO — insight-proverka-VO.md, //lip 1..8.
+//
+//  ЧЕМ ОТЛИЧАЕТСЯ ОТ ПОДВОДКИ К КУРСУ. Подводка продаёт курс и живёт 45
+//  секунд; инсайт отдаёт приём и живёт 30. Отсюда монтаж: планов меньше,
+//  держатся дольше, и на приёме (взлёт) камера НЕ режет — зритель должен
+//  успеть запомнить формулировку, а не разглядывать склейки.
+//
+//  ФИГУРА СТОИТ НА ЗЕМЛЕ. `place ... on floor` — заданная точка это СТУПНИ,
+//  а не центр рисунка. Раньше на пустом поле у локации не было карты
+//  поверхностей (`field-empty.surfaces.json` появился вместе с этим роликом),
+//  `on floor` молча не работал, и режиссёр ставил персонажа на глаз: при
+//  (0.5, 0.62) ноги уходили ЗА нижнюю кромку кадра — фигура стояла на
+//  несуществующем полу ниже экрана. Точка 0.86 — земля перед камерой,
+//  горизонт поля на 0.68.
+//
+//  БЕЗ СВЕРХКРУПНЫХ ПЛАНОВ: растр сета на ECU-зуме взрывается (лечится
+//  отдельно, PR #15). Самый тесный план здесь — close-up.
+//
+//  ВНУТРИ РЕПЛИКИ — ТОЛЬКО СЛОИ. Липсинк идёт слоем поверх позы тела, а полная
+//  поза слои СБРАСЫВАЕТ: рот прыгал на рот позы и держался до следующего
+//  флэпа — это и есть «лицо не соответствует озвучке». Поэтому жест внутри
+//  реплики ставится через `overlays`, а полные позы — между репликами.
+//  Проверяет `tools/speech_lint.py`; рот в самих позах тела снят
+//  `tools/mouth_ownership.py`.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set titry from "../assets/sets/lektorij-final.svg"
+import set pole from "../assets/sets/field-empty.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.35
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+}
+
+// ============================ СЦЕНА 1: ПРОВЕРКА =============================
+scene "proverka" (duration: 32s, set: pole) {
+    transition static 0.35s
+
+    place freeman at (0.5, 0.86) facing front on floor
+    freeman scales 0.72
+    let hand = prop("hand", "../assets/props/hand-point.svg") at (-1.5, 1.5) layer 5
+    let slovo = text("ВСПОМНИ", 160) at (0.5, -2.0) layer 6
+    slovo scales 2.6
+
+    // ── t=0..2.5 БЕЗ СЛОВ: листает назад, назад, назад ────────────────────
+    //  Сбой показан до того, как назван: одно и то же движение по кругу.
+    camera wide
+    freeman pose "think"
+    wait 0.9s
+    freeman pose "puppet"
+    wait 0.8s
+    freeman pose "think"
+    wait 0.8s
+
+    // ── ХУК (VO-1): «Ты перечитал главу трижды. И что?» ───────────────────
+    freeman moves-to (0.62, 0.86) over 0.01s
+    freeman pose "v_upor"
+    freeman overlays "stern"
+    //lip 1
+    together {
+        freeman speaks for 1.9s
+        do {
+            camera medium freeman
+            wait 0.95s
+            freeman overlays "point"          // палец в зрителя
+        }
+    }
+    wait 0.6s
+    // ── ХУК-добивка (VO-2): «Закрой её. Расскажи.» ────────────────────────
+    freeman moves-to (0.38, 0.86) over 0.01s
+    freeman pose "think"
+    freeman overlays "smug"
+    //lip 2
+    together {
+        freeman speaks for 1.6s
+        do {
+            camera close-up freeman
+            wait 0.8s
+            freeman overlays "no"             // развёл руками
+        }
+    }
+    // пауза: зритель пробует рассказать. Не выходит.
+    freeman overlays "flash_dead"
+    wait 0.08s
+    freeman overlays "hero_skeptic"
+    wait 1.3s
+
+    // ── ПУЛЕМЁТ 1 (VO-3): «Читал. Кивал. Подчёркивал.» ────────────────────
+    freeman moves-to (0.5, 0.86) over 0.01s
+    freeman pose "puppet"
+    //lip 3
+    together {
+        freeman speaks for 2.0s
+        do {
+            camera medium freeman
+            wait 1.0s
+            freeman overlays "puppet_jerk"    // тот же жест — механика
+        }
+    }
+    // ── ПУЛЕМЁТ 2 (VO-4): «Знакомый текст — как жвачка.» ──────────────────
+    freeman pose "hips"
+    //lip 4
+    together {
+        freeman speaks for 2.0s
+        do {
+            camera close-up freeman
+            wait 1.0s
+            freeman overlays "think"
+        }
+    }
+    // ── ПУЛЕМЁТ финал (VO-5): «Это узнавание. Не знание.» ─────────────────
+    freeman pose "za_golovu"
+    freeman overlays "stern"
+    //lip 5
+    together {
+        freeman speaks for 1.8s
+        do {
+            camera medium freeman
+            wait 0.9s
+            freeman overlays "despair"
+        }
+    }
+    camera shake 0.3s intensity 2
+    freeman overlays "flash_disgust"
+    wait 0.08s
+    freeman overlays "stern"
+    wait 1.1s
+
+    // ── t≈16 ПЕРЕЛОМ: РАЗВОРОТ (VO-6), ракурс СНИЗУ + рука в камеру ───────
+    freeman moves-to (0.44, 0.86) over 0.01s
+    freeman pose "v_upor"
+    //lip 6
+    together {
+        freeman speaks for 4.0s
+        do {
+            // РАКУРС СНИЗУ — БЕЗ ЦЕЛИ И ТОЛЬКО НА ТЕСНОМ ПЛАНЕ. `angle <kind>
+            // <цель>` не просто наклоняет камеру, а ещё и НАВОДИТ её на цель.
+            // Наведение без зума (zoom 1) сдвигает кадр, а сет ровно покрывает
+            // кадр — из-под съехавшего поля вылезал фон канвы, и фигура висела
+            // над пустотой: тот самый «левитирующий персонаж». Без цели угол
+            // только наклоняет; тесный план прячет кромки сета за кадром.
+            camera close-up freeman
+            camera angle low
+            wait 2.0s
+            freeman overlays "point"
+        }
+    }
+    hand moves-to (0.72, 0.72) over 0.01s
+    camera shake 0.3s intensity 2
+    wait 0.6s
+    hand moves-to (-1.5, 1.5) over 0.01s
+    // Угол СБРАСЫВАЕТСЯ до общего плана — иначе наклон уедет вместе с камерой.
+    camera angle level
+    wait 0.9s
+
+    // ── ВЗЛЁТ (VO-7): САМ ПРИЁМ. Камера НЕ режет — только поза ────────────
+    //  Здесь звучит то, ради чего ролик снят. Склейка посреди формулировки
+    //  крадёт у зрителя ровно ту секунду, в которую он её запоминает.
+    freeman moves-to (0.5, 0.86) over 0.01s
+    freeman pose "raskryl"
+    camera medium freeman
+    //lip 7
+    together {
+        freeman speaks for 3.5s
+        do {
+            wait 2.0s
+            freeman overlays "open"           // ладони раскрыты — отдал приём
+        }
+    }
+    // ── СЛОВО-УДАР «ВСПОМНИ» + негатив-панч ───────────────────────────────
+    camera wide
+    slovo moves-to (0.5, 0.32) over 0.01s
+    slovo scales 1.0 over 0.18s ease-in
+    transition invert 0.16s
+    camera shake 0.3s intensity 3
+    wait 0.9s
+    slovo moves-to (0.5, -2.0) over 0.22s ease-in
+    freeman overlays "flash_pupils"
+    wait 0.08s
+
+    // ── ЖАЛО-ЗАДАНИЕ (VO-8): не «приходи на курс», а «сделай сейчас» ──────
+    freeman pose "lunge"
+    //lip 8
+    together {
+        freeman speaks for 3.5s
+        do {
+            camera medium freeman
+            wait 1.7s
+            freeman overlays "v_upor"         // ладонь в камеру: «ну?»
+        }
+    }
+    freeman overlays "hero_wink"
+    wait 0.5s
+    // отъезд: фигура одна в поле, зритель остался с заданием
+    camera wide
+    freeman pose "calm"
+    wait 0.9s
+}
+
+// ============================ СЦЕНА 2: ТИТРЫ ================================
+scene "titry" (duration: 5s, set: titry) {
+    transition static 0.45s
+
+    place freeman at (0.5, 3.0) facing front
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 1.0s
+
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6
+    stamp rotates -7
+    stamp scales 0.94 over 0.22s ease-in
+    stamp scales 1.0 over 0.1s ease-out
+    stamp rotates -4 over 0.12s
+
+    wait 2.2s
+    transition fade-black 0.8s
+}

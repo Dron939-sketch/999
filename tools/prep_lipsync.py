@@ -33,6 +33,17 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lipsync import extract_envelope, envelope_to_mouths  # noqa: E402
 
 LIP = re.compile(r"^\s*//lip\s+(\d+)\s*$")
+
+# ЗАКАДРОВАЯ РЕПЛИКА — та, которую герой не произносит в кадре НАМЕРЕННО: он
+# может там вообще отсутствовать (титр-карта, план без него). У такой реплики
+# нет и не должно быть `//lip`, и опознаётся она по ремарке в VO-таблице.
+#
+# Константа вынесена сюда и импортируется теми, кому нужна та же конвенция
+# (tools/sverka.py). Разъехавшись, два инструмента начнут спорить об одном и
+# том же ролике: один назовёт закадровую реплику браком, другой — нормой. Так
+# уже случилось: гейт сверки уронил завод на `biznes-myshlenie-intro`, где
+# VO-7 честно помечена «голос-диктор» и звучит над титр-картой.
+NARRATOR = re.compile(r"голос[\s-]*диктор|диктор\w*\s+голос|за\s+кадром|закадр", re.I)
 SPEAK = re.compile(r"^(\s*)(\S+)\s+speaks\s+for\s+([\d.]+)s\s*$")
 # Строительные строки между маркером и речью: открытие блока, закрытие,
 # комментарий, пустая. Через них маркер обязан ПЕРЕЖИТЬ до `speaks for`.
@@ -333,7 +344,7 @@ def main(argv):
             for i, line in enumerate(
                     l for l in open(args.vo, encoding="utf-8")
                     if re.match(r"\s*\|\s*VO-?\d", l)):
-                if re.search(r"голос[\s-]*диктор|диктор\w*\s+голос|за\s+кадром|закадр", line, re.I):
+                if NARRATOR.search(line):
                     narrator.add(i + 1)
         lost = [n for n in have if n not in order and n not in narrator]
         if lost:
