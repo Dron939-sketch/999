@@ -280,9 +280,27 @@ def sobrat(plany, dlina):
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("--tolko-tablica", action="store_true")
+    ap.add_argument("--glavy", action="store_true",
+                    help="главы для YouTube — печатаются, а не вписываются руками")
     a = ap.parse_args(argv)
 
     plany, dlina, ps = razlozhit()
+
+    if a.glavy:
+        #  Глава начинается со ШВА — с той секунды, где картинка уже сменилась.
+        #  Время ОКРУГЛЯЕТСЯ ВНИЗ: глава, начавшаяся позже шва, показывает
+        #  зрителю хвост предыдущего раздела.
+        print("\n  ГЛАВЫ ДЛЯ YOUTUBE (из раскладки, не из памяти)\n")
+        print("0:00 Вступление")
+        n = 0
+        for p in plany:
+            if p["vid"] != "shov":
+                continue
+            n += 1
+            t = int(p["ot"])            # вниз до секунды
+            print(f"{t // 60}:{t % 60:02d} {RAZDELY[n][0]}")
+        print()
+        return 0
 
     print(f"\n  ВИДЕОРЯД ЛЕКЦИИ 1 — раскладка\n")
     print(f"  запись {dlina:.2f}с, пауз найдено {len(ps)}, планов {len(plany)}\n")
