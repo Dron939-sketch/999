@@ -1,0 +1,95 @@
+// =============================================================================
+//  ПИЛОТ ВИДЕОРЯДА ЛЕКЦИИ 1 «Чью жизнь вы живёте», раздел 1 «Анкета».
+//
+//  Это НЕ ролик-интро: голос — готовая аудиозапись лекции, синтеза нет,
+//  персонаж не говорит. Двадцать шесть гейтов приёмки сюда не применяются,
+//  список проверок свой — в lekciya-koleya-1-VIDEO.md.
+//
+//  РАСКЛАДКА СНЯТА С ЗВУКА, А НЕ НАЗНАЧЕНА. Раздел 1 в лекции занимает
+//  1:11.7–2:19.6: границы посчитаны по долям слов (154 слова вступления и 141
+//  слово раздела при общем темпе 124 слова в минуту) и посажены в НАСТОЯЩИЕ
+//  паузы записи — обе границы попадают в паузы 0.7с. Смены кадров внутри
+//  раздела тоже стоят в паузах: 1:30.6 и 2:09.7.
+//
+//  ПЕРСОНАЖ ПОЯВЛЯЕТСЯ НА СТЫКЕ И МОЛЧИТ. Три секунды тишины перед разделом —
+//  это шов между разделами, в него и встаёт Фримен. Локация взята та же, что в
+//  интро курса (koleya-komnata): зритель, пришедший с ролика, узнаёт комнату.
+//
+//  У КАЖДОГО КАДРА ЕСТЬ ДВИЖЕНИЕ. Иллюстрация без персонажа мертва: глазу не за
+//  что держаться дольше пятнадцати секунд. Поэтому в каждой сцене идёт
+//  медленный проезд камеры — по строкам анкеты сверху вниз, вдоль отметок,
+//  по экрану телефона.
+// =============================================================================
+import character freeman from "../assets/characters/freeman_rig"
+import set komnata from "../assets/sets/koleya-komnata.svg"
+import set anketa from "../assets/sets/lekciya-koleya-1-anketa.svg"
+import set galochka from "../assets/sets/lekciya-koleya-1-galochka.svg"
+import set telefon from "../assets/sets/lekciya-koleya-1-telefon.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.12
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+// ============ ШОВ: персонаж на стыке разделов, 3.0с, молча ============
+scene "shov" (duration: 1s, set: komnata) {
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.4s
+    freeman overlays "vzglyad"
+    wait 1.0s
+    freeman overlays "palec_vverh"
+    wait 1.0s
+    freeman pose "calm"
+    wait 0.6s
+}
+
+// ============ КАДР 1: АНКЕТА, 18.9с — проезд сверху вниз по строкам ============
+scene "anketa" (duration: 1s, set: anketa) {
+    transition static 0.12s
+    camera wide
+    camera pan-to (0.50, 0.38) over 0.01s
+    wait 1.0s
+    camera pan-to (0.50, 0.62) over 16.0s ease-in-out
+    wait 1.9s
+}
+
+// ============ КАДР 2: ГАЛОЧКА, 39.1с — граница рукописного и машинного ============
+scene "galochka" (duration: 1s, set: galochka) {
+    transition static 0.12s
+    camera wide
+    camera pan-to (0.44, 0.40) over 0.01s
+    wait 1.0s
+    camera pan-to (0.56, 0.60) over 36.0s ease-in-out
+    wait 2.1s
+}
+
+// ============ КАДР 3: ТЕЛЕФОН, 9.9с — заводские настройки ============
+scene "telefon" (duration: 1s, set: telefon) {
+    transition static 0.12s
+    camera wide
+    camera pan-to (0.50, 0.56) over 0.01s
+    wait 0.6s
+    camera pan-to (0.50, 0.44) over 8.5s ease-in-out
+    wait 0.48s
+}
