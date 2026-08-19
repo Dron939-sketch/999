@@ -120,7 +120,9 @@ SHVY = [("vzglyad", "point"), ("think", "palec_vverh"), ("razvel", "k_sebe"),
         ("vdal", "smel"), ("shrug", "open"), ("vzves", "raspahnul"),
         ("otschet", "dve_storony"), ("doubt", "vozzvanie"),
         ("chelo", "ladon_pusta"), ("prishchur", "rubit")]
-SHOV = 3.4      # длительность шва, с
+SHOV = 3.4       # длительность шва, с — запасная, если паузы в окне нет
+SHOV_MIN = 2.6   # окно, в котором ищется пауза под КОНЕЦ шва: короче персонаж
+SHOV_MAX = 5.4   # не успевает прочитаться, длиннее — лекция стоит
 MIN_PLAN = 12.0  # короче — кадр не успевает прочитаться
 
 
@@ -153,12 +155,41 @@ def pauzy(audio, minimum=0.36):
     return out, len(a) / sr
 
 
+def po_kadram(t):
+    """Время на сетку кадров.
+
+    БЕЗ ЭТОГО НАКАПЛИВАЕТСЯ СНОС. Движок переводит длительность сцены в кадры
+    с округлением ВВЕРХ, и на тридцати семи сценах набежало двадцать лишних
+    кадров — 0.83с. Беда не в длине файла, а в том, что каждая следующая
+    склейка уезжает от своей паузы всё дальше: к четвёртому разделу промах уже
+    полсекунды, то есть склейка садится в середину слова. Если все границы
+    лежат на сетке 1/24, округлять нечего и сноса нет.
+    """
+    return round(t * FPS) / FPS
+
+
 def v_pauzu(t, ps, posle):
     """Ближайший к t центр паузы, но строго позже `posle`."""
     god = [p for p in ps if (p[0] + p[1]) / 2 > posle + MIN_PLAN]
     if not god:
         return None
-    return min(((p[0] + p[1]) / 2 for p in god), key=lambda c: abs(c - t))
+    return po_kadram(min(((p[0] + p[1]) / 2 for p in god), key=lambda c: abs(c - t)))
+
+
+def pauza_v_okne(ps, ot, do):
+    """Центр паузы внутри окна [ot, do] — ближайший к его середине.
+
+    ЗАЧЕМ ОТДЕЛЬНО ОТ `v_pauzu`. Шов персонажа длится фиксированные 3.4с, и его
+    КОНЕЦ никуда не сажался: склейка обратно на иллюстрацию падала туда, куда
+    придётся. Десять швов — десять склеек посреди слова, и приёмка их поймала.
+    Шов обязан и начинаться, и кончаться в тишине, поэтому его конец ищется не
+    «ближе всего к 3.4с», а В ОКНЕ допустимых длин.
+    """
+    god = [(p[0] + p[1]) / 2 for p in ps if ot <= (p[0] + p[1]) / 2 <= do]
+    if not god:
+        return None
+    seredina = (ot + do) / 2
+    return po_kadram(min(god, key=lambda c: abs(c - seredina)))
 
 
 # ─────────────────────────────────────────────────────────── раскладка
@@ -168,7 +199,11 @@ def razlozhit():
 
     for n, (imya, plan_konec) in enumerate(RAZDELY):
         if n:                                    # шов перед каждым разделом
-            konec_shva = v_pauzu(t + SHOV, ps, t) if False else t + SHOV
+            #  Шов и НАЧИНАЕТСЯ, и КОНЧАЕТСЯ в тишине: иначе склейка обратно на
+            #  иллюстрацию садится в середину слова (приёмка ловила все десять).
+            konec_shva = pauza_v_okne(ps, t + SHOV_MIN, t + SHOV_MAX)
+            if konec_shva is None:
+                konec_shva = po_kadram(t + SHOV)
             plany.append({"vid": "shov", "imya": f"шов {n}",
                           "pozy": SHVY[(n - 1) % len(SHVY)],
                           "ot": t, "do": konec_shva})
@@ -177,7 +212,7 @@ def razlozhit():
         konec = dlina if plan_konec is None else v_pauzu(plan_konec, ps, t)
         konec = dlina if konec is None else konec
         if n == len(RAZDELY) - 1:
-            konec = dlina
+            konec = po_kadram(dlina)
 
         kadry = KADRY[imya]
         #  Внутренние склейки делят раздел поровну — и тоже садятся в паузы.
@@ -186,7 +221,7 @@ def razlozhit():
             cel = t + (konec - t) * (k + 1) / len(kadry)
             g = v_pauzu(cel, ps, prev)
             if g is None or g >= konec - MIN_PLAN:
-                g = prev + (konec - prev) / (len(kadry) - k)
+                g = po_kadram(prev + (konec - prev) / (len(kadry) - k))
             granicy.append(g)
             prev = g
         granicy.append(konec)
@@ -256,7 +291,9 @@ def sobrat(plany, dlina):
             A(f'    freeman pose "{b}"')
             A("    wait 1.10s")
             A('    freeman pose "calm"')
-            A(f"    wait {d - 0.12 - 0.01 - 0.50 - 1.10 - 1.10:.2f}s")
+            #  Четыре знака, а не два: длительности лежат на сетке 1/24, и
+            #  0.04166… при печати в сотых уводит сцену на кадр.
+            A(f"    wait {d - 0.12 - 0.01 - 0.50 - 1.10 - 1.10:.4f}s")
             A("}")
         else:
             plan, ot, do = HOD[p["hod"]]
@@ -270,7 +307,7 @@ def sobrat(plany, dlina):
             A(f"    camera pan-to ({ot[0]:.3f}, {ot[1]:.3f}) over 0.01s")
             A("    wait 0.80s")
             A(f"    camera pan-to ({do[0]:.3f}, {do[1]:.3f}) "
-              f"over {hod_t:.2f}s ease-in-out")
+              f"over {hod_t:.4f}s ease-in-out")
             A("    wait 0.90s")
             A("}")
         A("")

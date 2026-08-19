@@ -54,11 +54,21 @@ def sklejki(video, porog=0.35):
          "-vf", f"select='gt(scene,{porog})',metadata=print:file=-",
          "-f", "null", "-"],
         capture_output=True, text=True)
-    out = []
+    syr = []
     for line in (r.stdout + r.stderr).splitlines():
         if line.startswith("frame:") and "pts_time:" in line:
-            out.append(float(line.split("pts_time:")[1].split()[0]))
-    return sorted(set(round(t, 2) for t in out))
+            syr.append(float(line.split("pts_time:")[1].split()[0]))
+    #  СКЛЕЙКА ОДНА, А СРАБАТЫВАНИЙ НЕСКОЛЬКО. `scdet` даёт по два-три кадра
+    #  подряд на один стык (кадр смены и следующий за ним), и первый кадр файла
+    #  он тоже считает сменой. Без склейки этих гроздей приёмка насчитала 51
+    #  склейку там, где их 36, и половину объявила промахом.
+    out = []
+    for t in sorted(syr):
+        if t < 0.2:                       # первый кадр — не склейка
+            continue
+        if not out or t - out[-1] > 0.5:
+            out.append(round(t, 2))
+    return out
 
 
 def gromkost(p):
@@ -89,10 +99,20 @@ def main(argv):
     print(f"     немая картинка {dv:8.2f}с")
     print(f"     звук           {dz:8.2f}с")
     print(f"     готовый файл   {df:8.2f}с")
-    if max(abs(dv - df), abs(dz - df)) > 0.5:
-        print(f"     [ПРОВАЛ] расходятся больше чем на 0.5с"); ploho += 1
+    #  Звук короче картинки на добор тишины в хвосте — это НЕ расхождение, а
+    #  замысел: лекция кончается, и закрывающий кадр держится ещё полсекунды,
+    #  вместо того чтобы обрубиться на последнем слове. Отдельно меряется
+    #  картинка против готового файла (тут допуск жёсткий) и хвост тишины.
+    if abs(dv - df) > 0.1:
+        print(f"     [ПРОВАЛ] картинка и файл разошлись на {abs(dv-df):.2f}с")
+        ploho += 1
+    elif not (0 <= df - dz <= 1.0):
+        print(f"     [ПРОВАЛ] хвост тишины {df - dz:+.2f}с — либо звук обрублен, "
+              f"либо кадр висит слишком долго")
+        ploho += 1
     else:
-        print(f"     [OK] сходятся в {max(abs(dv-df), abs(dz-df)):.2f}с")
+        print(f"     [OK] картинка и файл сходятся в {abs(dv-df):.2f}с, "
+              f"хвост тишины {df - dz:.2f}с")
 
     # 2 ── склейки в паузах
     sys.path.insert(0, str(ROOT / "tools"))
