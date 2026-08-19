@@ -1,0 +1,495 @@
+// ===========================================================================
+//  ВИДЕОРЯД ЛЕКЦИИ 1 «Чью жизнь вы живёте». Собран
+//  tools/lekciya_videoryad.py — РУКАМИ НЕ ПРАВИТЬ, правится генератор.
+//
+//  Голос — готовая аудиозапись лекции, синтеза нет, персонаж не говорит.
+//  Двадцать шесть гейтов приёмки ролика сюда не применяются: они меряют
+//  устройство интро (крючок, кольцо, разрыв, жало), а у лекции есть тема
+//  и порядок мыслей. Свой список проверок — в lekciya-koleya-1-VIDEO.md.
+//
+//  Длина записи: 985.21с. Планов: 37.
+//  Каждая склейка стоит в НАСТОЯЩЕЙ паузе записи, снятой с огибающей.
+//
+//  Проезд идёт на two-shot и over-shoulder, но НИКОГДА на wide: сет
+//  натянут на кадр край в край, wide — зум 1.0, и проезд вытаскивает
+//  из-под картинки голую подложку (так был испорчен пилот). Держит
+//  tools/proezd.py.
+// ===========================================================================
+import character freeman from "../assets/characters/freeman_rig"
+import set komnata from "../assets/sets/koleya-komnata.svg"
+import set lek1_chasy from "../assets/sets/lek1-chasy.svg"
+import set lek1_chavo from "../assets/sets/lek1-chavo.svg"
+import set lek1_chto_dalshe from "../assets/sets/lek1-chto-dalshe.svg"
+import set lek1_fundament from "../assets/sets/lek1-fundament.svg"
+import set lek1_hizhina from "../assets/sets/lek1-hizhina.svg"
+import set lek1_knigi from "../assets/sets/lek1-knigi.svg"
+import set lek1_obychnaya_zhizn from "../assets/sets/lek1-obychnaya-zhizn.svg"
+import set lek1_pokolenie from "../assets/sets/lek1-pokolenie.svg"
+import set lek1_ringtone from "../assets/sets/lek1-ringtone.svg"
+import set lek1_semya from "../assets/sets/lek1-semya.svg"
+import set lek1_shag from "../assets/sets/lek1-shag.svg"
+import set lek1_shest_osej from "../assets/sets/lek1-shest-osej.svg"
+import set lek1_spisok_toro from "../assets/sets/lek1-spisok-toro.svg"
+import set lek1_sreda from "../assets/sets/lek1-sreda.svg"
+import set lek1_tak_vse from "../assets/sets/lek1-tak-vse.svg"
+import set lek1_vesy from "../assets/sets/lek1-vesy.svg"
+import set lek1_voskresnyj_vecher from "../assets/sets/lek1-voskresnyj-vecher.svg"
+import set lek1_vse_ryadom from "../assets/sets/lek1-vse-ryadom.svg"
+import set lek1_zavist from "../assets/sets/lek1-zavist.svg"
+import set lekciya_koleya_1_anketa from "../assets/sets/lekciya-koleya-1-anketa.svg"
+import set lekciya_koleya_1_galochka from "../assets/sets/lekciya-koleya-1-galochka.svg"
+import set lekciya_koleya_1_telefon from "../assets/sets/lekciya-koleya-1-telefon.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.12
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+// ── ВСТУПЛЕНИЕ / lek1-obychnaya-zhizn: 0:00.00, 38.46с, vdol на over-shoulder
+scene "s00_lek1_obychnaya_zhizn" (duration: 1s, set: lek1_obychnaya_zhizn) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.320, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.680, 0.500) over 36.63s ease-in-out
+    wait 0.90s
+}
+
+// ── ВСТУПЛЕНИЕ / lek1-shest-osej: 0:38.46, 33.56с, vniz на two-shot
+scene "s01_lek1_shest_osej" (duration: 1s, set: lek1_shest_osej) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.500, 0.435) over 0.01s
+    wait 0.80s
+    camera pan-to (0.500, 0.565) over 31.73s ease-in-out
+    wait 0.90s
+}
+
+// ── шов 1: 1:12.02, 3.40с — персонаж молчит
+scene "shov02" (duration: 1s, set: komnata) {
+    transition static 0.12s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.50s
+    freeman pose "vzglyad"
+    wait 1.10s
+    freeman pose "point"
+    wait 1.10s
+    freeman pose "calm"
+    wait 0.57s
+}
+
+// ── 1. Анкета / lekciya-koleya-1-anketa: 1:15.42, 24.06с, vniz на two-shot
+scene "s03_lekciya_koleya_1_anketa" (duration: 1s, set: lekciya_koleya_1_anketa) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.500, 0.435) over 0.01s
+    wait 0.80s
+    camera pan-to (0.500, 0.565) over 22.23s ease-in-out
+    wait 0.90s
+}
+
+// ── 1. Анкета / lekciya-koleya-1-galochka: 1:39.48, 21.72с, naiskos на over-shoulder
+scene "s04_lekciya_koleya_1_galochka" (duration: 1s, set: lekciya_koleya_1_galochka) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.340, 0.360) over 0.01s
+    wait 0.80s
+    camera pan-to (0.660, 0.640) over 19.89s ease-in-out
+    wait 0.90s
+}
+
+// ── 1. Анкета / lekciya-koleya-1-telefon: 2:01.20, 20.76с, vverh на two-shot
+scene "s05_lekciya_koleya_1_telefon" (duration: 1s, set: lekciya_koleya_1_telefon) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.500, 0.565) over 0.01s
+    wait 0.80s
+    camera pan-to (0.500, 0.435) over 18.93s ease-in-out
+    wait 0.90s
+}
+
+// ── шов 2: 2:21.96, 3.40с — персонаж молчит
+scene "shov06" (duration: 1s, set: komnata) {
+    transition static 0.12s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.50s
+    freeman pose "think"
+    wait 1.10s
+    freeman pose "palec_vverh"
+    wait 1.10s
+    freeman pose "calm"
+    wait 0.57s
+}
+
+// ── 2. Откуда настройки / lek1-semya: 2:25.36, 36.02с, vniz на two-shot
+scene "s07_lek1_semya" (duration: 1s, set: lek1_semya) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.500, 0.435) over 0.01s
+    wait 0.80s
+    camera pan-to (0.500, 0.565) over 34.19s ease-in-out
+    wait 0.90s
+}
+
+// ── 2. Откуда настройки / lek1-sreda: 3:01.38, 46.33с, vdol на over-shoulder
+scene "s08_lek1_sreda" (duration: 1s, set: lek1_sreda) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.320, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.680, 0.500) over 44.50s ease-in-out
+    wait 0.90s
+}
+
+// ── 2. Откуда настройки / lek1-pokolenie: 3:47.71, 41.24с, po_stupenyam на over-shoulder
+scene "s09_lek1_pokolenie" (duration: 1s, set: lek1_pokolenie) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.320, 0.640) over 0.01s
+    wait 0.80s
+    camera pan-to (0.680, 0.380) over 39.41s ease-in-out
+    wait 0.90s
+}
+
+// ── 2. Откуда настройки / lek1-ringtone: 4:28.95, 39.07с, vpravo на two-shot
+scene "s10_lek1_ringtone" (duration: 1s, set: lek1_ringtone) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.437, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.563, 0.500) over 37.24s ease-in-out
+    wait 0.90s
+}
+
+// ── шов 3: 5:08.02, 3.40с — персонаж молчит
+scene "shov11" (duration: 1s, set: komnata) {
+    transition static 0.12s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.50s
+    freeman pose "razvel"
+    wait 1.10s
+    freeman pose "k_sebe"
+    wait 1.10s
+    freeman pose "calm"
+    wait 0.57s
+}
+
+// ── 3. Почему колея не жмёт / lek1-vse-ryadom: 5:11.42, 44.46с, vverh на two-shot
+scene "s12_lek1_vse_ryadom" (duration: 1s, set: lek1_vse_ryadom) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.500, 0.565) over 0.01s
+    wait 0.80s
+    camera pan-to (0.500, 0.435) over 42.63s ease-in-out
+    wait 0.90s
+}
+
+// ── 3. Почему колея не жмёт / lek1-tak-vse: 5:55.88, 39.47с, vdol на over-shoulder
+scene "s13_lek1_tak_vse" (duration: 1s, set: lek1_tak_vse) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.320, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.680, 0.500) over 37.64s ease-in-out
+    wait 0.90s
+}
+
+// ── шов 4: 6:35.35, 3.40с — персонаж молчит
+scene "shov14" (duration: 1s, set: komnata) {
+    transition static 0.12s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.50s
+    freeman pose "vdal"
+    wait 1.10s
+    freeman pose "smel"
+    wait 1.10s
+    freeman pose "calm"
+    wait 0.57s
+}
+
+// ── 4. Торо: аудит вручную / lek1-hizhina: 6:38.75, 35.60с, vlevo на two-shot
+scene "s15_lek1_hizhina" (duration: 1s, set: lek1_hizhina) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.563, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.437, 0.500) over 33.77s ease-in-out
+    wait 0.90s
+}
+
+// ── 4. Торо: аудит вручную / lek1-spisok-toro: 7:14.35, 36.91с, vniz на two-shot
+scene "s16_lek1_spisok_toro" (duration: 1s, set: lek1_spisok_toro) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.500, 0.435) over 0.01s
+    wait 0.80s
+    camera pan-to (0.500, 0.565) over 35.08s ease-in-out
+    wait 0.90s
+}
+
+// ── шов 5: 7:51.26, 3.40с — персонаж молчит
+scene "shov17" (duration: 1s, set: komnata) {
+    transition static 0.12s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.50s
+    freeman pose "shrug"
+    wait 1.10s
+    freeman pose "open"
+    wait 1.10s
+    freeman pose "calm"
+    wait 0.57s
+}
+
+// ── 5. Три признака / lek1-zavist: 7:54.66, 29.42с, vdol на over-shoulder
+scene "s18_lek1_zavist" (duration: 1s, set: lek1_zavist) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.320, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.680, 0.500) over 27.59s ease-in-out
+    wait 0.90s
+}
+
+// ── 5. Три признака / lek1-voskresnyj-vecher: 8:24.08, 33.35с, vdol на over-shoulder
+scene "s19_lek1_voskresnyj_vecher" (duration: 1s, set: lek1_voskresnyj_vecher) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.320, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.680, 0.500) over 31.52s ease-in-out
+    wait 0.90s
+}
+
+// ── 5. Три признака / lek1-tak-vse: 8:57.43, 28.10с, vdol_nazad на over-shoulder
+scene "s20_lek1_tak_vse" (duration: 1s, set: lek1_tak_vse) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.680, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.320, 0.500) over 26.27s ease-in-out
+    wait 0.90s
+}
+
+// ── шов 6: 9:25.53, 3.40с — персонаж молчит
+scene "shov21" (duration: 1s, set: komnata) {
+    transition static 0.12s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.50s
+    freeman pose "vzves"
+    wait 1.10s
+    freeman pose "raspahnul"
+    wait 1.10s
+    freeman pose "calm"
+    wait 0.57s
+}
+
+// ── 6. Что дальше / lek1-chto-dalshe: 9:28.93, 37.22с, k_razvilke на two-shot
+scene "s22_lek1_chto_dalshe" (duration: 1s, set: lek1_chto_dalshe) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.460, 0.560) over 0.01s
+    wait 0.80s
+    camera pan-to (0.565, 0.452) over 35.39s ease-in-out
+    wait 0.90s
+}
+
+// ── 6. Что дальше / lek1-shag: 10:06.15, 37.69с, vverh на two-shot
+scene "s23_lek1_shag" (duration: 1s, set: lek1_shag) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.500, 0.565) over 0.01s
+    wait 0.80s
+    camera pan-to (0.500, 0.435) over 35.86s ease-in-out
+    wait 0.90s
+}
+
+// ── 6. Что дальше / lek1-spisok-toro: 10:43.84, 39.30с, vpravo на two-shot
+scene "s24_lek1_spisok_toro" (duration: 1s, set: lek1_spisok_toro) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.437, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.563, 0.500) over 37.47s ease-in-out
+    wait 0.90s
+}
+
+// ── шов 7: 11:23.14, 3.40с — персонаж молчит
+scene "shov25" (duration: 1s, set: komnata) {
+    transition static 0.12s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.50s
+    freeman pose "otschet"
+    wait 1.10s
+    freeman pose "dve_storony"
+    wait 1.10s
+    freeman pose "calm"
+    wait 0.57s
+}
+
+// ── ЧаВо / lek1-chavo: 11:26.54, 40.12с, naiskos на over-shoulder
+scene "s26_lek1_chavo" (duration: 1s, set: lek1_chavo) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.340, 0.360) over 0.01s
+    wait 0.80s
+    camera pan-to (0.660, 0.640) over 38.29s ease-in-out
+    wait 0.90s
+}
+
+// ── ЧаВо / lek1-chasy: 12:06.66, 39.02с, vlevo на two-shot
+scene "s27_lek1_chasy" (duration: 1s, set: lek1_chasy) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.563, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.437, 0.500) over 37.19s ease-in-out
+    wait 0.90s
+}
+
+// ── ЧаВо / lek1-vesy: 12:45.68, 42.30с, vdol на over-shoulder
+scene "s28_lek1_vesy" (duration: 1s, set: lek1_vesy) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.320, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.680, 0.500) over 40.47s ease-in-out
+    wait 0.90s
+}
+
+// ── шов 8: 13:27.98, 3.40с — персонаж молчит
+scene "shov29" (duration: 1s, set: komnata) {
+    transition static 0.12s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.50s
+    freeman pose "doubt"
+    wait 1.10s
+    freeman pose "vozzvanie"
+    wait 1.10s
+    freeman pose "calm"
+    wait 0.57s
+}
+
+// ── Итоги / lek1-fundament: 13:31.38, 32.64с, vniz на two-shot
+scene "s30_lek1_fundament" (duration: 1s, set: lek1_fundament) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.500, 0.435) over 0.01s
+    wait 0.80s
+    camera pan-to (0.500, 0.565) over 30.81s ease-in-out
+    wait 0.90s
+}
+
+// ── Итоги / lek1-chto-dalshe: 14:04.02, 30.21с, vverh на two-shot
+scene "s31_lek1_chto_dalshe" (duration: 1s, set: lek1_chto_dalshe) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.500, 0.565) over 0.01s
+    wait 0.80s
+    camera pan-to (0.500, 0.435) over 28.38s ease-in-out
+    wait 0.90s
+}
+
+// ── шов 9: 14:34.23, 3.40с — персонаж молчит
+scene "shov32" (duration: 1s, set: komnata) {
+    transition static 0.12s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.50s
+    freeman pose "chelo"
+    wait 1.10s
+    freeman pose "ladon_pusta"
+    wait 1.10s
+    freeman pose "calm"
+    wait 0.57s
+}
+
+// ── Вопросы для самопроверки / lek1-shest-osej: 14:37.63, 33.42с, vdol на over-shoulder
+scene "s33_lek1_shest_osej" (duration: 1s, set: lek1_shest_osej) {
+    transition static 0.12s
+    camera over-shoulder
+    camera pan-to (0.320, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.680, 0.500) over 31.59s ease-in-out
+    wait 0.90s
+}
+
+// ── шов 10: 15:11.05, 3.40с — персонаж молчит
+scene "shov34" (duration: 1s, set: komnata) {
+    transition static 0.12s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.50s
+    freeman pose "prishchur"
+    wait 1.10s
+    freeman pose "rubit"
+    wait 1.10s
+    freeman pose "calm"
+    wait 0.57s
+}
+
+// ── Литература / lek1-knigi: 15:14.45, 34.44с, k_stopke на two-shot
+scene "s35_lek1_knigi" (duration: 1s, set: lek1_knigi) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.440, 0.565) over 0.01s
+    wait 0.80s
+    camera pan-to (0.560, 0.440) over 32.61s ease-in-out
+    wait 0.90s
+}
+
+// ── Литература / lek1-hizhina: 15:48.89, 36.32с, vpravo на two-shot
+scene "s36_lek1_hizhina" (duration: 1s, set: lek1_hizhina) {
+    transition static 0.12s
+    camera two-shot
+    camera pan-to (0.437, 0.500) over 0.01s
+    wait 0.80s
+    camera pan-to (0.563, 0.500) over 34.49s ease-in-out
+    wait 0.90s
+}
+

@@ -275,10 +275,65 @@ def knigi():
     return sohranit(im, "lek1-knigi")
 
 
+# ЧАВО — «часы: сколько это займёт»
+def chasy():
+    im, d = holst(17)
+    krug(d, 640, 360, 290, w=24)
+    krug(d, 640, 360, 254, w=12)
+    for k in range(12):
+        import math
+        a = math.radians(k * 30 - 90)
+        liniya(d, (640 + 220 * math.cos(a), 360 + 220 * math.sin(a)),
+               (640 + 250 * math.cos(a), 360 + 250 * math.sin(a)),
+               w=18 if k % 3 == 0 else 11)
+    liniya(d, (640, 360), (640 + 130, 360 - 75), w=22)
+    liniya(d, (640, 360), (640 - 40, 360 - 185), w=17)
+    krug(d, 640, 360, 22, w=10, zaliv=TUSH)
+    return sohranit(im, "lek1-chasy")
+
+
+# ЧТО ДАЛЬШЕ — «трое идут по борозде, один стоит рядом с ней»
+def shag():
+    #  Следы отпали: ступня — мелкая форма, в этом стиле она читается сыпью, а
+    #  не шагами, сколько её ни увеличивай. Выход из колеи показывается не
+    #  следом, а ФИГУРОЙ: трое в борозде и один вне её — сравнение, которое
+    #  читается мгновенно и не требует додумывания.
+    im, d = holst(18)
+    liniya(d, (40, 250), (1240, 250), w=16)
+    for x_niz, x_verh in ((300, 566), (980, 714)):
+        liniya(d, (x_niz, 720), (x_verh, 250), w=22)
+    #  Фигуры в борозде НЕ ДОЛЖНЫ КАСАТЬСЯ: голова дальней, севшая на плечи
+    #  ближней, собирается глазом в один столб, и трое читаются одним. Разнос
+    #  по высоте больше суммы половин, плюс сдвиг вбок.
+    for x, y, h in ((618, 706, 208), (658, 466, 136), (676, 344, 92)):
+        figura(d, x, y, h, ww=int(13 * h / 208) + 4)
+    figura(d, 1086, 700, 208)
+    return sohranit(im, "lek1-shag")
+
+
+# ЧАВО — «весы: одно перевешивает, и видно, какое»
+def vesy():
+    #  Чаши — ШИРОКИЕ и ПЛОСКИЕ. Узкая глубокая чаша с двумя подвесами читается
+    #  палаткой: треугольник поверх трапеции глаз собирает в шатёр, а не в весы.
+    im, d = holst(19)
+    liniya(d, (640, 640), (640, 210), w=24)
+    liniya(d, (450, 668), (830, 668), w=22)
+    liniya(d, (250, 330), (1030, 232), w=22)
+    for cx, cy, gruz in ((250, 330, True), (1030, 232, False)):
+        for s in (-1, +1):
+            liniya(d, (cx, cy), (cx + s * 150, cy + 118), w=10)
+        lomanaya(d, [(cx - 168, cy + 118), (cx + 168, cy + 118)], w=20)
+        lomanaya(d, [(cx - 168, cy + 118), (cx - 140, cy + 168),
+                     (cx + 140, cy + 168), (cx + 168, cy + 118)], w=14)
+        if gruz:
+            pryamoug(d, (cx - 96, cy - 6, cx + 96, cy + 112), w=16, zaliv=TUSH)
+    return sohranit(im, "lek1-vesy")
+
+
 if __name__ == "__main__":
     kadry = [obychnaya_zhizn, shest_osej, semya, sreda, pokolenie, ringtone,
              vse_ryadom, tak_vse, voskresnyj_vecher, spisok_toro, hizhina,
-             fundament, zavist, chto_dalshe, chavo, knigi]
+             fundament, zavist, chto_dalshe, chavo, knigi, chasy, shag, vesy]
     for f in kadry:
         f()
     print(f"нарисовано {len(kadry)} кадров")
