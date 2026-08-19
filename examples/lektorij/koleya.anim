@@ -164,7 +164,7 @@ scene "s2" (duration: 1s, set: komnata) {
     //lip 6
     //  «Работа — выбрали или туда взяли?»
     together {
-        freeman speaks for 2.90s
+        freeman speaks for 2.01s
         do {
             freeman overlays "otschet"
         }
@@ -174,7 +174,7 @@ scene "s2" (duration: 1s, set: komnata) {
     //lip 7
     //  «Деньги — назвали сумму или согласились?»
     together {
-        freeman speaks for 3.20s
+        freeman speaks for 2.72s
         do {
             freeman overlays "dengi"
         }
@@ -243,12 +243,12 @@ scene "s3" (duration: 1s, set: komnata) {
     //lip 12
     //  «Работа по умолчанию, деньги по умолчанию, жизнь по умолчанию.»
     together {
-        freeman speaks for 5.80s
+        freeman speaks for 5.15s
         do {
             freeman overlays "otschet"
-            wait 1.93s
+            wait 1.71s
             freeman overlays "razmer"
-            wait 1.93s
+            wait 1.71s
             freeman overlays "rubit"
         }
     }
@@ -283,12 +283,12 @@ scene "s4" (duration: 1s, set: komnata) {
     //lip 14
     //  «Новость хорошая: лень поменять нельзя. А настройку — можно.»
     together {
-        freeman speaks for 4.40s
+        freeman speaks for 5.07s
         do {
             freeman overlays "raskryl"
-            wait 1.47s
+            wait 1.69s
             freeman overlays "teplo"
-            wait 1.47s
+            wait 1.69s
             freeman overlays "ostyl"
         }
     }
@@ -297,12 +297,12 @@ scene "s4" (duration: 1s, set: komnata) {
     //lip 15
     //  «Мне легко: я нарисованный, моя судьба — ваша лента.»
     together {
-        freeman speaks for 4.20s
+        freeman speaks for 4.94s
         do {
             freeman overlays "shrug"
-            wait 1.40s
+            wait 1.65s
             freeman overlays "zatylok"
-            wait 1.40s
+            wait 1.65s
             freeman overlays "gorech"
         }
     }
@@ -331,12 +331,12 @@ scene "s5" (duration: 1s, set: komnata) {
     //lip 16
     //  «Только не прыгайте. Прыжок — не смелость, а способ не мерить.»
     together {
-        freeman speaks for 4.10s
+        freeman speaks for 4.65s
         do {
             freeman overlays "no"
-            wait 1.37s
+            wait 1.55s
             freeman overlays "otmahnulsya"
-            wait 1.37s
+            wait 1.55s
             freeman overlays "wave"
         }
     }
@@ -366,10 +366,10 @@ scene "s5" (duration: 1s, set: komnata) {
     //lip 18
     //  «Полшага в сторону — и примерить.»
     together {
-        freeman speaks for 2.40s
+        freeman speaks for 3.97s
         do {
             freeman overlays "razmer"
-            wait 1.20s
+            wait 1.99s
             freeman overlays "poimal"
         }
     }
@@ -390,10 +390,10 @@ scene "s6" (duration: 1s, set: komnata) {
     //lip 19
     //  ««Своя колея»
     together {
-        freeman speaks for 3.20s
+        freeman speaks for 3.87s
         do {
             freeman overlays "raskryl"
-            wait 1.60s
+            wait 1.93s
             freeman overlays "odna_v_bok"
         }
     }
