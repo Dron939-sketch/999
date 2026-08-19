@@ -63,13 +63,13 @@ config {
     cast-shadow: 0.32
 }
 
-// ── ВСТУПЛЕНИЕ / lek1-obychnaya-zhizn: 0:00.00, 38.44с, vdol на over-shoulder
+// ── ВСТУПЛЕНИЕ / lek1-obychnaya-zhizn: 0:00.00, 38.44с, vdol на two-shot
 scene "s00_lek1_obychnaya_zhizn" (duration: 1s, set: lek1_obychnaya_zhizn) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.320, 0.500) over 0.01s
+    camera two-shot
+    camera pan-to (0.450, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.680, 0.500) over 36.6117s ease-in-out
+    camera pan-to (0.550, 0.500) over 36.6117s ease-in-out
     wait 0.90s
 }
 
@@ -77,9 +77,9 @@ scene "s00_lek1_obychnaya_zhizn" (duration: 1s, set: lek1_obychnaya_zhizn) {
 scene "s01_lek1_shest_osej" (duration: 1s, set: lek1_shest_osej) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.500, 0.435) over 0.01s
+    camera pan-to (0.500, 0.452) over 0.01s
     wait 0.80s
-    camera pan-to (0.500, 0.565) over 31.6950s ease-in-out
+    camera pan-to (0.500, 0.548) over 31.6950s ease-in-out
     wait 0.90s
 }
 
@@ -103,19 +103,19 @@ scene "shov02" (duration: 1s, set: komnata) {
 scene "s03_lekciya_koleya_1_anketa" (duration: 1s, set: lekciya_koleya_1_anketa) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.500, 0.435) over 0.01s
+    camera pan-to (0.500, 0.452) over 0.01s
     wait 0.80s
-    camera pan-to (0.500, 0.565) over 21.0283s ease-in-out
+    camera pan-to (0.500, 0.548) over 21.0283s ease-in-out
     wait 0.90s
 }
 
-// ── 1. Анкета / lekciya-koleya-1-galochka: 1:39.50, 21.69с, naiskos на over-shoulder
+// ── 1. Анкета / lekciya-koleya-1-galochka: 1:39.50, 21.69с, naiskos на two-shot
 scene "s04_lekciya_koleya_1_galochka" (duration: 1s, set: lekciya_koleya_1_galochka) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.340, 0.360) over 0.01s
+    camera two-shot
+    camera pan-to (0.460, 0.460) over 0.01s
     wait 0.80s
-    camera pan-to (0.660, 0.640) over 19.8617s ease-in-out
+    camera pan-to (0.540, 0.540) over 19.8617s ease-in-out
     wait 0.90s
 }
 
@@ -123,9 +123,9 @@ scene "s04_lekciya_koleya_1_galochka" (duration: 1s, set: lekciya_koleya_1_galoc
 scene "s05_lekciya_koleya_1_telefon" (duration: 1s, set: lekciya_koleya_1_telefon) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.500, 0.565) over 0.01s
+    camera pan-to (0.500, 0.548) over 0.01s
     wait 0.80s
-    camera pan-to (0.500, 0.435) over 18.9033s ease-in-out
+    camera pan-to (0.500, 0.452) over 18.9033s ease-in-out
     wait 0.90s
 }
 
@@ -133,29 +133,29 @@ scene "s05_lekciya_koleya_1_telefon" (duration: 1s, set: lekciya_koleya_1_telefo
 scene "s06_lek1_semya" (duration: 1s, set: lek1_semya) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.500, 0.435) over 0.01s
+    camera pan-to (0.500, 0.452) over 0.01s
     wait 0.80s
-    camera pan-to (0.500, 0.565) over 37.5700s ease-in-out
+    camera pan-to (0.500, 0.548) over 37.5700s ease-in-out
     wait 0.90s
 }
 
-// ── 2. Откуда настройки / lek1-sreda: 3:01.38, 42.86с, vdol на over-shoulder
+// ── 2. Откуда настройки / lek1-sreda: 3:01.38, 42.86с, vdol на two-shot
 scene "s07_lek1_sreda" (duration: 1s, set: lek1_sreda) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.320, 0.500) over 0.01s
+    camera two-shot
+    camera pan-to (0.450, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.680, 0.500) over 41.0283s ease-in-out
+    camera pan-to (0.550, 0.500) over 41.0283s ease-in-out
     wait 0.90s
 }
 
-// ── 2. Откуда настройки / lek1-pokolenie: 3:44.25, 44.69с, po_stupenyam на over-shoulder
+// ── 2. Откуда настройки / lek1-pokolenie: 3:44.25, 44.69с, po_stupenyam на two-shot
 scene "s08_lek1_pokolenie" (duration: 1s, set: lek1_pokolenie) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.320, 0.640) over 0.01s
+    camera two-shot
+    camera pan-to (0.458, 0.542) over 0.01s
     wait 0.80s
-    camera pan-to (0.680, 0.380) over 42.8617s ease-in-out
+    camera pan-to (0.542, 0.458) over 42.8617s ease-in-out
     wait 0.90s
 }
 
@@ -163,9 +163,9 @@ scene "s08_lek1_pokolenie" (duration: 1s, set: lek1_pokolenie) {
 scene "s09_lek1_ringtone" (duration: 1s, set: lek1_ringtone) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.437, 0.500) over 0.01s
+    camera pan-to (0.455, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.563, 0.500) over 37.1950s ease-in-out
+    camera pan-to (0.545, 0.500) over 37.1950s ease-in-out
     wait 0.90s
 }
 
@@ -189,19 +189,19 @@ scene "shov10" (duration: 1s, set: komnata) {
 scene "s11_lek1_vse_ryadom" (duration: 1s, set: lek1_vse_ryadom) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.500, 0.565) over 0.01s
+    camera pan-to (0.500, 0.548) over 0.01s
     wait 0.80s
-    camera pan-to (0.500, 0.435) over 41.5283s ease-in-out
+    camera pan-to (0.500, 0.452) over 41.5283s ease-in-out
     wait 0.90s
 }
 
-// ── 3. Почему колея не жмёт / lek1-tak-vse: 5:55.88, 39.44с, vdol на over-shoulder
+// ── 3. Почему колея не жмёт / lek1-tak-vse: 5:55.88, 39.44с, vdol на two-shot
 scene "s12_lek1_tak_vse" (duration: 1s, set: lek1_tak_vse) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.320, 0.500) over 0.01s
+    camera two-shot
+    camera pan-to (0.450, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.680, 0.500) over 37.6117s ease-in-out
+    camera pan-to (0.550, 0.500) over 37.6117s ease-in-out
     wait 0.90s
 }
 
@@ -225,9 +225,9 @@ scene "shov13" (duration: 1s, set: komnata) {
 scene "s14_lek1_hizhina" (duration: 1s, set: lek1_hizhina) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.563, 0.500) over 0.01s
+    camera pan-to (0.545, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.437, 0.500) over 34.1950s ease-in-out
+    camera pan-to (0.455, 0.500) over 34.1950s ease-in-out
     wait 0.90s
 }
 
@@ -235,9 +235,9 @@ scene "s14_lek1_hizhina" (duration: 1s, set: lek1_hizhina) {
 scene "s15_lek1_spisok_toro" (duration: 1s, set: lek1_spisok_toro) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.500, 0.435) over 0.01s
+    camera pan-to (0.500, 0.452) over 0.01s
     wait 0.80s
-    camera pan-to (0.500, 0.565) over 35.0700s ease-in-out
+    camera pan-to (0.500, 0.548) over 35.0700s ease-in-out
     wait 0.90s
 }
 
@@ -257,33 +257,33 @@ scene "shov16" (duration: 1s, set: komnata) {
     wait 2.6533s
 }
 
-// ── 5. Три признака / lek1-zavist: 7:56.75, 27.32с, vdol на over-shoulder
+// ── 5. Три признака / lek1-zavist: 7:56.75, 27.32с, vdol на two-shot
 scene "s17_lek1_zavist" (duration: 1s, set: lek1_zavist) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.320, 0.500) over 0.01s
+    camera two-shot
+    camera pan-to (0.450, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.680, 0.500) over 25.4867s ease-in-out
+    camera pan-to (0.550, 0.500) over 25.4867s ease-in-out
     wait 0.90s
 }
 
-// ── 5. Три признака / lek1-voskresnyj-vecher: 8:24.08, 33.32с, vdol на over-shoulder
+// ── 5. Три признака / lek1-voskresnyj-vecher: 8:24.08, 33.32с, vdol на two-shot
 scene "s18_lek1_voskresnyj_vecher" (duration: 1s, set: lek1_voskresnyj_vecher) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.320, 0.500) over 0.01s
+    camera two-shot
+    camera pan-to (0.450, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.680, 0.500) over 31.4867s ease-in-out
+    camera pan-to (0.550, 0.500) over 31.4867s ease-in-out
     wait 0.90s
 }
 
-// ── 5. Три признака / lek1-tak-vse: 8:57.42, 28.11с, vdol_nazad на over-shoulder
+// ── 5. Три признака / lek1-tak-vse: 8:57.42, 28.11с, vdol_nazad на two-shot
 scene "s19_lek1_tak_vse" (duration: 1s, set: lek1_tak_vse) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.680, 0.500) over 0.01s
+    camera two-shot
+    camera pan-to (0.550, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.320, 0.500) over 26.2783s ease-in-out
+    camera pan-to (0.450, 0.500) over 26.2783s ease-in-out
     wait 0.90s
 }
 
@@ -307,9 +307,9 @@ scene "shov20" (duration: 1s, set: komnata) {
 scene "s21_lek1_chto_dalshe" (duration: 1s, set: lek1_chto_dalshe) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.460, 0.560) over 0.01s
+    camera pan-to (0.478, 0.535) over 0.01s
     wait 0.80s
-    camera pan-to (0.565, 0.452) over 33.3617s ease-in-out
+    camera pan-to (0.542, 0.468) over 33.3617s ease-in-out
     wait 0.90s
 }
 
@@ -317,9 +317,9 @@ scene "s21_lek1_chto_dalshe" (duration: 1s, set: lek1_chto_dalshe) {
 scene "s22_lek1_shag" (duration: 1s, set: lek1_shag) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.500, 0.565) over 0.01s
+    camera pan-to (0.500, 0.548) over 0.01s
     wait 0.80s
-    camera pan-to (0.500, 0.435) over 35.8200s ease-in-out
+    camera pan-to (0.500, 0.452) over 35.8200s ease-in-out
     wait 0.90s
 }
 
@@ -327,9 +327,9 @@ scene "s22_lek1_shag" (duration: 1s, set: lek1_shag) {
 scene "s23_lek1_spisok_toro" (duration: 1s, set: lek1_spisok_toro) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.437, 0.500) over 0.01s
+    camera pan-to (0.455, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.563, 0.500) over 37.4450s ease-in-out
+    camera pan-to (0.545, 0.500) over 37.4450s ease-in-out
     wait 0.90s
 }
 
@@ -349,13 +349,13 @@ scene "shov24" (duration: 1s, set: komnata) {
     wait 1.4033s
 }
 
-// ── ЧаВо / lek1-chavo: 11:27.38, 39.27с, naiskos на over-shoulder
+// ── ЧаВо / lek1-chavo: 11:27.38, 39.27с, naiskos на two-shot
 scene "s25_lek1_chavo" (duration: 1s, set: lek1_chavo) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.340, 0.360) over 0.01s
+    camera two-shot
+    camera pan-to (0.460, 0.460) over 0.01s
     wait 0.80s
-    camera pan-to (0.660, 0.640) over 37.4450s ease-in-out
+    camera pan-to (0.540, 0.540) over 37.4450s ease-in-out
     wait 0.90s
 }
 
@@ -363,19 +363,19 @@ scene "s25_lek1_chavo" (duration: 1s, set: lek1_chavo) {
 scene "s26_lek1_chasy" (duration: 1s, set: lek1_chasy) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.563, 0.500) over 0.01s
+    camera pan-to (0.545, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.437, 0.500) over 37.1533s ease-in-out
+    camera pan-to (0.455, 0.500) over 37.1533s ease-in-out
     wait 0.90s
 }
 
-// ── ЧаВо / lek1-vesy: 12:45.67, 42.32с, vdol на over-shoulder
+// ── ЧаВо / lek1-vesy: 12:45.67, 42.32с, vdol на two-shot
 scene "s27_lek1_vesy" (duration: 1s, set: lek1_vesy) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.320, 0.500) over 0.01s
+    camera two-shot
+    camera pan-to (0.450, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.680, 0.500) over 40.4867s ease-in-out
+    camera pan-to (0.550, 0.500) over 40.4867s ease-in-out
     wait 0.90s
 }
 
@@ -399,9 +399,9 @@ scene "shov28" (duration: 1s, set: komnata) {
 scene "s29_lek1_fundament" (duration: 1s, set: lek1_fundament) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.500, 0.435) over 0.01s
+    camera pan-to (0.500, 0.452) over 0.01s
     wait 0.80s
-    camera pan-to (0.500, 0.565) over 28.6117s ease-in-out
+    camera pan-to (0.500, 0.548) over 28.6117s ease-in-out
     wait 0.90s
 }
 
@@ -409,9 +409,9 @@ scene "s29_lek1_fundament" (duration: 1s, set: lek1_fundament) {
 scene "s30_lek1_chto_dalshe" (duration: 1s, set: lek1_chto_dalshe) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.500, 0.565) over 0.01s
+    camera pan-to (0.500, 0.548) over 0.01s
     wait 0.80s
-    camera pan-to (0.500, 0.435) over 28.4033s ease-in-out
+    camera pan-to (0.500, 0.452) over 28.4033s ease-in-out
     wait 0.90s
 }
 
@@ -431,13 +431,13 @@ scene "shov31" (duration: 1s, set: komnata) {
     wait 1.2367s
 }
 
-// ── Вопросы для самопроверки / lek1-shest-osej: 14:38.33, 32.69с, vdol на over-shoulder
+// ── Вопросы для самопроверки / lek1-shest-osej: 14:38.33, 32.69с, vdol на two-shot
 scene "s32_lek1_shest_osej" (duration: 1s, set: lek1_shest_osej) {
     transition static 0.12s
-    camera over-shoulder
-    camera pan-to (0.320, 0.500) over 0.01s
+    camera two-shot
+    camera pan-to (0.450, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.680, 0.500) over 30.8617s ease-in-out
+    camera pan-to (0.550, 0.500) over 30.8617s ease-in-out
     wait 0.90s
 }
 
@@ -461,19 +461,19 @@ scene "shov33" (duration: 1s, set: komnata) {
 scene "s34_lek1_knigi" (duration: 1s, set: lek1_knigi) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.440, 0.565) over 0.01s
+    camera pan-to (0.462, 0.540) over 0.01s
     wait 0.80s
-    camera pan-to (0.560, 0.440) over 33.0700s ease-in-out
+    camera pan-to (0.538, 0.462) over 33.0700s ease-in-out
     wait 0.90s
 }
 
-// ── Литература / lek1-hizhina: 15:48.88, 36.32с, vpravo на two-shot
+// ── Литература / lek1-hizhina: 15:48.88, 36.90с, vpravo на two-shot
 scene "s35_lek1_hizhina" (duration: 1s, set: lek1_hizhina) {
     transition static 0.12s
     camera two-shot
-    camera pan-to (0.437, 0.500) over 0.01s
+    camera pan-to (0.455, 0.500) over 0.01s
     wait 0.80s
-    camera pan-to (0.563, 0.500) over 34.4867s ease-in-out
+    camera pan-to (0.545, 0.500) over 35.0700s ease-in-out
     wait 0.90s
 }
 

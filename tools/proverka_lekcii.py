@@ -118,12 +118,17 @@ def main(argv):
     sys.path.insert(0, str(ROOT / "tools"))
     from lekciya_videoryad import pauzy
     ps, _ = pauzy(istok)
+    #  ТА ЖЕ ПОДРОБНАЯ КАРТА, ЧТО У РАСКЛАДКИ. Концы швов садятся в промежутки
+    #  между словами (порог 0.24с), и проверять их по карте дыхательных пауз
+    #  (0.36с) — значит валить склейки, которые стоят ровно там, где надо.
+    #  Приёмка обязана мерить тем же, чем строит генератор.
+    ps_tonko, _ = pauzy(istok, minimum=0.24)
     cuts = sklejki(video)
     print(f"\n  2. СКЛЕЙКИ (снято с файла: {len(cuts)})")
     mimo = []
     for t in cuts:
-        if not any(p[0] - 0.25 <= t <= p[1] + 0.25 for p in ps):
-            blizh = min(((p[0] + p[1]) / 2 for p in ps), key=lambda c: abs(c - t))
+        if not any(p[0] - 0.25 <= t <= p[1] + 0.25 for p in ps_tonko):
+            blizh = min(((p[0] + p[1]) / 2 for p in ps_tonko), key=lambda c: abs(c - t))
             mimo.append((t, t - blizh))
     if mimo:
         print(f"     [ПРОВАЛ] мимо паузы: {len(mimo)} из {len(cuts)}")

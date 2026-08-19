@@ -123,18 +123,35 @@ def shtrih_mashina(d, x0, y0, x1, w=9, shag=32, h=24):
     liniya(d, (x0, y0), (x1, y0), w=8, drozh=0.8, prohody=1)
 
 
+#  ПОЛЕ ВОКРУГ РИСУНКА — НЕ ЭСТЕТИКА, А ГЕОМЕТРИЯ ПРОЕЗДА.
+#  Сет натягивается на кадр край в край, поэтому `camera wide` (зум 1.0) не
+#  оставляет проезду ни пикселя, а любой зум больше 1.0 означает, что картинку
+#  ЦЕЛИКОМ не видно никогда. Первая сборка это и показала: проезд на
+#  `over-shoulder` (1.8) выносил из кадра рукописную галочку, маленький дом в
+#  «зависти» и гружёную чашу весов — то есть ровно ту половину, ради которой
+#  кадр рисовался.
+#  Развязка — поле. При содержимом в 73% холста и зуме 1.2 видно 83% холста:
+#  рисунок помещается целиком, и сверх него остаётся ±0.05 на проезд, причём
+#  окно ни разу не выходит за холст и голая подложка не показывается.
+#  1760×990 — те же 16:9, что и кадр.
+HOLST_W, HOLST_H = 1760, 990
+
+
 def sohranit(im, imya):
     import base64
     import os
+    pole = Image.new("RGB", (HOLST_W, HOLST_H), BUMAGA)
+    pole.paste(im, ((HOLST_W - im.width) // 2, (HOLST_H - im.height) // 2))
+    im = pole
     p = f"examples/assets/sets/{imya}.png"
     im.save(p)
     b = base64.b64encode(open(p, "rb").read()).decode()
     with open(f"examples/assets/sets/{imya}.svg", "w", encoding="utf-8") as f:
         f.write(
             '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"'
-            ' viewBox="0 0 1280 720" width="1280" height="720">\n'
+            ' viewBox="0 0 1760 990" width="1760" height="990">\n'
             f'  <!-- Иллюстрация лекции, нарисована tools/risuem.py в стиле серии:\n'
             f'       бумага #d4d7cf, тушь #141410, дрожащая линия, плоские заливки. -->\n'
-            f'  <image x="0" y="0" width="1280" height="720" xlink:href="data:image/png;base64,{b}"/>\n'
+            f'  <image x="0" y="0" width="1760" height="990" xlink:href="data:image/png;base64,{b}"/>\n'
             "</svg>\n")
     return os.path.getsize(p)
