@@ -12,7 +12,7 @@ risuem.py — рисовалка иллюстраций лекции в стил
 
 СТИЛЬ СЕРИИ, СВЕДЁННЫЙ К ПРАВИЛАМ:
   · бумага #d4d7cf, тушь #141410, третьего цвета нет;
-  · линия толстая (8–14 px) и ДРОЖИТ: прямых машинных линий в кадре не бывает,
+  · линия ТОЛСТАЯ (14–20 px) и ДРОЖИТ: прямых машинных линий в кадре не бывает,
     иначе рисунок читается чертежом, а не рукой;
   · заливки плоские — ни градиентов, ни теней, ни полутонов;
   · деталей мало, форм мало, силуэт читается с одного взгляда;
@@ -23,6 +23,18 @@ risuem.py — рисовалка иллюстраций лекции в стил
 выглядит вставкой из другой программы. Поэтому дрожат все контуры, включая
 прямоугольники и окружности: `shag` задаёт, как часто ломается линия, `drozh` —
 насколько.
+
+КОНТУР ПРОВОДИТСЯ ДВАЖДЫ, И ЭТО ГЛАВНОЕ. Первый набор кадров вышел тонким и
+пустым — рядом с картинками пилота он читался вставкой из другой программы.
+Разница оказалась не в толщине: у рисунка серии контур ДВОЙНОЙ. Линия обведена
+второй раз с другой дрожью, две линии то сливаются, то расходятся на пиксель —
+отсюда «кипящий» край, которого одна линия любой толщины не даёт. Поэтому
+`liniya` и всё, что на ней стоит, кладут два прохода (`prohody`), и второй
+тоньше первого: так край получается живым, а не просто жирным.
+
+ПЛОТНОСТЬ. Кадр держит экран минуту с лишним — предмет в нём занимает две трети
+поля, а не четверть. Семь тонких линий посреди бумаги умирают на третьей
+секунде просмотра.
 """
 
 import math
@@ -56,54 +68,59 @@ def _tochki(p1, p2, shag=26, drozh=2.2):
     return out
 
 
-def liniya(d, p1, p2, w=10, drozh=2.2, fill=TUSH):
-    d.line(_tochki(p1, p2, drozh=drozh), fill=fill, width=w, joint="curve")
+def liniya(d, p1, p2, w=15, drozh=2.2, fill=TUSH, prohody=2):
+    """Линия в ДВА прохода — отсюда «кипящий» край (см. шапку файла)."""
+    for k in range(prohody):
+        d.line(_tochki(p1, p2, drozh=drozh + k * 0.8),
+               fill=fill, width=max(3, w - k * 5), joint="curve")
 
 
-def lomanaya(d, pts, w=10, drozh=2.0, zamknut=False, fill=TUSH):
+def lomanaya(d, pts, w=15, drozh=2.0, zamknut=False, fill=TUSH, prohody=2):
     pp = list(pts) + ([pts[0]] if zamknut else [])
     for a, b in zip(pp, pp[1:]):
-        liniya(d, a, b, w=w, drozh=drozh, fill=fill)
+        liniya(d, a, b, w=w, drozh=drozh, fill=fill, prohody=prohody)
 
 
-def pryamoug(d, box, w=10, drozh=2.0, zaliv=None):
+def pryamoug(d, box, w=15, drozh=2.0, zaliv=None, prohody=2):
     x0, y0, x1, y1 = box
     if zaliv:
         d.polygon([(x0, y0), (x1, y0), (x1, y1), (x0, y1)], fill=zaliv)
-    lomanaya(d, [(x0, y0), (x1, y0), (x1, y1), (x0, y1)], w=w, drozh=drozh, zamknut=True)
+    lomanaya(d, [(x0, y0), (x1, y0), (x1, y1), (x0, y1)],
+             w=w, drozh=drozh, zamknut=True, prohody=prohody)
 
 
-def krug(d, cx, cy, r, w=10, drozh=2.0, zaliv=None, ot=0, do=360):
-    pts = []
-    n = max(12, int(r / 3))
-    for i in range(n + 1):
-        a = math.radians(ot + (do - ot) * i / n)
-        rr = r + random.uniform(-drozh, drozh)
-        pts.append((cx + rr * math.cos(a), cy + rr * math.sin(a)))
-    if zaliv:
-        d.polygon(pts, fill=zaliv)
-    lomanaya(d, pts, w=w, drozh=0.6)
+def krug(d, cx, cy, r, w=15, drozh=2.0, zaliv=None, ot=0, do=360, prohody=2):
+    for k in range(prohody):
+        pts = []
+        n = max(16, int(r / 2.5))
+        for i in range(n + 1):
+            a = math.radians(ot + (do - ot) * i / n)
+            rr = r + random.uniform(-drozh, drozh) - k * 1.5
+            pts.append((cx + rr * math.cos(a), cy + rr * math.sin(a)))
+        if zaliv and k == 0:
+            d.polygon(pts, fill=zaliv)
+        lomanaya(d, pts, w=max(3, w - k * 5), drozh=0.6, prohody=1)
 
 
-def shtrih_ruka(d, x0, y0, x1, w=9):
+def shtrih_ruka(d, x0, y0, x1, w=11):
     """Свободная завитушка — «написано рукой»."""
     pts = []
     x = x0
     up = True
     while x < x1:
-        pts.append((x, y0 + (-16 if up else 12) + random.uniform(-4, 4)))
+        pts.append((x, y0 + (-18 if up else 14) + random.uniform(-5, 5)))
         x += random.uniform(26, 44)
         up = not up
-    lomanaya(d, pts, w=w, drozh=1.6)
+    lomanaya(d, pts, w=w, drozh=1.6, prohody=1)
 
 
-def shtrih_mashina(d, x0, y0, x1, w=7, shag=30, h=20):
+def shtrih_mashina(d, x0, y0, x1, w=9, shag=32, h=24):
     """Ровная гребёнка — «заполнено машиной»."""
     x = x0
     while x < x1:
         d.line([(x, y0 - h), (x, y0)], fill=TUSH, width=w)
         x += shag
-    liniya(d, (x0, y0), (x1, y0), w=6, drozh=0.8)
+    liniya(d, (x0, y0), (x1, y0), w=8, drozh=0.8, prohody=1)
 
 
 def sohranit(im, imya):
