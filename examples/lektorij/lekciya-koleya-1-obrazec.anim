@@ -108,11 +108,12 @@ scene "b07" (duration: 1s, set: lek1a_anketa_zapolnena) {
 scene "b08" (duration: 1s, set: lek1a_anketa_zapolnena) {
     transition static 0.10s
     camera two-shot
-    let w = text("СКОЛЬКО ИЗ НИХ", 84) at (0.5, -2.0)
-    wait 0.30s
-    w moves-to (0.500, 0.845) over 0.01s
+    let w08 = text("САМИ?", 64) at (0.5, -2.0)
+    wait 1.74s
+    w08 moves-to (0.500, 0.800) over 0.01s
     camera pan-to (0.500, 0.452) over 0.01s
-    camera pan-to (0.500, 0.548) over 11.5217s ease-in-out
+    camera pan-to (0.500, 0.548) over 10.0817s ease-in-out
+    w08 moves-to (0.500, -2.000) over 0.01s
 }
 
 // ── 2:22.17 (9.19с) — «было ли решение»
@@ -127,10 +128,11 @@ scene "b09" (duration: 1s, set: lek1a_anketa_zapolnena) {
 scene "b10" (duration: 1s, set: lek1a_dve_iz_desyati) {
     transition static 0.10s
     camera two-shot
-    let w = text("2 ИЗ 10", 84) at (0.5, -2.0)
-    wait 0.22s
-    w moves-to (0.500, 0.845) over 0.01s
-    wait 3.9033s
+    let w10 = text("2 ИЗ 10", 64) at (0.5, -2.0)
+    wait 0.63s
+    w10 moves-to (0.500, 0.800) over 0.01s
+    wait 3.4833s
+    w10 moves-to (0.500, -2.000) over 0.01s
 }
 
 // ── 2:35.61 (11.69с) — «жизнь состоит из настроек»
