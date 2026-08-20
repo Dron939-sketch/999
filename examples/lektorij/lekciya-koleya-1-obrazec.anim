@@ -1,0 +1,220 @@
+// ==========================================================================
+//  ОБРАЗЕЦ НОВОГО ВИДЕОРЯДА ЛЕКЦИИ 1: 1:28.92–3:22.41.
+//  Собран tools/obrazec_anketa.py — РУКАМИ НЕ ПРАВИТЬ.
+//
+//  Каждый кадр стоит на СВОЁМ СЛОВЕ из расшифровки записи
+//  (lekciya-koleya-1-slova.json), а не на границе раздела. Двадцать
+//  три смены за 113 секунд против двух в первой сборке.
+//
+//  monochrome ВЫКЛЮЧЕН: запись называет цвет меток («пять красных»,
+//  «одна зелёная»), и фильтр стёр бы то, что сказано голосом.
+// ==========================================================================
+import set lek1a_anketa_0 from "../assets/sets/lek1a-anketa-0.svg"
+import set lek1a_anketa_1 from "../assets/sets/lek1a-anketa-1.svg"
+import set lek1a_anketa_2 from "../assets/sets/lek1a-anketa-2.svg"
+import set lek1a_anketa_3 from "../assets/sets/lek1a-anketa-3.svg"
+import set lek1a_anketa_4 from "../assets/sets/lek1a-anketa-4.svg"
+import set lek1a_anketa_5 from "../assets/sets/lek1a-anketa-5.svg"
+import set lek1a_anketa_6 from "../assets/sets/lek1a-anketa-6.svg"
+import set lek1a_anketa_zapolnena from "../assets/sets/lek1a-anketa-zapolnena.svg"
+import set lek1a_dve_iz_desyati from "../assets/sets/lek1a-dve-iz-desyati.svg"
+import set lek1a_shema_0 from "../assets/sets/lek1a-shema-0.svg"
+import set lek1a_shema_1 from "../assets/sets/lek1a-shema-1.svg"
+import set lek1a_shema_2 from "../assets/sets/lek1a-shema-2.svg"
+import set lek1a_shema_3 from "../assets/sets/lek1a-shema-3.svg"
+import set lek1a_shema_4 from "../assets/sets/lek1a-shema-4.svg"
+import set lek1a_shema_5 from "../assets/sets/lek1a-shema-5.svg"
+import set lek1a_shema_6 from "../assets/sets/lek1a-shema-6.svg"
+import set lek1a_shema_cvet from "../assets/sets/lek1a-shema-cvet.svg"
+import set lek1a_shema_krasnye from "../assets/sets/lek1a-shema-krasnye.svg"
+import set lek1a_shema_metki from "../assets/sets/lek1a-shema-metki.svg"
+import set lek1a_telefon from "../assets/sets/lek1a-telefon.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #d4d7cf
+    monochrome: false
+    snow: 0.1
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.04
+    vignette: 0.1
+    film-flicker: 0.02
+    gate-weave: 0.3
+    film-scratch: 0.2
+    film-dust: 0.4
+}
+
+// ── 1:28.92 (3.77с) — «теперь представьте анкету»
+scene "b00" (duration: 1s, set: lek1a_anketa_0) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.6750s
+}
+
+// ── 1:32.70 (3.15с) — «графа первая — РАБОТА»
+scene "b01" (duration: 1s, set: lek1a_anketa_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.0500s
+}
+
+// ── 1:35.88 (3.77с) — «вторая — ГРАФИК»
+scene "b02" (duration: 1s, set: lek1a_anketa_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.6750s
+}
+
+// ── 1:39.69 (6.94с) — «третья — МЕСТО жительства»
+scene "b03" (duration: 1s, set: lek1a_anketa_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.8417s
+}
+
+// ── 1:46.65 (4.11с) — «четвёртая — ОТДЫХ»
+scene "b04" (duration: 1s, set: lek1a_anketa_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.0083s
+}
+
+// ── 1:50.79 (6.32с) — «пятая — ЛЮДИ вокруг»
+scene "b05" (duration: 1s, set: lek1a_anketa_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.2167s
+}
+
+// ── 1:57.12 (4.52с) — «и шестая — ТЕМП жизни»
+scene "b06" (duration: 1s, set: lek1a_anketa_6) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.4250s
+}
+
+// ── 2:01.68 (8.53с) — «у каждого эта анкета заполнена»
+scene "b07" (duration: 1s, set: lek1a_anketa_zapolnena) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 8.4150s ease-in-out
+}
+
+// ── 2:10.23 (11.94с) — «сколько граф вы заполняли сами»
+scene "b08" (duration: 1s, set: lek1a_anketa_zapolnena) {
+    transition static 0.10s
+    camera two-shot
+    let w = text("СКОЛЬКО ИЗ НИХ", 84) at (0.5, -2.0)
+    wait 0.30s
+    w moves-to (0.500, 0.845) over 0.01s
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 11.5217s ease-in-out
+}
+
+// ── 2:22.17 (9.19с) — «было ли решение»
+scene "b09" (duration: 1s, set: lek1a_anketa_zapolnena) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 9.0817s ease-in-out
+}
+
+// ── 2:31.38 (4.23с) — «две-три графы из десятка»
+scene "b10" (duration: 1s, set: lek1a_dve_iz_desyati) {
+    transition static 0.10s
+    camera two-shot
+    let w = text("2 ИЗ 10", 84) at (0.5, -2.0)
+    wait 0.22s
+    w moves-to (0.500, 0.845) over 0.01s
+    wait 3.9033s
+}
+
+// ── 2:35.61 (11.69с) — «жизнь состоит из настроек»
+scene "b11" (duration: 1s, set: lek1a_anketa_zapolnena) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 11.5817s ease-in-out
+}
+
+// ── 2:47.31 (7.65с) — «как в новом телефоне: рингтон, обои, язык»
+scene "b12" (duration: 1s, set: lek1a_telefon) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.5500s
+}
+
+// ── 2:54.99 (7.23с) — «взгляните на схему»
+scene "b13" (duration: 1s, set: lek1a_shema_0) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.1333s
+}
+
+// ── 3:02.25 (1.65с) — «работа — в офисе»
+scene "b14" (duration: 1s, set: lek1a_shema_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.5500s
+}
+
+// ── 3:03.93 (1.53с) — «график — пять на два»
+scene "b15" (duration: 1s, set: lek1a_shema_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.4250s
+}
+
+// ── 3:05.46 (1.94с) — «место — город, где родился»
+scene "b16" (duration: 1s, set: lek1a_shema_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.8417s
+}
+
+// ── 3:07.41 (1.65с) — «отдых — море в августе»
+scene "b17" (duration: 1s, set: lek1a_shema_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.5500s
+}
+
+// ── 3:09.06 (2.48с) — «люди — семья и два друга»
+scene "b18" (duration: 1s, set: lek1a_shema_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.3833s
+}
+
+// ── 3:11.55 (2.61с) — «темп — календарь забит»
+scene "b19" (duration: 1s, set: lek1a_shema_6) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.5083s
+}
+
+// ── 3:14.16 (2.44с) — «напротив каждой графы стоит метка»
+scene "b20" (duration: 1s, set: lek1a_shema_metki) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.3417s
+}
+
+// ── 3:16.62 (3.07с) — «пять красных меток — по умолчанию»
+scene "b21" (duration: 1s, set: lek1a_shema_krasnye) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.9667s
+}
+
+// ── 3:19.71 (2.69с) — «и только одна зелёная — выбранная»
+scene "b22" (duration: 1s, set: lek1a_shema_cvet) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.5917s
+}
+
