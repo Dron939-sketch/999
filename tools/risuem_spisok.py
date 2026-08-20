@@ -50,6 +50,13 @@ def _perenos(d, txt, px, shirina):
     return stroki
 
 
+def _vysota(dd, punkty, otkryto, px, shirina):
+    y = 0
+    for i, p in enumerate(punkty[:otkryto]):
+        y += max(1, len(_perenos(dd, p, px, shirina))) * (px + 8) + 24
+    return y
+
+
 def spisok(nomer, zagolovok, punkty, otkryto, imya, nomerki=True, px=48):
     """Заголовок и `otkryto` пунктов.
 
@@ -60,6 +67,13 @@ def spisok(nomer, zagolovok, punkty, otkryto, imya, nomerki=True, px=48):
     dd = ImageDraw.Draw(im)
     nadpis(dd, (LEV, 52), zagolovok, 56)
     liniya(d, (LEV, 130), (W - LEV + 40, 130), w=13)
+
+    #  КЕГЛЬ ПОДБИРАЕТСЯ ПОД ЧИСЛО ПУНКТОВ, А НЕ ЗАДАЁТСЯ НАВСЕГДА. Список
+    #  растёт по одному пункту, и заданный кегль подходит первым состояниям,
+    #  но на последнем нижний пункт уходит за край кадра — проверено глазами
+    #  на «итогах» и «плане лекции». Уменьшаем, пока не влезет.
+    while px > 26 and _vysota(dd, punkty, otkryto, px, W - LEV - 250) > H - 230:
+        px -= 3
 
     y = 196
     for i, p in enumerate(punkty):
