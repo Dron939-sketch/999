@@ -1,6 +1,6 @@
 //! Video pipeline — encodes rendered frames into an MP4 video via FFmpeg.
 
-use std::io::Write;
+use std::io::{Read, Write};
 use std::path::Path;
 use std::process::{Command, Stdio};
 
@@ -166,12 +166,35 @@ fn write_png(path: &Path, data: &[u8], width: u32, height: u32) -> Result<(), An
 // только от номера кадра. Номер поэтому и передаётся сквозным — `Koder`
 // считает отданные кадры сам, а вызывающая сторона обязана применять
 // постобработку до `push`.
+// ВЫВОД ffmpeg ВЫЧИТЫВАЕТСЯ ОТДЕЛЬНЫМ ПОТОКОМ, И ЭТО НЕ АККУРАТНОСТЬ.
+//
+// Здесь стоял взаимный клин, который убивал рендер намертво. `stderr` ffmpeg
+// заведён в трубу, а читался он только в `finish()` — через
+// `wait_with_output()`, то есть ПОСЛЕ того, как отданы все кадры. Пока ffmpeg
+// печатает мало, его вывод помещается в буфер трубы (64 КБ на Linux) и всё
+// работает. Как только вывод перевалил за буфер, ffmpeg блокируется на записи
+// в stderr, перестаёт читать stdin, а `push` блокируется на записи кадра. Оба
+// процесса засыпают навсегда: ни ошибки, ни таймаута, ни строчки в логе.
+//
+// Поймано на лекции в 174 сцены: рендер встал на двух третях и простоял пять
+// часов с 5% CPU. Диагноз виден только снаружи — `/proc/<pid>/wchan` показывал
+// `anon_pipe_write` у движка и спящий ffmpeg.
+//
+// Подлость в том, что беда НЕ зависит от длины ролика: те же 23 тысячи кадров
+// проходили раньше без единого сбоя. Зависит она от ОБЪЁМА вывода ffmpeg, а он
+// меняется от набора фильтров, версии ffmpeg и содержимого кадров. То есть
+// клин срабатывал случайно и мог не проявиться ни разу за десятки прогонов.
+//
+// Поток-сборщик читает stderr до конца всё время, пока идёт рендер, поэтому
+// буфер никогда не переполняется. Собранное отдаётся в `finish()` для
+// диагностики, если ffmpeg завершился с ошибкой.
 pub struct Koder {
     child: std::process::Child,
     png_dir: Option<std::path::PathBuf>,
     otdano: usize,
     width: u32,
     height: u32,
+    sbor_stderr: Option<std::thread::JoinHandle<Vec<u8>>>,
 }
 
 impl Koder {
@@ -245,12 +268,25 @@ impl Koder {
                 AnimError::Video(format!("failed to start ffmpeg: {e}. Is ffmpeg installed?"))
             })?;
 
+        let mut child = child;
+        //  Забираем stderr СРАЗУ и вычитываем его в фоне: см. комментарий у
+        //  структуры. Без этого рендер встаёт наглухо, когда вывод ffmpeg
+        //  переполнит буфер трубы.
+        let sbor_stderr = child.stderr.take().map(|mut e| {
+            std::thread::spawn(move || {
+                let mut buf = Vec::new();
+                let _ = e.read_to_end(&mut buf);
+                buf
+            })
+        });
+
         Ok(Koder {
             child,
             png_dir: png_dir.map(|p| p.to_path_buf()),
             otdano: 0,
             width,
             height,
+            sbor_stderr,
         })
     }
 
@@ -291,12 +327,19 @@ impl Koder {
             return Err(AnimError::Video("no frames to encode".into()));
         }
         drop(self.child.stdin.take());
-        let out = self
+        //  `wait` вместо `wait_with_output`: stderr уже забран потоком-сборщиком
+        //  и читать его тут нечем и незачем.
+        let status = self
             .child
-            .wait_with_output()
+            .wait()
             .map_err(|e| AnimError::Video(format!("ffmpeg process error: {e}")))?;
-        if !out.status.success() {
-            let stderr = String::from_utf8_lossy(&out.stderr);
+        let sobrano = self
+            .sbor_stderr
+            .take()
+            .and_then(|h| h.join().ok())
+            .unwrap_or_default();
+        if !status.success() {
+            let stderr = String::from_utf8_lossy(&sobrano);
             return Err(AnimError::Video(format!("ffmpeg failed: {stderr}")));
         }
         log::info!("Video encoded successfully: {} frames", self.otdano);

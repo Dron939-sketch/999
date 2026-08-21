@@ -29,6 +29,7 @@ render_chastyami.py — рендер длинного .anim ЧАСТЯМИ, в �
 """
 
 import argparse
+import math
 import re
 import subprocess
 import sys
@@ -55,6 +56,26 @@ def razrezat(tekst, chastej):
     return out
 
 
+def kadrov_v_kode(kod):
+    """Сколько кадров даст этот кусок: движок округляет сумму сцены ВВЕРХ."""
+    vsego = 0
+    for sc in re.split(r"^scene ", kod, flags=re.M)[1:]:
+        d = sum(float(x) for x in re.findall(r"(?:wait|over)\s+([\d.]+)s", sc))
+        d += sum(float(x) for x in re.findall(r"transition static ([\d.]+)s", sc))
+        vsego += math.ceil(d * 24 - 1e-9)
+    return vsego
+
+
+def kadrov_v_faile(p):
+    r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0",
+                        "-count_frames", "-show_entries", "stream=nb_read_frames",
+                        "-of", "csv=p=0", str(p)], capture_output=True, text=True)
+    try:
+        return int(r.stdout.strip())
+    except ValueError:
+        return -1
+
+
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("anim")
@@ -71,25 +92,41 @@ def main(argv):
     #  ЧАСТИ ЛЕЖАТ РЯДОМ С ИСХОДНИКОМ, а не во временной подпапке: импорты в
     #  .anim заданы относительно файла («../assets/...»), и любой лишний
     #  уровень вложенности их ломает — первая попытка так и упала на риге.
+    #
+    #  ГОТОВЫЕ ЧАСТИ НЕ УДАЛЯЮТСЯ И ПЕРЕИСПОЛЬЗУЮТСЯ. Контейнер сессии
+    #  откатывался шесть раз за сутки и каждый раз уносил часовой прогон
+    #  целиком. Часть — единица работы в десять минут: уцелевшие берутся
+    #  готовыми, доделывается только начатая. Целостность проверяется не
+    #  наличием файла, а числом кадров: оборванный на откате кусок короче
+    #  ожидаемого и будет перерисован.
     kuski, vsego = [], 0
     import shutil
-    tmp = src.parent / f".chasti_{src.stem}"
-    shutil.rmtree(tmp, ignore_errors=True)
-    tmp.mkdir()
+    tmp = ROOT / "videos" / f".chasti_{src.stem}"
+    tmp.mkdir(parents=True, exist_ok=True)
     try:
         for i, (kod, scen) in enumerate(chasti):
             p = src.parent / f".chast_{i:02d}.anim"
             p.write_text(kod, encoding="utf-8")
             out = tmp / f"chast_{i:02d}.mp4"
-            r = subprocess.run([str(ANIMDSL), "render", str(p), "-o", str(out)],
-                               cwd=str(src.parent), capture_output=True, text=True)
-            if r.returncode != 0 or not out.exists():
-                print(r.stdout[-2000:], r.stderr[-2000:])
-                raise SystemExit(f"часть {i} не отрендерилась")
-            kadrov = int(re.search(r"(\d+) frames", r.stdout + r.stderr).group(1))
+            zhdem = kadrov_v_kode(kod)
+            gotovo = out.exists() and kadrov_v_faile(out) == zhdem
+            if gotovo:
+                kadrov = zhdem
+                print(f"    часть {i + 1}/{len(chasti)}: уже готова, "
+                      f"кадров {kadrov} — пропускаем")
+            else:
+                r = subprocess.run([str(ANIMDSL), "render", str(p), "-o", str(out)],
+                                   cwd=str(src.parent), capture_output=True, text=True)
+                if r.returncode != 0 or not out.exists():
+                    print(r.stdout[-2000:], r.stderr[-2000:])
+                    raise SystemExit(f"часть {i} не отрендерилась")
+                kadrov = int(re.search(r"(\d+) frames", r.stdout + r.stderr).group(1))
+                if kadrov != zhdem:
+                    raise SystemExit(f"часть {i}: кадров {kadrov}, ждали {zhdem}")
             vsego += kadrov
             kuski.append(out)
-            print(f"    часть {i + 1}/{len(chasti)}: сцен {scen}, кадров {kadrov}")
+            if not gotovo:
+                print(f"    часть {i + 1}/{len(chasti)}: сцен {scen}, кадров {kadrov}")
 
         spisok = tmp / "spisok.txt"
         spisok.write_text("".join(f"file '{k}'\n" for k in kuski), encoding="utf-8")
@@ -98,7 +135,8 @@ def main(argv):
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0",
                         "-i", str(spisok), "-c", "copy", str(cel)], check=True)
     finally:
-        shutil.rmtree(tmp, ignore_errors=True)
+        #  Части ОСТАЮТСЯ: следующий запуск возьмёт их готовыми. Чистятся только
+        #  куски исходника — они пересоздаются за миллисекунды.
         for f in src.parent.glob(".chast_*.anim"):
             f.unlink()
 
