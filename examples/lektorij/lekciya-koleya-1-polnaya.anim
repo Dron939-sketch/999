@@ -56,12 +56,15 @@ import set lek1v_avtory_1 from "../assets/sets/lek1v-avtory-1.svg"
 import set lek1v_avtory_2 from "../assets/sets/lek1v-avtory-2.svg"
 import set lek1v_avtory_3 from "../assets/sets/lek1v-avtory-3.svg"
 import set lek1v_bez_rulya from "../assets/sets/lek1v-bez-rulya.svg"
+import set lek1v_bylo_reshenie from "../assets/sets/lek1v-bylo-reshenie.svg"
 import set lek1v_chavo_1 from "../assets/sets/lek1v-chavo-1.svg"
 import set lek1v_chavo_2 from "../assets/sets/lek1v-chavo-2.svg"
 import set lek1v_chavo_3 from "../assets/sets/lek1v-chavo-3.svg"
 import set lek1v_chavo_4 from "../assets/sets/lek1v-chavo-4.svg"
+import set lek1v_chestnyj from "../assets/sets/lek1v-chestnyj.svg"
 import set lek1v_diskomfort from "../assets/sets/lek1v-diskomfort.svg"
 import set lek1v_drugaya_zhizn from "../assets/sets/lek1v-drugaya-zhizn.svg"
+import set lek1v_epoha from "../assets/sets/lek1v-epoha.svg"
 import set lek1v_itogi_1 from "../assets/sets/lek1v-itogi-1.svg"
 import set lek1v_itogi_2 from "../assets/sets/lek1v-itogi-2.svg"
 import set lek1v_itogi_3 from "../assets/sets/lek1v-itogi-3.svg"
@@ -73,6 +76,7 @@ import set lek1v_maski_1 from "../assets/sets/lek1v-maski-1.svg"
 import set lek1v_maski_2 from "../assets/sets/lek1v-maski-2.svg"
 import set lek1v_maski_3 from "../assets/sets/lek1v-maski-3.svg"
 import set lek1v_metod from "../assets/sets/lek1v-metod.svg"
+import set lek1v_ne_s_kem from "../assets/sets/lek1v-ne-s-kem.svg"
 import set lek1v_ne_zla from "../assets/sets/lek1v-ne-zla.svg"
 import set lek1v_nedeli from "../assets/sets/lek1v-nedeli.svg"
 import set lek1v_obeschaniya_1 from "../assets/sets/lek1v-obeschaniya-1.svg"
@@ -93,9 +97,11 @@ import set lek1v_plan_3 from "../assets/sets/lek1v-plan-3.svg"
 import set lek1v_plan_4 from "../assets/sets/lek1v-plan-4.svg"
 import set lek1v_plan_5 from "../assets/sets/lek1v-plan-5.svg"
 import set lek1v_plan_6 from "../assets/sets/lek1v-plan-6.svg"
+import set lek1v_posle_resheniya from "../assets/sets/lek1v-posle-resheniya.svg"
 import set lek1v_priznaki_1 from "../assets/sets/lek1v-priznaki-1.svg"
 import set lek1v_priznaki_2 from "../assets/sets/lek1v-priznaki-2.svg"
 import set lek1v_priznaki_3 from "../assets/sets/lek1v-priznaki-3.svg"
+import set lek1v_s_toskoj from "../assets/sets/lek1v-s-toskoj.svg"
 import set lek1v_sam_1 from "../assets/sets/lek1v-sam-1.svg"
 import set lek1v_sam_2 from "../assets/sets/lek1v-sam-2.svg"
 import set lek1v_sam_3 from "../assets/sets/lek1v-sam-3.svg"
@@ -104,7 +110,9 @@ import set lek1v_sam_5 from "../assets/sets/lek1v-sam-5.svg"
 import set lek1v_sam_6 from "../assets/sets/lek1v-sam-6.svg"
 import set lek1v_spasibo from "../assets/sets/lek1v-spasibo.svg"
 import set lek1v_sravnenie from "../assets/sets/lek1v-sravnenie.svg"
+import set lek1v_sto_voskresenij from "../assets/sets/lek1v-sto-voskresenij.svg"
 import set lek1v_toro_god from "../assets/sets/lek1v-toro-god.svg"
+import set lek1v_uzhin from "../assets/sets/lek1v-uzhin.svg"
 import set lek1v_vopros_gde from "../assets/sets/lek1v-vopros-gde.svg"
 import set lek1v_vopros_vybiral from "../assets/sets/lek1v-vopros-vybiral.svg"
 import set lek1v_vozrazhenie from "../assets/sets/lek1v-vozrazhenie.svg"
@@ -250,18 +258,18 @@ scene "b014" (duration: 1s, set: lek1v_plan_4) {
     wait 8.1750s
 }
 
-// ── 1:20.58 (3.98с) — «три признака унаследованного образа жизни»
+// ── 1:20.58 (4.52с) — «три признака унаследованного образа жизни»
 scene "b015" (duration: 1s, set: lek1v_plan_5) {
     transition static 0.10s
     camera two-shot
-    wait 3.8833s
+    wait 4.4250s
 }
 
-// ── 1:24.60 (4.32с) — «и что мы будем делать в курсе»
+// ── 1:25.13 (3.77с) — «и что мы будем делать в курсе»
 scene "b016" (duration: 1s, set: lek1v_plan_6) {
     transition static 0.10s
     camera two-shot
-    wait 4.2167s
+    wait 3.6750s
 }
 
 // ── 1:28.92 (3.77с) — «теперь представьте анкету»
@@ -333,7 +341,7 @@ scene "b025" (duration: 1s, set: lek1a_anketa_zapolnena) {
 }
 
 // ── 2:22.17 (9.19с) — «было ли решение»
-scene "b026" (duration: 1s, set: lek1a_anketa_zapolnena) {
+scene "b026" (duration: 1s, set: lek1v_bylo_reshenie) {
     transition static 0.10s
     camera two-shot
     camera pan-to (0.500, 0.452) over 0.01s
@@ -459,14 +467,14 @@ scene "b042" (duration: 1s, set: lek1_semya) {
 }
 
 // ── 3:47.91 (7.61с) — «отпуск выглядит так, как в детстве»
-scene "b043" (duration: 1s, set: lek1_semya) {
+scene "b043" (duration: 1s, set: lek1v_obraz_2) {
     transition static 0.10s
     camera two-shot
     wait 7.5083s
 }
 
 // ── 3:55.53 (5.73с) — «вы обнаружите это в доме, где ужинают в другое время»
-scene "b044" (duration: 1s, set: lek1_semya) {
+scene "b044" (duration: 1s, set: lek1v_uzhin) {
     transition static 0.10s
     camera two-shot
     wait 5.6333s
@@ -487,7 +495,7 @@ scene "b046" (duration: 1s, set: lek1_sreda) {
 }
 
 // ── 4:11.34 (5.65с) — «статистика окружения, ставшая невидимой»
-scene "b047" (duration: 1s, set: lek1_sreda) {
+scene "b047" (duration: 1s, set: lek1v_ne_s_kem) {
     transition static 0.10s
     camera two-shot
     wait 5.5500s
@@ -508,7 +516,7 @@ scene "b049" (duration: 1s, set: lek1_pokolenie) {
 }
 
 // ── 4:27.36 (9.90с) — «настройки эпохи меняются от десятилетия к десятилетию»
-scene "b050" (duration: 1s, set: lek1_pokolenie) {
+scene "b050" (duration: 1s, set: lek1v_epoha) {
     transition static 0.10s
     camera two-shot
     camera pan-to (0.500, 0.452) over 0.01s
@@ -631,7 +639,7 @@ scene "b066" (duration: 1s, set: lek1v_obosnovanie) {
 }
 
 // ── 6:15.99 (10.40с) — «объяснение построено после решения»
-scene "b067" (duration: 1s, set: lek1v_obosnovanie) {
+scene "b067" (duration: 1s, set: lek1v_posle_resheniya) {
     transition static 0.10s
     camera two-shot
     camera pan-to (0.500, 0.452) over 0.01s
@@ -822,14 +830,14 @@ scene "b092" (duration: 1s, set: lek1_zavist) {
 }
 
 // ── 8:50.97 (6.69с) — «на выбранное смотрите с интересом, на чужое — с тоской»
-scene "b093" (duration: 1s, set: lek1_zavist) {
+scene "b093" (duration: 1s, set: lek1v_s_toskoj) {
     transition static 0.10s
     camera two-shot
     wait 6.5917s
 }
 
 // ── 8:57.69 (7.69с) — «зависть без плана — самый честный индикатор»
-scene "b094" (duration: 1s, set: lek1_zavist) {
+scene "b094" (duration: 1s, set: lek1v_chestnyj) {
     transition static 0.10s
     camera two-shot
     wait 7.5917s
@@ -857,7 +865,7 @@ scene "b097" (duration: 1s, set: lek1_voskresnyj_vecher) {
 }
 
 // ── 9:20.55 (5.27с) — «одно воскресенье не значит, сто подряд — данные»
-scene "b098" (duration: 1s, set: lek1_voskresnyj_vecher) {
+scene "b098" (duration: 1s, set: lek1v_sto_voskresenij) {
     transition static 0.10s
     camera two-shot
     wait 5.1750s
@@ -1356,7 +1364,7 @@ scene "b167" (duration: 1s, set: lek1v_kniga_1) {
 }
 
 // ── 15:49.20 (3.15с) — «главное в книге не ответы, а метод»
-scene "b168" (duration: 1s, set: lek1v_kniga_1) {
+scene "b168" (duration: 1s, set: lek1v_metod) {
     transition static 0.10s
     camera two-shot
     wait 3.0500s
