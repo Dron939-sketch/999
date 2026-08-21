@@ -258,18 +258,18 @@ scene "b014" (duration: 1s, set: lek1v_plan_4) {
     wait 8.1750s
 }
 
-// ── 1:20.58 (4.52с) — «три признака унаследованного образа жизни»
+// ── 1:20.58 (4.11с) — «три признака унаследованного образа жизни»
 scene "b015" (duration: 1s, set: lek1v_plan_5) {
     transition static 0.10s
     camera two-shot
-    wait 4.4250s
+    wait 4.0083s
 }
 
-// ── 1:25.13 (3.77с) — «и что мы будем делать в курсе»
+// ── 1:24.69 (4.23с) — «и что мы будем делать в курсе»
 scene "b016" (duration: 1s, set: lek1v_plan_6) {
     transition static 0.10s
     camera two-shot
-    wait 3.6750s
+    wait 4.1333s
 }
 
 // ── 1:28.92 (3.77с) — «теперь представьте анкету»
@@ -374,18 +374,18 @@ scene "b029" (duration: 1s, set: lek1a_telefon) {
     wait 7.5500s
 }
 
-// ── 2:54.99 (7.23с) — «взгляните на схему»
+// ── 2:54.99 (7.36с) — «взгляните на схему»
 scene "b030" (duration: 1s, set: lek1a_shema_0) {
     transition static 0.10s
     camera two-shot
-    wait 7.1333s
+    wait 7.2583s
 }
 
-// ── 3:02.25 (1.65с) — «работа — в офисе»
+// ── 3:02.37 (1.53с) — «работа — в офисе»
 scene "b031" (duration: 1s, set: lek1a_shema_1) {
     transition static 0.10s
     camera two-shot
-    wait 1.5500s
+    wait 1.4250s
 }
 
 // ── 3:03.93 (1.53с) — «график — пять на два»
@@ -430,19 +430,19 @@ scene "b037" (duration: 1s, set: lek1a_shema_metki) {
     wait 2.3417s
 }
 
-// ── 3:16.62 (3.07с) — «пять красных меток — по умолчанию»
+// ── 3:16.62 (3.19с) — «пять красных меток — по умолчанию»
 scene "b038" (duration: 1s, set: lek1a_shema_krasnye) {
     transition static 0.10s
     camera two-shot
-    wait 2.9667s
+    wait 3.0917s
 }
 
-// ── 3:19.71 (15.07с) — «и только одна зелёная — выбранная»
+// ── 3:19.83 (14.94с) — «и только одна зелёная — выбранная»
 scene "b039" (duration: 1s, set: lek1a_shema_cvet) {
     transition static 0.10s
     camera two-shot
     camera pan-to (0.500, 0.452) over 0.01s
-    camera pan-to (0.500, 0.548) over 14.9567s ease-in-out
+    camera pan-to (0.500, 0.548) over 14.8317s ease-in-out
 }
 
 // ── 3:34.80 (3.90с) — «у каждой незаполненной графы есть автор»
@@ -501,18 +501,18 @@ scene "b047" (duration: 1s, set: lek1v_ne_s_kem) {
     wait 5.5500s
 }
 
-// ── 4:17.01 (1.53с) — «третий автор — поколение»
+// ── 4:17.01 (1.65с) — «третий автор — поколение»
 scene "b048" (duration: 1s, set: lek1v_avtory_3) {
     transition static 0.10s
     camera two-shot
-    wait 1.4250s
+    wait 1.5500s
 }
 
-// ── 4:18.57 (8.78с) — «ипотека, высшее, дача — ступени эпохи»
+// ── 4:18.69 (8.65с) — «ипотека, высшее, дача — ступени эпохи»
 scene "b049" (duration: 1s, set: lek1_pokolenie) {
     transition static 0.10s
     camera two-shot
-    wait 8.6750s
+    wait 8.5500s
 }
 
 // ── 4:27.36 (9.90с) — «настройки эпохи меняются от десятилетия к десятилетию»
@@ -565,19 +565,19 @@ scene "b056" (duration: 1s, set: lek1_vse_ryadom) {
     wait 4.3833s
 }
 
-// ── 5:12.69 (9.78с) — «если бы жизнь была не моя — я бы чувствовал»
+// ── 5:12.69 (9.90с) — «если бы жизнь была не моя — я бы чувствовал»
 scene "b057" (duration: 1s, set: lek1v_vozrazhenie) {
     transition static 0.10s
     camera two-shot
     camera pan-to (0.500, 0.452) over 0.01s
-    camera pan-to (0.500, 0.548) over 9.6650s ease-in-out
+    camera pan-to (0.500, 0.548) over 9.7900s ease-in-out
 }
 
-// ── 5:22.50 (2.90с) — «есть три механизма маскировки»
+// ── 5:22.62 (2.77с) — «есть три механизма маскировки»
 scene "b058" (duration: 1s, set: lek1v_maski_1) {
     transition static 0.10s
     camera two-shot
-    wait 2.8000s
+    wait 2.6750s
 }
 
 // ── 5:25.41 (5.77с) — «первый: привычное вообще не ощущается»
@@ -695,22 +695,18 @@ scene "b074" (duration: 1s, set: lek1_spisok_toro) {
     wait 5.8417s
 }
 
-// ── 7:06.66 (5.86с) — «сколько нужно работать, чтобы прокормиться»
+// ── 7:06.66 (5.98с) — «сколько нужно работать, чтобы прокормиться»
 scene "b075" (duration: 1s, set: lek1v_nedeli) {
     transition static 0.10s
     camera two-shot
-    wait 5.7583s
+    wait 5.8833s
 }
 
-// ── 7:12.54 (2.15с) — «около шести недель в году»
+// ── 7:12.66 (2.02с) — «около шести недель в году»
 scene "b076" (duration: 1s, set: lek1v_nedeli) {
     transition static 0.10s
     camera two-shot
-    let w076 = text("6 НЕДЕЛЬ", 64) at (0.5, -2.0)
-    wait 0.33s
-    w076 moves-to (0.500, 0.800) over 0.01s
-    wait 1.7000s
-    w076 moves-to (0.500, -2.000) over 0.01s
+    wait 1.9250s
 }
 
 // ── 7:14.69 (3.94с) — «остальное уходило на оплату чужих настроек»
@@ -763,19 +759,19 @@ scene "b083" (duration: 1s, set: lek1_spisok_toro) {
     wait 2.2583s
 }
 
-// ── 7:49.17 (11.65с) — «мы займёмся ровно этим, только без хижины»
+// ── 7:49.17 (11.78с) — «мы займёмся ровно этим, только без хижины»
 scene "b084" (duration: 1s, set: lek1v_plan_6) {
     transition static 0.10s
     camera two-shot
     camera pan-to (0.500, 0.452) over 0.01s
-    camera pan-to (0.500, 0.548) over 11.5400s ease-in-out
+    camera pan-to (0.500, 0.548) over 11.6650s ease-in-out
 }
 
-// ── 8:00.84 (3.65с) — «есть три признака»
+// ── 8:00.96 (3.52с) — «есть три признака»
 scene "b085" (duration: 1s, set: lek1v_priznaki_1) {
     transition static 0.10s
     camera two-shot
-    wait 3.5500s
+    wait 3.4250s
 }
 
 // ── 8:04.50 (2.94с) — «первый — ответ «так все живут»»
@@ -1272,18 +1268,18 @@ scene "b154" (duration: 1s, set: lek1v_itogi_5) {
     wait 4.6333s
 }
 
-// ── 14:36.93 (5.48с) — «даст карту осей, цену позиций, способ примерять»
+// ── 14:36.93 (5.61с) — «даст карту осей, цену позиций, способ примерять»
 scene "b155" (duration: 1s, set: lek1v_osi_5) {
     transition static 0.10s
     camera two-shot
-    wait 5.3833s
+    wait 5.5083s
 }
 
-// ── 14:42.42 (8.94с) — «а теперь вопросы, над которыми стоит подумать»
+// ── 14:42.54 (8.82с) — «а теперь вопросы, над которыми стоит подумать»
 scene "b156" (duration: 1s, set: lek1v_sam_1) {
     transition static 0.10s
     camera two-shot
-    wait 8.8417s
+    wait 8.7167s
 }
 
 // ── 14:51.39 (1.65с) — «какая графа удивила»

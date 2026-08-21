@@ -29,6 +29,7 @@ render_chastyami.py — рендер длинного .anim ЧАСТЯМИ, в �
 """
 
 import argparse
+import hashlib
 import math
 import re
 import subprocess
@@ -108,8 +109,17 @@ def main(argv):
             p = src.parent / f".chast_{i:02d}.anim"
             p.write_text(kod, encoding="utf-8")
             out = tmp / f"chast_{i:02d}.mp4"
+            #  ЧИСЛА КАДРОВ МАЛО — НУЖЕН ОТПЕЧАТОК ИСХОДНИКА. Правка, сдвигающая
+            #  границу между двумя сценами, забирает кадры у одной и отдаёт
+            #  другой: сумма части не меняется, и проверка по числу кадров
+            #  объявила бы устаревший кусок готовым. Рядом с частью лежит хеш
+            #  её кода.
             zhdem = kadrov_v_kode(kod)
-            gotovo = out.exists() and kadrov_v_faile(out) == zhdem
+            otpechatok = hashlib.sha256(kod.encode("utf-8")).hexdigest()
+            marker = out.with_suffix(".sha")
+            gotovo = (out.exists() and marker.exists()
+                      and marker.read_text().strip() == otpechatok
+                      and kadrov_v_faile(out) == zhdem)
             if gotovo:
                 kadrov = zhdem
                 print(f"    часть {i + 1}/{len(chasti)}: уже готова, "
@@ -123,6 +133,7 @@ def main(argv):
                 kadrov = int(re.search(r"(\d+) frames", r.stdout + r.stderr).group(1))
                 if kadrov != zhdem:
                     raise SystemExit(f"часть {i}: кадров {kadrov}, ждали {zhdem}")
+                marker.write_text(otpechatok)
             vsego += kadrov
             kuski.append(out)
             if not gotovo:
