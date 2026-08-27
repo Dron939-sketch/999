@@ -110,10 +110,56 @@ def credits_len(path):
     return 0.0 if LIP.search(s[last.end():]) else float(last.group(2))
 
 
+def molchalivye_shvy(path):
+    """Номера реплик, ПОСЛЕ которых стоит молчаливый план.
+
+    ТА ЖЕ ЛОГИКА, ЧТО У `credits_len`, только не в хвосте. Сцена без единого
+    `//lip` — это не дыра, а КАДР: там происходит событие, на которое зритель
+    смотрит, просто событие беззвучное. В хвосте гейт это уже признаёт (печать
+    с логотипом), а в середине ролика — нет, и молчаливый план ловился как
+    брак.
+
+    Разница между дырой и планом видна структурно, списка имён вести не нужно.
+    Дыра набегает САМА: сцена добивается застывшим кадром до объявленной
+    длительности, и в тексте сценария ей ничего не соответствует. Молчаливый
+    план НАПИСАН РУКОЙ — это отдельная сцена, у неё своя локация и своя камера,
+    и в раскадровке у неё своя строка.
+
+    Пример, ради которого проверка и появилась: ролик 27 «Парус», запрет студии
+    дословно — «Пауза на 00:28 несокращаемая. Она отделяет обвинение от
+    разворота. Подрежете — ролик останется упрёком.» Три секунды тишины на
+    замершем кадре: гейт называл их дырой и был бы прав в общем случае, но
+    здесь тишина — предмет, а не отход.
+    """
+    posle = set()
+    nomer = 0
+    for _imya, _dlit, govorit in scenes(path):
+        if govorit:
+            nomer += 1
+        elif nomer:
+            posle.add(nomer)      # молчаливый план ПОСЛЕ говорящей сцены N
+    return posle
+
+
 def blocks(path):
     r = subprocess.run([str(ENGINE), "timing", str(path)],
                        capture_output=True, check=True)
     return json.loads(r.stdout.decode())
+
+
+def _scena_repliki(path, nomer_repliki):
+    """Порядковый номер ГОВОРЯЩЕЙ сцены, в которой лежит реплика с таким //lip."""
+    s = Path(path).read_text(encoding="utf-8")
+    m = list(SCENE.finditer(s))
+    n = 0
+    for i, sc in enumerate(m):
+        body = s[sc.end():m[i + 1].start() if i + 1 < len(m) else len(s)]
+        lips = [int(x) for x in re.findall(r"^\s*//lip\s+(\d+)", body, re.M)]
+        if lips:
+            n += 1
+            if nomer_repliki in lips:
+                return n
+    return -1
 
 
 def check(path):
@@ -122,8 +168,21 @@ def check(path):
     if len(b) < 2:
         return [], 0.0
     bad = []
+    #  Сцены без реплик считаем по порядку: молчаливый план между говорящими
+    #  сценами — содержимое, а не тишина (см. `molchalivye_shvy`).
+    shvy, scen_reply = molchalivye_shvy(path), []
+    n = 0
+    for _imya, _d, govorit in scenes(path):
+        if govorit:
+            n += 1
+        scen_reply.append(n)
     for p, q in zip(b, b[1:]):
         gap = q["start"] - p["end"]
+        #  Реплики нумеруются подряд; сцена, в которой лежит реплика p, — та,
+        #  чей счётчик равен её номеру. Шов помечен молчаливым, если сразу за
+        #  этой сценой стоит сцена без реплик.
+        if gap > GAP_MAX and _scena_repliki(path, p["index"]) in shvy:
+            continue
         if gap > GAP_MAX:
             bad.append((p["index"], gap,
                         "сцена длиннее содержимого или ветка do{} длиннее реплики"))
