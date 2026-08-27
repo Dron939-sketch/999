@@ -140,7 +140,10 @@ HOLST_W, HOLST_H = 1760, 990
 def sohranit(im, imya):
     import base64
     import os
-    pole = Image.new("RGB", (HOLST_W, HOLST_H), BUMAGA)
+    # Поле обычно цвета бумаги, но кадру, залитому тушью, светлая кайма вокруг
+    # превращает «чёрный экран» в заплатку, как только камера пойдёт на проезд.
+    # Рисунок может назвать свой цвет поля сам.
+    pole = Image.new("RGB", (HOLST_W, HOLST_H), getattr(im, "_zaliv_holsta", BUMAGA))
     pole.paste(im, ((HOLST_W - im.width) // 2, (HOLST_H - im.height) // 2))
     im = pole
     p = f"examples/assets/sets/{imya}.png"
