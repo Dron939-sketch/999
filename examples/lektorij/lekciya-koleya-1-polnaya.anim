@@ -1,0 +1,1413 @@
+// ==========================================================================
+//  ВИДЕОРЯД ЛЕКЦИИ 1 «Чью жизнь вы живёте» — ЦЕЛИКОМ.
+//  Собран tools/lekciya1_polnaya.py — РУКАМИ НЕ ПРАВИТЬ.
+//
+//  Каждый кадр стоит на СВОЁМ СЛОВЕ из расшифровки записи
+//  (lekciya-koleya-1-slova.json). Первая сборка вешала кадр на раздел,
+//  и разделы стояли не на месте: она считалась по долям слов СТАТЬИ,
+//  а запись — устная лекция. «Откуда настройки» уехало на минуту.
+//
+//  monochrome ВЫКЛЮЧЕН: запись называет цвет меток («пять красных»,
+//  «одна зелёная»), и фильтр стёр бы сказанное вслух.
+// ==========================================================================
+import character freeman from "../assets/characters/freeman_rig"
+import set komnata from "../assets/sets/koleya-komnata.svg"
+import set lek1_chasy from "../assets/sets/lek1-chasy.svg"
+import set lek1_chavo from "../assets/sets/lek1-chavo.svg"
+import set lek1_chto_dalshe from "../assets/sets/lek1-chto-dalshe.svg"
+import set lek1_fundament from "../assets/sets/lek1-fundament.svg"
+import set lek1_hizhina from "../assets/sets/lek1-hizhina.svg"
+import set lek1_knigi from "../assets/sets/lek1-knigi.svg"
+import set lek1_obychnaya_zhizn from "../assets/sets/lek1-obychnaya-zhizn.svg"
+import set lek1_pokolenie from "../assets/sets/lek1-pokolenie.svg"
+import set lek1_ringtone from "../assets/sets/lek1-ringtone.svg"
+import set lek1_semya from "../assets/sets/lek1-semya.svg"
+import set lek1_shag from "../assets/sets/lek1-shag.svg"
+import set lek1_shest_osej from "../assets/sets/lek1-shest-osej.svg"
+import set lek1_spisok_toro from "../assets/sets/lek1-spisok-toro.svg"
+import set lek1_sreda from "../assets/sets/lek1-sreda.svg"
+import set lek1_tak_vse from "../assets/sets/lek1-tak-vse.svg"
+import set lek1_vesy from "../assets/sets/lek1-vesy.svg"
+import set lek1_voskresnyj_vecher from "../assets/sets/lek1-voskresnyj-vecher.svg"
+import set lek1_vse_ryadom from "../assets/sets/lek1-vse-ryadom.svg"
+import set lek1_zavist from "../assets/sets/lek1-zavist.svg"
+import set lek1a_anketa_0 from "../assets/sets/lek1a-anketa-0.svg"
+import set lek1a_anketa_1 from "../assets/sets/lek1a-anketa-1.svg"
+import set lek1a_anketa_2 from "../assets/sets/lek1a-anketa-2.svg"
+import set lek1a_anketa_3 from "../assets/sets/lek1a-anketa-3.svg"
+import set lek1a_anketa_4 from "../assets/sets/lek1a-anketa-4.svg"
+import set lek1a_anketa_5 from "../assets/sets/lek1a-anketa-5.svg"
+import set lek1a_anketa_6 from "../assets/sets/lek1a-anketa-6.svg"
+import set lek1a_anketa_zapolnena from "../assets/sets/lek1a-anketa-zapolnena.svg"
+import set lek1a_dve_iz_desyati from "../assets/sets/lek1a-dve-iz-desyati.svg"
+import set lek1a_shema_0 from "../assets/sets/lek1a-shema-0.svg"
+import set lek1a_shema_1 from "../assets/sets/lek1a-shema-1.svg"
+import set lek1a_shema_2 from "../assets/sets/lek1a-shema-2.svg"
+import set lek1a_shema_3 from "../assets/sets/lek1a-shema-3.svg"
+import set lek1a_shema_4 from "../assets/sets/lek1a-shema-4.svg"
+import set lek1a_shema_5 from "../assets/sets/lek1a-shema-5.svg"
+import set lek1a_shema_6 from "../assets/sets/lek1a-shema-6.svg"
+import set lek1a_shema_cvet from "../assets/sets/lek1a-shema-cvet.svg"
+import set lek1a_shema_krasnye from "../assets/sets/lek1a-shema-krasnye.svg"
+import set lek1a_shema_metki from "../assets/sets/lek1a-shema-metki.svg"
+import set lek1a_telefon from "../assets/sets/lek1a-telefon.svg"
+import set lek1v_avtor from "../assets/sets/lek1v-avtor.svg"
+import set lek1v_avtory_1 from "../assets/sets/lek1v-avtory-1.svg"
+import set lek1v_avtory_2 from "../assets/sets/lek1v-avtory-2.svg"
+import set lek1v_avtory_3 from "../assets/sets/lek1v-avtory-3.svg"
+import set lek1v_bez_rulya from "../assets/sets/lek1v-bez-rulya.svg"
+import set lek1v_bylo_reshenie from "../assets/sets/lek1v-bylo-reshenie.svg"
+import set lek1v_chavo_1 from "../assets/sets/lek1v-chavo-1.svg"
+import set lek1v_chavo_2 from "../assets/sets/lek1v-chavo-2.svg"
+import set lek1v_chavo_3 from "../assets/sets/lek1v-chavo-3.svg"
+import set lek1v_chavo_4 from "../assets/sets/lek1v-chavo-4.svg"
+import set lek1v_chestnyj from "../assets/sets/lek1v-chestnyj.svg"
+import set lek1v_diskomfort from "../assets/sets/lek1v-diskomfort.svg"
+import set lek1v_drugaya_zhizn from "../assets/sets/lek1v-drugaya-zhizn.svg"
+import set lek1v_epoha from "../assets/sets/lek1v-epoha.svg"
+import set lek1v_itogi_1 from "../assets/sets/lek1v-itogi-1.svg"
+import set lek1v_itogi_2 from "../assets/sets/lek1v-itogi-2.svg"
+import set lek1v_itogi_3 from "../assets/sets/lek1v-itogi-3.svg"
+import set lek1v_itogi_4 from "../assets/sets/lek1v-itogi-4.svg"
+import set lek1v_itogi_5 from "../assets/sets/lek1v-itogi-5.svg"
+import set lek1v_kniga_1 from "../assets/sets/lek1v-kniga-1.svg"
+import set lek1v_kniga_2 from "../assets/sets/lek1v-kniga-2.svg"
+import set lek1v_maski_1 from "../assets/sets/lek1v-maski-1.svg"
+import set lek1v_maski_2 from "../assets/sets/lek1v-maski-2.svg"
+import set lek1v_maski_3 from "../assets/sets/lek1v-maski-3.svg"
+import set lek1v_metod from "../assets/sets/lek1v-metod.svg"
+import set lek1v_ne_s_kem from "../assets/sets/lek1v-ne-s-kem.svg"
+import set lek1v_ne_zla from "../assets/sets/lek1v-ne-zla.svg"
+import set lek1v_nedeli from "../assets/sets/lek1v-nedeli.svg"
+import set lek1v_obeschaniya_1 from "../assets/sets/lek1v-obeschaniya-1.svg"
+import set lek1v_obeschaniya_2 from "../assets/sets/lek1v-obeschaniya-2.svg"
+import set lek1v_obosnovanie from "../assets/sets/lek1v-obosnovanie.svg"
+import set lek1v_obraz_1 from "../assets/sets/lek1v-obraz-1.svg"
+import set lek1v_obraz_2 from "../assets/sets/lek1v-obraz-2.svg"
+import set lek1v_obraz_3 from "../assets/sets/lek1v-obraz-3.svg"
+import set lek1v_obraz_4 from "../assets/sets/lek1v-obraz-4.svg"
+import set lek1v_osi_1 from "../assets/sets/lek1v-osi-1.svg"
+import set lek1v_osi_2 from "../assets/sets/lek1v-osi-2.svg"
+import set lek1v_osi_3 from "../assets/sets/lek1v-osi-3.svg"
+import set lek1v_osi_4 from "../assets/sets/lek1v-osi-4.svg"
+import set lek1v_osi_5 from "../assets/sets/lek1v-osi-5.svg"
+import set lek1v_plan_1 from "../assets/sets/lek1v-plan-1.svg"
+import set lek1v_plan_2 from "../assets/sets/lek1v-plan-2.svg"
+import set lek1v_plan_3 from "../assets/sets/lek1v-plan-3.svg"
+import set lek1v_plan_4 from "../assets/sets/lek1v-plan-4.svg"
+import set lek1v_plan_5 from "../assets/sets/lek1v-plan-5.svg"
+import set lek1v_plan_6 from "../assets/sets/lek1v-plan-6.svg"
+import set lek1v_posle_resheniya from "../assets/sets/lek1v-posle-resheniya.svg"
+import set lek1v_priznaki_1 from "../assets/sets/lek1v-priznaki-1.svg"
+import set lek1v_priznaki_2 from "../assets/sets/lek1v-priznaki-2.svg"
+import set lek1v_priznaki_3 from "../assets/sets/lek1v-priznaki-3.svg"
+import set lek1v_s_toskoj from "../assets/sets/lek1v-s-toskoj.svg"
+import set lek1v_sam_1 from "../assets/sets/lek1v-sam-1.svg"
+import set lek1v_sam_2 from "../assets/sets/lek1v-sam-2.svg"
+import set lek1v_sam_3 from "../assets/sets/lek1v-sam-3.svg"
+import set lek1v_sam_4 from "../assets/sets/lek1v-sam-4.svg"
+import set lek1v_sam_5 from "../assets/sets/lek1v-sam-5.svg"
+import set lek1v_sam_6 from "../assets/sets/lek1v-sam-6.svg"
+import set lek1v_spasibo from "../assets/sets/lek1v-spasibo.svg"
+import set lek1v_sravnenie from "../assets/sets/lek1v-sravnenie.svg"
+import set lek1v_sto_voskresenij from "../assets/sets/lek1v-sto-voskresenij.svg"
+import set lek1v_toro_god from "../assets/sets/lek1v-toro-god.svg"
+import set lek1v_uzhin from "../assets/sets/lek1v-uzhin.svg"
+import set lek1v_vopros_gde from "../assets/sets/lek1v-vopros-gde.svg"
+import set lek1v_vopros_vybiral from "../assets/sets/lek1v-vopros-vybiral.svg"
+import set lek1v_vozrazhenie from "../assets/sets/lek1v-vozrazhenie.svg"
+import set lek1v_vycherk_1 from "../assets/sets/lek1v-vycherk-1.svg"
+import set lek1v_vycherk_3 from "../assets/sets/lek1v-vycherk-3.svg"
+import set lek1v_vycherk_5 from "../assets/sets/lek1v-vycherk-5.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #d4d7cf
+    monochrome: false
+    snow: 0.1
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.04
+    vignette: 0.1
+    film-flicker: 0.02
+    gate-weave: 0.3
+    film-scratch: 0.2
+    film-dust: 0.4
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+// ── 0:00.09 (7.73с) — «здравствуйте, с вами Фреди»
+scene "b000_shov" (duration: 1s, set: komnata) {
+    transition static 0.10s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.60s
+    freeman pose "vzglyad"
+    wait 1.40s
+    freeman pose "point"
+    wait 1.40s
+    freeman pose "calm"
+    wait 4.2233s
+}
+
+// ── 0:07.84 (12.61с) — «что в повседневности ваш выбор, а что настройки»
+scene "b001" (duration: 1s, set: lek1_obychnaya_zhizn) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 12.4983s ease-in-out
+}
+
+// ── 0:20.46 (11.19с) — «увидеть свою жизнь свежим взглядом»
+scene "b002" (duration: 1s, set: lek1_shest_osej) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 11.0817s ease-in-out
+}
+
+// ── 0:31.68 (1.94с) — «работа пять дней в неделю»
+scene "b003" (duration: 1s, set: lek1v_obraz_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.8417s
+}
+
+// ── 0:33.63 (1.86с) — «отпуск в августе у моря»
+scene "b004" (duration: 1s, set: lek1v_obraz_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.7583s
+}
+
+// ── 0:35.49 (1.44с) — «квартира в ипотеку»
+scene "b005" (duration: 1s, set: lek1v_obraz_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.3417s
+}
+
+// ── 0:36.96 (1.65с) — «шашлыки по субботам»
+scene "b006" (duration: 1s, set: lek1v_obraz_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.5500s
+}
+
+// ── 0:38.64 (6.52с) — «обычная жизнь. может быть, даже ваша»
+scene "b007" (duration: 1s, set: lek1v_obraz_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.4250s
+}
+
+// ── 0:45.18 (3.57с) — «кто из вас всё это выбирал»
+scene "b008" (duration: 1s, set: lek1v_vopros_vybiral) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.4667s
+}
+
+// ── 0:48.75 (3.77с) — «я не спрашиваю, плохо ли вы живёте»
+scene "b009" (duration: 1s, set: lek1v_vopros_vybiral) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.6750s
+}
+
+// ── 0:52.53 (6.98с) — «вопрос в другом: где здесь ваше решение»
+scene "b010" (duration: 1s, set: lek1v_vopros_gde) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.8833s
+}
+
+// ── 0:59.52 (5.48с) — «проведём мысленный эксперимент»
+scene "b011" (duration: 1s, set: lek1v_plan_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.3833s
+}
+
+// ── 1:05.04 (3.98с) — «откуда берётся жизнь, которую не выбирали»
+scene "b012" (duration: 1s, set: lek1v_plan_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.8833s
+}
+
+// ── 1:09.03 (3.23с) — «почему чужая колея не ощущается чужой»
+scene "b013" (duration: 1s, set: lek1v_plan_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.1333s
+}
+
+// ── 1:12.30 (8.28с) — «Торо и Уолден: первый аудит настроек»
+scene "b014" (duration: 1s, set: lek1v_plan_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 8.1750s
+}
+
+// ── 1:20.58 (4.11с) — «три признака унаследованного образа жизни»
+scene "b015" (duration: 1s, set: lek1v_plan_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.0083s
+}
+
+// ── 1:24.69 (4.23с) — «и что мы будем делать в курсе»
+scene "b016" (duration: 1s, set: lek1v_plan_6) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.1333s
+}
+
+// ── 1:28.92 (3.77с) — «теперь представьте анкету»
+scene "b017" (duration: 1s, set: lek1a_anketa_0) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.6750s
+}
+
+// ── 1:32.70 (3.15с) — «графа первая — работа»
+scene "b018" (duration: 1s, set: lek1a_anketa_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.0500s
+}
+
+// ── 1:35.88 (3.77с) — «вторая — график»
+scene "b019" (duration: 1s, set: lek1a_anketa_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.6750s
+}
+
+// ── 1:39.69 (6.94с) — «третья — место жительства»
+scene "b020" (duration: 1s, set: lek1a_anketa_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.8417s
+}
+
+// ── 1:46.65 (4.11с) — «четвёртая — отдых»
+scene "b021" (duration: 1s, set: lek1a_anketa_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.0083s
+}
+
+// ── 1:50.79 (6.32с) — «пятая — люди вокруг»
+scene "b022" (duration: 1s, set: lek1a_anketa_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.2167s
+}
+
+// ── 1:57.12 (4.52с) — «и шестая — темп жизни»
+scene "b023" (duration: 1s, set: lek1a_anketa_6) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.4250s
+}
+
+// ── 2:01.68 (8.53с) — «у каждого эта анкета заполнена»
+scene "b024" (duration: 1s, set: lek1a_anketa_zapolnena) {
+    transition static 0.10s
+    camera two-shot
+    wait 8.4250s
+}
+
+// ── 2:10.23 (11.94с) — «сколько граф вы заполняли сами»
+scene "b025" (duration: 1s, set: lek1a_anketa_zapolnena) {
+    transition static 0.10s
+    camera two-shot
+    let w025 = text("САМИ?", 64) at (0.5, -2.0)
+    wait 1.74s
+    w025 moves-to (0.500, 0.800) over 0.01s
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 10.0717s ease-in-out
+    w025 moves-to (0.500, -2.000) over 0.01s
+}
+
+// ── 2:22.17 (9.19с) — «было ли решение»
+scene "b026" (duration: 1s, set: lek1v_bylo_reshenie) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 9.0817s ease-in-out
+}
+
+// ── 2:31.38 (4.23с) — «две-три графы из десятка»
+scene "b027" (duration: 1s, set: lek1a_dve_iz_desyati) {
+    transition static 0.10s
+    camera two-shot
+    let w027 = text("2 ИЗ 10", 64) at (0.5, -2.0)
+    wait 0.63s
+    w027 moves-to (0.500, 0.800) over 0.01s
+    wait 3.4833s
+    w027 moves-to (0.500, -2.000) over 0.01s
+}
+
+// ── 2:35.61 (11.69с) — «жизнь состоит из настроек»
+scene "b028" (duration: 1s, set: lek1a_anketa_zapolnena) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 11.5817s ease-in-out
+}
+
+// ── 2:47.31 (7.65с) — «как в новом телефоне: рингтон, обои, язык»
+scene "b029" (duration: 1s, set: lek1a_telefon) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.5500s
+}
+
+// ── 2:54.99 (7.36с) — «взгляните на схему»
+scene "b030" (duration: 1s, set: lek1a_shema_0) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.2583s
+}
+
+// ── 3:02.37 (1.53с) — «работа — в офисе»
+scene "b031" (duration: 1s, set: lek1a_shema_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.4250s
+}
+
+// ── 3:03.93 (1.53с) — «график — пять на два»
+scene "b032" (duration: 1s, set: lek1a_shema_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.4250s
+}
+
+// ── 3:05.46 (1.94с) — «место — город, где родился»
+scene "b033" (duration: 1s, set: lek1a_shema_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.8417s
+}
+
+// ── 3:07.41 (1.65с) — «отдых — море в августе»
+scene "b034" (duration: 1s, set: lek1a_shema_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.5500s
+}
+
+// ── 3:09.06 (2.48с) — «люди — семья и два друга»
+scene "b035" (duration: 1s, set: lek1a_shema_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.3833s
+}
+
+// ── 3:11.55 (2.61с) — «темп — календарь забит»
+scene "b036" (duration: 1s, set: lek1a_shema_6) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.5083s
+}
+
+// ── 3:14.16 (2.44с) — «напротив каждой графы стоит метка»
+scene "b037" (duration: 1s, set: lek1a_shema_metki) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.3417s
+}
+
+// ── 3:16.62 (3.19с) — «пять красных меток — по умолчанию»
+scene "b038" (duration: 1s, set: lek1a_shema_krasnye) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.0917s
+}
+
+// ── 3:19.83 (14.94с) — «и только одна зелёная — выбранная»
+scene "b039" (duration: 1s, set: lek1a_shema_cvet) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 14.8317s ease-in-out
+}
+
+// ── 3:34.80 (3.90с) — «у каждой незаполненной графы есть автор»
+scene "b040" (duration: 1s, set: lek1v_avtor) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.8000s
+}
+
+// ── 3:38.73 (1.53с) — «первый автор — семья»
+scene "b041" (duration: 1s, set: lek1v_avtory_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.4250s
+}
+
+// ── 3:40.29 (7.61с) — «работать надо так, как работали родители»
+scene "b042" (duration: 1s, set: lek1_semya) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.5083s
+}
+
+// ── 3:47.91 (7.61с) — «отпуск выглядит так, как в детстве»
+scene "b043" (duration: 1s, set: lek1v_obraz_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.5083s
+}
+
+// ── 3:55.53 (5.73с) — «вы обнаружите это в доме, где ужинают в другое время»
+scene "b044" (duration: 1s, set: lek1v_uzhin) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.6333s
+}
+
+// ── 4:01.26 (1.69с) — «второй автор — среда»
+scene "b045" (duration: 1s, set: lek1v_avtory_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.5917s
+}
+
+// ── 4:02.97 (8.36с) — «в одном дворе нормально уехать, в другом остаться»
+scene "b046" (duration: 1s, set: lek1_sreda) {
+    transition static 0.10s
+    camera two-shot
+    wait 8.2583s
+}
+
+// ── 4:11.34 (5.65с) — «статистика окружения, ставшая невидимой»
+scene "b047" (duration: 1s, set: lek1v_ne_s_kem) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.5500s
+}
+
+// ── 4:17.01 (1.65с) — «третий автор — поколение»
+scene "b048" (duration: 1s, set: lek1v_avtory_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.5500s
+}
+
+// ── 4:18.69 (8.65с) — «ипотека, высшее, дача — ступени эпохи»
+scene "b049" (duration: 1s, set: lek1_pokolenie) {
+    transition static 0.10s
+    camera two-shot
+    wait 8.5500s
+}
+
+// ── 4:27.36 (9.90с) — «настройки эпохи меняются от десятилетия к десятилетию»
+scene "b050" (duration: 1s, set: lek1v_epoha) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 9.7900s ease-in-out
+}
+
+// ── 4:37.26 (4.07с) — «опция по умолчанию наследуется без пересмотра»
+scene "b051" (duration: 1s, set: lek1v_avtory_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.9667s
+}
+
+// ── 4:41.34 (7.77с) — «ни один из авторов не желал вам зла»
+scene "b052" (duration: 1s, set: lek1v_ne_zla) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.6750s
+}
+
+// ── 4:49.14 (3.90с) — «среда транслировала то, что в ней выживало»
+scene "b053" (duration: 1s, set: lek1_sreda) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.8000s
+}
+
+// ── 4:53.07 (8.69с) — «анкету заполняли люди, жившие другую жизнь»
+scene "b054" (duration: 1s, set: lek1v_drugaya_zhizn) {
+    transition static 0.10s
+    camera two-shot
+    wait 8.5917s
+}
+
+// ── 5:01.77 (6.40с) — «ответы могут подходить, а могут и нет»
+scene "b055" (duration: 1s, set: lek1v_avtory_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.3000s
+}
+
+// ── 5:08.19 (4.48с) — «почему колея не жмёт»
+scene "b056" (duration: 1s, set: lek1_vse_ryadom) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.3833s
+}
+
+// ── 5:12.69 (9.90с) — «если бы жизнь была не моя — я бы чувствовал»
+scene "b057" (duration: 1s, set: lek1v_vozrazhenie) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 9.7900s ease-in-out
+}
+
+// ── 5:22.62 (2.77с) — «есть три механизма маскировки»
+scene "b058" (duration: 1s, set: lek1v_maski_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.6750s
+}
+
+// ── 5:25.41 (5.77с) — «первый: привычное вообще не ощущается»
+scene "b059" (duration: 1s, set: lek1v_maski_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.6750s
+}
+
+// ── 5:31.20 (3.90с) — «рингтон производителя перестаёшь слышать»
+scene "b060" (duration: 1s, set: lek1_ringtone) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.8000s
+}
+
+// ── 5:35.10 (7.57с) — «по колее едешь без руля»
+scene "b061" (duration: 1s, set: lek1v_bez_rulya) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.4667s
+}
+
+// ── 5:42.69 (3.27с) — «второй механизм: вокруг едут те же»
+scene "b062" (duration: 1s, set: lek1v_maski_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.1750s
+}
+
+// ── 5:45.99 (10.11с) — «окружение подобрано той же колеёй»
+scene "b063" (duration: 1s, set: lek1_tak_vse) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 9.9983s ease-in-out
+}
+
+// ── 5:56.13 (7.44с) — «сосед по ленте далеко, у него другая ситуация»
+scene "b064" (duration: 1s, set: lek1_vse_ryadom) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.3417s
+}
+
+// ── 6:03.60 (2.69с) — «третий механизм самый сильный»
+scene "b065" (duration: 1s, set: lek1v_maski_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.5917s
+}
+
+// ── 6:06.30 (9.69с) — «задним числом настройка обрастает обоснованием»
+scene "b066" (duration: 1s, set: lek1v_obosnovanie) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 9.5817s ease-in-out
+}
+
+// ── 6:15.99 (10.40с) — «объяснение построено после решения»
+scene "b067" (duration: 1s, set: lek1v_posle_resheniya) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 10.2900s ease-in-out
+}
+
+// ── 6:26.40 (5.82с) — «отсутствие дискомфорта не доказательство»
+scene "b068" (duration: 1s, set: lek1v_diskomfort) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.7167s
+}
+
+// ── 6:32.25 (6.23с) — «комфорт означает лишь, что колея накатана»
+scene "b069" (duration: 1s, set: lek1v_bez_rulya) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.1333s
+}
+
+// ── 6:38.49 (8.48с) — «и наконец Генри Торо и аудит вручную»
+scene "b070" (duration: 1s, set: lek1v_toro_god) {
+    transition static 0.10s
+    camera two-shot
+    wait 8.3833s
+}
+
+// ── 6:46.98 (4.32с) — «построил хижину и прожил там два года»
+scene "b071" (duration: 1s, set: lek1_hizhina) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.2167s
+}
+
+// ── 6:51.30 (5.15с) — «книга пережила полтора века»
+scene "b072" (duration: 1s, set: lek1_knigi) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.0500s
+}
+
+// ── 6:56.46 (4.23с) — «он сделал то, чего всерьёз почти никто не делал»
+scene "b073" (duration: 1s, set: lek1_spisok_toro) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.1333s
+}
+
+// ── 7:00.72 (5.94с) — «провёл ревизию настроек на себе, по одной»
+scene "b074" (duration: 1s, set: lek1_spisok_toro) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.8417s
+}
+
+// ── 7:06.66 (5.98с) — «сколько нужно работать, чтобы прокормиться»
+scene "b075" (duration: 1s, set: lek1v_nedeli) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.8833s
+}
+
+// ── 7:12.66 (2.02с) — «около шести недель в году»
+scene "b076" (duration: 1s, set: lek1v_nedeli) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.9250s
+}
+
+// ── 7:14.69 (3.94с) — «остальное уходило на оплату чужих настроек»
+scene "b077" (duration: 1s, set: lek1v_vycherk_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.8417s
+}
+
+// ── 7:18.63 (6.98с) — «дом побольше, вещей посолиднее, статус поприличнее»
+scene "b078" (duration: 1s, set: lek1v_vycherk_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.8833s
+}
+
+// ── 7:25.62 (3.40с) — «он вычёркивал по строчке и смотрел, что сломается»
+scene "b079" (duration: 1s, set: lek1v_vycherk_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.3000s
+}
+
+// ── 7:29.04 (1.69с) — «многое не сломалось»
+scene "b080" (duration: 1s, set: lek1v_vycherk_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.5917s
+}
+
+// ── 7:30.75 (9.78с) — «перенимать его ответы не надо»
+scene "b081" (duration: 1s, set: lek1_hizhina) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 9.6650s ease-in-out
+}
+
+// ── 7:40.53 (6.23с) — «перенимать стоит метод»
+scene "b082" (duration: 1s, set: lek1v_metod) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.1333s
+}
+
+// ── 7:46.80 (2.36с) — «он проверял каждую настройку»
+scene "b083" (duration: 1s, set: lek1_spisok_toro) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.2583s
+}
+
+// ── 7:49.17 (11.78с) — «мы займёмся ровно этим, только без хижины»
+scene "b084" (duration: 1s, set: lek1v_plan_6) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 11.6650s ease-in-out
+}
+
+// ── 8:00.96 (3.52с) — «есть три признака»
+scene "b085" (duration: 1s, set: lek1v_priznaki_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.4250s
+}
+
+// ── 8:04.50 (2.94с) — «первый — ответ «так все живут»»
+scene "b086" (duration: 1s, set: lek1v_priznaki_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.8417s
+}
+
+// ── 8:07.47 (5.86с) — «спросите себя, почему графа заполнена именно так»
+scene "b087" (duration: 1s, set: lek1_tak_vse) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.7583s
+}
+
+// ── 8:13.35 (10.94с) — «выбрана — в ответе будет сравнение»
+scene "b088" (duration: 1s, set: lek1v_sravnenie) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 10.8317s ease-in-out
+}
+
+// ── 8:24.30 (7.44с) — «унаследована — ответ ссылается на других»
+scene "b089" (duration: 1s, set: lek1_tak_vse) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.3417s
+}
+
+// ── 8:31.77 (4.98с) — «это не ответ, это переадресация»
+scene "b090" (duration: 1s, set: lek1v_sravnenie) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.8833s
+}
+
+// ── 8:36.78 (2.82с) — «второй признак — зависть без плана»
+scene "b091" (duration: 1s, set: lek1v_priznaki_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.7167s
+}
+
+// ── 8:39.63 (11.32с) — «зависть к устройству жизни, а не к деньгам»
+scene "b092" (duration: 1s, set: lek1_zavist) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 11.2067s ease-in-out
+}
+
+// ── 8:50.97 (6.69с) — «на выбранное смотрите с интересом, на чужое — с тоской»
+scene "b093" (duration: 1s, set: lek1v_s_toskoj) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.5917s
+}
+
+// ── 8:57.69 (7.69с) — «зависть без плана — самый честный индикатор»
+scene "b094" (duration: 1s, set: lek1v_chestnyj) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.5917s
+}
+
+// ── 9:05.40 (3.48с) — «третий признак — тоска воскресного вечера»
+scene "b095" (duration: 1s, set: lek1v_priznaki_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.3833s
+}
+
+// ── 9:08.88 (6.86с) — «знакомая, маленькая, привычная»
+scene "b096" (duration: 1s, set: lek1_voskresnyj_vecher) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.7583s
+}
+
+// ── 9:15.75 (4.77с) — «еженедельный отчёт организма»
+scene "b097" (duration: 1s, set: lek1_voskresnyj_vecher) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.6750s
+}
+
+// ── 9:20.55 (5.27с) — «одно воскресенье не значит, сто подряд — данные»
+scene "b098" (duration: 1s, set: lek1v_sto_voskresenij) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.1750s
+}
+
+// ── 9:25.83 (5.40с) — «один-два признака — это не приговор»
+scene "b099" (duration: 1s, set: lek1v_priznaki_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.3000s
+}
+
+// ── 9:31.26 (9.53с) — «это показания к аудиту вашей анкеты»
+scene "b100" (duration: 1s, set: lek1a_anketa_zapolnena) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 9.4150s ease-in-out
+}
+
+// ── 9:40.80 (3.90с) — «как устроен курс и два обещания»
+scene "b101" (duration: 1s, set: lek1v_plan_6) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.8000s
+}
+
+// ── 9:44.70 (4.44с) — «разложим образ жизни на оси»
+scene "b102" (duration: 1s, set: lek1v_osi_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.3417s
+}
+
+// ── 9:49.17 (4.48с) — «работа: найм, своё дело, ремесло»
+scene "b103" (duration: 1s, set: lek1v_osi_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.3833s
+}
+
+// ── 9:53.67 (3.15с) — «деньги: сколько достаточно»
+scene "b104" (duration: 1s, set: lek1v_osi_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.0500s
+}
+
+// ── 9:56.82 (5.07с) — «отдых: восстановление или впечатления»
+scene "b105" (duration: 1s, set: lek1v_osi_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.9667s
+}
+
+// ── 10:01.92 (1.48с) — «темп»
+scene "b106" (duration: 1s, set: lek1v_osi_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.3833s
+}
+
+// ── 10:03.42 (2.94с) — «люди вокруг»
+scene "b107" (duration: 1s, set: lek1v_osi_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.8417s
+}
+
+// ── 10:06.39 (7.57с) — «по каждой оси — позиции и честная цена»
+scene "b108" (duration: 1s, set: lek1v_osi_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.4667s
+}
+
+// ── 10:13.98 (6.61с) — «как примерять чужое, не сжигая своего»
+scene "b109" (duration: 1s, set: lek1_chto_dalshe) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.5083s
+}
+
+// ── 10:20.61 (5.98с) — «первое обещание: не скажем, как правильно жить»
+scene "b110" (duration: 1s, set: lek1v_obeschaniya_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.8833s
+}
+
+// ── 10:26.61 (7.02с) — «правильного образа жизни не существует»
+scene "b111" (duration: 1s, set: lek1v_obeschaniya_1) {
+    transition static 0.10s
+    camera two-shot
+    let w111 = text("НЕТ", 64) at (0.5, -2.0)
+    wait 0.69s
+    w111 moves-to (0.500, 0.800) over 0.01s
+    wait 6.2150s
+    w111 moves-to (0.500, -2.000) over 0.01s
+}
+
+// ── 10:33.66 (6.15с) — «за каждым «правильно» стоит чья-то ось»
+scene "b112" (duration: 1s, set: lek1_vesy) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.0500s
+}
+
+// ── 10:39.84 (4.23с) — «второе обещание: никакой мотивации «всё брось»»
+scene "b113" (duration: 1s, set: lek1v_obeschaniya_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.1333s
+}
+
+// ── 10:44.10 (5.52с) — «резкий разворот — самое дорогое и ненадёжное»
+scene "b114" (duration: 1s, set: lek1_chto_dalshe) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.4250s
+}
+
+// ── 10:49.65 (6.07с) — «вторая половина курса — про дешёвые обратимые пробы»
+scene "b115" (duration: 1s, set: lek1_shag) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.9667s
+}
+
+// ── 10:55.74 (3.23с) — «нужно впервые прочитать собственную анкету»
+scene "b116" (duration: 1s, set: lek1a_anketa_0) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.1333s
+}
+
+// ── 10:59.01 (10.98с) — «сегодня вечером выпишите свою анкету»
+scene "b117" (duration: 1s, set: lek1a_anketa_6) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 10.8733s ease-in-out
+}
+
+// ── 11:10.02 (3.77с) — «рядом с каждой строкой поставьте метку»
+scene "b118" (duration: 1s, set: lek1a_shema_metki) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.6750s
+}
+
+// ── 11:13.83 (5.27с) — ««выбирал» — если помните момент решения»
+scene "b119" (duration: 1s, set: lek1a_shema_krasnye) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.1750s
+}
+
+// ── 11:19.14 (6.69с) — ««по умолчанию» — если честный ответ «так сложилось»»
+scene "b120" (duration: 1s, set: lek1a_shema_cvet) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.5917s
+}
+
+// ── 11:25.86 (4.19с) — «задача: впервые увидеть соотношение»
+scene "b121" (duration: 1s, set: lek1v_sam_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.0917s
+}
+
+// ── 11:30.06 (2.94с) — «у большинства оно оказывается неожиданным»
+scene "b122" (duration: 1s, set: lek1a_dve_iz_desyati) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.8417s
+}
+
+// ── 11:33.00 (4.61с) — «девять лекций вы будете читать другими глазами»
+scene "b123" (duration: 1s, set: lek1v_plan_6) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.5083s
+}
+
+// ── 11:37.62 (3.07с) — «теперь частые вопросы»
+scene "b124" (duration: 1s, set: lek1_chavo) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.9667s
+}
+
+// ── 11:40.71 (6.90с) — «настройки мне подходят — зачем трогать»
+scene "b125" (duration: 1s, set: lek1v_chavo_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.8000s
+}
+
+// ── 11:47.64 (9.48с) — «цель не поменять всё, а перевести в выбранные»
+scene "b126" (duration: 1s, set: lek1a_shema_cvet) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 9.3733s ease-in-out
+}
+
+// ── 11:57.12 (5.44с) — «теперь вы знаете, почему живёте так»
+scene "b127" (duration: 1s, set: lek1_fundament) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.3417s
+}
+
+// ── 12:02.58 (7.98с) — «меняем только то, что оказалось чужим»
+scene "b128" (duration: 1s, set: lek1a_anketa_zapolnena) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.8833s
+}
+
+// ── 12:10.59 (6.57с) — «можно ли жить без настроек по умолчанию»
+scene "b129" (duration: 1s, set: lek1v_chavo_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.4667s
+}
+
+// ── 12:17.16 (9.78с) — «выбирать всё — работа, на которую не хватит жизни»
+scene "b130" (duration: 1s, set: lek1_chasy) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 9.6650s ease-in-out
+}
+
+// ── 12:26.94 (7.57с) — «вопрос не в количестве, а в несущих осях»
+scene "b131" (duration: 1s, set: lek1v_osi_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.4667s
+}
+
+// ── 12:34.53 (4.32с) — «дом, где выбран фундамент, стоит»
+scene "b132" (duration: 1s, set: lek1_fundament) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.2167s
+}
+
+// ── 12:38.85 (7.11с) — «чем это отличается от «выйди из зоны комфорта»»
+scene "b133" (duration: 1s, set: lek1v_chavo_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.0083s
+}
+
+// ── 12:45.96 (5.98с) — «лозунг предполагает, что привычное надо покидать»
+scene "b134" (duration: 1s, set: lek1_shag) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.8833s
+}
+
+// ── 12:51.96 (7.65с) — «аудит настроек ничего не предполагает»
+scene "b135" (duration: 1s, set: lek1a_shema_metki) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.5500s
+}
+
+// ── 12:59.64 (4.94с) — «дискомфорт не цель, иногда это цена проверки»
+scene "b136" (duration: 1s, set: lek1_vesy) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.8417s
+}
+
+// ── 13:04.59 (4.36с) — «курс не про подвиг, а про прочтение анкеты»
+scene "b137" (duration: 1s, set: lek1a_anketa_zapolnena) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.2583s
+}
+
+// ── 13:08.97 (4.86с) — «мне сорок — не поздно ли»
+scene "b138" (duration: 1s, set: lek1v_chavo_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.7583s
+}
+
+// ── 13:13.83 (5.98с) — «аудит не имеет возраста»
+scene "b139" (duration: 1s, set: lek1_chasy) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.8833s
+}
+
+// ── 13:19.83 (3.11с) — «цена непрочитанного с годами только растёт»
+scene "b140" (duration: 1s, set: lek1_chasy) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.0083s
+}
+
+// ── 13:22.95 (5.27с) — «меняется набор доступных ходов и цена резких»
+scene "b141" (duration: 1s, set: lek1_pokolenie) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.1750s
+}
+
+// ── 13:28.23 (5.61с) — «курс построен на дешёвых обратимых пробах»
+scene "b142" (duration: 1s, set: lek1_shag) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.5083s
+}
+
+// ── 13:33.84 (6.36с) — «примерить чужой темп можно в любом возрасте»
+scene "b143" (duration: 1s, set: lek1_shag) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.2583s
+}
+
+// ── 13:40.20 (4.57с) — «подведём итоги»
+scene "b144" (duration: 1s, set: lek1v_itogi_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.4667s
+}
+
+// ── 13:44.79 (3.07с) — «работа, темп, место, люди, отдых»
+scene "b145" (duration: 1s, set: lek1a_anketa_6) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.9667s
+}
+
+// ── 13:47.89 (3.52с) — «у большинства большинство граф заполнены не ими»
+scene "b146" (duration: 1s, set: lek1v_itogi_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.4250s
+}
+
+// ── 13:51.42 (3.77с) — «авторы: семья, среда, поколение»
+scene "b147" (duration: 1s, set: lek1v_avtory_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.6750s
+}
+
+// ── 13:55.23 (7.11с) — «они не желали зла»
+scene "b148" (duration: 1s, set: lek1v_ne_zla) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.0083s
+}
+
+// ── 14:02.34 (1.82с) — «чужая колея не жмёт»
+scene "b149" (duration: 1s, set: lek1v_itogi_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.7167s
+}
+
+// ── 14:04.17 (8.78с) — «привычка, окружение, объяснение задним числом»
+scene "b150" (duration: 1s, set: lek1v_maski_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 8.6750s
+}
+
+// ── 14:12.96 (2.36с) — «Торо показал метод»
+scene "b151" (duration: 1s, set: lek1v_itogi_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.2583s
+}
+
+// ── 14:15.33 (6.65с) — «не спорить с образом жизни, а проверять настройки»
+scene "b152" (duration: 1s, set: lek1_spisok_toro) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.5500s
+}
+
+// ── 14:21.99 (10.15с) — «три признака чужой колеи»
+scene "b153" (duration: 1s, set: lek1v_priznaki_3) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 10.0400s ease-in-out
+}
+
+// ── 14:32.16 (4.73с) — «курс не скажет, как правильно»
+scene "b154" (duration: 1s, set: lek1v_itogi_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.6333s
+}
+
+// ── 14:36.93 (5.61с) — «даст карту осей, цену позиций, способ примерять»
+scene "b155" (duration: 1s, set: lek1v_osi_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.5083s
+}
+
+// ── 14:42.54 (8.82с) — «а теперь вопросы, над которыми стоит подумать»
+scene "b156" (duration: 1s, set: lek1v_sam_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 8.7167s
+}
+
+// ── 14:51.39 (1.65с) — «какая графа удивила»
+scene "b157" (duration: 1s, set: lek1v_sam_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.5500s
+}
+
+// ── 14:53.07 (5.52с) — «найдите настройку, унаследованную от семьи»
+scene "b158" (duration: 1s, set: lek1v_sam_3) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.4250s
+}
+
+// ── 14:58.62 (5.61с) — «от какой опасности она защищала родителей»
+scene "b159" (duration: 1s, set: lek1v_sam_4) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.5083s
+}
+
+// ── 15:04.23 (4.15с) — «почему отсутствие дискомфорта ничего не доказывает»
+scene "b160" (duration: 1s, set: lek1v_sam_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.0500s
+}
+
+// ── 15:08.40 (2.82с) — «назовите три механизма маскировки»
+scene "b161" (duration: 1s, set: lek1v_sam_6) {
+    transition static 0.10s
+    camera two-shot
+    wait 2.7167s
+}
+
+// ── 15:11.25 (6.40с) — «что в методе Торо перенимать, а что устарело»
+scene "b162" (duration: 1s, set: lek1_spisok_toro) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.3000s
+}
+
+// ── 15:17.67 (4.27с) — «вспомните свою устойчивую зависть»
+scene "b163" (duration: 1s, set: lek1_zavist) {
+    transition static 0.10s
+    camera two-shot
+    wait 4.1750s
+}
+
+// ── 15:21.96 (6.36с) — «к какой оси она относится»
+scene "b164" (duration: 1s, set: lek1v_osi_5) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.2583s
+}
+
+// ── 15:28.35 (7.44с) — «вот две книги, которые я советую»
+scene "b165" (duration: 1s, set: lek1_knigi) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.3417s
+}
+
+// ── 15:35.82 (7.02с) — «Генри Дэвид Торо, «Уолден», 1854»
+scene "b166" (duration: 1s, set: lek1v_kniga_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.9250s
+}
+
+// ── 15:42.87 (6.32с) — «двухлетний эксперимент автора над собой»
+scene "b167" (duration: 1s, set: lek1v_kniga_1) {
+    transition static 0.10s
+    camera two-shot
+    wait 6.2167s
+}
+
+// ── 15:49.20 (3.15с) — «главное в книге не ответы, а метод»
+scene "b168" (duration: 1s, set: lek1v_metod) {
+    transition static 0.10s
+    camera two-shot
+    wait 3.0500s
+}
+
+// ── 15:52.38 (7.94с) — «Бернетт и Эванс, «Дизайн вашей жизни», 2016»
+scene "b169" (duration: 1s, set: lek1v_kniga_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 7.8417s
+}
+
+// ── 16:00.33 (6.02с) — «жизнь не угадывают, а прототипируют»
+scene "b170" (duration: 1s, set: lek1v_kniga_2) {
+    transition static 0.10s
+    camera two-shot
+    wait 5.9250s
+}
+
+// ── 16:06.36 (7.23с) — «вот, пожалуй, и всё, что я хотел сказать»
+scene "b171_shov" (duration: 1s, set: komnata) {
+    transition static 0.10s
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.60s
+    freeman pose "razvel"
+    wait 1.40s
+    freeman pose "ladon_pusta"
+    wait 1.40s
+    freeman pose "calm"
+    wait 3.7233s
+}
+
+// ── 16:13.60 (10.23с) — «продолжение курса ждёт вас в Лектории»
+scene "b172" (duration: 1s, set: lek1v_spasibo) {
+    transition static 0.10s
+    camera two-shot
+    camera pan-to (0.500, 0.452) over 0.01s
+    camera pan-to (0.500, 0.548) over 10.1233s ease-in-out
+}
+
+// ── 16:23.85 (1.94с) — «всего доброго»
+scene "b173" (duration: 1s, set: lek1v_spasibo) {
+    transition static 0.10s
+    camera two-shot
+    wait 1.8417s
+}
+

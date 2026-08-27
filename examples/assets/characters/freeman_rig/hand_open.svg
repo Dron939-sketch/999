@@ -2,7 +2,19 @@
   <defs><filter id="ink" x="-30%" y="-30%" width="160%" height="160%">
     <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="41" result="n"/>
     <feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/>
-  </filter></defs>
+  </filter><filter id="kajma" x="-50%" y="-50%" width="200%" height="200%"><feMorphology in="SourceAlpha" operator="dilate" radius="1.6" result="tolshche"/><feFlood flood-color="#eef1ec" result="bumaga"/><feComposite in="bumaga" in2="tolshche" operator="in"/></filter></defs>
+<!-- СВЕТЛАЯ КАЙМА (tools/kajma.py). Ниже рисунок напечатан дважды:
+     первый проход — раздутый силуэт цветом бумаги, второй — он же тушью
+     поверх. На чёрном плаще кисть читается каймой, на светлом поле —
+     тушью. Правится не здесь, а в kajma.py: он пересобирает все файлы. -->
+<g filter="url(#kajma)"><g filter="url(#ink)">
+    <path d="M49 0 Q60 -5 71 0 Q73 15 60 20 Q47 15 49 0 Z" fill="#0e0e0e"/>
+    <path d="M67.7 19.2 L46.1 32.8 L26.5 42.2 L20.8 34.0 L35.2 19.8 L52.3 0.8 Z" fill="#0e0e0e"/>
+    <path d="M71.3 14.1 L58.2 39.8 L44.9 60.2 L35.8 56.0 L42.2 34.0 L48.7 5.9 Z" fill="#0e0e0e"/>
+    <path d="M71.7 7.5 L74.0 35.1 L73.4 58.6 L63.5 59.8 L57.4 38.7 L48.3 12.5 Z" fill="#0e0e0e"/>
+    <path d="M68.9 2.0 L81.8 21.5 L90.8 39.3 L82.8 45.3 L69.1 32.9 L51.1 18.0 Z" fill="#0e0e0e"/>
+  </g></g>
+
   <!-- раскрытая ладонь: пальцы веером, почти прямые.
        ЧЕТЫРЕ пальца вместо пяти, толще и короче. Замер изрезанности силуэта
        (периметр в квадрате на площадь) дал у нас 308 против 252 у оригинала:

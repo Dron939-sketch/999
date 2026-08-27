@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 112" width="52" height="112"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="22" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<!-- ГОЛЕНЬ НА НОСКЕ. Та же кость, что и `shin_left`, но капля-стопа
+     развёрнута из «наружу-вперёд» в «вниз-под-щиколотку»: пятка снята,
+     вес на носке.
+
+     ОТДЕЛЬНОЙ КОСТИ У СТОПЫ НЕТ — она нарисована внутри голени, и
+     завести её значило бы переразобрать ноги во всех тридцати роликах.
+     Позы умеют подменять ДЕТАЛЬ (так устроены виземы рта), и для
+     контраста «плашмя против носка» этого хватает. Именно по этому
+     контрасту опознают лунную походку. -->
+<g filter="url(#ink)"><path d="M17 4 Q15 48 16 88 Q11 99 9 110 Q18 101 24 90 Q26 48 27 4 Z" fill="#0e0e0e"/></g></svg>

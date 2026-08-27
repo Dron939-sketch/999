@@ -176,6 +176,55 @@ def parse_sfx_table(md_path):
     return cues
 
 
+TISHINA_STROKA = re.compile(r"тишин", re.I)
+TISHINA_PAUZA = re.compile(r"на\s+паузе\s+после\s+VO-(\d+)", re.I)
+
+
+def parse_tishiny(md_path):
+    """Окна ТИШИНЫ из партитуры звука: [(начало, конец)] в плановых секундах.
+
+    ЗАЧЕМ. Партитура назначала тишину дважды — обрыв на переломе и паузу, в
+    которой зритель делает догадку, — а комнатный тон стелился под ВЕСЬ ролик и
+    играл поверх обеих. Замер сданного файла: ноль секунд тишины при двух
+    назначенных. Тон в паузах заведён намеренно (цифровой ноль слышно как обрыв
+    записи), но НАЗНАЧЕННАЯ тишина сильнее этого правила: это не пауза, а удар.
+
+    Два вида строк, и они читаются по-разному:
+
+      · строка, которая ВСЯ про тишину («обрыв — глухая тишина») — молчит весь
+        её отрезок, до следующей строки таблицы;
+      · строка, которая называет тишину МОМЕНТОМ («на паузе после VO-26 —
+        ТИШИНА») — молчит ровно эта пауза: от конца названной реплики до начала
+        следующей.
+    """
+    stroki, in_sfx = [], False
+    for line in open(md_path, encoding="utf-8"):
+        if line.startswith("##"):
+            in_sfx = "SFX" in line or "звук" in line.lower()
+            continue
+        if not in_sfx:
+            continue
+        m = ROW.match(line.strip())
+        if m:
+            stroki.append((int(m.group(1)) * 60 + float(m.group(2)), m.group(3)))
+    vo = parse_vo_times(md_path)
+    okna = []
+    for i, (t0, desc) in enumerate(stroki):
+        if not TISHINA_STROKA.search(desc):
+            continue
+        m = TISHINA_PAUZA.search(desc)
+        if m:
+            n = int(m.group(1))
+            if n <= len(vo):
+                nachalo = vo[n - 1][1]
+                konec = vo[n][0] if n < len(vo) else nachalo + 1.8
+                okna.append((nachalo, konec))
+            continue
+        konec = stroki[i + 1][0] if i + 1 < len(stroki) else t0 + 2.0
+        okna.append((t0, konec))
+    return okna
+
+
 def sfx_table_span(md_path):
     """Самый поздний тайм-код SFX-таблицы — плановая длина ролика.
 
@@ -246,7 +295,7 @@ def remap_cues(cues, planned, real, plan_total, real_total):
     return [(round(at(t), 2), kind) for t, kind in cues]
 
 
-def build_track(cues, out_path, duration):
+def build_track(cues, out_path, duration, tishiny=()):
     """Собрать дорожку: каждый синтез на своём тайм-коде + room-постель.
 
     ПОСТЕЛЬ (MELOCHI.md гр.В): комнатный тон стелется под ВСЮ длину ролика, а
@@ -292,8 +341,15 @@ def build_track(cues, out_path, duration):
         for i, ms in enumerate(delays):
             chains.append(f"[{i}]adelay={ms}|{ms}[d{i}]")
         mix = "".join(f"[d{i}]" for i in range(len(inputs)))
+        # НАЗНАЧЕННАЯ ТИШИНА ГЛУШИТ ВСЮ ДОРОЖКУ, а не одну постель: в окне
+        # молчат и тон, и чайник, и всё прочее. Речь этим не задета — она в
+        # отдельном файле и подмешивается в studio.py.
+        tiho = ""
+        if tishiny:
+            uslovie = "+".join(f"between(t,{a:.2f},{b:.2f})" for a, b in tishiny)
+            tiho = f",volume=0:enable='{uslovie}'"
         chains.append(
-            f"{mix}amix=inputs={len(inputs)}:duration=longest:normalize=0,"
+            f"{mix}amix=inputs={len(inputs)}:duration=longest:normalize=0{tiho},"
             f"apad=whole_dur={duration},atrim=0:{duration}[out]"
         )
         _run(args + ["-filter_complex", ";".join(chains),
@@ -358,7 +414,29 @@ def main(argv):
                       "перевод тайм-кодов пропущен, звук встанет по плану.")
         except Exception as e:                       # noqa: BLE001
             print(f"  [sfx] тайминг не прочитан ({e}) — звук встанет по плану.")
-    ok = build_track(cues, args.output, args.duration)
+    # ОКНА ТИШИНЫ переводятся на фактический монтаж ТЕМ ЖЕ отображением, что и
+    # звуки: иначе тишина, назначенная на паузу после реплики, приедет мимо
+    # паузы — а мимо паузы она хуже, чем её отсутствие.
+    tishiny = []
+    if args.vo_md:
+        try:
+            okna = parse_tishiny(args.vo_md)
+            if okna and 'planned' in dir() and 'real' in dir() and real and len(real) == len(planned):
+                kraya = [(x, "t") for para in okna for x in para]
+                kraya = remap_cues(kraya, planned, real,
+                                   sfx_table_span(args.vo_md) or args.duration,
+                                   args.duration)
+                tochki = [x for x, _ in kraya]
+                tishiny = list(zip(tochki[0::2], tochki[1::2]))
+            else:
+                tishiny = okna
+        except Exception as e:                       # noqa: BLE001
+            print(f"  [sfx] окна тишины не прочитаны ({e})")
+    if tishiny:
+        print("  назначенная тишина: " + ", ".join(
+            f"{a:.1f}–{b:.1f}с" for a, b in tishiny))
+
+    ok = build_track(cues, args.output, args.duration, tishiny)
     print(f"OK: {args.output} — {len(cues)} звуков" if ok else "СБОЙ синтеза")
     return 0 if ok else 1
 

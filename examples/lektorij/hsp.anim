@@ -1,0 +1,609 @@
+// =============================================================================
+//  «ЧАША» — интро к курсу «Высокочувствительные люди», номер 21.
+//  VO — hsp-VO.md, маркеры 1..28.
+//
+//  ОДНА МЫСЛЬ НА РОЛИК: высокая чувствительность — не поломка, а настройка.
+//  Тот же сигнал проходит больше кругов, поэтому человек замечает раньше и
+//  устаёт раньше. Слово «слишком» в этой фразе лишнее.
+//
+//  ЧЕМ ЭТОТ РОЛИК ОТЛИЧАЕТСЯ ОТ ПРЕДЫДУЩИХ
+//
+//  1. ТЕПЛО ВЕДЁТ ПОДАЧУ, И ЭТО ВПЕРВЫЕ. За тридцать шесть роликов тепло было
+//     ОДНОЙ репликой на штуку — единственным светлым местом среди приговоров.
+//     Здесь его двадцать один процент. Эмоция «облегчение» требует такой
+//     доминанты, иначе объявленное состояние остаётся надписью в шапке.
+//
+//  2. СКЕЛЕТ — ПРИТЧА, второй раз за всю историю (первый был «Меч Мастера»).
+//     История одного человека от восьми лет до тридцати пяти, поворот внутри
+//     неё, вывод не проговаривается.
+//
+//  3. ШУТКА — СТАНОК 6 «ПОДМЕНА ИМЕНИ» (BANK-SHUTOK.md), впервые. С
+//     чувствительностью ничего не сделаешь, а громкость убавляют — и середина
+//     ролика из рассуждения становится действием.
+//
+//  4. ЦВЕТНОЙ ПРЕДМЕТ — КРАСНАЯ РУЧКА ГРОМКОСТИ на старой колонке, 0.23%
+//     кадра. Единственная цветная вещь ролика и единственная, которую ролик
+//     велит тронуть: «Убавьте громкость» — про неё буквально.
+//
+//  5. ХУК — ЧУЖАЯ РЕПЛИКА. «Ты слишком чувствительный» сказано в кавычках, это
+//     цитата того, кто так говорил. Сам ролик обращается на «вы» до конца.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · в длинной реплике первым слоем называется РУКА (lint_arms);
+//    · фигура НЕ ПРИСЕДАЕТ (tools/posture.py) — поэтому мальчик, подросток и
+//      взрослый показаны стоя: сидячие позы студия запретила трижды;
+//    · `duration:` ГОВОРЯЩЕЙ СЦЕНЫ — ПОЛ, А НЕ ЦЕЛЬ, и потому равен 1s;
+//    · голый `scales` стоит 0.5с таймлайна — всегда `over 0.01s`;
+//    · слой, трогающий рот, ВНУТРИ реплики перебивает липсинк — только до или
+//      после (tools/speech_lint.py). Мимику полной позой не ставим вовсе:
+//      на этом ролик уже падал в CI;
+//    · МАСШТАБ ЧИТАЕТСЯ ВМЕСТЕ С `over` (реестр §XXXI).
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
+//  Завод перепишет их по факту озвучки.
+// =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: b622f343
+import character freeman from "../assets/characters/freeman_rig"
+import set komnata from "../assets/sets/hsp-prazdnik-dver.svg"
+import set koridor from "../assets/sets/koridor-lovushka.svg"
+import set peregovorka from "../assets/sets/hsp-peregovorka.svg"
+import set void from "../assets/sets/void-black.svg"
+import set kabinet from "../assets/sets/dva-stula.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+
+// ============ СЦЕНА 1: komnata — ХУК И ОТРИЦАНИЕ ========================
+//  Тёмная дальняя комната. За дверью шумит праздник, справа на комоде колонка
+//  с красной ручкой громкости. Первая реплика — чужая, и она в кавычках.
+scene "s1" (duration: 1s, set: komnata) {
+    place freeman at (0.30, 0.95) facing front on floor
+    freeman scales 0.95 over 0.01s
+
+    let nomer = prop("nomer", "../assets/props/nomer-21.svg") at (0.325, 0.575) layer 9
+    nomer scales 0.16 over 0.01s
+    nomer hides
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.18 over 0.05s ease-out
+    nomer scales 0.16 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 1
+    //  «Ты слишком чувствительный.»
+    together {
+        freeman speaks for 1.31s
+        do {
+            freeman overlays "vdal"
+        }
+    }
+    wait 0.6s
+
+    //lip 2
+    //  «Вам это говорили. Не раз.»
+    together {
+        freeman speaks for 2.27s
+        do {
+            freeman overlays "ladoni_vniz"
+            wait 1.2s
+            freeman overlays "ugryumo"
+        }
+    }
+    wait 0.7s
+
+    camera medium freeman
+
+    //lip 3
+    //  «Так говорят каждому пятому.»
+    together {
+        freeman speaks for 2.53s
+        do {
+            freeman overlays "razmer"
+        }
+    }
+    wait 0.6s
+
+    //lip 4
+    //  «И это не оправдание для нытья.»
+    together {
+        freeman speaks for 2.25s
+        do {
+            freeman overlays "stop_ladon"
+        }
+    }
+    camera wide
+    wait 0.7s
+
+    //lip 5
+    //  «Мальчик уходит с шумного праздника в дальнюю комнату. Странный.»
+    //  ПЕРВОЕ ПЕРЕМЕЩЕНИЕ: отход от дверного проёма вглубь тёмной комнаты —
+    //  ровно то, что описывает реплика. Шаг слоями, рта они не трогают.
+    together {
+        freeman speaks for 4.14s
+        do {
+            freeman overlays "shag_bok_levoj"
+            freeman moves-to (0.42, 0.95) over 1.3s
+            freeman overlays "shag_bok_pravoj"
+            freeman moves-to (0.54, 0.95) over 1.3s
+            freeman overlays "vdal_l"
+        }
+    }
+    freeman pose "ruki_za_spinu"
+    wait 0.4s
+}
+
+
+// ============ СЦЕНА 2: koridor — ПОДРОСТОК У СТЕНЫ ======================
+//  Вторая сцена цепи. `na_noskah` — поза из нетронутых шестидесяти семи, и она
+//  здесь единственно верная: чтобы расслышать через стену, тянутся вверх.
+scene "s2" (duration: 1s, set: koridor) {
+    transition static 0.2s
+
+    place freeman at (0.38, 0.94) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "na_noskah"
+
+    //lip 6
+    //  «Подросток слышит, что родители опять молчат. Мнительный.»
+    together {
+        freeman speaks for 4.34s
+        do {
+            freeman overlays "za_uho"
+            wait 1.5s
+            freeman overlays "somnenie"
+            wait 1.5s
+            freeman overlays "ugryumo"
+        }
+    }
+    freeman pose "calm"
+    wait 0.4s
+}
+
+
+// ============ СЦЕНА 3: peregovorka — ВЗРОСЛЫЙ НА ПЛАНЁРКЕ ===============
+//  Третья сцена цепи, та же конструкция, и слово повторяется дословно.
+scene "s3" (duration: 1s, set: peregovorka) {
+    transition static 0.2s
+
+    //  В ЛЕВЫЙ ПРОХОД, А НЕ ПО ЦЕНТРУ. По центру стол перекрывает фигуру по
+    //  грудь, и масштаб этого не чинит: стол нарисован крупно и стоит между
+    //  камерой и персонажем. Контактный лист показал ровно это.
+    place freeman at (0.13, 0.93) facing front on floor
+    freeman scales 1.15 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 7
+    //  «Взрослый первым замечает, что коллеге плохо. Мнительный. Опять.»
+    together {
+        freeman speaks for 4.52s
+        do {
+            freeman overlays "vzglyad"
+            wait 1.11s
+            freeman overlays "lokti"
+            wait 1.11s
+            freeman overlays "prishchur"
+            wait 1.11s
+            freeman overlays "ostyl"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 4: void — ПЕРЕЛОМ ====================================
+//  Три сцены оказываются одной биографией. Пустота: смотреть больше не на что.
+scene "s4" (duration: 1s, set: void) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.46) facing front
+    freeman scales 1.85 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 8
+    //  «Это один человек. Странный и мнительный — не диагнозы.»
+    together {
+        freeman speaks for 4.53s
+        do {
+            freeman overlays "rubit"
+            wait 2.4s
+            freeman overlays "otverg"
+        }
+    }
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 5: kabinet — ВРАЧ И ИМЯ ==============================
+//  Два стула друг напротив друга: разговор, который ничего не изменил.
+scene "s5" (duration: 1s, set: kabinet) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.62) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 9
+    //  «Он и к врачу ходил: здоров. Легче не стало — имени всё равно не было.»
+    together {
+        freeman speaks for 5.09s
+        do {
+            freeman overlays "shrug"
+            wait 1.65s
+            freeman overlays "zakrylsya"
+            wait 1.65s
+            freeman overlays "gorech"
+        }
+    }
+    wait 0.9s
+
+    camera medium freeman
+
+    //lip 10
+    //  «Имя есть, и оно спокойное: высокая чувствительность.»
+    //  ПЕРВОЕ ТЕПЛО РОЛИКА. Не утешает — называет.
+    together {
+        freeman speaks for 5.30s
+        do {
+            freeman overlays "raskryl"
+            wait 2.81s
+            freeman overlays "teplo"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 6: komnata — МЕХАНИЗМ И МАНТРА =======================
+//  Обратно в тихую комнату: объяснение звучит там, где не шумит.
+scene "s6" (duration: 1s, set: komnata) {
+    transition static 0.2s
+
+    place freeman at (0.54, 0.95) facing front on floor
+    freeman scales 0.95 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 11
+    //  «Дело не в тонкой душе и не в толстой шкуре. Дело в лишних кругах.»
+    together {
+        freeman speaks for 4.88s
+        do {
+            freeman overlays "dve_storony"
+            wait 1.53s
+            freeman overlays "no"
+            wait 1.53s
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.5s
+
+    //lip 12
+    //  «Один и тот же сигнал проходит у вас больше кругов.»
+    together {
+        freeman speaks for 3.55s
+        do {
+            freeman overlays "manit"
+        }
+    }
+    wait 0.5s
+
+    //lip 13
+    //  «Поэтому вы замечаете раньше. И устаёте раньше.»
+    together {
+        freeman speaks for 4.14s
+        do {
+            freeman overlays "vzves"
+            wait 1.3s
+            freeman overlays "klin"
+            wait 1.3s
+            freeman overlays "ostyl"
+        }
+    }
+    camera wide
+    wait 0.9s
+
+    //lip 14
+    //  «Чаша наполняется у всех. Наполняется от шума. Наполняется от чужого
+    //  настроения.» — МАНТРА: три куска с одного слова.
+    together {
+        freeman speaks for 9.22s
+        do {
+            freeman overlays "hips"
+            wait 3.04s
+            freeman overlays "ladoni_vniz"
+            wait 3.04s
+            freeman overlays "razmer"
+        }
+    }
+    wait 0.5s
+
+    //  ОБЛЕГЧЕНИЕ ЦЕЛОЙ ПОЗОЙ. `blazhenstvo` — вторая поза из нетронутых, и
+    //  ставится она ровно на несущей строке: плечи опускаются раньше слов.
+    camera close-up freeman
+    freeman pose "blazhenstvo"
+    wait 0.15s
+
+    //lip 15
+    //  «У вас она меньше. Это не поломка — настройка.»
+    freeman speaks for 4.55s
+    camera wide
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 7: komnata — ОТКАЗ И ПОДМЕНА ИМЕНИ ===================
+//  ВТОРОЕ ПЕРЕМЕЩЕНИЕ: подход к комоду с колонкой. Ролик не рассказывает про
+//  громкость — он к ней подходит.
+scene "s7" (duration: 1s, set: komnata) {
+    transition static 0.2s
+
+    place freeman at (0.54, 0.95) facing front on floor
+    freeman scales 0.95 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 16
+    //  «Что делать — решать вам. Я скажу только, как это зовётся.»
+    together {
+        freeman speaks for 4.26s
+        do {
+            freeman overlays "otmahnulsya"
+            wait 1.38s
+            freeman overlays "open"
+            wait 1.38s
+            freeman overlays "k_sebe"
+        }
+    }
+    wait 0.5s
+
+    //lip 17
+    //  «Перестаньте называть это чувствительностью: с ней ничего не сделаешь.»
+    together {
+        freeman speaks for 4.26s
+        do {
+            freeman overlays "stop_ladon"
+            wait 2.26s
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.4s
+
+    together {
+        freeman moves-to (0.70, 0.95) over 0.7s
+        do {
+            freeman overlays "shag_bok_pravoj"
+        }
+    }
+    freeman pose "point"
+    camera close-up freeman
+
+    //lip 18
+    //  «Называйте громкостью. Громкость убавляют.» — рука на ручке.
+    together {
+        freeman speaks for 3.02s
+        do {
+            freeman overlays "palec_vverh"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 8: peregovorka — НЕ-РЕШЕНИЕ И ПРЕДЕЛ =================
+//  Предел способа назван там, где он и ломается.
+scene "s8" (duration: 1s, set: peregovorka) {
+    transition static 0.2s
+
+    place freeman at (0.13, 0.93) facing front on floor
+    freeman scales 1.15 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 19
+    //  «Способ, который предлагали, назывался «привыкнешь».»
+    together {
+        freeman speaks for 3.40s
+        do {
+            freeman overlays "shrug"
+            wait 1.8s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.4s
+
+    //lip 20
+    //  «Работает ровно до первого открытого офиса.»
+    together {
+        freeman speaks for 3.71s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+    camera wide
+    wait 1.0s
+}
+
+
+// ============ СЦЕНА 9: zal — ПРЕЗЕНТАЦИЯ, ГРАНИЦА, ПЕРЕСЫЛКА =============
+scene "s9" (duration: 1s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.93) facing front on floor
+    freeman scales 0.88 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 21
+    //  «Есть курс «Высокочувствительные люди». Десять лекций, и всё бесплатно.»
+    together {
+        freeman speaks for 5.10s
+        do {
+            freeman overlays "raskryl"
+            wait 1.7s
+            freeman overlays "vozzvanie"
+            wait 1.7s
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.45s
+
+    //lip 22
+    //  «Он не учит терпеть. Он показывает, где у вашей чаши край.»
+    together {
+        freeman speaks for 4.18s
+        do {
+            freeman overlays "otverg"
+            wait 1.42s
+            freeman overlays "yorik"
+            wait 1.42s
+            freeman overlays "razmer"
+        }
+    }
+    wait 0.5s
+
+    camera medium freeman
+
+    //lip 23
+    //  «Отдельная лекция — где черта, за которой нужен врач.»
+    together {
+        freeman speaks for 3.37s
+        do {
+            freeman overlays "ladoni_vniz"
+            wait 1.79s
+            freeman overlays "chelo"
+        }
+    }
+    wait 0.6s
+
+    //lip 24
+    //  «Нарисованный человек за вас громкость не убавит.» — САМОРЕФЕРЕНЦИЯ.
+    together {
+        freeman speaks for 3.00s
+        do {
+            freeman overlays "zatylok"
+        }
+    }
+    wait 0.9s
+
+    //lip 25
+    //  «И вы уже вспомнили того, кому «слишком» говорили при вас.»
+    together {
+        freeman speaks for 4.14s
+        do {
+            freeman overlays "v_upor"
+            wait 1.4s
+            freeman overlays "smel"
+            wait 1.4s
+            freeman overlays "prishchur"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 10: komnata — ЖАЛО И ПОДПИСЬ =========================
+//  Кадр VO-1 целиком: ролик кончается там же, где начался, и на последней
+//  реплике шум за дверью убавляется — ролик делает то, о чём просит.
+scene "s10" (duration: 1s, set: komnata) {
+    transition static 0.2s
+
+    place freeman at (0.30, 0.95) facing front on floor
+    freeman scales 0.95 over 0.01s
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-21.svg") at (0.325, 0.575) layer 9
+    nomer2 scales 0.16 over 0.01s
+    nomer2 hides
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 26
+    //  «Когда накроет, не тяните. Убавьте громкость.»
+    together {
+        freeman speaks for 3.78s
+        do {
+            freeman overlays "palec_vverh"
+            wait 2.0s
+            freeman overlays "v_upor"
+        }
+    }
+    wait 0.9s
+
+    camera close-up freeman
+
+    //lip 27
+    //  «Чаша не бездонная ни у кого…» — ОБРЫВ.
+    together {
+        freeman speaks for 2.07s
+        do {
+            freeman overlays "rubit"
+        }
+    }
+    //  Пауза 1.2 с: обрыв обязан повиснуть, иначе подпись его затрёт.
+    camera wide
+    wait 1.2s
+
+    //  ПОДПИСЬ-КОЛЬЦО. Кадр тождествен первому, метка курса на месте.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.18 over 0.05s ease-out
+    nomer2 scales 0.16 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 28
+    //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
+    together {
+        freeman speaks for 3.71s
+        do {
+            freeman overlays "wave"
+            wait 1.96s
+            freeman overlays "manit"
+        }
+    }
+    nomer2 hides
+    wait 0.5s
+}

@@ -1,0 +1,677 @@
+// =============================================================================
+//  «СЧЁТ» — интро к курсу «Психология еды», номер 20.
+//  VO — eda-VO.md, маркеры 1..28.
+//
+//  ОДНА МЫСЛЬ НА РОЛИК: срыв на четвёртый день запрета — не слабость характера,
+//  а счёт, который тело предъявляет за недоданное. Виноват не человек.
+//
+//  ЧЕМ ЭТОТ РОЛИК ОТЛИЧАЕТСЯ ОТ ПРЕДЫДУЩИХ ПЯТИ
+//
+//  1. ЗРИТЕЛЯ НЕ ОБВИНЯЮТ. Пять роликов подряд открывались «Вы + глагол» и
+//     ставили зрителя виноватым. Здесь так нельзя: наука курса говорит ровно
+//     обратное. Ставка перевёрнута — виновато УСТРОЙСТВО (механизм M2).
+//
+//  2. СКЕЛЕТ — ПРЯМОЙ ПОКАЗ, в каталоге не брали ни разу. Четыре дня идут
+//     сценами подряд, каждый в своей локации; никто не объясняет, зритель сам
+//     видит, куда идёт неделя.
+//
+//  3. ШУТКА — СТАНОК 2 «ОПЫТ НА ЗРИТЕЛЕ» (BANK-SHUTOK.md), тоже впервые.
+//     Вопрос про овсянку проигрывается за секунду и не выигрывается никем,
+//     кто стоит у холодильника в одиннадцать ночи.
+//
+//  4. ЦВЕТНОЙ ПРЕДМЕТ — КРАСНЫЙ МАГНИТ на дверце, 0.018% кадра. Локация
+//     чёрно-белая целиком; цвет несёт одна вещь, и она держит список — то,
+//     с чем ролик и спорит.
+//
+//  5. КАМЕРА РАБОТАЕТ. Двадцать последних роликов сняты двумя приёмами из
+//     десяти; здесь четыре — общий, средний, крупный и нижний ракурс, и
+//     каждый мотивирован репликой, а не разнообразием ради счётчика
+//     (гейт tools/rost.py).
+//
+//  6. ПЕРСОНАЖ ХОДИТ. В одиннадцати последних роликах не было ни одного
+//     `moves-to`. Здесь два: проход мимо витрины во вторник и отход от дверцы
+//     после шутки. Новые позы — `spina_oglyadka` и `low_angle`, обе из
+//     шестидесяти семи, не поставленных ни разу.
+//
+//     СИДЕТЬ НЕЛЬЗЯ. Первая редакция ставила `na_stule` и `spina_ponuro` —
+//     гейт осанки отбил обе (0.88 и 0.80 роста эталона при пороге 0.92), и
+//     он прав: студия трижды говорила «нигде не сидит». Брать из нетронутого
+//     запаса можно только то, что не роняет фигуру.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · в длинной реплике первым слоем называется РУКА (lint_arms);
+//    · фигура НЕ ПРИСЕДАЕТ (tools/posture.py);
+//    · `duration:` ГОВОРЯЩЕЙ СЦЕНЫ — ПОЛ, А НЕ ЦЕЛЬ, и потому равен 1s;
+//    · голый `scales` стоит 0.5с таймлайна — всегда `over 0.01s`;
+//    · слой, трогающий рот, ВНУТРИ реплики перебивает липсинк — только до или
+//      после (tools/speech_lint.py);
+//    · У СТОЛА СО СЧЁТОМ ФИГУРЫ НЕТ ПО ЗАМЫСЛУ: счёт предъявлен, а платить
+//      некому. Поэтому в сцене `s7` нет `place` — и масштаб там не меряется;
+//    · МАСШТАБ ЧИТАЕТСЯ ВМЕСТЕ С `over` (реестр §XXXI).
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
+//  Завод перепишет их по факту озвучки.
+// =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 09ed4d0c
+import character freeman from "../assets/characters/freeman_rig"
+import set kuhnya from "../assets/sets/eda-kuhnya-noch.svg"
+import set vitrina from "../assets/sets/eda-vitrina.svg"
+import set schet from "../assets/sets/eda-stol-schet.svg"
+import set void from "../assets/sets/void-black.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+
+// ============ СЦЕНА 1: kuhnya — ХУК И ОТРИЦАНИЕ =========================
+//  Ночная кухня. Свет только из открытого холодильника. Первые две реплики
+//  ставят зрителя в кадр, а не в подсудимые.
+scene "s1" (duration: 1s, set: kuhnya) {
+    place freeman at (0.54, 0.95) facing front on floor
+    freeman scales 1.15 over 0.01s
+
+    let nomer = prop("nomer", "../assets/props/nomer-20.svg") at (0.565, 0.545) layer 9
+    nomer scales 0.17 over 0.01s
+    nomer hides
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.19 over 0.05s ease-out
+    nomer scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 1
+    //  «Одиннадцать ночи. Вы у холодильника.»
+    together {
+        freeman speaks for 3.47s
+        do {
+            freeman overlays "vdal"
+            wait 1.84s
+            freeman overlays "calm"
+        }
+    }
+    wait 0.5s
+
+    //lip 2
+    //  «Свет только из него.»
+    together {
+        freeman speaks for 1.13s
+        do {
+            freeman overlays "ladoni_vniz"
+        }
+    }
+    wait 0.5s
+
+    //  СПИНОЙ К КАМЕРЕ, С ОГЛЯДКОЙ ЧЕРЕЗ ПЛЕЧО. Поза `spina_oglyadka` — из
+    //  шестидесяти семи, которых в роликах не было ни разу. Реплика про
+    //  «держались» звучит в спину: пока не сказано, что он не виноват, лицо
+    //  показывать нечего.
+    //
+    //  СНАЧАЛА СТОЯЛА `spina_ponuro` — и гейт осанки её отбил: 0.80 роста
+    //  эталона при пороге 0.92. Гейт прав, и это не придирка: студия трижды
+    //  говорила «нигде не сидит», «на корточки не садится — некрасиво в кадре».
+    //  Понурая спина роняет фигуру ровно так же. Оглядка держит рост 0.96.
+    freeman pose "spina_oglyadka"
+    wait 0.15s
+
+    //lip 3
+    //  «Вы держались четыре дня.»
+    freeman speaks for 1.96s
+    wait 0.6s
+
+    //  РАЗВОРОТ К КАМЕРЕ ровно на реплике, которая снимает обвинение.
+    freeman pose "calm"
+    camera medium freeman
+    wait 0.1s
+
+    //lip 4
+    //  «Про силу воли не надо. Она у вас есть.»
+    together {
+        freeman speaks for 3.71s
+        do {
+            freeman overlays "stop_ladon"
+            wait 1.97s
+            freeman overlays "ugryumo"
+        }
+    }
+    camera wide
+    wait 0.7s
+}
+
+
+// ============ СЦЕНА 2: kuhnya, крупно — ПОНЕДЕЛЬНИК =====================
+//  Крупный план у дверцы: список под красным магнитом — единственная цветная
+//  вещь ролика и предмет, с которым ролик спорит.
+scene "s2" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.44, 0.95) facing front on floor
+    freeman scales 1.15 over 0.01s
+    //  СРЕДНИЙ, А НЕ КРУПНЫЙ. Крупный план строится вокруг фигуры и выкинул бы
+    //  из кадра дверцу со списком — а реплика именно про список. Контактный
+    //  лист этого не покажет: он рисует все сцены общим планом, и работа
+    //  камеры человеческой проверке пока недоступна.
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 5
+    //  «В понедельник вы написали список — что нельзя есть.»
+    together {
+        freeman speaks for 2.77s
+        do {
+            freeman overlays "point"
+            wait 1.47s
+            freeman overlays "ugryumo"
+        }
+    }
+    camera wide
+    wait 0.4s
+}
+
+
+// ============ СЦЕНА 3: vitrina — ВТОРНИК =================================
+//  Проход мимо витрины. Движение поперёк кадра, а не на зрителя: вторник —
+//  это то, что прошло мимо, и прошло с гордостью.
+scene "s3" (duration: 1s, set: vitrina) {
+    transition static 0.2s
+
+    place freeman at (0.16, 0.92) facing front on floor
+    freeman scales 1.06 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 6
+    //  «Во вторник прошли мимо витрины и гордились.»
+    //  Шаг слоями `shag_bok_*`: они не трогают рта, липсинк остаётся хозяином.
+    //  2×1.3 = 2.6 с при 2.63 с реплики.
+    together {
+        freeman speaks for 2.63s
+        do {
+            freeman overlays "shag_bok_levoj"
+            freeman moves-to (0.30, 0.92) over 1.3s
+            freeman overlays "shag_bok_pravoj"
+            freeman moves-to (0.44, 0.92) over 1.3s
+        }
+    }
+    //  Остановка полной позой ТЕЛА, а не мимикой. Сначала здесь стоял
+    //  `pose "smug"` — и строгий линт синхрона на заводе отбил: `smug` это
+    //  МИМИКА, и полной позой она стирает жест тела в стойку смирно
+    //  (PRAVILA-DVIZHENIYA.md §5). Приёмка этого не видит: гейт ходьбы
+    //  требует закрыть проход полной позой и не смотрит, лицо это или тело.
+    //  Тело закрывает проход, лицо доигрывает слоем.
+    freeman pose "confident"
+    freeman overlays "smug"
+    wait 0.4s
+}
+
+
+// ============ СЦЕНА 4: void — СРЕДА ======================================
+//  Среда живёт в голове, а не в комнате: локации у неё нет.
+scene "s4" (duration: 1s, set: void) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.46) facing front
+    freeman scales 1.85 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 7
+    //  «В среду думали о печенье, которого год не покупали.»
+    together {
+        freeman speaks for 3.24s
+        do {
+            freeman overlays "u_viska_l"
+            wait 1.1s
+            freeman overlays "gorech"
+            wait 1.1s
+            freeman overlays "zakrylsya"
+        }
+    }
+    wait 0.5s
+}
+
+
+// ============ СЦЕНА 5: kuhnya — ЧЕТВЕРГ И ПОДВОД =========================
+//  Тот же кадр, что в VO-1. Неделя вернулась туда, откуда вышла.
+scene "s5" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.54, 0.95) facing front on floor
+    freeman scales 1.15 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 8
+    //  «В четверг вы стоите здесь.»
+    together {
+        freeman speaks for 1.83s
+        do {
+            freeman overlays "vniz"
+        }
+    }
+    wait 0.9s
+
+    camera medium freeman
+
+    //lip 9
+    //  «Положено сказать «сорвался».»
+    together {
+        freeman speaks for 2.14s
+        do {
+            freeman overlays "shrug"
+            wait 1.14s
+            freeman overlays "zatylok"
+        }
+    }
+    wait 0.5s
+
+    //lip 10
+    //  «Это не срыв. Это счёт.»
+    //  ПЕРЕЛОМ. Слово «счёт» отдельно и вниз.
+    together {
+        freeman speaks for 2.46s
+        do {
+            freeman overlays "otverg"
+            wait 1.3s
+            freeman overlays "rubit"
+        }
+    }
+    camera wide
+    wait 0.2s
+}
+
+
+// ============ СЦЕНА 6: schet — ВСТАВКА, ФИГУРЫ НЕТ =======================
+//  Лента чека со стола на пол. Держится ровно паузу после перелома: счёт
+//  предъявлен, а платить некому — потому в кадре никого и нет.
+scene "s6" (duration: 0.9s, set: schet) {
+    transition static 0.2s
+    camera wide
+    wait 0.7s
+}
+
+
+// ============ СЦЕНА 7: kuhnya — РАЗБОР И ВЗЛЁТ ===========================
+scene "s7" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.54, 0.95) facing front on floor
+    freeman scales 1.15 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 11
+    //  «Четыре дня вы держали тело голодным, а тело ведёт учёт.»
+    together {
+        freeman speaks for 4.33s
+        do {
+            freeman overlays "razmer"
+            wait 1.5s
+            freeman overlays "dengi"
+            wait 1.5s
+            freeman overlays "vzves"
+        }
+    }
+    wait 0.5s
+
+    //lip 12
+    //  «Вечером четвёртого дня оно счёт предъявило. Целиком.»
+    together {
+        freeman speaks for 4.49s
+        do {
+            freeman overlays "raskryl"
+            wait 1.47s
+            freeman overlays "chelo"
+            wait 1.47s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.9s
+
+    //  НИЖНИЙ РАКУРС на реплику, где высокие слова проигрывают брюху: снизу
+    //  фигура крупнее слов, которыми зритель себя судит.
+    camera close-up freeman
+    camera angle low
+    //  Поза `low_angle` — ОБЪЁМНАЯ добавка к наклону камеры (CAMERA.md рига):
+    //  один наклон даёт ракурс плоско, поза доигрывает перспективу телом.
+    //  Вторая из нетронутых шестидесяти семи, рост 1.00 эталона.
+    freeman pose "low_angle"
+    wait 0.1s
+
+    //lip 13
+    //  «Не слабость — арифметика. Зовите это достоинством или силой воли, а
+    //  решает брюхо.»
+    together {
+        freeman speaks for 8.88s
+        do {
+            freeman overlays "dve_storony"
+            wait 3.1s
+            freeman overlays "razvel"
+            wait 3.1s
+            freeman overlays "vniz"
+        }
+    }
+    camera angle level
+    camera wide
+    freeman pose "calm"
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 8: kuhnya — ОПЫТ, МАНТРА, УДАР =======================
+scene "s8" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.54, 0.95) facing front on floor
+    freeman scales 1.15 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 14
+    //  «Что делать, не скажу. Скажу, что спросить: съели бы вы сейчас тарелку
+    //  овсянки?»
+    together {
+        freeman speaks for 6.06s
+        do {
+            freeman overlays "otmahnulsya"
+            wait 1.47s
+            freeman overlays "think"
+            wait 1.47s
+            freeman overlays "k_sebe"
+            wait 1.47s
+            freeman overlays "vzglyad"
+        }
+    }
+    //  ПАУЗА ОБЯЗАТЕЛЬНА: зритель отвечает себе сам. Сократить — значит
+    //  ответить за него, и опыт умирает.
+    wait 0.9s
+
+    //lip 15
+    //  «Вот. И я нет. Сила воли работает ровно до открытой дверцы.»
+    together {
+        freeman speaks for 4.91s
+        do {
+            freeman overlays "shrug"
+            wait 1.6s
+            freeman overlays "doshlo"
+            wait 1.6s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.5s
+
+    //  ОТХОД ОТ ДВЕРЦЫ. Драка кончилась — он отходит от холодильника и
+    //  договаривает уже не у него. Сидеть здесь нельзя: `na_stule` даёт 0.88
+    //  роста эталона, и гейт осанки её отбивает по прямому указанию студии.
+    together {
+        freeman moves-to (0.71, 0.95) over 0.8s
+        do {
+            freeman overlays "shag_bok_pravoj"
+        }
+    }
+    freeman pose "hips"
+    camera wide
+    wait 0.2s
+
+    //lip 16
+    //  «Голод тела ждёт. Голод тела ест что дают. Голод тела кончается.»
+    //  МАНТРА: три куска с одного слова.
+    together {
+        freeman speaks for 5.75s
+        do {
+            freeman overlays "ruki_za_spinu"
+            wait 1.35s
+            freeman overlays "razvel"
+            wait 1.35s
+            freeman overlays "ladoni_vniz"
+            wait 1.35s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.5s
+
+    //lip 17
+    //  «А у холодильника стоял не он.»
+    together {
+        freeman speaks for 2.72s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 9: void — ДВА ГОЛОДА =================================
+scene "s9" (duration: 1s, set: void) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.46) facing front
+    freeman scales 1.85 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 18
+    //  «Голод бывает двух видов: один в теле, другой в голове.»
+    together {
+        freeman speaks for 3.66s
+        do {
+            freeman overlays "dve_storony"
+            wait 1.18s
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.4s
+
+    //lip 19
+    //  «Оба чувствуются по-разному, а дверцу открывают одну.»
+    together {
+        freeman speaks for 3.53s
+        do {
+            freeman overlays "klin"
+            wait 1.53s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 10: kuhnya — НЕ-РЕШЕНИЕ И ПРЕДЕЛ =====================
+//  Обратно к дверце со списком: не-решение стоит там же, где стояло.
+scene "s10" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.44, 0.95) facing front on floor
+    freeman scales 1.15 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 20
+    //  «И что назначают тому, кто их спутал? Новый список. Или ролик вроде
+    //  этого.» — САМОРЕФЕРЕНЦИЯ, без подмигивания.
+    together {
+        freeman speaks for 6.56s
+        do {
+            freeman overlays "point"
+            wait 2.14s
+            freeman overlays "razmer"
+            wait 2.14s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.35s
+
+    //lip 21
+    //  «Работает ровно до четверга.»
+    together {
+        freeman speaks for 1.88s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+    camera wide
+    wait 1.0s
+}
+
+
+// ============ СЦЕНА 11: zal — ПРЕЗЕНТАЦИЯ И ГРАНИЦА ======================
+scene "s11" (duration: 1s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.93) facing front on floor
+    freeman scales 0.88 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 22
+    //  «Есть курс «Психология еды». Десять лекций, и всё бесплатно.»
+    together {
+        freeman speaks for 5.20s
+        do {
+            freeman overlays "raskryl"
+            wait 2.75s
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.45s
+
+    //lip 23
+    //  «Он не про вес и не про правильные продукты. Он про голод в теле и голод в голове.»
+    together {
+        freeman speaks for 5.46s
+        do {
+            freeman overlays "otverg"
+            wait 2.3s
+            freeman overlays "dve_storony"
+        }
+    }
+    wait 0.5s
+
+    camera medium freeman
+
+    //lip 24
+    //  «Одна лекция — про то, где это уже болезнь. Там нужен врач, и мы
+    //  говорим прямо.» — БЕЗ СМЯГЧЕНИЯ И БЕЗ НАЖИМА.
+    together {
+        freeman speaks for 5.20s
+        do {
+            freeman overlays "ladoni_vniz"
+            wait 1.71s
+            freeman overlays "vozzvanie"
+            wait 1.71s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.9s
+
+    //lip 25
+    //  «И вы уже вспомнили того, кто зовёт себя безвольным. Из-за еды.»
+    together {
+        freeman speaks for 5.17s
+        do {
+            freeman overlays "v_upor"
+            wait 2.73s
+            freeman overlays "prishchur"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+
+// ============ СЦЕНА 12: kuhnya — ЖАЛО И ПОДПИСЬ ==========================
+//  Кадр VO-1 целиком: ролик кончается там же, где начался.
+scene "s12" (duration: 1s, set: kuhnya) {
+    transition static 0.2s
+
+    place freeman at (0.54, 0.95) facing front on floor
+    freeman scales 1.15 over 0.01s
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-20.svg") at (0.565, 0.545) layer 9
+    nomer2 scales 0.17 over 0.01s
+    nomer2 hides
+    camera medium freeman
+    freeman pose "calm"
+
+    //lip 26
+    //  «Сегодня в одиннадцать задайте вопрос про овсянку. За вас никто не спросит.»
+    together {
+        freeman speaks for 5.77s
+        do {
+            freeman overlays "palec_vverh"
+            wait 3.46s
+            freeman overlays "v_upor"
+        }
+    }
+    wait 0.9s
+
+    camera close-up freeman
+
+    //lip 27
+    //  «Нет списка — нет и счёта…» — ОБРЫВ.
+    together {
+        freeman speaks for 1.89s
+        do {
+            freeman overlays "rubit"
+        }
+    }
+    //  Пауза 1.2 с: обрыв обязан повиснуть, иначе подпись его затрёт.
+    camera wide
+    wait 1.2s
+
+    //  ПОДПИСЬ-КОЛЬЦО. Кадр тождествен первому, метка курса на месте.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.19 over 0.05s ease-out
+    nomer2 scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 28
+    //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
+    together {
+        freeman speaks for 5.04s
+        do {
+            freeman overlays "wave"
+            wait 2.66s
+            freeman overlays "manit"
+        }
+    }
+    nomer2 hides
+    wait 0.5s
+}

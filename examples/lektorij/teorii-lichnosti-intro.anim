@@ -151,7 +151,7 @@ scene "linza" (duration: 61s, set: pole) {
         do {
             camera angle high freeman
             wait 1.3s
-            freeman overlays "no"             // «да не в вас дело» — развёл руками
+            freeman overlays "no"             // «ты уже́ объясня́ешь люде́й» — развёл руками
             camera medium freeman
         }
     }

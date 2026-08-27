@@ -1,0 +1,528 @@
+// =============================================================================
+//  «ЭТО МОЁ ИЛИ НЕ МОЁ» — интро к курсу «Стоицизм на практике», номер 14.
+//  VO — stoicizm-VO.md, маркеры 1..23.
+//
+//  ОДНА МЫСЛЬ НА РОЛИК: ранит не событие, а то, что вы про него себе сказали.
+//  Событие вам не подчиняется, сказанное — подчиняется.
+//
+//  ЧЕМ ЭТОТ РОЛИК УСТРОЕН
+//
+//  1. ЗЛОСТЬ НЕ ЗАПРЕЩАЕТСЯ НИ РАЗУ. «Не злитесь» — это ровно то не-решение,
+//     над которым ролик смеётся на VO-17. В VO-5 злость названа НАСТОЯЩЕЙ;
+//     отбирается не чувство, а тот, кому его предъявить.
+//
+//  2. ЗАЩИТУ ЗАКРЫВАЮТ ДО ПЕРЕЧИСЛЕНИЯ. Бит отрицания (VO-2) стоит ПЕРЕД
+//     пулемётом, а не после: зритель, услышавший «вы злились», первым делом
+//     отвечает «я держался», и с этой мыслью уходит. Возражение называют
+//     раньше, чем он успевает его подумать.
+//
+//  3. ВЕЩЬ РОЛИКА — ПРОБКА, и она же закрывает шутку пределом («работает
+//     ровно до следующей пробки»). Кольцо ленты замыкается на той же улице.
+//
+//  4. ТРИАДА ХУКА БЫТОВАЯ ЦЕЛИКОМ — указание студии: «нужно насущное, чтобы
+//     увеличить вероятность попадания». Пробка, скорость интернета,
+//     начальник, погода — по убыванию насущности, абсурдный хвост последним.
+//
+//  5. РАЗНООБРАЗИЕ ДВИЖЕНИЙ СЧИТАЕТСЯ ЧИСЛОМ. В риге 203 позы, использованы
+//     143, семьдесят две не использованы ни разу. Здесь намеренно взяты слои,
+//     которых в серии ещё не было: `zakrylsya`, `shrug`, `dve_storony`,
+//     `k_sebe`, `vdal`, `no`, `gorech`, `somnenie`, `raspahnul`, `u_viska`,
+//     `za_golovu`, `zatylok`, `dengi`, `smel`, `oba_vverh`, `razmer`, `wave`.
+//     Ни один слой не повторяется в окне из восьми реплик.
+//
+//  6. НОМЕР КУРСА 14, метка `nomer-14.svg` белой тушью на груди, в ПЕРВОМ и
+//     ПОСЛЕДНЕМ кадре. Масштаб метки идёт ЗА фигурой.
+//
+//  7. ЛОКАЦИЙ ШЕСТЬ, ДВЕ НАРИСОВАНЫ СТУДИЕЙ ПОД ЭТОТ РОЛИК по промтам
+//     (`stoicizm-IMAGE-PROMPTS.md`): тротуар вдоль стоящей пробки и стол с
+//     двумя ящиками. Остальные четыре уже стояли в серии.
+//
+//  КООРДИНАТЫ ДВУХ НОВЫХ ЛОКАЦИЙ — ПРЕДВАРИТЕЛЬНЫЕ и пересчитываются пробным
+//  рендером, как только картинки лягут в репо: `place` и `scales` в сценах
+//  s1, s3, s5, s7, s9 держатся на глаз, а не на карте поверхностей. До
+//  пересчёта гейт масштаба по ролику не гоняется и ролик не отправляется.
+//
+//  ОБЩИЕ ЗАКОНЫ, которые держат гейты, а не глаз:
+//    · в длинной реплике первым слоем называется РУКА (lint_arms);
+//    · фигура НЕ ПРИСЕДАЕТ (tools/posture.py);
+//    · `duration:` ГОВОРЯЩЕЙ СЦЕНЫ — ПОЛ, А НЕ ЦЕЛЬ, и потому равен 1s;
+//      ветка `do{}` не длиннее `speaks for` (tools/pauses.py);
+//    · голый `scales` стоит 0.5с таймлайна — всегда `over 0.01s`;
+//    · слой, трогающий рот, ВНУТРИ реплики перебивает липсинк — только до или
+//      после (tools/speech_lint.py). Здесь такой один: `hero_wink` в финале;
+//    · номера реплик и маркеров сходятся (tools/sverka.py);
+//    · комментарий цитирует ЖИВУЮ реплику (tools/citaty.py);
+//    · КАЖДОЕ ИМЯ ПОЗЫ ЕСТЬ В РИГЕ (tools/imena_poz.py);
+//    · ВИЗЕМЫ ОТКРЫВАЮТ РОТ (tools/rot.py, реестр §XXVI);
+//    · МАСШТАБ ФИГУРЫ сверяется с мерой локации (tools/masshtab.py, §XXVII);
+//    · БЕЗ СВЕРХКРУПНЫХ ПЛАНОВ: растр сета на ECU-зуме взрывается.
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ С ПОПРАВКОЙ ПО РЕГИСТРАМ (`podacha.prognoz`).
+//  Завод перепишет их по факту озвучки.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set probka from "../assets/sets/stoicizm-probka.svg"
+import set void from "../assets/sets/void-black.svg"
+import set vannaya from "../assets/sets/vannaya-zerkalo.svg"
+import set yaschiki from "../assets/sets/stoicizm-dva-yaschika.svg"
+import set pole from "../assets/sets/field-day.svg"
+import set zal from "../assets/sets/lektorij-zal.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.2
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+
+// ============ СЦЕНА 1: probka ===========================================
+//  Вещь ролика стоит в двух метрах и никуда не едет. Зритель видит это
+//  раньше, чем услышит «ни один из них об этом не узнал».
+scene "s1" (duration: 1s, set: probka) {
+    place freeman at (0.42, 0.545) facing front on floor
+    freeman scales 0.76 over 0.01s
+
+    let nomer = prop("nomer", "../assets/props/nomer-14.svg") at (0.515, 0.665) layer 9
+    nomer scales 0.16 over 0.01s
+    nomer hides
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.177 over 0.05s ease-out
+    nomer scales 0.16 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 1
+    //  «Вы сегодня злились.»
+    together {
+        freeman speaks for 1.57s
+        do {
+            freeman overlays "obvinil"
+        }
+    }
+    wait 0.4s
+
+    //lip 2
+    //  «И не говорите, что держались. Вы просто не подали виду.»
+    together {
+        freeman speaks for 5.41s
+        do {
+            freeman overlays "zakrylsya"
+            wait 2.7s
+            freeman overlays "shrug"
+            wait 1.65s
+            freeman overlays "ugryumo"
+        }
+    }
+    wait 0.5s
+
+    //lip 3
+    //  «На пробку. На скорость интернета. На начальника. На погоду.»
+    together {
+        freeman speaks for 4.76s
+        do {
+            freeman overlays "dve_storony"
+            wait 1.58s
+            freeman overlays "k_sebe"
+            wait 1.58s
+            freeman overlays "vdal"
+        }
+    }
+    wait 0.35s
+
+    //lip 4
+    //  «Ни один из них об этом не узнал.»
+    together {
+        freeman speaks for 1.71s
+        do {
+            freeman overlays "no"
+        }
+    }
+    wait 0.7s
+
+    //lip 5
+    //  «Злость была настоящая — предъявить её было некому.»
+    together {
+        freeman speaks for 3.96s
+        do {
+            camera medium freeman
+            freeman overlays "gorech"
+            wait 2.10s
+            freeman overlays "somnenie"
+        }
+    }
+    camera wide
+    wait 0.6s
+}
+
+// ============ СЦЕНА 2: void =============================================
+//  ПЕРЕЛОМ. Единственная намеренная тишина ролика идёт перед этим кадром:
+//  вопрос повисает, зритель отвечает про себя.
+scene "s2" (duration: 1s, set: void) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.46) facing front
+    freeman scales 2.00 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 6
+    //  «А теперь скажите: что из этого было в вашей власти?»
+    together {
+        freeman speaks for 3.87s
+        do {
+            freeman overlays "raspahnul"
+            wait 2.40s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.9s
+
+    //lip 7
+    //  «Ничего. Только то, что вы обо всём этом подумали.»
+    together {
+        freeman speaks for 4.83s
+        do {
+            freeman overlays "u_viska"
+            wait 2.42s
+            freeman overlays "k_sebe"
+            wait 1.45s
+            freeman overlays "doshlo"
+        }
+    }
+    wait 0.5s
+}
+
+// ============ СЦЕНА 3: probka ===========================================
+//  Приговор произносится на живом фоне, а не в пустоте: пробка обязана
+//  стоять в кадре ровно тогда, когда с неё снимают вину.
+scene "s3" (duration: 1s, set: probka) {
+    transition static 0.2s
+
+    place freeman at (0.42, 0.545) facing front on floor
+    freeman scales 0.76 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 8
+    //  «Ранит не пробка. Ранит то, что вы про неё решили.»
+    together {
+        freeman speaks for 4.94s
+        do {
+            freeman overlays "otverg"
+            wait 2.51s
+            freeman overlays "v_upor"
+            wait 1.48s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 4: vannaya ==========================================
+//  Внутренняя речь звучит там, где тихо. Зеркало отвечает на «это сказали
+//  вы» раньше, чем реплика доходит до конца.
+scene "s4" (duration: 1s, set: vannaya) {
+    transition static 0.2s
+
+    place freeman at (0.34, 0.94) facing front on floor
+    freeman scales 1.45 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 9
+    //  «Я опоздаю, на меня перестанут рассчитывать, всё рушится.»
+    together {
+        freeman speaks for 4.45s
+        do {
+            freeman overlays "za_golovu"
+            wait 2.30s
+            freeman overlays "zatylok"
+            wait 1.30s
+            freeman overlays "chelo"
+        }
+    }
+    wait 0.35s
+
+    //lip 10
+    //  «Это сказали не машины. Это сказали вы.»
+    together {
+        freeman speaks for 3.04s
+        do {
+            camera medium freeman
+            freeman overlays "obvinil"
+            wait 1.60s
+            freeman overlays "prishchur"
+        }
+    }
+    camera wide
+    wait 0.8s
+
+    //lip 11
+    //  «Сколько раз за день вы себе это рассказывали?»
+    together {
+        freeman speaks for 3.50s
+        do {
+            freeman overlays "dengi"
+            wait 1.79s
+            freeman overlays "vzves"
+            wait 0.98s
+            freeman overlays "klin"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 5: yaschiki =========================================
+//  Дихотомия контроля показана ДЕЙСТВИЕМ: на столе разбор, вещи ещё не
+//  разложены, и руки ходят над двумя ящиками.
+scene "s5" (duration: 1s, set: yaschiki) {
+    transition static 0.2s
+
+    place freeman at (0.24, 0.83) facing front on floor
+    freeman scales 1.23 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 12
+    //  «И вот что важно: злиться вы не разучитесь.»
+    together {
+        freeman speaks for 3.55s
+        do {
+            freeman overlays "smel"
+            wait 2.1s
+            freeman overlays "blink"
+        }
+    }
+    wait 0.35s
+
+    //lip 13
+    //  «Но платить за чужую погоду перестанете.»
+    together {
+        freeman speaks for 2.85s
+        do {
+            freeman overlays "otmahnulsya"
+            wait 1.70s
+            freeman overlays "gorech"
+        }
+    }
+    wait 0.9s
+
+    //lip 14
+    //  «Стоики делили всё надвое: это в моей власти, а это нет.»
+    together {
+        freeman speaks for 5.80s
+        do {
+            freeman overlays "dve_storony"
+            wait 2.95s
+            freeman overlays "klin"
+        }
+    }
+    wait 0.4s
+
+    //lip 15
+    //  «И работали только с первой половиной.»
+    together {
+        freeman speaks for 2.47s
+        do {
+            camera medium freeman
+            freeman overlays "k_sebe"
+            wait 1.40s
+            freeman overlays "doshlo"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+// ============ СЦЕНА 6: pole =============================================
+//  ВЗЛЁТ. Единственное высокое место ролика, и высокое слово стоит в одной
+//  фразе с бытовым: «свобода» и «жрать себя».
+scene "s6" (duration: 1s, set: pole) {
+    transition static 0.2s
+
+    place freeman at (0.50, 0.80) facing front on floor
+    freeman scales 1.15 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 16
+    //  «Свобода — это не когда всё под контролем, а когда вы перестали жрать
+    //  себя за то, что вам не подчиняется.»
+    together {
+        freeman speaks for 8.61s
+        do {
+            freeman overlays "raspahnul"
+            wait 3.00s
+            freeman overlays "oba_vverh"
+            wait 3.00s
+            freeman overlays "teplo"
+            wait 2.20s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.9s
+}
+
+// ============ СЦЕНА 7: probka ===========================================
+//  ШУТКА. Не-решение названо ВЕЩЬЮ — дыхание по квадрату, — и предел у него
+//  та же пробка, с которой ролик начался.
+scene "s7" (duration: 1s, set: probka) {
+    transition static 0.2s
+
+    place freeman at (0.42, 0.545) facing front on floor
+    freeman scales 0.76 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 17
+    //  «Самый популярный ответ — просто не нервничать. Подышать по квадрату.»
+    together {
+        freeman speaks for 4.62s
+        do {
+            freeman overlays "razmer"
+            wait 2.34s
+            freeman overlays "ladoni_vniz"
+            wait 1.71s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.35s
+
+    //lip 18
+    //  «Работает ровно до следующей пробки.»
+    together {
+        freeman speaks for 2.47s
+        do {
+            freeman overlays "shrug"
+            wait 1.50s
+            freeman overlays "ugryumo"
+        }
+    }
+    wait 1.0s
+}
+
+// ============ СЦЕНА 8: zal ==============================================
+//  Служебная часть говорится в другом пространстве: цена курса не должна
+//  звучать с той же улицы, где только что вынесли приговор.
+scene "s8" (duration: 1s, set: zal) {
+    transition static 0.2s
+
+    place freeman at (0.46, 0.93) facing front on floor
+    freeman scales 0.72 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    //lip 19
+    //  «Курс называется «Стоицизм на практике».»
+    together {
+        freeman speaks for 2.31s
+        do {
+            freeman overlays "vozzvanie"
+        }
+    }
+    wait 0.4s
+
+    //lip 20
+    //  «Десять лекций, и всё бесплатно.»
+    together {
+        freeman speaks for 2.17s
+        do {
+            camera medium freeman
+            freeman overlays "palec_vverh"
+        }
+    }
+    camera wide
+    wait 0.9s
+}
+
+// ============ СЦЕНА 9: probka ===========================================
+//  ЖАЛО и ПОДПИСЬ. Кольцо ленты: последний кадр тождествен первому, метка
+//  курса на том же месте.
+scene "s9" (duration: 1s, set: probka) {
+    transition static 0.2s
+
+    place freeman at (0.42, 0.545) facing front on floor
+    freeman scales 0.76 over 0.01s
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-14.svg") at (0.515, 0.665) layer 9
+    nomer2 scales 0.16 over 0.01s
+    nomer2 hides
+    camera wide
+    freeman pose "calm"
+
+    //lip 21
+    //  «Сегодня, когда разозлитесь, назовите вслух: это моё или не моё?»
+    together {
+        freeman speaks for 5.36s
+        do {
+            freeman overlays "manit"
+            wait 2.71s
+            freeman overlays "vdal_l"
+            wait 1.65s
+            freeman overlays "chelo"
+        }
+    }
+    wait 0.5s
+
+    //lip 22
+    //  «И если не ваше — за что вы платите?»
+    together {
+        freeman speaks for 3.07s
+        do {
+            camera medium freeman
+            freeman overlays "v_upor"
+            wait 2.10s
+            freeman overlays "ostyl"
+        }
+    }
+    camera wide
+    wait 1.1s
+
+    //  ТОТ ЖЕ КАДР, ЧТО И ПЕРВЫЙ, И ТА ЖЕ МЕТКА.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.177 over 0.05s ease-out
+    nomer2 scales 0.16 over 0.02s
+
+    //lip 23
+    //  «Всё, идём дальше. Лекторий Мейстера, курс лекций. Поехали!»
+    together {
+        freeman speaks for 4.65s
+        do {
+            freeman overlays "gladit_grud_niz"
+            wait 2.2s
+            freeman overlays "wave"
+        }
+    }
+    nomer2 hides
+    freeman overlays "hero_wink"
+}

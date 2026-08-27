@@ -1,0 +1,750 @@
+// =============================================================================
+//  «ХАЛИТОЗ» — манифест Лектория Мейстера, ролик номер 25.
+//  VO — halitoz-VO.md, маркеры 1..44. Сценарий студии.
+//
+//  ОДНА МЫСЛЬ НА РОЛИК: схему «сделай проблему — продай решение» показывают на
+//  чужом примере, а потом проделывают со зрителем при свидетелях. Разница ровно
+//  одна: та проблема была выдумана, эта настоящая, и денег за неё не берут.
+//
+//  1. РАЗРЫВ ОБЪЯВЛЕН ФЛАКОНОМ — АПТЕЧНЫМ ПУЗЫРЬКОМ ИЗ ДВАДЦАТЫХ на сегодняшней
+//     столешнице: единственная нарисованная вещь среди снятых, единственное
+//     цветное пятно (0.06% кадра), контекстом не объяснённая ничем. Он стоит в
+//     кадре с первой секунды, за четыре реплики до того, как в монологе появится
+//     «человек с флаконом» (VO-5), и оплачивается в VO-30 — «разница между мной и
+//     парнем с флаконом ровно одна», — где на этот пузырёк встаёт весь тезис. В
+//     финальном кадре он остаётся, и на втором круге зритель видит его знающим
+//     глазом.
+//
+//  2. ВТОРОЙ СЛОЙ РАЗРЫВА — МАТЕРИАЛ КАДРА, И ЭТОГО В СЕРИИ НЕ БЫЛО НИ РАЗУ.
+//     Двадцать четыре ролика подряд рисованный персонаж стоял в рисованной
+//     локации. Здесь он стоит в СНЯТОЙ комнате: плоская тушь на фотографической
+//     глубине. Глаз ловит несовместимость раньше, чем поймёт, что видит, — и это
+//     же тезис ролика: нарисованный говорит про настоящую жизнь, а настоящую
+//     жизнь тебе нарисовали. Машина такой разрыв не меряет: он видно и только
+//     видно, поэтому гейту объявлен флакон.
+//
+//  3. ЛОКАЦИЯ ОДНА НА ВЕСЬ РОЛИК, И ЭТО РЕШЕНИЕ, А НЕ ЭКОНОМИЯ. Он не выходит с
+//     твоей кухни две с половиной минуты. Склейки идут внутри одного места и
+//     работают планом, а не переездом: общий — средний — крупный.
+//
+//  4. ПЕРСОНАЖА НЕ СТАВИТЬ ПРАВЕЕ 0.6 (карта поверхностей локации). Правый блок
+//     шкафов после монохромного прохода имеет средний тон 81 из 255 и 46%
+//     пикселей темнее 40 — чёрный плащ там пропадает целиком, и ни одна мерка
+//     этого не поймает: все они читают силуэт по туши.
+//
+//  5. МЕРА ЧЕЛОВЕКА 0.73, И ФИГУРА СТОИТ НИЖЕ МЕРЫ НАМЕРЕННО. Полоса пола узкая
+//     (0.852..1.0), множитель глубины меняется резко: при scales 1.38 и ступнях
+//     на 0.97 рост выходил ровно в меру, 0.73, — и гейт запаса срезал макушку на
+//     пяти сценах из восьми, потому что самая высокая поза даёт ещё восемь
+//     процентов сверху. Стоит 1.10 при ступнях на 0.99: рост около 0.66, это
+//     внутри допуска ±15% от меры, а над головой появилось поле. Гейт роста и
+//     гейт запаса тянут в разные стороны, и проверять их надо парой.
+//
+//  7. ПЛАНЫ ВЗЯТЫ ПО ШКАЛЕ ЭТОЙ ЛОКАЦИИ, А НЕ ПО ПРИВЫЧКЕ. Мера человека здесь
+//     0.73 кадра — комната тесная, — и `camera medium` (зум 2.2) срезает макушку:
+//     проверено готовым рендером, на среднем плане голова уходила за верхнюю
+//     кромку. Поэтому общий остаётся `wide`, средний играет `two-shot` (1.2), а
+//     крупный — `medium` (2.2), который при таком росте и есть голова с плечами.
+//     В ролике 24 фигура была 0.56, и `medium` там проходил: план выбирается от
+//     меры локации, а не от названия.
+//
+//  6. ПОВЁРНУТЫХ РАКУРСОВ НЕТ И НИЖНЕГО РАКУРСА НЕТ. Пары ±22°, ±45° и ±90° у
+//     рига не зеркальны (реестр §XLI), а `camera angle low` наклоняет камеру и
+//     обнажает подложку. Здесь это стоило бы дороже обычного: локация —
+//     фотография, и её край виден сразу.
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ ПО 4.1 СЛОГА В СЕКУНДУ (поправка снята с
+//  переписанных заводом чисел ролика 24). Завод перепишет их по факту озвучки.
+// =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 59df7be7
+import character freeman from "../assets/characters/freeman_rig"
+import set kuhnya from "../assets/sets/halitoz-kuhnya-foto.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.12
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+
+// ============ СЦЕНА 1: s1 — приветствие, хук, отрицание ============
+scene "s1" (duration: 1s, set: kuhnya) {
+    place freeman at (0.30, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
+
+    let nomer = prop("nomer", "../assets/props/nomer-25.svg") at (0.325, 0.545) layer 9
+    nomer scales 0.17 over 0.01s
+    nomer hides
+    camera wide
+
+    //  ПЕРВЫЙ КАДР ТОЖДЕСТВЕН ПОСЛЕДНЕМУ, И ГРУДЬ В ОБОИХ ПУСТАЯ.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.19 over 0.05s ease-out
+    nomer scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+    wait 0.1s
+
+    freeman overlays "hero_grin"
+    wait 0.1s
+    //lip 1
+    //  «Привет-привет. Ты вовремя.»
+    together {
+        freeman speaks for 2.48s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.4s
+
+    //lip 2
+    //  «Америка, двадцатые годы. У Америки нет проблемы.»
+    together {
+        freeman speaks for 4.63s
+        do {
+            freeman overlays "vdal"
+            wait 2.32s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.4s
+
+    //lip 3
+    //  «Вообще никакой.»
+    together {
+        freeman speaks for 1.46s
+        do {
+            freeman overlays "razvel"
+        }
+    }
+    camera two-shot freeman
+    wait 0.4s
+
+    //lip 4
+    //  «Ты думаешь, это про рекламу. Это про тебя.»
+    together {
+        freeman speaks for 4.47s
+        do {
+            freeman overlays "no"
+            wait 2.23s
+            freeman overlays "prishchur"
+        }
+    }
+    camera wide
+    wait 0.7s
+}
+
+// ============ СЦЕНА 2: s2 — история про флакон ============
+scene "s2" (duration: 1s, set: kuhnya) {
+    transition static 0.12s
+
+    place freeman at (0.34, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
+    camera two-shot freeman
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 5
+    //  «И тут выходит человек с флаконом.»
+    together {
+        freeman speaks for 2.68s
+        do {
+            freeman overlays "manit"
+        }
+    }
+    wait 0.4s
+
+    //lip 6
+    //  «Говорит: у тебя изо рта пахнет.»
+    together {
+        freeman speaks for 2.22s
+        do {
+            freeman overlays "otvraschenie"
+        }
+    }
+    wait 0.4s
+
+    //lip 7
+    //  «Это болезнь. Ха-ли-тоз.»
+    together {
+        freeman speaks for 1.71s
+        do {
+            freeman overlays "palec_vverh"
+            wait 0.85s
+            freeman overlays "otschet"
+        }
+    }
+    wait 0.4s
+
+    freeman overlays "flash_wink"
+    wait 0.1s
+    //lip 8
+    //  «Даже друзья тебе не скажут. А я скажу.»
+    together {
+        freeman speaks for 3.17s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.4s
+
+    //lip 9
+    //  «И вот тебе лекарство.»
+    together {
+        freeman speaks for 1.71s
+        do {
+            freeman overlays "poimal"
+        }
+    }
+    wait 0.7s
+}
+
+// ============ СЦЕНА 3: s3 — числа, перелом, схема ============
+scene "s3" (duration: 1s, set: kuhnya) {
+    transition static 0.12s
+
+    place freeman at (0.30, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.15s
+
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 10
+    //  «У продавца выручка — с сотни тысяч до восьми миллионов.»
+    together {
+        freeman speaks for 3.00s
+        do {
+            freeman overlays "razmer"
+            wait 1.17s
+            freeman overlays "dve_storony"
+        }
+    }
+    wait 0.4s
+
+    //lip 11
+    //  «За семь лет.»
+    together {
+        freeman speaks for 0.73s
+        do {
+            freeman overlays "rubit"
+        }
+    }
+    wait 0.7s
+
+    //lip 12
+    //  «Запах был всегда. Ещё до рекламы.»
+    together {
+        freeman speaks for 3.53s
+        do {
+            freeman overlays "ladoni_vniz"
+            wait 1.76s
+            freeman overlays "ostyl"
+        }
+    }
+    camera two-shot freeman
+    wait 0.7s
+
+    //lip 13
+    //  «Проблему — сделали. Решение — продали.»
+    together {
+        freeman speaks for 4.05s
+        do {
+            freeman overlays "k_sebe"
+            wait 2.03s
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.7s
+
+    freeman overlays "hero_grin"
+    wait 0.1s
+    //lip 14
+    //  «Красиво? Красиво.»
+    together {
+        freeman speaks for 2.27s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.4s
+
+    //lip 15
+    //  «Запомни схему.»
+    together {
+        freeman speaks for 1.22s
+        do {
+            freeman overlays "palec_vverh"
+        }
+    }
+    camera wide
+    wait 0.7s
+}
+
+// ============ СЦЕНА 4: s4 — якорь-поступок: фокус объявлен до фокуса ============
+scene "s4" (duration: 1s, set: kuhnya) {
+    transition static 0.12s
+
+    place freeman at (0.38, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
+    camera two-shot freeman
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 16
+    //  «А теперь смотри внимательно, что я сделаю.»
+    together {
+        freeman speaks for 2.72s
+        do {
+            freeman overlays "vzglyad"
+            wait 1.36s
+            freeman overlays "manit_l"
+        }
+    }
+    camera medium freeman
+    //  РУКА ВОЗВРАЩАЕТСЯ, И ЭТО НЕ ПРИДИРКА (реестр §XXXIX: у каждой кости
+    //  свои часы). `manit_l` поднимает upper_arm_left на 68°, а дальше идут
+    //  `stern` и `vzglyad` — слои, которые рук НЕ НАЗЫВАЮТ. Кость смотрит
+    //  назад, находит своё последнее объявление и держит 68° шесть секунд
+    //  подряд: жест превращается в забытую руку, и на готовом кадре она
+    //  читается доской, перечёркивающей маску. Полная поза между репликами —
+    //  законное место (речь она не задевает) и единственное, что руки
+    //  называет.
+    freeman pose "calm"
+    wait 0.4s
+
+    freeman overlays "stern"
+    wait 0.1s
+    //lip 17
+    //  «Я сделаю с тобой ровно то же самое.»
+    together {
+        freeman speaks for 3.17s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.4s
+
+    //lip 18
+    //  «Прямо сейчас. При свидетелях.»
+    together {
+        freeman speaks for 2.95s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    camera two-shot freeman
+    wait 0.7s
+}
+
+// ============ СЦЕНА 5: s5 — приём применяют к зрителю ============
+scene "s5" (duration: 1s, set: kuhnya) {
+    transition static 0.12s
+
+    place freeman at (0.34, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.15s
+
+    //  ПЕРЕМЕЩЕНИЕ ПО КАДРУ: единственный проход ролика — он подходит ближе
+    //  ровно там, где приём применяют к зрителю. Правее 0.6 не идёт (тёмная зона).
+    freeman overlays "turn34"
+    wait 0.1s
+    freeman pose "shag_pravoj"
+    wait 0.12s
+    freeman moves-to (0.44, 0.99) over 0.5s ease-in-out
+    freeman pose "shag_levoj"
+    wait 0.12s
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 19
+    //  «У тебя есть проблема, о которой тебе не скажут даже друзья.»
+    together {
+        freeman speaks for 4.88s
+        do {
+            freeman overlays "otvraschenie"
+            wait 2.44s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.4s
+
+    //lip 20
+    //  «Не запах. Хуже.»
+    together {
+        freeman speaks for 1.99s
+        do {
+            freeman overlays "no"
+        }
+    }
+    wait 0.4s
+
+    //lip 21
+    //  «Ты не знаешь, как устроена твоя собственная жизнь.»
+    together {
+        freeman speaks for 3.24s
+        do {
+            freeman overlays "prishchur"
+        }
+    }
+    camera wide
+    wait 0.7s
+
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 22
+    //  «Кредит тебе продали. Работу тебе выдали.»
+    together {
+        freeman speaks for 3.66s
+        do {
+            freeman overlays "otschet"
+            wait 1.83s
+            freeman overlays "odna_v_bok"
+        }
+    }
+    wait 0.4s
+
+    //lip 23
+    //  «Ссоришься ты по сценарию, который писал не ты.»
+    together {
+        freeman speaks for 3.13s
+        do {
+            freeman overlays "dve_storony"
+        }
+    }
+    wait 0.7s
+
+    //lip 24
+    //  «Каждый день кто-то давит на длинное плечо рычага.»
+    together {
+        freeman speaks for 3.32s
+        do {
+            freeman overlays "razmer"
+            wait 1.47s
+            freeman overlays "ladoni_vniz"
+        }
+    }
+    wait 1.2s
+
+    //lip 25
+    //  «А камешек на коротком конце — это ты.»
+    together {
+        freeman speaks for 3.17s
+        do {
+            freeman overlays "obvinil"
+        }
+    }
+    camera medium freeman
+    wait 0.7s
+}
+
+// ============ СЦЕНА 6: s6 — вопрос в лоб и догадка ============
+scene "s6" (duration: 1s, set: kuhnya) {
+    transition static 0.12s
+
+    place freeman at (0.38, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
+    camera two-shot freeman
+    freeman pose "calm"
+    wait 0.15s
+
+    freeman overlays "hero_grin"
+    wait 0.1s
+    //lip 26
+    //  «И тебе даже нравится: думать — больно, листать — приятно.»
+    together {
+        freeman speaks for 3.66s
+        do {
+            freeman overlays "gorech"
+        }
+    }
+    wait 0.7s
+
+    //lip 27
+    //  «Чувствуешь? Вот прямо сейчас неприятно стало.»
+    together {
+        freeman speaks for 4.08s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 1.8s
+
+    freeman overlays "smug"
+    wait 0.1s
+    //lip 28
+    //  «Поздравляю. Это и есть халитоз.»
+    together {
+        freeman speaks for 3.37s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.4s
+
+    //lip 29
+    //  «Только настоящий.»
+    together {
+        freeman speaks for 1.46s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+    camera wide
+    wait 0.7s
+}
+
+// ============ СЦЕНА 7: s7 — взлёт, презентация, предел ============
+scene "s7" (duration: 1s, set: kuhnya) {
+    transition static 0.12s
+
+    place freeman at (0.30, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.15s
+
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 30
+    //  «Разница между мной и парнем с флаконом ровно одна.»
+    together {
+        freeman speaks for 3.34s
+        do {
+            freeman overlays "raspahnul"
+        }
+    }
+    wait 0.4s
+
+    //lip 31
+    //  «Он проблему придумал. Твоя — настоящая.»
+    together {
+        freeman speaks for 3.41s
+        do {
+            freeman overlays "dve_storony"
+            wait 1.71s
+            freeman overlays "rubit"
+        }
+    }
+    wait 0.4s
+
+    //lip 32
+    //  «Он брал деньги. Я нарисованный — мне не надо.»
+    together {
+        freeman speaks for 4.00s
+        do {
+            freeman overlays "ladon_pusta"
+        }
+    }
+    wait 0.4s
+
+    //lip 33
+    //  «Вся моя судьба — твоя лента.»
+    together {
+        freeman speaks for 2.20s
+        do {
+            freeman overlays "shrug"
+        }
+    }
+    wait 0.7s
+
+    //lip 34
+    //  «Больше семидесяти направлений. Больше семисот лекций.»
+    together {
+        freeman speaks for 4.39s
+        do {
+            freeman overlays "raskryl"
+            wait 2.20s
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.4s
+
+    //lip 35
+    //  «Про деньги, про влияние, про отношения, про твою голову.»
+    together {
+        freeman speaks for 4.88s
+        do {
+            freeman overlays "otschet"
+            wait 1.63s
+            freeman overlays "dengi"
+            wait 1.63s
+            freeman overlays "k_sebe_r"
+        }
+    }
+    //  Та же забытая рука с другой стороны: `k_sebe_r` держит upper_arm_right
+    //  на 76°, а следующий слой `teplo` рук не называет.
+    freeman pose "calm"
+    wait 0.4s
+
+    //lip 36
+    //  «Бесплатно. Без регистрации.»
+    together {
+        freeman speaks for 3.24s
+        do {
+            freeman overlays "teplo"
+        }
+    }
+    wait 0.7s
+
+    freeman overlays "smug"
+    wait 0.1s
+    //lip 37
+    //  «Худшая бизнес-модель в истории.»
+    together {
+        freeman speaks for 2.68s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.4s
+
+    //lip 38
+    //  «Потому что это не бизнес.»
+    together {
+        freeman speaks for 2.20s
+        do {
+            freeman overlays "ladoni_vniz"
+        }
+    }
+    wait 0.7s
+}
+
+// ============ СЦЕНА 8: s8 — жало, подпись, кольцо ============
+scene "s8" (duration: 1s, set: kuhnya) {
+    transition static 0.12s
+
+    place freeman at (0.30, 0.99) facing front on floor
+    freeman scales 1.10 over 0.01s
+    camera two-shot freeman
+    freeman pose "calm"
+
+    //  МЕТКА ОБЪЯВЛЯЕТСЯ В ГОЛОВЕ СЦЕНЫ И СРАЗУ ПРЯЧЕТСЯ.
+    //
+    //  Стояла внизу, в блоке кольца, — и метка провисела на груди СЕМНАДЦАТЬ
+    //  секунд, всю сцену до своего `hides`. Реквизит существует с той секунды,
+    //  где стоит `let`, и до этой секунды он ВИДЕН; прячет его не объявление, а
+    //  `hides`, который исполняется на своём месте в таймлайне. В сцене 1 то же
+    //  объявление стоит первой строкой, поэтому там метка мигает два кадра, как
+    //  задумано, — и разница между сценами была только в порядке строк.
+    //
+    //  На готовом файле это прочиталось не меткой: приёмка сказала «кисть на
+    //  лице, 17 с», потому что белые штрихи «25» касаются подбородка маски,
+    //  сливаются с ней в одно светлое пятно, и внутрь маски попадает чёрный
+    //  плащ между штрихами. Мерка честная, диагноз чужой — видно только глазом.
+    let nomer2 = prop("nomer", "../assets/props/nomer-25.svg") at (0.325, 0.545) layer 9
+    nomer2 scales 0.17 over 0.01s
+    nomer2 hides
+    wait 0.15s
+
+    //lip 39
+    //  «Одна лекция — десять минут.»
+    together {
+        freeman speaks for 2.20s
+        do {
+            freeman overlays "razmer"
+        }
+    }
+    wait 0.4s
+
+    //lip 40
+    //  «Меньше, чем ты сегодня потратил на чужие сторис.»
+    together {
+        freeman speaks for 3.90s
+        do {
+            freeman overlays "prishchur"
+        }
+    }
+    camera two-shot freeman
+    wait 0.7s
+
+    //lip 41
+    //  «Ссылка внизу. Нажмёшь — начнёшь видеть рычаги.»
+    together {
+        freeman speaks for 4.00s
+        do {
+            freeman overlays "vniz"
+            wait 2.0s
+            freeman overlays "raspahnul"
+        }
+    }
+    wait 0.4s
+
+    //lip 42
+    //  «Не нажмёшь — тоже выбор. Решать тебе.»
+    together {
+        freeman speaks for 2.68s
+        do {
+            freeman overlays "shrug"
+        }
+    }
+    wait 0.7s
+
+    //lip 43
+    //  «Кому-то надо быть камешком.»
+    together {
+        freeman speaks for 2.20s
+        do {
+            freeman overlays "ostyl"
+        }
+    }
+    camera medium freeman
+    wait 1.8s
+
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 44
+    //  «Пип…»
+    together {
+        freeman speaks for 0.97s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    camera wide
+    wait 0.6s
+
+    //  КОЛЬЦО. Кадр собирается тождественным первому: та же кухня, тот же флакон,
+    //  та же точка пола, та же поза, та же метка курса — и ролик уходит на второй круг.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.19 over 0.05s ease-out
+    nomer2 scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer2 hides
+    freeman pose "calm"
+    wait 0.5s
+}

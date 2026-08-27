@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <defs>
+    <filter id="ink" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="1" seed="61" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <!-- НОМЕР КУРСА «8» на балахон, справа на груди. Белая тушь: балахон —
+       сплошное чёрное пятно, чёрная цифра на нём не читается вообще.
+       Круг рваный и незамкнутый — метка от руки, а не печать.
+       Восьмёрка рисуется двумя незамкнутыми петлями: верхняя уже нижней,
+       как выходит у руки, а не у шрифта. -->
+  <g filter="url(#ink)">
+    <circle cx="120" cy="120" r="86" fill="none" stroke="#f2f2ec" stroke-width="9"
+            stroke-linecap="round" stroke-dasharray="470 60" transform="rotate(-24 120 120)"/>
+    <g transform="translate(77.0 59.8) scale(0.86)" fill="none" stroke="#f2f2ec"
+       stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M51 70 C30 70 16 56 16 39 C16 20 32 6 51 6 C70 6 86 20 86 39 C86 56 72 70 51 70 Z"/>
+      <path d="M51 70 C26 70 10 88 10 108 C10 128 28 140 51 140 C74 140 92 128 92 108 C92 88 76 70 51 70"/>
+    </g>
+  </g>
+</svg>

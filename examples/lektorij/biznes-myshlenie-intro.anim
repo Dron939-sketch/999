@@ -71,7 +71,7 @@ scene "street" (duration: 13s, set: street) {
         freeman speaks for 3.6s
         do {
             wait 1.8s
-            freeman overlays "no"              // «да не в этом дело»
+            freeman overlays "no"              // «вложить денег и продавать»
         }
     }
     freeman pose "point"

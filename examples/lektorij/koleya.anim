@@ -1,0 +1,485 @@
+// =============================================================================
+//  «СВОЯ КОЛЕЯ» — интро к курсу Лектория Мейстера, ролик номер 26.
+//  VO — koleya-VO.md, маркеры 1..23.
+//
+//  ОДНА МЫСЛЬ: шесть осей образа жизни выставлены по умолчанию, и ни одну
+//  зритель не выбирал. Выход не прыжок, а полшага в сторону и примерка.
+//
+//  1. РАЗРЫВ — САМ ПРЕДМЕТ, А НЕ МАТЕРИАЛ КАДРА. В ролике 25 несовместимость
+//     стояла в материале (тушь на фотографии), и такого в серии не было ни разу.
+//     Повторять приём подряд нельзя — он станет нормой. Здесь локация снова
+//     рисованная, а несовместима ВЕЩЬ: дорожная колея с валиком земли,
+//     продавленная в пол жилой комнаты. Комната при этом целая, и никто колеи
+//     не замечает: приём работает только на фоне порядка.
+//
+//  2. ПЕРСОНАЖ СТОИТ В КОЛЕЕ И ТОЛЬКО В ПЕРЕДНЕЙ ЧАСТИ ПОЛА. Комната пришла
+//     глубже, чем просил промт (проём 0.35 кадра вместо 0.53), мера человека
+//     0.54 при пороге 0.5 — запас тонкий и держится на глубине. Ставить фигуру
+//     дальше нельзя: рост уедет под порог готового файла (0.35 кадра).
+//     Рабочий масштаб `scales 0.90`, ступни на 0.99 — сверено пробным рендером.
+//
+//  3. ПЛАНЫ ТОЛЬКО ОБЩИЙ И СРЕДНИЙ. При мере 0.54 `camera medium` (зум 2.2)
+//     даёт 1.19 кадра и срезает фигуру целиком, `over-shoulder` (1.8) — 0.97,
+//     то есть впритык. Остаются `wide` (0.54) и `two-shot` (0.65); третий приём
+//     камеры — `pan-to`, он же показывает борозду под ногами.
+//
+//  4. ПОЛШАГА — НАСТОЯЩЕЕ ПЕРЕМЕЩЕНИЕ, А НЕ СЛОВО. На VO-18 персонаж выходит
+//     из борозды на чистый пол, к рулетке, и стоит там всю презентацию. Перед
+//     отказом возвращается в колею: выбор зрителя, а не его, и кольцо обязано
+//     сомкнуться тем же кадром.
+//
+//  5. МИМИКА С РТОМ — ВЫШЕ МАРКЕРА `//lip`, А НЕ МЕЖДУ НИМ И РЕЧЬЮ (реестр:
+//     ролик 25 собрался без финала именно из-за этого). Внутрь реплики идут
+//     только слои без рта.
+//
+//  ЧИСЛА `speaks for` — ПРОГНОЗ ПО 4.1 СЛОГА В СЕКУНДУ. Завод перепишет их по
+//  факту озвучки.
+// =============================================================================
+//
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: e80c82fa
+import character freeman from "../assets/characters/freeman_rig"
+import set komnata from "../assets/sets/koleya-komnata.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 2.2
+    snow: 0.12
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+    ground-shadow: true
+    cast-shadow: 0.32
+}
+
+// ============ СЦЕНА 1: хук, разрыв, отрицание, тезис ============
+scene "s1" (duration: 1s, set: komnata) {
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.15s
+    let nomer = prop("nomer", "../assets/props/nomer-26.svg") at (0.545, 0.66) layer 9
+    nomer scales 0.17 over 0.01s
+    nomer hides
+
+    //  КОЛЬЦО: тот же кадр, что и в финале — поза, метка, точка пола.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer shows
+    nomer scales 0.02 over 0.01s
+    nomer scales 0.19 over 0.05s ease-out
+    nomer scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer hides
+    freeman pose "calm"
+    wait 0.1s
+
+    freeman overlays "hero_grin"
+    wait 0.1s
+    //lip 1
+    //  «Вы не ленивый. И не выгорели.»
+    together {
+        freeman speaks for 2.70s
+        do {
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.4s
+
+    //lip 2
+    //  «Посмотрите под ноги: в полу колея.»
+    together {
+        freeman speaks for 2.90s
+        do {
+            freeman overlays "vniz"
+            wait 1.45s
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.7s
+
+    //lip 3
+    //  «Сейчас вы подумали: у вас не так.»
+    together {
+        freeman speaks for 2.60s
+        do {
+            freeman overlays "otverg"
+            wait 1.30s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 0.7s
+
+    freeman pose "hips"
+    wait 0.15s
+    //lip 4
+    //  «Это не лень и не характер. Это настройки по умолчанию.»
+    together {
+        freeman speaks for 4.90s
+        do {
+            freeman overlays "razmer"
+            wait 1.63s
+            freeman overlays "vdal"
+            wait 1.63s
+            freeman overlays "klin"
+        }
+    }
+    wait 0.7s
+
+}
+
+// ============ СЦЕНА 2: опыт на зрителе — четыре вопроса и выпавший пятый ============
+scene "s2" (duration: 1s, set: komnata) {
+    transition static 0.12s
+
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera two-shot freeman
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 5
+    //  «Шесть вопросов, отвечайте про себя.»
+    together {
+        freeman speaks for 2.70s
+        do {
+            freeman overlays "palec_vverh"
+        }
+    }
+    wait 0.7s
+
+    //lip 6
+    //  «Работа — выбрали или туда взяли?»
+    together {
+        freeman speaks for 2.01s
+        do {
+            freeman overlays "otschet"
+        }
+    }
+    wait 0.4s
+
+    //lip 7
+    //  «Деньги — назвали сумму или согласились?»
+    together {
+        freeman speaks for 2.72s
+        do {
+            freeman overlays "dengi"
+        }
+    }
+    wait 0.4s
+
+    //lip 8
+    //  «Отдых — придумали или как у всех?»
+    together {
+        freeman speaks for 2.70s
+        do {
+            freeman overlays "razvel"
+        }
+    }
+    wait 0.4s
+
+    //lip 9
+    //  «Место и люди — выбрали или оказались?»
+    together {
+        freeman speaks for 3.40s
+        do {
+            freeman overlays "dve_storony"
+        }
+    }
+    wait 0.4s
+
+    freeman overlays "smug"
+    wait 0.1s
+    //lip 10
+    //  «Про риск не спрашиваю: не предлагали.»
+    together {
+        freeman speaks for 2.90s
+        do {
+            freeman overlays "shrug"
+        }
+    }
+    wait 1.8s
+
+    freeman pose "calm"
+    wait 0.2s
+}
+
+// ============ СЦЕНА 3: догадка, мантра, место зрителя ============
+scene "s3" (duration: 1s, set: komnata) {
+    transition static 0.12s
+
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 11
+    //  «Вот она, колея.»
+    together {
+        freeman speaks for 1.50s
+        do {
+            freeman overlays "vniz"
+        }
+    }
+    camera pan-to (0.50, 0.62) over 0.8s ease-in-out
+    wait 0.4s
+
+    camera wide
+
+    //lip 12
+    //  «Работа по умолчанию, деньги по умолчанию, жизнь по умолчанию.»
+    together {
+        freeman speaks for 5.15s
+        do {
+            freeman overlays "otschet"
+            wait 1.71s
+            freeman overlays "razmer"
+            wait 1.71s
+            freeman overlays "rubit"
+        }
+    }
+    wait 0.7s
+
+    //lip 13
+    //  «Колею не вы выбирали, а едете вы.»
+    together {
+        freeman speaks for 3.40s
+        do {
+            freeman overlays "k_sebe"
+            wait 1.70s
+            freeman overlays "ladoni_vniz"
+        }
+    }
+    wait 0.7s
+
+}
+
+// ============ СЦЕНА 4: взлёт и самореференция ============
+scene "s4" (duration: 1s, set: komnata) {
+    transition static 0.12s
+
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera two-shot freeman
+    freeman pose "calm"
+    wait 0.15s
+
+    freeman pose "confident"
+    wait 0.15s
+    //lip 14
+    //  «Новость хорошая: лень поменять нельзя. А настройку — можно.»
+    together {
+        freeman speaks for 5.07s
+        do {
+            freeman overlays "raskryl"
+            wait 1.69s
+            freeman overlays "teplo"
+            wait 1.69s
+            freeman overlays "ostyl"
+        }
+    }
+    wait 0.7s
+
+    //lip 15
+    //  «Мне легко: я нарисованный, моя судьба — ваша лента.»
+    together {
+        freeman speaks for 4.94s
+        do {
+            freeman overlays "shrug"
+            wait 1.65s
+            freeman overlays "zatylok"
+            wait 1.65s
+            freeman overlays "gorech"
+        }
+    }
+    wait 0.7s
+
+}
+
+// ============ СЦЕНА 5: шутка, предел способа и ПОЛШАГА В СТОРОНУ ============
+scene "s5" (duration: 1s, set: komnata) {
+    transition static 0.12s
+
+    place freeman at (0.50, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.15s
+
+    //  ПРЫЖОК ПОКАЗАН, А НЕ ОПИСАН: поза `pryzhok` стоит МЕЖДУ репликами,
+    //  за полсекунды до слов «только не прыгайте» — зритель видит способ
+    //  раньше, чем слышит его имя, и шутка приходит на готовое.
+    freeman pose "pryzhok"
+    wait 0.5s
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 16
+    //  «Только не прыгайте. Прыжок — не смелость, а способ не мерить.»
+    together {
+        freeman speaks for 4.65s
+        do {
+            freeman overlays "no"
+            wait 1.55s
+            freeman overlays "otmahnulsya"
+            wait 1.55s
+            freeman overlays "wave"
+        }
+    }
+    wait 0.4s
+
+    freeman pose "laugh"
+    wait 0.4s
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 17
+    //  «Работает до первой посадки.»
+    together {
+        freeman speaks for 2.50s
+        do {
+            freeman overlays "ladon_pusta"
+        }
+    }
+    wait 0.7s
+
+    //  ПОЛШАГА — НАСТОЯЩИЙ ШАГ ИЗ БОРОЗДЫ НА ЧИСТЫЙ ПОЛ, К РУЛЕТКЕ.
+    freeman pose "idet"
+    freeman moves-to (0.34, 0.99) over 0.6s ease-in-out
+    freeman pose "calm"
+    wait 0.1s
+
+    //lip 18
+    //  «Полшага в сторону — и примерить.»
+    together {
+        freeman speaks for 3.97s
+        do {
+            freeman overlays "razmer"
+            wait 1.99s
+            freeman overlays "poimal"
+        }
+    }
+    wait 0.7s
+
+}
+
+// ============ СЦЕНА 6: презентация, цена, жало ============
+scene "s6" (duration: 1s, set: komnata) {
+    transition static 0.12s
+
+    place freeman at (0.34, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera two-shot freeman
+    freeman pose "calm"
+    wait 0.15s
+
+    //lip 19
+    //  ««Своя колея»
+    together {
+        freeman speaks for 3.87s
+        do {
+            freeman overlays "raskryl"
+            wait 1.93s
+            freeman overlays "odna_v_bok"
+        }
+    }
+    wait 0.4s
+
+    //lip 20
+    //  «Всё бесплатно и без регистрации.»
+    together {
+        freeman speaks for 2.60s
+        do {
+            freeman overlays "ladoni_vniz"
+        }
+    }
+    wait 0.7s
+
+    //lip 21
+    //  «Ссылка внизу, полшага — сегодня.»
+    together {
+        freeman speaks for 2.50s
+        do {
+            freeman overlays "palec_vverh"
+        }
+    }
+    wait 0.4s
+
+}
+
+// ============ СЦЕНА 7: отказ, подпись, кольцо ============
+scene "s7" (duration: 1s, set: komnata) {
+    transition static 0.12s
+
+    place freeman at (0.34, 0.99) facing front on floor
+    freeman scales 0.90 over 0.01s
+    camera wide
+    freeman pose "calm"
+    wait 0.15s
+
+    let nomer2 = prop("nomer", "../assets/props/nomer-26.svg") at (0.545, 0.66) layer 9
+    nomer2 scales 0.17 over 0.01s
+    nomer2 hides
+
+    //  ВОЗВРАТ В КОЛЕЮ: выбор зрителя, а не рассказчика, и кольцо
+    //  обязано сомкнуться тем же кадром, что открывал ролик.
+    freeman pose "idet"
+    freeman moves-to (0.50, 0.99) over 0.6s ease-in-out
+    freeman pose "calm"
+    wait 0.1s
+
+    freeman overlays "stern"
+    wait 0.1s
+    //lip 22
+    //  «Куда — не скажу: за вас никто не померит. Колея-то ваша…»
+    together {
+        freeman speaks for 4.60s
+        do {
+            freeman overlays "razvel"
+            wait 1.53s
+            freeman overlays "ladon_pusta"
+            wait 1.53s
+            freeman overlays "vzglyad"
+        }
+    }
+    wait 1.8s
+
+    //lip 23
+    //  «Пип…»
+    together {
+        freeman speaks for 0.30s
+        do {
+            freeman overlays "prishchur"
+        }
+    }
+    wait 0.0s
+
+    //  КОЛЬЦО: тот же кадр, что и в финале — поза, метка, точка пола.
+    freeman pose "gladit_grud"
+    wait 0.02s
+    nomer2 shows
+    nomer2 scales 0.02 over 0.01s
+    nomer2 scales 0.19 over 0.05s ease-out
+    nomer2 scales 0.17 over 0.02s
+    freeman pose "gladit_grud_niz"
+    wait 0.02s
+    nomer2 hides
+    freeman pose "calm"
+    wait 0.1s
+
+}
+

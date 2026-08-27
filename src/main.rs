@@ -197,7 +197,22 @@ fn cmd_render(
         return Err(AnimError::Scene("no scenes found in source file".into()).into());
     }
 
-    let mut all_frames = Vec::new();
+    // КАДРЫ НЕ КОПЯТСЯ. Раньше здесь стоял `let mut all_frames = Vec::new()`,
+    // все сцены складывались в него, и только потом шли постобработка и
+    // кодирование. Кадр 1280×720 в RGBA весит 3.69 МБ: на 90-секундном ролике
+    // это 8 ГБ и «работает», на трёхминутном — 19.5 ГБ, и раннер убивает
+    // процесс без единого слова про память.
+    //
+    // Теперь ffmpeg запущен ДО первой сцены, и каждая сцена, отрендерившись,
+    // проходит постобработку и уходит в него целиком. В памяти живёт одна
+    // сцена. Потолка по длине ролика больше нет.
+    let mut koder = video::Koder::start(
+        output,
+        config.width,
+        config.height,
+        config.fps,
+        png_dir.as_deref(),
+    )?;
 
     for scene_decl in &scenes {
         log::info!("Processing scene: {}", scene_decl.name);
@@ -211,7 +226,7 @@ fn cmd_render(
                 .as_deref()
                 .and_then(|n| assets.sets.get(n))
                 .and_then(|s| s.surfaces.as_ref())
-                .map(|s| s.floor),
+                .and_then(|s| s.floor),
         )?;
 
         // Check for character overlaps before rendering.
@@ -223,7 +238,7 @@ fn cmd_render(
             .collect();
         timeline::check_overlaps(&compiled_timeline, &resolved.entities, &character_names)?;
 
-        let frames = renderer::render_scene(
+        let mut frames = renderer::render_scene(
             &config,
             &compiled_timeline,
             &resolved.entities,
@@ -231,96 +246,100 @@ fn cmd_render(
             &assets,
             &custom_poses,
         )?;
-        all_frames.extend(frames);
-    }
 
-    // Freeman-style black & white ("ink") post-process.
-    if config.monochrome {
-        for frame in &mut all_frames {
-            apply_monochrome(&mut frame.data, config.mono_contrast as f32);
+        // ПОСТОБРАБОТКА ПОКАДРОВАЯ И ЗАВИСИТ ТОЛЬКО ОТ НОМЕРА КАДРА — поэтому
+        // её можно применять посценно, лишь бы номер оставался СКВОЗНЫМ по
+        // всему ролику. Сквозной номер даёт `koder.kadrov()`: сколько кадров
+        // уже отдано, столько и «прошло» ролика. Ошибись тут — и зерно,
+        // мерцание и гуляние кадра начнут перезапускаться на каждой сцене,
+        // то есть на каждой склейке будет видно «дёрнуло».
+        let bazovyj = koder.kadrov();
+        for (j, frame) in frames.iter_mut().enumerate() {
+            let i = bazovyj + j;
+
+            // Freeman-style black & white ("ink") post-process.
+            if config.monochrome {
+                apply_monochrome(&mut frame.data, config.mono_contrast as f32);
+            }
+
+            // Hand-drawn line boil: the ink outline resettles every held
+            // drawing-frame, as if redrawn — the single biggest gap between a
+            // rigged puppet and real frame-by-frame animation. Runs on the
+            // post-monochrome near-binary image, so "edge" simply means a
+            // black/white transition.
+            if config.line_boil > 0.0 {
+                apply_line_boil(
+                    &mut frame.data,
+                    frame.width,
+                    frame.height,
+                    i as u32,
+                    config.on_twos,
+                    config.line_boil as f32,
+                );
+            }
+
+            // Aged-film post: vignette + grain (the last layer of the look).
+            if config.film_grain > 0.0 || config.vignette > 0.0 {
+                apply_film(
+                    &mut frame.data,
+                    frame.width,
+                    frame.height,
+                    // Зерно ДЕРЖИТСЯ вместе с рисунком (on-twos), а не
+                    // пересчитывается каждый кадр: иначе шум «кипит» на 24fps
+                    // поверх анимации на 12 и читается как дёрганье персонажа.
+                    // Замер: film-grain 0.30 даёт покадровую разницу 4.39
+                    // против 1.98 без зерна — больше половины всей дрожи кадра
+                    // приходило именно отсюда.
+                    (i as u32) / config.on_twos.max(1),
+                    config.film_grain as f32,
+                    config.vignette as f32,
+                );
+            }
+
+            // ПЛЁНОЧНЫЕ МЕЛОЧИ (MELOCHI.md, группа А): мерцание экспозиции,
+            // гуляние кадра в тракте, царапины, пылинки. Дают ощущение
+            // «снято», а не «сгенерировано». Всё детерминировано от номера
+            // кадра — golden воспроизводим.
+            if config.film_flicker > 0.0 || config.gate_weave > 0.0
+                || config.film_scratch > 0.0 || config.film_dust > 0.0
+            {
+                apply_filmstock(
+                    &mut frame.data,
+                    frame.width,
+                    frame.height,
+                    i as u32,
+                    config.film_flicker as f32,
+                    config.gate_weave as f32,
+                    config.film_scratch as f32,
+                    config.film_dust as f32,
+                );
+            }
+
+            // Drifting particles (snow/ash) — Freeman's atmospheric layer.
+            if config.snow > 0.0 {
+                apply_snow(
+                    &mut frame.data,
+                    frame.width,
+                    frame.height,
+                    i as u32,
+                    config.snow as f32,
+                );
+            }
         }
-    }
 
-    // Hand-drawn line boil: the ink outline resettles every held drawing-frame,
-    // as if redrawn — the single biggest gap between a rigged puppet and real
-    // frame-by-frame animation. Runs on the post-monochrome near-binary image,
-    // so "edge" simply means a black/white transition.
-    if config.line_boil > 0.0 {
-        for (i, frame) in all_frames.iter_mut().enumerate() {
-            apply_line_boil(
-                &mut frame.data,
-                frame.width,
-                frame.height,
-                i as u32,
-                config.on_twos,
-                config.line_boil as f32,
-            );
+        for frame in &frames {
+            koder.push(frame)?;
         }
+        // Кадры сцены больше не нужны — освобождаем до следующей.
+        drop(frames);
     }
 
-    // Aged-film post: vignette + grain (the last layer of the Freeman look).
-    if config.film_grain > 0.0 || config.vignette > 0.0 {
-        for (i, frame) in all_frames.iter_mut().enumerate() {
-            apply_film(
-                &mut frame.data,
-                frame.width,
-                frame.height,
-                // Зерно ДЕРЖИТСЯ вместе с рисунком (on-twos), а не пересчитывается
-                // каждый кадр: иначе шум «кипит» на 24fps поверх анимации на 12
-                // и читается как дёрганье персонажа. Замер: film-grain 0.30 даёт
-                // покадровую разницу 4.39 против 1.98 без зерна — больше половины
-                // всей дрожи кадра приходило именно отсюда.
-                (i as u32) / config.on_twos.max(1),
-                config.film_grain as f32,
-                config.vignette as f32,
-            );
-        }
-    }
-
-    // ПЛЁНОЧНЫЕ МЕЛОЧИ (MELOCHI.md, группа А): мерцание экспозиции, гуляние
-    // кадра в тракте, царапины, пылинки. Дают ощущение «снято», а не
-    // «сгенерировано». Всё детерминировано от номера кадра — golden воспроизводим.
-    if config.film_flicker > 0.0 || config.gate_weave > 0.0
-        || config.film_scratch > 0.0 || config.film_dust > 0.0
-    {
-        for (i, frame) in all_frames.iter_mut().enumerate() {
-            apply_filmstock(
-                &mut frame.data,
-                frame.width,
-                frame.height,
-                i as u32,
-                config.film_flicker as f32,
-                config.gate_weave as f32,
-                config.film_scratch as f32,
-                config.film_dust as f32,
-            );
-        }
-    }
-
-    // Drifting particles (snow/ash) — Freeman's atmospheric layer.
-    if config.snow > 0.0 {
-        for (i, frame) in all_frames.iter_mut().enumerate() {
-            apply_snow(
-                &mut frame.data,
-                frame.width,
-                frame.height,
-                i as u32,
-                config.snow as f32,
-            );
-        }
-    }
-
-    // Output.
-    if let Some(dir) = png_dir {
-        video::encode_png_sequence(&all_frames, dir)?;
-    }
-
-    video::encode_video(&all_frames, output, config.fps)?;
+    let vsego_kadrov = koder.finish()?;
 
     println!(
         "Rendered {} scene(s), {} frames -> {}",
         scenes.len(),
-        all_frames.len(),
+        vsego_kadrov,
         output.display(),
     );
 
@@ -741,7 +760,7 @@ fn cmd_check(input: &Path) -> Result<()> {
                 .as_deref()
                 .and_then(|n| assets.sets.get(n))
                 .and_then(|s| s.surfaces.as_ref())
-                .map(|s| s.floor),
+                .and_then(|s| s.floor),
         )?;
 
         let character_names: Vec<String> = resolved
@@ -815,7 +834,7 @@ fn cmd_timing(input: &Path) -> Result<()> {
                 .as_deref()
                 .and_then(|n| assets.sets.get(n))
                 .and_then(|s| s.surfaces.as_ref())
-                .map(|s| s.floor),
+                .and_then(|s| s.floor),
         )?;
             for (s0, e0) in &tl.speech_blocks {
                 blocks.push((offset + s0, offset + e0));

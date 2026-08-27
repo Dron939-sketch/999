@@ -28,7 +28,12 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
+import urllib.error
 import urllib.request
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import podacha  # noqa: E402
 
 API_URL = "https://api.fish.audio/v1/tts"
 # Frederick — источник правды по озвучке (голос Фреди). Если задан токен, реплики
@@ -187,13 +192,66 @@ def resolve_voice_id(api_key, explicit):
     return vid, f"первый свой голос «{title}» (Фримена в аккаунте не нашлось)"
 
 
+FISH_POPYTOK = 3          # попыток на реплику при СЕРВЕРНОЙ ошибке
+FISH_PAUZA = 2            # первая пауза, с; дальше удвоение
+FISH_BYUDZHET = 240       # сколько секунд на весь прогон можно потратить на
+                          # ожидание между повторами (см. _fish_poprobovat)
+_fish_zhdali = [0.0]      # сколько уже прождали; список — чтобы менять из функции
+
+
+def _fish_poprobovat(payload, headers, chto):
+    """Запрос к Fish с повторами на СЕРВЕРНОЙ ошибке. Возвращает mp3-байты.
+
+    ЗАЧЕМ. `HTTP 500` на одной реплике из двадцати семи уронил всю озвучку
+    «Девяносто девятого дня», и ролик уехал студии без голоса. Повтор в коде
+    был, но рассчитан на другое: он снимал заголовок модели, потому что
+    единственной ожидаемой бедой считалось «модель не принята аккаунтом». На
+    серверный сбой это не лечение — Fish ответил 500 и без заголовка тоже.
+
+    Пятисотые разделяются с четырёхсотыми по смыслу: 4xx — «так не бывает,
+    больше не проси» (там и правда нужен откат на дефолтную модель), 5xx и
+    обрыв связи — «сейчас не могу», и это лечится ожиданием.
+
+    БЮДЖЕТ, А НЕ ПРОСТО СЧЁТЧИК ПОПЫТОК. Реплик под три десятка, таймаут
+    запроса — две минуты; при полностью лежащем Fish отдельные счётчики на
+    реплику держали бы раннер часами и всё равно кончились бы ничем. Общий
+    бюджет ожидания на прогон это обрывает: блип переживаем, лежащий сервис
+    роняет прогон быстро, и красный прогон честнее висящего.
+    """
+    pauza = FISH_PAUZA
+    for popytka in range(1, FISH_POPYTOK + 1):
+        req = urllib.request.Request(
+            API_URL, data=json.dumps(payload).encode("utf-8"),
+            headers=headers, method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=120) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as e:
+            if e.code < 500:
+                raise                      # не наше дело ждать: 4xx не пройдёт
+            prichina = f"HTTP {e.code}"
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            prichina = f"{type(e).__name__}: {e}"
+        if popytka == FISH_POPYTOK or _fish_zhdali[0] + pauza > FISH_BYUDZHET:
+            raise RuntimeError(
+                f"Fish не отвечает ({chto}): {prichina}. "
+                f"Попыток {popytka}, ожидания потрачено {_fish_zhdali[0]:.0f} с "
+                f"из {FISH_BYUDZHET}.")
+        print(f"    [fish] {chto}: {prichina} — повтор {popytka}/{FISH_POPYTOK - 1} "
+              f"через {pauza} с")
+        time.sleep(pauza)
+        _fish_zhdali[0] += pauza
+        pauza *= 2
+
+
 def tts_fish_audio(text, api_key, voice_id=None, model=None):
     """Одна реплика → mp3-байты через Fish Audio (прямой путь завода).
 
     `model` — заголовок выбора движка Fish (s2 — новее и живее s1; решение
-    студии). Если модель недоступна на аккаунте, откат на дефолтную.
-    Если модель недоступна на аккаунте, запрос повторяется без заголовка,
-    чтобы озвучка не падала целиком.
+    студии). Если модель недоступна на аккаунте (4xx), запрос повторяется без
+    заголовка, чтобы озвучка не падала целиком. Серверные сбои и обрывы —
+    забота `_fish_poprobovat`, он их пережидает.
     """
     payload = {"text": text, "format": "mp3"}
     if voice_id:
@@ -204,24 +262,19 @@ def tts_fish_audio(text, api_key, voice_id=None, model=None):
     }
     if model:
         headers["model"] = model
-    req = urllib.request.Request(
-        API_URL, data=json.dumps(payload).encode("utf-8"),
-        headers=headers, method="POST",
-    )
     try:
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            return resp.read()
+        return _fish_poprobovat(payload, headers,
+                                f"модель {model}" if model else "дефолтная модель")
     except Exception as e:
         if not model:
             raise
-        print(f"    [fish] модель {model} не принята ({e}) — повтор на дефолтной")
+        # Формулировка нарочно шире прежней «модель не принята»: сюда приходят
+        # и 4xx (её правда не приняли), и исчерпанные повторы на 5xx. Лог не
+        # должен называть серверный сбой отказом от модели — на этом уже один
+        # раз потеряли полчаса, разбираясь не в ту сторону.
+        print(f"    [fish] на модели {model} не вышло ({e}) — пробую дефолтную")
         headers.pop("model", None)
-        req = urllib.request.Request(
-            API_URL, data=json.dumps(payload).encode("utf-8"),
-            headers=headers, method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            return resp.read()
+        return _fish_poprobovat(payload, headers, "дефолтная модель")
 
 
 def _mp3_duration(path):
@@ -256,99 +309,14 @@ def script_tempo(md_path):
     return float(m.group(1)) if m else 1.0
 
 
-def direct_line(mp3_bytes, remark, base=1.0):
-    """Режиссура реплики по ремарке из VO-таблицы: темп/громкость/шёпот.
-
-    Обрабатываем готовый mp3 ffmpeg'ом — API не трогаем. Ключевые слова:
-    шёпот/тихо → тише и мягче; медленно/с расстановкой → темп вниз;
-    жёстко/в упор → чуть громче и плотнее; финал → медленно и весомо.
-
-    `base` — общий темп ролика из шапки сценария. Ремарка правит подачу
-    ОТНОСИТЕЛЬНО него: «медленно» на разогнанном ролике всё равно быстрее
-    обычного, и это верно — медленно тут значит «медленнее соседних», а не
-    «медленно вообще».
-    """
-    if not shutil.which("ffmpeg"):
-        return mp3_bytes
-    if not remark and abs(base - 1.0) < 0.005:
-        return mp3_bytes
-    af = []
-    tempo = 1.0          # копим ОДИН множитель темпа (см. ниже про кламп)
-    r = remark
-    # --- ЯВНЫЙ ТЕМП: «темп 0.88» / «темп ×1.10» в ремарке -------------------
-    # Ключевые слова ниже дают ФИКСИРОВАННЫЕ множители: «медленно» — всегда
-    # 0.93, сколько бы раз его ни написали. Для трёх-четырёх реплик подряд
-    # этого хватает, но кривая темпа по ролику так не рисуется: разворот и
-    # дно требуют разной степени «медленно», а словарь их не различает.
-    # Замечание студии — «выбирай правильно, где как из пулемёта, а где
-    # медленно, чтобы мысль доходила» — про это и есть.
-    #
-    # Явная метка отменяет словарь целиком: режиссёр называет число, а не
-    # подбирает слово, которое случайно даст нужный множитель. Кламп ±12%
-    # остаётся — он про внятность дикции, а не про удобство.
-    m = re.search(r"темп\s*[×xх*]?\s*([01][.,]\d+)", r)
-    explicit = float(m.group(1).replace(",", ".")) if m else None
-    # --- ШЁПОТ / ТИХО: тише, мягче, чуть ближе к уху -----------------------
-    if any(k in r for k in ("шёпот", "шепот", "тихо", "тише")):
-        af += ["volume=0.66", "lowpass=f=6500", "highpass=f=120"]
-    # --- КРИК / ЯРОСТЬ: громче, плотнее, чуть быстрее ----------------------
-    if any(k in r for k in ("крик", "кричи", "ярост", "зло", "злее", "рявк")):
-        af += ["volume=1.32",
-               "acompressor=threshold=-20dB:ratio=4:attack=3:release=60"]
-        tempo *= 1.05
-    # --- ЖЁСТКО / В УПОР: плотный нажим без крика --------------------------
-    if any(k in r for k in ("жёстко", "жестко", "в упор", "оскал")):
-        af += ["volume=1.18",
-               "acompressor=threshold=-18dB:ratio=3:attack=5:release=80"]
-    # --- РУБЛЕНО / МЕХАНИЧЕСКИ (пулемёт): суше, ровнее и БЫСТРЕЕ ------------
-    # 1.04 был почти неслышен: перечисление шло тем же темпом, что и
-    # рассуждение, и приём пропадал. Пулемёт обязан отличаться на слух —
-    # 1.12 (потолок вклада ремарки) поверх базового темпа ролика даёт
-    # очередь, после которой пауза бьёт.
-    if any(k in r for k in ("рублен", "механич", "пулемёт", "пулемет")):
-        af.append("acompressor=threshold=-16dB:ratio=2.5")
-        tempo *= 1.12
-    # --- ПРЕЗРЕНИЕ / УХМЫЛКА: медленнее, вальяжно ---------------------------
-    if any(k in r for k in ("презрен", "ухмыл", "фамильярн", "дерзк")):
-        tempo *= 0.96
-    # --- ТЕПЛО / ДОСТОИНСТВО (взлёт): мягче и медленнее ---------------------
-    if any(k in r for k in ("тепл", "достоинств", "взлёт", "взлет")):
-        af += ["lowpass=f=11000", "volume=0.95"]
-        tempo *= 0.94
-    # --- МЕДЛЕННО / ФИНАЛ / ЖАЛО: весомо ------------------------------------
-    if any(k in r for k in ("медленн", "расстановк", "финал", "весом", "жало")):
-        tempo *= 0.93
-    # --- СПОКОЙНО / ДИКТОР --------------------------------------------------
-    if any(k in r for k in ("спокойно", "диктор")):
-        tempo *= 0.97
-    # Кламп: несколько подсказок не должны складываться в кисель. Диапазон
-    # ±12% — слышно как смена подачи, но дикция остаётся внятной.
-    # Клампится ТОЛЬКО вклад ремарки; базовый темп ролика накладывается сверху,
-    # иначе разогнанный монолог упирался бы в потолок на каждой второй реплике
-    # и подача выравнивалась бы в одну доску.
-    if explicit is not None:
-        tempo = explicit
-    tempo = min(1.12, max(0.88, tempo)) * base
-    # Общий потолок дикции. Поднимался дважды по замеру готовых роликов: на
-    # 1.35 и пулемёт, и рассуждение упирались в него и звучали одинаково, а
-    # разница между битами важнее последних процентов внятности. 1.58 — это
-    # база 1.42 плюс вклад пулемёта; синтез на такой скорости ещё держит
-    # согласные, но дальше поднимать нельзя.
-    tempo = min(1.58, max(0.75, tempo))
-    if abs(tempo - 1.0) > 0.005:
-        af.append(f"atempo={tempo:.3f}")
-    if not af:
-        return mp3_bytes
-    with tempfile.TemporaryDirectory() as td:
-        src = os.path.join(td, "in.mp3"); dst = os.path.join(td, "out.mp3")
-        open(src, "wb").write(mp3_bytes)
-        try:
-            subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", src,
-                            "-af", ",".join(af), "-c:a", "libmp3lame", "-q:a", "3", dst],
-                           check=True)
-            return open(dst, "rb").read()
-        except subprocess.CalledProcessError:
-            return mp3_bytes
+# ПОДАЧА ВЫНЕСЕНА В tools/podacha.py. Здесь раньше жила `direct_line`: она
+# читала ремарку, набирала фильтры по ключевым словам и растягивала реплику
+# множителем из шапки сценария (`**ТЕМП:** 1.42`). Множитель и погубил ролики —
+# студия услышала скороговорку. Разбор и замер — в шапке `podacha.py`:
+# темп теперь задаётся ЦЕЛЬЮ в слогах в секунду и считается по факту синтеза,
+# а интонация — регистром, который назван по тому, ЧТО должен почувствовать
+# зритель. Оставлять здесь второй набор правил про то же самое нельзя: два
+# инструмента, спорящих об одном ролике, у нас уже были (см. NARRATOR выше).
 
 
 def assemble_track(replicas, out_path, gap=0.15):
@@ -477,9 +445,14 @@ def main(argv):
     if not use_frederick:
         voice_id, voice_src = resolve_voice_id(api_key, voice_id)
 
+    # `**ТЕМП:**` в шапке — СДВИГ ВСЕЙ ПАРТИТУРЫ, а не растяжка файла: 1.05
+    # значит «этот монолог идёт на пять процентов живее обычного». Прежнее
+    # значение (множитель к длине) выродилось в 1.42 у всех роликов подряд и
+    # сделало речь неразборчивой; подробности — в шапке tools/podacha.py.
     base_tempo = script_tempo(args.script)
     if abs(base_tempo - 1.0) > 0.005:
-        print(f"  темп ролика: ×{base_tempo:.2f} (шапка сценария)")
+        print(f"  сдвиг партитуры: ×{base_tempo:.2f} (шапка сценария)")
+    partitura = []
     rows = parse_vo_table(args.script)
     if not rows:
         sys.exit(f"В {args.script} не найдено реплик VO-таблицы.")
@@ -501,12 +474,25 @@ def main(argv):
         spoken = for_synthesis(text)
         audio = (tts_via_frederick(spoken) if use_frederick
                  else tts_fish_audio(spoken, api_key, voice_id, fish_model))
-        audio = direct_line(audio, remark, base_tempo)
+        audio = podacha.podat(audio, text, remark, base_tempo, log=partitura)
         replicas.append((start, audio))
         # Сохранить реплику отдельным файлом для липсинка (prep_lipsync).
         if args.parts_dir:
             with open(os.path.join(args.parts_dir, f"vo-{i}.mp3"), "wb") as f:
                 f.write(audio)
+
+    # СВОДКА ПОДАЧИ. Печатается всегда, потому что читать её надо не когда
+    # что-то сломалось, а каждый раз: «срезан» значит, что цель по темпу не
+    # достаётся в границах внятной растяжки, и виноват текст, а не сборщик.
+    if partitura:
+        print("\n  подача:")
+        for i, z in enumerate(partitura, start=1):
+            metka = "  ← растяжка на пределе, режь текст" if z["срезан"] else ""
+            print(f"   VO-{i:<2} {z['регистр']:<11} цель {z['цель']:.2f} "
+                  f"слог/с, синтез дал {z['факт']:.2f} → ×{z['k']:.3f}{metka}")
+        sred = sum(z["слогов"] for z in partitura) / max(
+            1e-6, sum(z["слогов"] / z["цель"] for z in partitura))
+        print(f"   средний темп ролика {sred:.2f} слог/с")
 
     if args.no_assemble:
         print("Части готовы (сборка отложена до animdsl timing).")
