@@ -1,0 +1,354 @@
+// =============================================================================
+//  «ПЕРЕХОД» — ЧАСТЬ 3 из 3. ИГРА И ЖАЛО.
+//
+//  Единственное место, где показан продукт, и показан он ОДНОЙ механикой:
+//  гаснущие варианты с подписью «нужно 35, у вас 23». Не список возможностей,
+//  не десять сценариев — одна картинка, из которой видно, что игра снимает
+//  силы так же, как их снимает жизнь.
+//
+//  Интерфейс живёт тремя стадиями (день 2 → 14 → 29, бегунок 92% → 16%):
+//  движок не умеет менять часть пропа, поэтому стадии подменяются hides/shows.
+//
+//  Финал играется на черноте без сета: лицо крупно, без движения. Титр с
+//  адресом приходит последним и уже после того, как голос замолчал.
+//
+//  ВНИМАНИЕ ПРО `duration`. Это ПОЛ, а не потолок: содержимое длиннее
+//  играет целиком, содержимое КОРОЧЕ движок доигрывает замороженным
+//  кадром. Липсинк подменяет заявленные `speaks for` реальной длиной
+//  озвучки, и сцена ужимается — поэтому объявляем заведомо низкий пол
+//  (5с), а длину сцены задаёт содержимое. На первом заходе здесь
+//  стояли честные на вид 44 и 48 секунд, и во второй части вышли
+//  провалы на 5.9 и 10.1 секунды мёртвого кадра.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set  doska from "../assets/sets/perehod-doska.svg"
+import prop ui0   from "../assets/props/perehod-ui-0.svg"
+import prop ui1   from "../assets/props/perehod-ui-1.svg"
+import prop ui2   from "../assets/props/perehod-ui-2.svg"
+import prop ned   from "../assets/props/perehod-nedostupno.svg"
+import prop karta from "../assets/props/perehod-karta.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #17170f
+    monochrome: true
+    mono-contrast: 1.6
+    snow: 0.3
+    on-twos: 2
+    line-boil: 0.5
+    film-grain: 0.05
+    vignette: 0.3
+    film-flicker: 0.02
+    gate-weave: 0.3
+    film-scratch: 0.2
+    film-dust: 0.4
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+}
+
+// ── СЦЕНА 1. ИГРА ───────────────────────────────────────────────────────────
+scene "igra" (duration: 5s, set: doska) {
+    transition static 0.4s
+
+    place freeman at (0.16, 0.66) facing front layer 9
+    freeman scales 0.78 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    place ui0 at (0.60, 0.22) layer 4
+    ui0 scales 0.95 over 0.01s
+    ui0 hides
+    place ui1 at (0.60, 0.22) layer 4
+    ui1 scales 0.95 over 0.01s
+    ui1 hides
+    place ui2 at (0.60, 0.22) layer 4
+    ui2 scales 0.95 over 0.01s
+    ui2 hides
+    place ned at (0.62, 0.64) layer 4
+    ned scales 1.15 over 0.01s
+    ned hides
+    place karta at (0.60, 0.42) layer 4
+    karta scales 1.5 over 0.01s
+    karta hides
+
+    // ── VO-1 [ВЗЛЁТ]: Рассказывать я тебе ничего не буду…
+    //lip 1
+    together {
+        freeman speaks for 6.4s
+        do {
+            camera medium freeman
+            freeman pose "shrug"
+            wait 2.4s
+            freeman pose "otvraschenie"
+            wait 2.4s
+            freeman pose "povorot_levo"
+        }
+    }
+
+    wait 0.35s
+
+    // ── VO-2 [ВЗЛЁТ]: Проживи.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "flash_pupils"
+    //lip 2
+    together {
+        freeman speaks for 1.0s
+        do {
+            camera close-up freeman
+            freeman pose "v_upor"
+            wait 0.16s
+        }
+    }
+    freeman overlays "stern"
+
+    wait 0.6s
+
+    // ── VO-3 [ВЗЛЁТ]: Месяц. Десять решений, со второго по двадцать девятое…
+    //  Интерфейс впервые.
+    ui0 shows
+    //lip 3
+    together {
+        freeman speaks for 8.6s
+        do {
+            camera wide
+            freeman pose "point"
+            wait 2.4s
+            freeman pose "raskryl"
+            wait 2.4s
+            freeman pose "open"
+            wait 2.4s
+            freeman pose "chetvert_pravo"
+            wait 2.0s
+            freeman pose "confident"
+        }
+    }
+
+    wait 0.3s
+
+    // ── VO-4 [ВЗЛЁТ]: Три. На весь месяц. Сутки на подумать ломают почти любой приём…
+    //lip 4
+    together {
+        freeman speaks for 9.0s
+        do {
+            camera medium freeman
+            freeman pose "hips"
+            wait 2.6s
+            freeman pose "myslitel"
+            wait 2.6s
+            camera wide
+            freeman pose "idet"
+            freeman moves-to (0.28, 0.66) over 1.8s
+            wait 2.4s
+            freeman pose "point"
+            wait 2.2s
+            freeman pose "think"
+        }
+    }
+
+    wait 0.35s
+
+    // ── VO-5 [ВЗЛЁТ]: К концу месяца ты устанешь по-настоящему…
+    //  Бегунок сил ползёт влево: 92% → 55% → 16%.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "weary"
+    //lip 5
+    together {
+        freeman speaks for 6.9s
+        do {
+            camera wide
+            freeman pose "hunch"
+            wait 2.4s
+            wait 2.2s
+            freeman pose "ugryumo"
+        }
+        do {
+            wait 2.2s
+            ui0 hides
+            ui1 shows
+            wait 2.6s
+            ui1 hides
+            ui2 shows
+        }
+    }
+
+    wait 0.3s
+
+    // ── VO-6 [ВЗЛЁТ]: Посчитать — недоступно. Уточнить — недоступно…
+    ned shows
+    //lip 6
+    together {
+        freeman speaks for 6.9s
+        do {
+            camera wide
+            freeman pose "no"
+            wait 2.4s
+            freeman pose "point"
+            wait 2.2s
+            freeman pose "yarost_telom"
+            wait 1.4s
+            freeman pose "hunch"
+        }
+    }
+
+    wait 0.35s
+
+    // ── VO-7 [ВЗЛЁТ]: Красиво?
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "hero_sly"
+    //lip 7
+    together {
+        freeman speaks for 1.0s
+        do {
+            camera close-up freeman
+            wait 0.8s
+        }
+    }
+
+    wait 0.5s
+
+    // ── VO-8 [ВЗЛЁТ]: Две сцены из десяти — честные. Какие именно — не скажу.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "smug"
+    //lip 8
+    together {
+        freeman speaks for 5.3s
+        do {
+            camera medium freeman
+            freeman pose "bok_pravo"
+            wait 2.4s
+            freeman pose "v_upor"
+            wait 2.0s
+            freeman pose "calm"
+        }
+    }
+
+    wait 0.35s
+
+    // ── VO-9 [ВЗЛЁТ]: А в конце тебе покажут карту…
+    ned hides
+    ui2 hides
+    karta shows
+    //lip 9
+    together {
+        freeman speaks for 8.1s
+        do {
+            camera wide
+            freeman pose "point"
+            wait 2.6s
+            freeman pose "raskryl"
+            wait 2.4s
+            freeman pose "chetvert_levo"
+            wait 2.4s
+            freeman pose "raskryl"
+            wait 1.6s
+            freeman pose "myslitel"
+        }
+    }
+
+    wait 0.4s
+    karta hides
+}
+
+// ── СЦЕНА 2. ФИНАЛ НА ЧЕРНОТЕ ───────────────────────────────────────────────
+scene "final" (duration: 5s) {
+    transition static 0.5s
+
+    place freeman at (0.50, 0.80) facing front layer 9
+    freeman scales 0.80 over 0.01s
+    camera close-up freeman
+    freeman pose "v_upor"
+
+    // ── VO-10 [ЖАЛО]: Первый заход будет неприятным. Это не поломка…
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "stern"
+    //lip 10
+    together {
+        freeman speaks for 5.9s
+        do {
+            camera close-up freeman
+            wait 3.0s
+            freeman pose "v_upor"
+        }
+    }
+
+    wait 0.4s
+
+    // ── VO-11 [ЖАЛО]: Игра называется «Переход».
+    let nazvanie = text("ПЕРЕХОД", 90) at (0.5, -1.4) layer 7
+    nazvanie scales 0.6 over 0.01s
+    //lip 11
+    together {
+        freeman speaks for 1.6s
+        nazvanie moves-to (0.5, 0.22) over 0.35s ease-out
+        do {
+            camera medium freeman
+            wait 1.2s
+        }
+    }
+
+    wait 0.5s
+
+    // ── VO-12 [ЖАЛО]: И да. Если пройдёшь десять из десяти с первого раза — не радуйся.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "hero_sly"
+    //lip 12
+    together {
+        freeman speaks for 6.9s
+        do {
+            camera medium freeman
+            freeman pose "bok_levo"
+            wait 2.2s
+            wait 1.8s
+            freeman pose "chetvert_pravo"
+            wait 1.4s
+            freeman pose "v_upor"
+        }
+    }
+
+    // Пауза. Полсекунды.
+    wait 0.3s
+
+    // ── VO-13 [ЖАЛО]: Просто ты играл выспавшийся.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "stern"
+    //lip 13
+    together {
+        freeman speaks for 2.1s
+        do {
+            camera close-up freeman
+            wait 1.6s
+        }
+    }
+
+    wait 0.45s
+
+    // ── VO-14 [ЖАЛО]: Проверь себя двадцать третьего.
+    //lip 14
+    together {
+        freeman speaks for 2.1s
+        do {
+            camera close-up freeman
+            freeman pose "v_upor"
+            wait 1.6s
+        }
+    }
+
+    // Чернота. Титр с адресом приходит уже после того, как голос замолчал.
+    wait 0.4s
+    let adres = text("meysternlp.ru/fredi/?m=perehod", 44) at (0.5, 1.4) layer 7
+    adres scales 0.17 over 0.01s
+    adres moves-to (0.5, 0.62) over 0.4s ease-out
+    transition invert 0.16s
+    wait 0.8s
+}

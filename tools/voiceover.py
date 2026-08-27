@@ -43,6 +43,15 @@ FREDERICK_TOKEN = os.environ.get("FREDERICK_ADMIN_TOKEN") or ""
 # реплики у него нет. Аварийный тумблер на случай, если движок начнёт читать
 # знак вслух: VO_NO_ACCENTS=1 срезает разметку перед отправкой, а сценарий
 # при этом остаётся источником правды и править его не надо.
+# Базовый темп речи ролика (1.0 — как синтезировал Fish). Умножается на
+# ремарочный множитель, у которого свой кламп ±12%: ремарки задают СМЕНУ подачи
+# внутри ролика, а этот множитель — общую скорость. Задаётся полем "tempo" в
+# productions.json (studio.py передаёт его в --tempo).
+BASE_TEMPO = 1.0
+# Сколько тишины оставлять внутри реплики (секунды). 0 — не трогать.
+# Задаётся полем "silence" в productions.json.
+SILENCE_KEEP = 0.0
+
 ACCENT = "́"
 STRIP_ACCENTS = (os.environ.get("VO_NO_ACCENTS") or "").strip() not in ("", "0")
 
@@ -224,8 +233,14 @@ def direct_line(mp3_bytes, remark):
     шёпот/тихо → тише и мягче; медленно/с расстановкой → темп вниз;
     жёстко/в упор → чуть громче и плотнее; финал → медленно и весомо.
     """
-    if not remark or not shutil.which("ffmpeg"):
+    # Раньше выходили сразу, если у реплики нет ремарки, — вместе с ремаркой
+    # терялись и общий темп ролика, и подрезка пауз. Теперь выходим, только
+    # если делать действительно нечего.
+    if not shutil.which("ffmpeg"):
         return mp3_bytes
+    if not remark and abs(BASE_TEMPO - 1.0) < 0.005 and SILENCE_KEEP <= 0:
+        return mp3_bytes
+    remark = remark or ""
     af = []
     tempo = 1.0          # копим ОДИН множитель темпа (см. ниже про кламп)
     r = remark
@@ -260,9 +275,22 @@ def direct_line(mp3_bytes, remark):
         tempo *= 0.97
     # Кламп: несколько подсказок не должны складываться в кисель. Диапазон
     # ±12% — слышно как смена подачи, но дикция остаётся внятной.
-    tempo = min(1.12, max(0.88, tempo))
+    tempo = min(1.12, max(0.88, tempo)) * BASE_TEMPO
     if abs(tempo - 1.0) > 0.005:
-        af.append(f"atempo={tempo:.3f}")
+        t = tempo                      # atempo берёт множитель только в [0.5, 2.0]
+        while t > 2.0:
+            af.append("atempo=2.0"); t /= 2.0
+        af.append(f"atempo={t:.3f}")
+
+    # ПАУЗЫ ВНУТРИ РЕПЛИКИ. Синтез ставит вдох на каждую точку, а в текстах
+    # завода точек много: «Три. Я жду.», «Сам принял. Не согласился — принял.»
+    # У «Перехода» на этом набежало столько, что 406 слов шли 4:35 — при том
+    # что тишины МЕЖДУ репликами всего 5% хронометража. Ускорять голос целиком
+    # ради этого нельзя, дикция рассыпается. Режем ровно паузы: всё, что
+    # длиннее SILENCE_KEEP, ужимается до SILENCE_KEEP, речь не трогается.
+    if SILENCE_KEEP > 0:
+        af.append(f"silenceremove=stop_periods=-1:stop_duration={SILENCE_KEEP}"
+                  f":stop_threshold=-40dB:stop_silence={SILENCE_KEEP}")
     if not af:
         return mp3_bytes
     with tempfile.TemporaryDirectory() as td:
@@ -357,6 +385,10 @@ def main(argv):
     ap.add_argument("--parts-dir", help="Куда сохранить mp3 по репликам (vo-<N>.mp3) для липсинка")
     ap.add_argument("--no-assemble", action="store_true",
                     help="только сгенерить части (сборка позже по временам движка)")
+    ap.add_argument("--tempo", type=float, default=1.0,
+                    help="базовый темп речи ролика (1.0 = как синтезировал Fish)")
+    ap.add_argument("--silence", type=float, default=0.0,
+                    help="ужать паузы ВНУТРИ реплики до N секунд (0 — не трогать)")
     ap.add_argument("--assemble-only", action="store_true",
                     help="только собрать из готовых частей по --times-json/--map-json")
     ap.add_argument("--times-json", help="JSON от `animdsl timing` (фактические времена)")
@@ -364,6 +396,15 @@ def main(argv):
     ap.add_argument("--list-voices", action="store_true",
                     help="показать голоса аккаунта Fish (их id → FISH_AUDIO_VOICE_ID)")
     args = ap.parse_args(argv)
+
+    # БЕЗ ЭТИХ ДВУХ СТРОК ПОЛЕ tempo НЕ РАБОТАЛО. Аргумент разбирался, но
+    # BASE_TEMPO оставался единицей: студия просила «быстрее», в манифесте
+    # стояло 1.15, а на дорожку это не попадало вообще. Замер вскрыл: у
+    # «Перехода» на темпе 1.30 голос шёл МЕДЛЕННЕЕ, чем у Фреди на 1.15 —
+    # разница была только в текстах, множитель не применялся ни разу.
+    global BASE_TEMPO, SILENCE_KEEP
+    BASE_TEMPO = max(0.7, min(1.9, args.tempo))
+    SILENCE_KEEP = max(0.0, min(1.0, args.silence))
 
     if args.list_voices:
         key = os.environ.get("FISH_AUDIO_API_KEY")

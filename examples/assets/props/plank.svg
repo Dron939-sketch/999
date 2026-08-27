@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 150" width="340" height="150">
+<!-- Заплатка на щель — толстая доска НАИСКОСЬ с двумя гвоздями: сразу читается
+     как «залатано на живую», а не как штатная перекладина забора.
+     Тушь по LOCATION_STYLE.md. -->
+<defs><filter id="ink" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<g filter="url(#ink)">
+  <g transform="rotate(-11 170 75)">
+    <rect x="8" y="40" width="324" height="70" rx="9" fill="#141410"/>
+    <!-- шляпки гвоздей — светлые кресты, мелкие: акцент, а не украшение -->
+    <g stroke="#d4d7cf" stroke-width="6" stroke-linecap="round">
+      <path d="M46 62 l14 14 M60 62 l-14 14"/>
+      <path d="M282 62 l14 14 M296 62 l-14 14"/>
+    </g>
+  </g>
+</g>
+</svg>

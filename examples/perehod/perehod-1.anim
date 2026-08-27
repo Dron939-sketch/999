@@ -1,0 +1,312 @@
+// =============================================================================
+//  «ПЕРЕХОД» — ЧАСТЬ 1 из 3. ЗАХОД И МЕХАНИЗМ.
+//
+//  Разрез на три части — ограничение движка: он держит все кадры в памяти и
+//  растёт на ~800 МБ в минуту (OTK.md), длинный ролик роняет раннер по OOM.
+//  Границы по смыслу: заход и механизм — здесь, главный удар и паранойя — во
+//  второй, игра и жало — в третьей. Склейка ffmpeg concat.
+//
+//  ФИШКА — ГЕРБАРИЙ. Каждое «не считается» прилетает в кадр отдельной
+//  карточкой и садится на доску под булавку: это уже случилось, отменить
+//  нельзя, можно только рассмотреть. На «всё честно» булавки выдёргиваются
+//  разом и образцы падают.
+//
+//  ДВИЖЕНИЕ. Ролик писан после замера, который показал, что монтаж завода
+//  качается между calm / point / v_upor и не поворачивает корпус ни разу
+//  (PRAVILA-DVIZHENIYA.md §8). Здесь фигура ХОДИТ по кадру вдоль доски
+//  (idet, shag_levoj, shag_pravoj), поворачивается к ней спиной и через
+//  плечо (chetvert_pravo, bok_pravo, spina_oglyadka) и берёт крупные позы
+//  только на ударах.
+//
+//  Локации: чернота на заходе (сета нет, фон config), дальше доска-гербарий.
+//
+//  ВНИМАНИЕ ПРО `duration`. Это ПОЛ, а не потолок: содержимое длиннее
+//  играет целиком, содержимое КОРОЧЕ движок доигрывает замороженным
+//  кадром. Липсинк подменяет заявленные `speaks for` реальной длиной
+//  озвучки, и сцена ужимается — поэтому объявляем заведомо низкий пол
+//  (5с), а длину сцены задаёт содержимое. На первом заходе здесь
+//  стояли честные на вид 44 и 48 секунд, и во второй части вышли
+//  провалы на 5.9 и 10.1 секунды мёртвого кадра.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set doska  from "../assets/sets/perehod-doska.svg"
+import prop obr1  from "../assets/props/perehod-obr-telefon.svg"
+import prop obr2  from "../assets/props/perehod-obr-vitrina.svg"
+import prop obr3  from "../assets/props/perehod-obr-kuhnya.svg"
+import prop obr4  from "../assets/props/perehod-obr-noutbuk.svg"
+import prop pin1  from "../assets/props/perehod-bulavka.svg"
+import prop pin2  from "../assets/props/perehod-bulavka.svg"
+import prop pin3  from "../assets/props/perehod-bulavka.svg"
+import prop pin4  from "../assets/props/perehod-bulavka.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #17170f
+    monochrome: true
+    mono-contrast: 1.6
+    snow: 0.3
+    on-twos: 2
+    line-boil: 0.5
+    film-grain: 0.05
+    vignette: 0.3
+    film-flicker: 0.02
+    gate-weave: 0.3
+    film-scratch: 0.2
+    film-dust: 0.4
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+}
+
+// ── СЦЕНА 1. ЧЕРНОТА ────────────────────────────────────────────────────────
+//  Сета нет: фон берётся из config. Лицо проступает из темноты, глаза
+//  открываются раньше остального — поэтому вход идёт со спины и через поворот.
+scene "temnota" (duration: 5s) {
+    transition static 0.5s
+
+    place freeman at (0.50, 0.80) facing front layer 9
+    freeman scales 0.80 over 0.01s
+    camera close-up freeman
+    freeman pose "spina"
+    wait 0.6s
+    freeman pose "povorot_pravo"
+    wait 0.4s
+    freeman pose "v_upor"
+    freeman overlays "blink"
+    wait 0.3s
+
+    // ── VO-1 [ХУК]: Здравствуй. Сядь. Я задам тебе один вопрос, и он тебе не понравится.
+    //lip 1
+    together {
+        freeman speaks for 6.4s
+        do {
+            camera close-up freeman
+            wait 2.2s
+            camera medium freeman
+            freeman pose "open"
+            wait 2.0s
+            freeman pose "v_upor"
+        }
+    }
+
+    wait 0.35s
+
+    // ── VO-2 [ХУК]: Назови три решения, которые ты принял за последний месяц.
+    //lip 2
+    together {
+        freeman speaks for 4.8s
+        do {
+            camera medium freeman
+            freeman pose "point"
+            wait 2.2s
+            freeman pose "hips"
+        }
+    }
+
+    wait 0.3s
+
+    // ── VO-3 [ХУК]: Сам принял. Не согласился — принял.
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "stern"
+    //lip 3
+    together {
+        freeman speaks for 3.2s
+        do {
+            freeman pose "no"
+            wait 1.6s
+            camera close-up freeman
+        }
+    }
+
+    wait 0.3s
+
+    // ── VO-4 [ХУК]: Три. Я жду.
+    //lip 4
+    together {
+        freeman speaks for 1.6s
+        do {
+            camera close-up freeman
+            freeman pose "v_upor"
+            wait 1.2s
+        }
+    }
+
+    // Две секунды неподвижного лица. Только моргнул.
+    wait 0.7s
+    freeman overlays "blink"
+    wait 0.6s
+}
+
+// ── СЦЕНА 2. ДОСКА-ГЕРБАРИЙ ─────────────────────────────────────────────────
+scene "doska" (duration: 5s, set: doska) {
+    transition static 0.4s
+
+    // Фигура входит слева и ХОДИТ вдоль доски: композиция кадра меняется
+    // за счёт хода, а не только за счёт рук.
+    place freeman at (0.14, 0.66) facing front layer 9
+    freeman scales 0.78 over 0.01s
+    camera wide
+    freeman pose "idet"
+
+    // Образцы ждут за правой кромкой — влетают по одному.
+    place obr1 at (1.55, 0.30) layer 4
+    obr1 scales 0.95 over 0.01s
+    place obr2 at (1.85, 0.70) layer 4
+    obr2 scales 0.55 over 0.01s
+    place obr3 at (1.70, 0.30) layer 4
+    obr3 scales 0.75 over 0.01s
+    place obr4 at (1.55, 0.70) layer 4
+    obr4 scales 0.95 over 0.01s
+    place pin1 at (1.55, 0.10) layer 5
+    pin1 scales 0.32 over 0.01s
+    place pin2 at (1.85, 0.56) layer 5
+    pin2 scales 0.32 over 0.01s
+    place pin3 at (1.70, 0.13) layer 5
+    pin3 scales 0.32 over 0.01s
+    place pin4 at (1.55, 0.50) layer 5
+    pin4 scales 0.32 over 0.01s
+
+    wait 0.4s
+
+    // ── VO-5 [ПУЛЕМЁТ]: Не считается «взял кредит» — тебе позвонили…
+    //lip 5
+    together {
+        freeman speaks for 7.4s
+        obr1 moves-to (0.38, 0.30) over 0.5s ease-out
+        pin1 moves-to (0.38, 0.10) over 0.6s ease-out
+        do {
+            freeman pose "shag_pravoj"
+            freeman moves-to (0.21, 0.66) over 1.4s
+            wait 1.6s
+            camera wide
+            freeman pose "point"
+            wait 2.4s
+            freeman pose "chetvert_pravo"
+            wait 2.0s
+            freeman pose "idet"
+        }
+    }
+
+    wait 0.25s
+
+    // ── VO-6 [ПУЛЕМЁТ]: Не считается «купил» — на полке лежала последняя…
+    //lip 6
+    together {
+        freeman speaks for 6.9s
+        obr2 moves-to (0.76, 0.70) over 0.5s ease-out
+        pin2 moves-to (0.76, 0.56) over 0.6s ease-out
+        do {
+            freeman pose "shag_levoj"
+            freeman moves-to (0.27, 0.66) over 1.6s
+            wait 1.8s
+            camera medium freeman
+            freeman pose "gopnik"
+            wait 2.2s
+            freeman pose "v_upor"
+            wait 1.6s
+            freeman pose "idet"
+        }
+    }
+
+    wait 0.25s
+
+    // ── VO-7 [ПУЛЕМЁТ]: Не считается «пообещал звонить маме каждый день»…
+    //lip 7
+    together {
+        freeman speaks for 8.0s
+        obr3 moves-to (0.74, 0.30) over 0.5s ease-out
+        pin3 moves-to (0.74, 0.13) over 0.6s ease-out
+        do {
+            camera wide
+            freeman pose "shag_pravoj"
+            freeman moves-to (0.33, 0.66) over 1.6s
+            wait 1.8s
+            freeman pose "otvraschenie"
+            wait 2.2s
+            freeman pose "shrug"
+            wait 2.0s
+            freeman pose "v_upor"
+        }
+    }
+
+    wait 0.35s
+
+    // ── VO-8 [ПУЛЕМЁТ]: Тебя не обманули. Слышишь? Обман — это когда врут…
+    // Мимика ДО реплики: внутри неё `overlays` правит ту же кость
+    // `mouth`, что и липсинк, и до конца фразы рот замирает.
+    freeman overlays "stern"
+    //lip 8
+    together {
+        freeman speaks for 7.4s
+        obr4 moves-to (0.38, 0.70) over 0.5s ease-out
+        pin4 moves-to (0.38, 0.50) over 0.6s ease-out
+        do {
+            camera medium freeman
+            freeman pose "v_upor"
+            wait 2.2s
+            camera close-up freeman
+            wait 2.2s
+            camera wide
+            freeman pose "hips"
+        }
+    }
+    freeman overlays "wide"
+
+    wait 0.35s
+
+    // ── VO-9 [ПУЛЕМЁТ]: Тебе аккуратно подали одно число вместо другого…
+    //  Два числа: красивое приходит в кадр, честное — не приходит.
+    let krasivo = text("9 400 в месяц", 60) at (0.60, -1.2) layer 7
+    krasivo scales 0.30 over 0.01s
+    let chestno = text("214 000 переплаты", 60) at (0.60, -1.2) layer 7
+    chestno scales 0.30 over 0.01s
+    //lip 9
+    together {
+        freeman speaks for 11.2s
+        krasivo moves-to (0.55, 0.07) over 0.6s ease-out
+        do {
+            camera wide
+            freeman pose "raskryl"
+            wait 2.6s
+            freeman pose "chetvert_pravo"
+            wait 2.4s
+            freeman pose "point"
+            wait 2.4s
+            freeman pose "bok_pravo"
+            wait 2.2s
+            freeman pose "v_upor"
+        }
+    }
+    chestno moves-to (0.55, 0.92) over 0.6s ease-out
+
+    wait 0.35s
+
+    // ── VO-10 [ПУЛЕМЁТ]: Ты не спросил — они не показали. Всё честно.
+    //  Булавки выдёргиваются разом, образцы падают за нижнюю кромку.
+    //lip 10
+    together {
+        freeman speaks for 4.8s
+        do {
+            camera wide
+            freeman pose "shrug"
+            wait 2.0s
+            freeman pose "spina_oglyadka"
+            wait 1.8s
+        }
+    }
+    pin1 moves-to (0.38, -0.25) over 0.4s
+    pin2 moves-to (0.76, -0.25) over 0.4s
+    pin3 moves-to (0.74, -0.25) over 0.4s
+    pin4 moves-to (0.38, -0.25) over 0.4s
+    obr1 moves-to (0.38, 1.5) over 0.9s ease-in
+    obr2 moves-to (0.76, 1.5) over 0.9s ease-in
+    obr3 moves-to (0.74, 1.5) over 0.9s ease-in
+    obr4 moves-to (0.38, 1.5) over 0.9s ease-in
+    krasivo moves-to (0.55, 1.5) over 0.9s ease-in
+    chestno moves-to (0.55, 1.5) over 0.9s ease-in
+    wait 0.55s
+}

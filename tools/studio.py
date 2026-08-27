@@ -30,11 +30,13 @@ studio.py — «завод» Лектория: одна команда → го�
 
 import argparse
 import io
+import collections
 import json
 import os
 import re
 import subprocess
 import sys
+import tempfile
 from contextlib import redirect_stdout
 from pathlib import Path
 
@@ -150,7 +152,9 @@ def step_voice(prod, out_voice, parts_dir):
     # Мягко: сбой озвучки НЕ рушит завод — просто немой ролик + лог причины.
     try:
         run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
-             "-o", str(out_voice), "--parts-dir", str(parts_dir)])
+             "-o", str(out_voice), "--parts-dir", str(parts_dir),
+             "--tempo", str(prod.get("tempo", 1.0)),
+             "--silence", str(prod.get("silence", 0.0))])
         return out_voice
     except subprocess.CalledProcessError as e:
         log(f"  [озвучка] не удалась ({e}) — оставляю немой ролик. "
@@ -174,7 +178,8 @@ def step_voice_parts(prod, parts_dir):
     try:
         run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
              "-o", str(parts_dir / "_unused.mp3"), "--parts-dir", str(parts_dir),
-             "--no-assemble"])
+             "--tempo", str(prod.get("tempo", 1.0)),
+             "--silence", str(prod.get("silence", 0.0)), "--no-assemble"])
         return True
     except subprocess.CalledProcessError as e:
         log(f"  [озвучка] не удалась ({e}) — немой ролик.")
@@ -193,6 +198,8 @@ def step_assemble_voice(prod, prepped_anim, parts_dir, out_voice, engine):
         run([sys.executable, str(TOOLS / "voiceover.py"), str(vo_path),
              "-o", str(out_voice), "--assemble-only",
              "--parts-dir", str(parts_dir),
+             "--tempo", str(prod.get("tempo", 1.0)),
+             "--silence", str(prod.get("silence", 0.0)),
              "--times-json", str(times), "--map-json", str(mapf)])
         return out_voice
     except subprocess.CalledProcessError as e:
@@ -303,6 +310,26 @@ def has_audio(path):
     return bool(_ffprobe(path, "stream=codec_type", select="a:0"))
 
 
+def find_silences(path, min_len=2.5, thr="-38dB"):
+    """Провалы тишины длиннее min_len секунд: [(старт, длина), ...].
+
+    Нужен, чтобы ловить замороженный кадр от завышенной `duration` сцены.
+    Без ffmpeg молча возвращает пусто — гейт не должен падать сам.
+    """
+    if not have_ffmpeg() or not Path(path).exists():
+        return []
+    try:
+        r = subprocess.run(["ffmpeg", "-i", str(path), "-af",
+                            f"silencedetect=noise={thr}:d={min_len}", "-f", "null", "-"],
+                           capture_output=True, text=True)
+    except Exception:
+        return []
+    out = r.stderr
+    starts = [float(x) for x in re.findall(r"silence_start: ([\d.-]+)", out)]
+    ends = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", out)]
+    return [(a, b - a) for a, b in zip(starts, ends) if b - a >= min_len]
+
+
 def qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced):
     """Гейт качества. Возвращает (hard, soft) — списки сообщений.
 
@@ -330,6 +357,18 @@ def qc_production(prod, video_mp4, final_mp4, voice_expected, voice_produced):
                 soft.append(f"{prod['id']}: заявлен vo, но голос не сгенерился "
                             "(вероятно недоступен TTS) — отдаём немой рендер")
         else:
+            # ПРОВАЛЫ ТИШИНЫ. `duration` сцены — это ПОЛ, а не потолок:
+            # содержимое длиннее играет целиком, содержимое короче движок
+            # доигрывает ЗАМОРОЖЕННЫМ кадром. Если объявленная длительность
+            # больше фактической, в ролике появляется дыра: картинка стоит,
+            # звука нет. У «Перехода» так вышли провалы на 10.1 и 5.9 секунды
+            # во второй части — 16 секунд мёртвого кадра из 75.
+            for start, dur in find_silences(final_mp4, min_len=2.5):
+                hard.append(f"{prod['id']}: провал тишины {dur:.1f}с на "
+                            f"{int(start // 60)}:{start % 60:04.1f} — почти наверняка "
+                            f"`duration` сцены больше её содержимого, и движок "
+                            f"доигрывает замороженным кадром. Ставь duration ЗАВЕДОМО "
+                            f"НИЖЕ содержимого: длину сцены задаёт содержимое")
             vd, ad = media_duration(video_mp4), media_duration(final_mp4)
             if vd > 0 and abs(ad - vd) / vd > 0.20:
                 # Рассинхрон при СУЩЕСТВУЮЩЕМ звуке — дефект сборки. HARD.
@@ -799,6 +838,18 @@ DISTINCT_BODIES_MIN = 9
 # висящими руками бóльшую часть хронометража; ровно это студия и назвала
 # «нет динамики».
 DEFAULT_BODY_SHARE_MAX = 0.35
+# Потолок концентрации: три самые частые позы не должны съедать больше половины
+# монтажа. Замер по манифесту: у большинства роликов 24–45%, у обеих частей
+# «Худшего собеседника» — 57% (calm / v_upor / point), и это самые длинные
+# ролики, где однообразие копится.
+TOP3_POSE_SHARE_MAX = 0.50
+# Ролик длиннее этого обязан показать корпус не только анфас.
+RAKURS_MIN_SEC = 30
+# И длиннее этого — сойти с точки хотя бы раз.
+HOD_MIN_SEC = 60
+# Позы, меняющие РАКУРС корпуса, а не жест: профиль, три четверти, спина.
+RAKURS_POSES = ("chetvert_", "bok_", "spina", "polu_spina", "turn34",
+                "high_angle", "low_angle")
 
 
 def lint_dinamika(prod, rig_dir=None):
@@ -809,7 +860,7 @@ def lint_dinamika(prod, rig_dir=None):
         return [], []
     text = anim_code(anim.read_text(encoding="utf-8"))
     seq = re.findall(r'(pose|overlays)\s+"([a-z_0-9]+)"', text)
-    secs = sum(float(x) for x in re.findall(r"duration:\s*(\d+)s", text))
+    secs = _anim_seconds(anim)
     if secs < 5 or not seq:
         return [], []
 
@@ -841,12 +892,120 @@ def lint_dinamika(prod, rig_dir=None):
         soft.append(f"{prod['id']}: разных силуэтов {len(set(sigs))} при норме "
                     f"{DISTINCT_BODIES_MIN} (имён поз {len({n for _, n in seq})}) — "
                     f"в риге 70 поз с телом, монтаж их не видит")
+    names = [n for k, n in seq if k == "pose"]
+    if len(names) >= 10:
+        top3 = sum(v for _, v in collections.Counter(names).most_common(3))
+        if top3 / len(names) > TOP3_POSE_SHARE_MAX:
+            top = ", ".join(n for n, _ in collections.Counter(names).most_common(3))
+            soft.append(f"{prod['id']}: три позы держат {top3 / len(names) * 100:.0f}% "
+                        f"монтажа при потолке {TOP3_POSE_SHARE_MAX * 100:.0f}% "
+                        f"({top}) — смены силуэта есть, но это качание между теми же "
+                        f"тремя стойками. В риге 70 поз с телом, 29 не были в кадре "
+                        f"ни разу")
     if share > DEFAULT_BODY_SHARE_MAX:
         soft.append(f"{prod['id']}: {share * 100:.0f}% событий оставляют тело в "
                     f"дефолтной стойке при потолке {DEFAULT_BODY_SHARE_MAX * 100:.0f}% "
                     f"— это и есть «анфас с висящей рукой». Мимику через `overlays`, "
                     f"жест телом на каждый удар")
     return [], soft
+
+
+
+def lint_rakurs(prod, rig_dir=None):
+    """Приёмщик РАКУРСА: показан ли корпус не только анфас. (hard, soft).
+
+    Замер по манифесту: `facing front` стоит в четырнадцати роликах из
+    пятнадцати, и другого положения корпуса в них нет. Риг умеет три четверти,
+    профиль в обе стороны, спину с оглядкой, низкий и высокий ракурс — 29 поз
+    с телом не были в кадре ни разу. Отсюда и «бедно по визуалу»: смены поз
+    идут, но зритель всё время смотрит на одну и ту же плоскую проекцию.
+    """
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return [], []
+    text = anim_code(anim.read_text(encoding="utf-8"))
+    secs = _anim_seconds(anim)
+    if secs < RAKURS_MIN_SEC:
+        return [], []
+    states = set(re.findall(r"facing\s+(\w+)", text))
+    states |= {n for n in re.findall(r'pose\s+"([a-z_0-9]+)"', text)
+               if n.startswith(RAKURS_POSES)}
+    if len(states) < 2:
+        return [], [f"{prod['id']}: корпус за {secs:.0f}с ни разу не поворачивается "
+                    f"(только {', '.join(sorted(states)) or 'анфас'}) — три четверти, "
+                    f"профиль и спина в риге есть. Плоская проекция весь ролик "
+                    f"читается как бедная картинка, даже когда поз много"]
+    return [], []
+
+
+def lint_hod(prod, rig_dir=None):
+    """Приёмщик ХОДА: сходит ли фигура с точки в длинном ролике. (hard, soft).
+
+    В «Худшем собеседнике» (2:58) говорящий не сдвинулся ни разу: `place` в
+    начале сцены и всё. Композиция кадра тогда одна на весь ролик, и сколько
+    бы поз ни сменилось, глазу не за что зацепиться.
+    """
+    anim = ROOT / prod.get("anim", "")
+    if not anim.exists():
+        return [], []
+    text = anim_code(anim.read_text(encoding="utf-8"))
+    secs = _anim_seconds(anim)
+    if secs < HOD_MIN_SEC:
+        return [], []
+    chars = set(re.findall(r"import\s+character\s+(\w+)", text))
+    moves = [m for m in re.findall(r"^\s*(\w+)\s+moves-to", text, re.M) if m in chars]
+    if not moves:
+        return [], [f"{prod['id']}: за {secs:.0f}с фигура ни разу не сходит с точки "
+                    f"— композиция кадра одна на весь ролик. Ход по кадру меняет её "
+                    f"сильнее любой смены позы"]
+    return [], []
+
+
+def lint_rot(prod, rig_dir=None):
+    """Приёмщик РТА: мимика внутри реплики стирает липсинк. (hard, soft).
+
+    Липсинк подставляет вместо `speaks for` дорожку `lips "visX"` — она правит
+    кость `mouth` кадр за кадром. Почти каждая мимическая поза правит ТУ ЖЕ
+    кость: из 54 лицевых поз рига без рта только `blink`. Поэтому `overlays`,
+    поставленный ВНУТРИ реплики, перебивает рот на своё выражение, и до конца
+    фразы губы не двигаются вообще.
+
+    ЗАМЕРЕНО на «Переходе»: в финальной сцене межкадровая разница в области
+    лица во время речи 0.67 при 2.55 в паузе — то есть на реплике лицо стоит
+    неподвижнее, чем в тишине. Отсюда и «рот не совпадает»: он не отстаёт, он
+    просто выключен.
+
+    Мимику ставить ДО реплики или в паузу после неё; внутри реплики допустим
+    только `blink`, который рта не трогает.
+    """
+    anim = ROOT / prod.get("anim", "")
+    poses = _rig_poses(rig_dir)
+    if not anim.exists() or not poses:
+        return [], []
+    mouthful = {n for n, p in poses.items() if "mouth" in p.get("bones", {})}
+    lines = anim.read_text(encoding="utf-8").split("\n")
+    bad, in_lip, depth, cur = [], False, 0, None
+    for ln in lines:
+        code = ln.split("//")[0] if not ln.strip().startswith("//") else ""
+        m = re.match(r"^\s*//lip\s+(\d+)\s*$", ln)
+        if m:
+            in_lip, depth, cur = True, 0, m.group(1)
+            continue
+        if not in_lip:
+            continue
+        depth += code.count("{") - code.count("}")
+        for ov in re.findall(r'overlays\s+"([a-z_0-9]+)"', code):
+            if ov in mouthful:
+                bad.append(f"//lip {cur} → overlays \"{ov}\"")
+        if depth <= 0 and ("}" in code):
+            in_lip = False
+    if bad:
+        return [f"{prod['id']}: мимика внутри реплики стирает липсинк — "
+                f"{'; '.join(bad[:6])}{' и ещё ' + str(len(bad) - 6) if len(bad) > 6 else ''}. "
+                f"Кость `mouth` правят и липсинк, и мимика: с этого места и до конца "
+                f"фразы рот не двигается. Ставить мимику ДО реплики или в паузу; "
+                f"внутри допустим только `blink`"], []
+    return [], []
 
 
 def lint_turnaround(prods):
@@ -882,6 +1041,55 @@ def lint_turnaround(prods):
             log("  " + line.rstrip())
     return ([] if code == 0 else ["разворот: нарушения на ракурсах, которые "
                                   "играют ролики — см. таблицу выше"]), []
+
+
+def _anim_seconds(anim_path):
+    """Фактическая длина сценария по движку, а не по объявленным `duration`.
+
+    `duration` сцены — ПОЛ: содержимое длиннее играет целиком, содержимое
+    короче доигрывается замороженным кадром. Поэтому сумма объявленных
+    длительностей не равна длине ролика ни в одну сторону, и приёмщикам
+    динамики по ней считать нельзя. Если движок не собран — откатываемся
+    на старую оценку по `duration:`.
+    """
+    eng = ROOT / "target" / "release" / "animdsl"
+    if eng.exists():
+        try:
+            out = subprocess.run([str(eng), "timing", str(anim_path)],
+                                 capture_output=True, text=True, check=True).stdout
+            return float(json.loads(out)["total"])
+        except Exception:
+            pass
+    text = Path(anim_path).read_text(encoding="utf-8")
+    return sum(float(x) for x in re.findall(r"duration:\s*([\d.]+)s", text))
+
+
+def lint_lipmap(prod):
+    """Приёмщик карты липсинка: каждый `//lip N` обязан дойти до `speaks for`.
+
+    Голос собирается ПО КАРТЕ блоков, а не по номерам реплик: `assemble_by_timing`
+    сопоставляет i-й блок движка с i-м номером из map.json. Если один маркер по
+    дороге потерялся — между ним и речью встала строка, которую препроцессор не
+    считает строительной, — карта короче на единицу, и ВСЯ дорожка уезжает на
+    реплику вперёд. Слышно это только на просмотре целиком, а метрики молчат:
+    ролик не немой, длины сходятся, липсинк формально «по звуку».
+
+    Так молча разъехались вторая часть «Худшего собеседника» (карта [2..8]
+    вместо [1..8]: пропы `imya moves-to` стояли между маркером и речью) и
+    «Перепрошивка». Проверка статическая, до рендера.
+    """
+    src = ROOT / prod["anim"]
+    if not src.is_file() or not prod.get("vo"):
+        return [], []
+    with tempfile.TemporaryDirectory() as td:
+        r = subprocess.run(
+            [sys.executable, str(TOOLS / "prep_lipsync.py"), str(src),
+             "-o", os.path.join(td, "probe.anim")],
+            capture_output=True, text=True)
+    if r.returncode:
+        msg = (r.stdout + r.stderr).strip().splitlines()
+        return [f"{prod['id']}: {msg[-1].strip() if msg else 'липсинк не разобрал сценарий'}"], []
+    return [], []
 
 
 def lint_location(prod):
@@ -1066,7 +1274,8 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
 
 def main(argv):
     ap = argparse.ArgumentParser(description="Завод Лектория: ролики со звуком")
-    ap.add_argument("only", nargs="?", help="id одного продакшена (иначе — все)")
+    ap.add_argument("only", nargs="?",
+                    help="id продакшена или несколько через запятую (иначе — все)")
     ap.add_argument("--manifest", default=str(DEFAULT_MANIFEST))
     ap.add_argument("--engine", default=str(DEFAULT_ENGINE))
     ap.add_argument("--videos", default=str(ROOT / "videos"))
@@ -1078,9 +1287,14 @@ def main(argv):
     manifest = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
     prods = manifest["productions"]
     if args.only:
-        prods = [p for p in prods if p["id"] == args.only]
+        # Несколько id через запятую: многочастные ролики (Фреди, «Переход»)
+        # раньше приходилось гнать по одному пушу на часть, а каждый новый push
+        # снимает предыдущий прогон (concurrency: cancel-in-progress). Из-за
+        # этого сборка трёхчастного ролика занимала три очереди подряд.
+        want = [x.strip() for x in args.only.split(",") if x.strip()]
+        prods = [p for p in prods if p["id"] in want]
         if not prods:
-            sys.exit(f"нет продакшена с id={args.only}")
+            sys.exit(f"нет продакшенов с id={args.only}")
 
     engine = Path(args.engine)
     if not engine.exists():
@@ -1104,6 +1318,9 @@ def main(argv):
         lh, ls = lint_location(prod)      # приёмщик локаций
         all_hard += lh
         all_soft += ls
+        mh, ms = lint_lipmap(prod)        # приёмщик карты липсинка
+        all_hard += mh
+        all_soft += ms
         nh, ns = lint_imena_poz(prod)     # приёмщик имён поз
         all_hard += nh
         all_soft += ns
@@ -1131,6 +1348,15 @@ def main(argv):
         dh, ds = lint_dinamika(prod)      # приёмщик динамики
         all_hard += dh
         all_soft += ds
+        kh, ks = lint_rakurs(prod)        # приёмщик ракурса корпуса
+        all_hard += kh
+        all_soft += ks
+        hh, hs = lint_hod(prod)           # приёмщик хода по кадру
+        all_hard += hh
+        all_soft += hs
+        th2, ts2 = lint_rot(prod)         # приёмщик рта (мимика внутри реплики)
+        all_hard += th2
+        all_soft += ts2
     th, ts = lint_turnaround(prods)       # приёмщик разворота (один на риг)
     all_hard += th
     all_soft += ts

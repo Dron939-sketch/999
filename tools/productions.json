@@ -61,6 +61,70 @@
    "anim": "examples/lektorij/myshlenie-intro.anim",
    "vo": "examples/lektorij/myshlenie-intro-VO.md",
    "images": []
+  },
+  {
+   "id": "osoznannost-intro",
+   "desc": "Подводка к курсу «Осознанность»: телевизор, который никто не смотрит, — блуждающий ум. На «вернулся» экраны гаснут, под жало ящик включается снова.",
+   "anim": "examples/lektorij/osoznannost-intro.anim",
+   "vo": "examples/lektorij/osoznannost-intro-VO.md",
+   "images": []
+  },
+  {
+   "id": "lazejka-intro",
+   "desc": "Подводка к курсу «Лазейка»: забор цел, а в нём щель — правило это текст, и у текста есть край. На взлёте доска прибита, под жало рядом открывается новый просвет.",
+   "anim": "examples/lektorij/lazejka-intro.anim",
+   "vo": "examples/lektorij/lazejka-intro-VO.md",
+   "images": []
+  },
+  {
+   "id": "lazejka-chuzhoe-intro",
+   "desc": "Второе интро к курсу «Лазейка», угол читателя: шлагбаум с табличкой «ПРОЕЗД ЗАПРЕЩЁН», а герой пешком. Запрет цел — он просто не про тебя.",
+   "anim": "examples/lektorij/lazejka-chuzhoe-intro.anim",
+   "vo": "examples/lektorij/lazejka-chuzhoe-intro-VO.md",
+   "images": []
+  },
+  {
+   "id": "fredi-hudshij-sobesednik-1",
+   "desc": "Фреди, часть 1 из 2 — ДИАГНОЗ: худший собеседник в твоей жизни это ты сам. Двое в кадре. Шесть локаций по 11–27 сек: спальня → переговорка → спальня → прихожая → офис → кухня. Разрез из-за памяти движка (см. VO §ПОЧЕМУ ДВЕ ЧАСТИ). Темп речи 1.15.",
+   "anim": "examples/fredi/fredi-hudshij-sobesednik-1.anim",
+   "vo": "examples/fredi/fredi-hudshij-sobesednik-1-VO.md",
+   "images": [],
+   "tempo": 1.15
+  },
+  {
+   "id": "fredi-hudshij-sobesednik-2",
+   "desc": "Фреди, часть 2 из 2 — ЧТО ДЕЛАТЬ: имя Фреди, бит про живого врача, жало. Четыре локации: кухня (шов с частью 1) → спальня → поликлиника → спальня. Титры здесь. Склеивается с частью 1 через ffmpeg concat. Темп речи 1.15.",
+   "anim": "examples/fredi/fredi-hudshij-sobesednik-2.anim",
+   "vo": "examples/fredi/fredi-hudshij-sobesednik-2-VO.md",
+   "images": [],
+   "tempo": 1.15
+  },
+  {
+   "id": "perehod-1",
+   "desc": "«Переход», часть 1 из 3 — ЗАХОД И МЕХАНИЗМ: назови три решения, которые принял сам. Гербарий: каждое «не считается» садится на доску под булавку. Темп речи 1.30.",
+   "anim": "examples/perehod/perehod-1.anim",
+   "vo": "examples/perehod/perehod-1-VO.md",
+   "images": [],
+   "tempo": 1.35,
+   "silence": 0.2
+  },
+  {
+   "id": "perehod-2",
+   "desc": "«Переход», часть 2 из 3 — ГЛАВНЫЙ УДАР И ВТОРАЯ КРАЙНОСТЬ: выгорающий календарь, опора на бите усталости, решётка из знаков вопроса. Темп речи 1.30.",
+   "anim": "examples/perehod/perehod-2.anim",
+   "vo": "examples/perehod/perehod-2-VO.md",
+   "images": [],
+   "tempo": 1.35,
+   "silence": 0.2
+  },
+  {
+   "id": "perehod-3",
+   "desc": "«Переход», часть 3 из 3 — ИГРА И ЖАЛО: интерфейс в трёх стадиях, «нужно 35, у вас 23», карта месяца, титр. Темп речи 1.30.",
+   "anim": "examples/perehod/perehod-3.anim",
+   "vo": "examples/perehod/perehod-3-VO.md",
+   "images": [],
+   "tempo": 1.35,
+   "silence": 0.2
   }
  ]
 }

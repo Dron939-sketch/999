@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 420" width="1060" height="420">
+<!-- «Нужно 35, у вас 23»: к концу месяца умные ходы гаснут.
+     Перечёркнутые серым — недоступные: сил на них уже нет. Это единственная
+     механика игры, которую стоит показать в кадре. -->
+<defs><filter id="ink29" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="29" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+<rect x="0" y="0" width="1060" height="420" fill="#d4d7cf"/>
+<g filter="url(#ink29)">
+  <rect x="24" y="24" width="1012" height="62" fill="none" stroke="#141410" stroke-width="5"/><text x="52" y="67" font-family="DejaVu Sans, Helvetica, sans-serif" font-size="36" fill="#141410">СОГЛАСИТЬСЯ</text><rect x="24" y="100" width="1012" height="62" fill="none" stroke="#a2a59d" stroke-width="5"/><text x="52" y="143" font-family="DejaVu Sans, Helvetica, sans-serif" font-size="36" fill="#a2a59d">ПОСЧИТАТЬ</text><line x1="24" y1="131" x2="1036" y2="131" stroke="#a2a59d" stroke-width="5"/><rect x="24" y="176" width="1012" height="62" fill="none" stroke="#a2a59d" stroke-width="5"/><text x="52" y="219" font-family="DejaVu Sans, Helvetica, sans-serif" font-size="36" fill="#a2a59d">УТОЧНИТЬ</text><line x1="24" y1="207" x2="1036" y2="207" stroke="#a2a59d" stroke-width="5"/><rect x="24" y="252" width="1012" height="62" fill="none" stroke="#141410" stroke-width="5"/><text x="52" y="295" font-family="DejaVu Sans, Helvetica, sans-serif" font-size="36" fill="#141410">ОТКАЗАТЬ</text>
+  <text x="530" y="392" font-family="DejaVu Sans, Helvetica, sans-serif" font-size="44" font-weight="bold" fill="#141410" text-anchor="middle">нужно 35, у вас 23</text>
+</g>
+</svg>

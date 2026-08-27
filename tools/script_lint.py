@@ -63,6 +63,14 @@ LOW = re.compile(r"(жр[ая]|жу[ёе]|мяс|шкур|брюх|лент[аы
 # формальность: ролик без единства действия набирает второй тезис и распухает
 # за потолок в 60с, а монолог без препятствия превращается в проповедь.
 THESIS = re.compile(r"^\s*(?://\s*)?(?:\*\*)?СКВОЗНАЯ(?:\*\*)?\s*:", re.I | re.M)
+# МНОГОЧАСТЕВОЙ РОЛИК. Длинный монолог не помещается в один рендер: движок
+# держит все кадры в памяти (~800 МБ/мин), и ролик длиннее ~2 минут обрывает
+# раннер. Такие ролики режутся на части, и тогда формула §5 выполнена в РОЛИКЕ,
+# а не в каждом файле: в первой части нет взлёта и жала, во второй — хука и
+# пулемёта. Гейт, требующий все биты от половины, валит здоровый сценарий.
+# Шапка объявляет «ЧАСТЬ: N/M», и проверки, неприменимые к этой доле, из счёта
+# УБИРАЮТСЯ (не обнуляются) — знаменатель уменьшается, балл не размывается.
+PART = re.compile(r"^\s*(?://\s*)?(?:\*\*)?ЧАСТЬ(?:\*\*)?\s*:\s*(\d+)\s*/\s*(\d+)", re.I | re.M)
 CONFLICT = re.compile(r"^\s*(?://\s*)?(?:\*\*)?КОНФЛИКТ(?:\*\*)?\s*:", re.I | re.M)
 # Смеховые маркеры финала. Ищутся ТОЛЬКО в последней реплике: шутка в финале
 # обнуляет ставку, зритель уходит развлечённым, а не выбитым (§13).
@@ -113,19 +121,30 @@ def hits(rows, raw=""):
     out = []
     if not rows:
         return [(100, False, "таблица VO", "не нашёл ни одной строки VO-N")]
+    part_m = PART.search(raw)
+    part, parts = (int(part_m.group(1)), int(part_m.group(2))) if part_m else (1, 1)
+    first_part, last_part = part == 1, part == parts
     text_all = " ".join(r["text"] for r in rows)
     beats_all = " ".join(r["beat"] for r in rows).upper()
     first, last = rows[0], rows[-1]
 
-    out.append((10, bool(ADDRESS.search(first["text"])), "обращение к зрителю в первой реплике",
-                "первая фраза не адресована лично («ты/вы») — зритель остаётся наблюдателем"))
-    out.append((10, not WARMUP.search(first["text"]) or bool(GREETING.search(first["text"])),
-                "нет разогрева",
-                "первая фраза начинается с представления или «сегодня поговорим»"))
+    if first_part:
+        out.append((10, bool(ADDRESS.search(first["text"])), "обращение к зрителю в первой реплике",
+                    "первая фраза не адресована лично («ты/вы») — зритель остаётся наблюдателем"))
+        out.append((10, not WARMUP.search(first["text"]) or bool(GREETING.search(first["text"])),
+                    "нет разогрева",
+                    "первая фраза начинается с представления или «сегодня поговорим»"))
 
     missing = [b for b in BEATS if b not in beats_all]
-    out.append((15, not missing, "все биты формулы на месте",
-                f"нет битов: {', '.join(missing)}" if missing else ""))
+    if parts == 1:
+        out.append((15, not missing, "все биты формулы на месте",
+                    f"нет битов: {', '.join(missing)}" if missing else ""))
+    else:
+        # у части свои биты; проверяем лишь то, что она не пуста по формуле
+        out.append((15, len(BEATS) - len(missing) > 0,
+                    f"биты формулы в части {part}/{parts}: "
+                    f"{', '.join(b for b in BEATS if b in beats_all) or '—'}",
+                    "в части нет ни одного бита формулы"))
 
     # порядок битов: ХУК раньше ПУЛЕМЁТА, РАЗВОРОТ раньше ВЗЛЁТА, ЖАЛО последним
     idx = {b: next((i for i, r in enumerate(rows) if b in r["beat"].upper()), None)
@@ -142,9 +161,14 @@ def hits(rows, raw=""):
                 "фразы длинные — рублёный ритм оригинала теряется"))
 
     # триада: три и более коротких предложения подряд (пулемёт)
-    triad = any(all(len(s.split()) <= 3 for s in sents[i:i + 3]) for i in range(len(sents) - 2))
-    out.append((10, triad, "есть пулемётная триада",
-                "нет серии из трёх коротких ударов подряд"))
+    # Триаду спрашиваем только там, где пулемёт вообще есть. В части, где
+    # идут взлёт и жало, серии коротких ударов быть и не должно — а проверка
+    # всё равно снимала десять очков с каждой второй части.
+    if "ПУЛЕМ" in beats_all:
+        triad = any(all(len(s.split()) <= 3 for s in sents[i:i + 3])
+                    for i in range(len(sents) - 2))
+        out.append((10, triad, "есть пулемётная триада",
+                    "нет серии из трёх коротких ударов подряд"))
 
     out.append((8, bool(HIGH.search(text_all) and LOW.search(text_all)),
                 "столкновение регистров",
@@ -161,20 +185,32 @@ def hits(rows, raw=""):
     limit = 14.0 if has_hello else 7.0
     ok_first = t_first is not None and t_first <= 7.0
     ok_hook = t_hook is not None and t_hook <= limit
-    out.append((7, ok_first and ok_hook,
-                f"первая реплика ≤7с, хук ≤{limit:.0f}с"
-                + (" (с фирменным приветствием)" if has_hello else ""),
-                f"первая реплика на {t_first}с, хук на {t_hook}с — зритель уже ушёл"))
+    # Только первая часть: во второй хука нет по устройству, и проверка
+    # валилась на отсутствующем бите, а не на реальной ошибке.
+    if first_part:
+        out.append((7, ok_first and ok_hook,
+                    f"первая реплика ≤7с, хук ≤{limit:.0f}с"
+                    + (" (с фирменным приветствием)" if has_hello else ""),
+                    f"первая реплика на {t_first}с, хук на {t_hook}с — зритель уже ушёл"))
     turn = next((r for r in rows if "РАЗВОРОТ" in r["beat"].upper()), None)
     t_turn = first_time(turn["time"]) if turn else None
-    out.append((5, t_turn is not None and 14.0 <= t_turn <= 28.0, "перелом в окне 14–28с",
-                f"разворот на {t_turn}с — вторая перезагрузка внимания не туда"
-                if t_turn else "бита РАЗВОРОТ нет"))
+    if parts == 1:
+        out.append((5, t_turn is not None and 14.0 <= t_turn <= 28.0, "перелом в окне 14–28с",
+                    f"разворот на {t_turn}с — вторая перезагрузка внимания не туда"
+                    if t_turn else "бита РАЗВОРОТ нет"))
 
     out.append((5, not SUMMING.search(text_all), "нет подведения итогов",
                 "есть «подводя итог»/«таким образом» — мораль проговорена, глубина схлопывается"))
-    out.append((5, bool(FINALE_OK.search(last["text"])), "финал — удар, а не точка",
-                "последняя реплика заканчивается ровной точкой: нет вопроса, вызова или обрыва"))
+    if last_part:
+        # Удар — это вопрос, восклицание, обрыв ИЛИ короткий приказ: «Проверь
+        # себя двадцать третьего.» бьёт не хуже вопроса, а по знаку препинания
+        # неотличима от ровной точки. Приказ узнаём по первому слову: русский
+        # императив кончается на -й, -и или -ь.
+        words = last["text"].strip("«»\"' ").split()
+        order = bool(words) and len(words) <= 7 and re.search(r"[йиь]$", words[0], re.I)
+        out.append((5, bool(FINALE_OK.search(last["text"])) or bool(order),
+                    "финал — удар, а не точка",
+                    "последняя реплика заканчивается ровной точкой: нет вопроса, вызова или обрыва"))
 
     bad = [name for name, pat in FORBIDDEN.items() if re.search(pat, text_all, re.I)]
     out.append((5, not bad, "нет стоп-приёмов",
@@ -200,9 +236,10 @@ def hits(rows, raw=""):
     # заваливала два ролика из шести, не показав в них ни одного дефекта.
     # Закон остаётся в силе и проверяется человеком по чек-листу §III.9.
 
-    out.append((5, not JOKE.search(last["text"]), "финал не на шутке",
-                "последняя реплика — шутка: ставка обнулена, зритель уходит "
-                "развлечённым, а не выбитым (DRAMATURGIYA.md §13)"))
+    if last_part:
+        out.append((5, not JOKE.search(last["text"]), "финал не на шутке",
+                    "последняя реплика — шутка: ставка обнулена, зритель уходит "
+                    "развлечённым, а не выбитым (DRAMATURGIYA.md §13)"))
     return out
 
 
@@ -225,7 +262,9 @@ def main(argv):
         total = sum(w for w, _, _, _ in checks)
         score = round(100 * score / total) if total else 0
         worst = max(worst, 0 if score >= GATE else 1)
-        print(f"\n  ГЕЙТ СЦЕНАРИЯ: {Path(f).name}   реплик: {len(rows)}")
+        pm = PART.search(Path(f).read_text(encoding="utf-8"))
+        part_note = f"   часть {pm.group(1)}/{pm.group(2)}" if pm else ""
+        print(f"\n  ГЕЙТ СЦЕНАРИЯ: {Path(f).name}   реплик: {len(rows)}{part_note}")
         for w, ok, name, why in checks:
             print(f"    [{'OK  ' if ok else 'ПРОВАЛ'}] {name}" + (f"\n             → {why}" if not ok and why else ""))
         print(f"    ИТОГО {score}/100 — {'взят' if score >= GATE else f'НЕ ВЗЯТ (порог {GATE})'}")

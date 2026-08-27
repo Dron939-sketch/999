@@ -1,0 +1,490 @@
+// =============================================================================
+//  ФРЕДИ — «Худший собеседник» (реклама приложения, не Лекторий)
+//
+//  ЧАСТЬ 1 из 2 — ДИАГНОЗ. Движок держит все кадры в памяти (замерено:
+//  +800 МБ/мин), и 3.5-минутный ролик обрывал CI-раннер по OOM. Разрезан
+//  по смысловой границе: здесь проблема, во второй части — что с ней делать.
+//  Части склеиваются в один файл на выходе (ffmpeg concat).
+//
+//  ФИШКА — ДВОЕ В КАДРЕ. Впервые в цеху: кроме Фримена в сцене лежит ВТОРОЙ
+//  персонаж (тот же риг под именем sleeper, поза "lezhit"). Он не говорит и
+//  не встаёт весь ролик — он просто смотрит в потолок в три часа ночи, пока
+//  о нём говорят в третьем лице. Зритель узнаёт себя в лежащем, а не в
+//  говорящем: «смотри, как он работает» — и это про тебя.
+//
+//    · пулемёт идёт КРУПНЫМИ ПЛАНАМИ ЛЕЖАЩЕГО: мимика меняется (weary →
+//      doubt → despair), тело не двигается. Пластинка ходит по кругу;
+//    · на отрицании Фримен НАКЛОНЯЕТСЯ к зрителю (поза lean) — «фу, с
+//      роботом»;
+//    · разворот — «следи за рукой»: перечисление на пальцах, кому что
+//      изображал сегодня;
+//    · взлёт — единственное место, где голос теплеет: имя Фреди;
+//    · ПРЕДЕЛ — отдельный бит, которого нет в формуле: прямая отсылка к врачу.
+//      Держится строгой мимикой и общим планом, без иронии;
+//    · жало — «Пип.» в темноту.
+//
+//  ЛОКАЦИИ — ШЕСТЬ СЦЕН. Одна комната на 2:46 глазу не даёт ни одной новой
+//  композиции, поэтому ролик разложен на планы по 11–27 секунд. Уходы
+//  привязаны к тексту, а не к таймеру:
+//
+//    · спальня      VO-1…VO-6   — лежащий в кадре, «смотри, как он работает»;
+//    · переговорка  VO-7, VO-8  — «разговор, который был во вторник»;
+//    · спальня      VO-9, VO-10 — круг замкнулся, пластинка играет там же;
+//    · прихожая     VO-11…VO-13 — «к психологу? дорого, страшно»: стоит у
+//                                 двери, из которой так и не вышел;
+//    · офис ночью   VO-14…VO-17 — сцена, на которой днём играли роли;
+//    · кухня        VO-18, VO-19 — «первый честный разговор за день». Локация
+//                                 переходит во вторую часть — шва не видно.
+//
+//  Лежащий привязан к кровати: любой план с ним — только спальня. Она и
+//  остаётся домом ролика, остальное — вылазки, там Фреди один.
+//
+//  Во всех наборах тона средне-серые, а не чёрные: оба персонажа — сплошные
+//  силуэты и на тёмной комнате пропали бы. Говорящий стоит на светлом пятне
+//  с жёсткой кромкой — единственном месте кадра, где силуэт читается целиком.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import character sleeper from "../assets/characters/freeman_rig"
+import set spalnya     from "../assets/sets/fredi-spalnya.svg"
+import set peregovorka from "../assets/sets/fredi-peregovorka.svg"
+import set prihozhaya  from "../assets/sets/fredi-prihozhaya.svg"
+import set ofis        from "../assets/sets/fredi-ofis.svg"
+import set kuhnya      from "../assets/sets/fredi-kuhnya.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b9bbb4
+    monochrome: true
+    mono-contrast: 1.7
+    snow: 0.35
+    on-twos: 2
+    line-boil: 0.55
+    film-grain: 0.05
+    vignette: 0.22
+    film-flicker: 0.025
+    gate-weave: 0.35
+    film-scratch: 0.25
+    film-dust: 0.5
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+}
+
+scene "spalnya" (duration: 27.0s, set: spalnya) {
+    //  ДОМ РОЛИКА. Лежащий в кадре — про него и говорят.
+    transition static 0.35s
+
+    // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
+    place sleeper at (0.73, 0.60) facing front
+    sleeper scales 0.5 over 0.01s
+    sleeper pose "lezhit"
+    sleeper overlays "weary"
+
+    // Фреди — на светлом пятне от фонаря слева: только там виден силуэт.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+
+    // ── БЕЗ СЛОВ: лежащий смотрит в потолок ───────────────────────────────
+    camera wide
+    freeman pose "spina"
+    wait 1.4s
+    freeman pose "polu_spina"
+    wait 0.6s
+    freeman pose "v_upor"
+
+    // ── VO-1 [ПРИВЕТСТВИЕ]: Привет-привет.
+    //lip 1
+    together {
+        freeman speaks for 0.7s
+        do {
+            wait 0.6s
+        }
+    }
+
+    wait 0.5s
+    freeman overlays "blink"
+    wait 0.6s
+
+    // ── VO-2 [ХУК]: Вопрос на засыпку. С кем ты разговариваешь больше всех?
+    //lip 2
+    together {
+        freeman speaks for 4.2s
+        do {
+            camera medium freeman
+            freeman pose "v_upor"
+            wait 2.0s
+            freeman pose "point"
+            wait 2.0s
+            freeman pose "hips"
+        }
+    }
+
+    wait 0.7s
+
+    // ── VO-3 [ХУК]: Не с женой. Не с начальником. Не с мамой.
+    //lip 3
+    together {
+        freeman speaks for 4.2s
+        do {
+            freeman pose "no"
+            wait 1.8s
+            camera medium freeman
+            freeman overlays "smug"
+            wait 1.8s
+            freeman pose "v_upor"
+        }
+    }
+
+    wait 0.7s
+
+    // ── VO-4 [ХУК]: С собой. Часа четыре в день, без выходных.
+    //lip 4
+    together {
+        freeman speaks for 3.7s
+        do {
+            camera medium freeman
+            freeman pose "hips"
+            wait 1.6s
+            freeman pose "point"
+            wait 1.6s
+            freeman pose "calm"
+        }
+    }
+
+    wait 0.7s
+
+    // ── VO-5 [ХУК]: И вот беда: это худший собеседник в твоей жизни.
+    //lip 5
+    together {
+        freeman speaks for 4.2s
+        do {
+            camera medium freeman
+            freeman overlays "stern"
+            wait 1.8s
+            freeman pose "v_upor"
+            wait 1.8s
+            camera wide
+            freeman overlays "stern"
+        }
+    }
+
+    wait 0.7s
+
+    // ── VO-6 [ПУЛЕМЁТ]: Смотри, как он работает. Три часа ночи.
+    //lip 6
+    together {
+        freeman speaks for 3.3s
+        do {
+            camera wide
+            freeman pose "point"
+            wait 1.6s
+            camera close-up sleeper
+            sleeper overlays "weary"
+            wait 1.4s
+            freeman pose "calm"
+        }
+    }
+
+    wait 0.45s
+}
+
+scene "peregovorka" (duration: 12.1s, set: peregovorka) {
+    //  «разговор, который был во вторник» — уходим туда, где он был.
+    //  Отодвинутый стул — вещдок: разговор кончился, а он всё идёт.
+    transition static 0.35s
+
+    // Фреди — на светлом пятне слева: только там силуэт читается целиком.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── VO-7 [ПУЛЕМЁТ]: Он в двадцатый раз прокручивает разговор, который был во в
+    //lip 7
+    together {
+        freeman speaks for 4.7s
+        do {
+            // показывает на отодвинутый стул: вот он, тот самый вторник
+            freeman pose "point"
+            wait 2.2s
+            camera medium freeman
+            freeman pose "shrug"
+            wait 2.0s
+            freeman pose "calm"
+        }
+    }
+
+    wait 0.45s
+
+    // ── VO-8 [ПУЛЕМЁТ]: Собеседник внутри знает все его больные места — и давит ро
+    //lip 8
+    together {
+        freeman speaks for 6.1s
+        do {
+            camera wide
+            freeman pose "point"
+            wait 2.4s
+            camera close-up freeman
+            freeman overlays "stern"
+            wait 2.4s
+            freeman pose "hips"
+        }
+    }
+
+    wait 0.45s
+}
+
+scene "spalnya-2" (duration: 10.6s, set: spalnya) {
+    //  Круг замкнулся: пластинка играет там же, где началась.
+    transition static 0.35s
+
+    // Лежащий: на кровати справа, верх матраса на 0.75 высоты кадра.
+    place sleeper at (0.73, 0.60) facing front
+    sleeper scales 0.5 over 0.01s
+    sleeper pose "lezhit"
+    sleeper overlays "weary"
+
+    // Фреди — на светлом пятне от фонаря слева: только там виден силуэт.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+
+    // ── VO-9 [ПУЛЕМЁТ]: Не задаёт ни одного нового вопроса. Ходит по кругу, как за
+    //lip 9
+    together {
+        freeman speaks for 5.6s
+        do {
+            camera medium freeman
+            freeman pose "puppet"
+            wait 2.4s
+            freeman pose "puppet_jerk"
+            wait 2.0s
+            freeman pose "puppet"
+            wait 1.6s
+            freeman pose "calm"
+        }
+    }
+
+    wait 0.45s
+
+    // ── VO-10 [ПУЛЕМЁТ]: И перебить его нельзя — он же ты.
+    //lip 10
+    together {
+        freeman speaks for 3.7s
+        do {
+            camera medium freeman
+            freeman pose "v_upor"
+            freeman overlays "stern"
+            wait 2.0s
+            freeman pose "hunch"
+            wait 1.6s
+        }
+    }
+
+    wait 0.45s
+}
+
+scene "prihozhaya" (duration: 18.7s, set: prihozhaya) {
+    //  «К психологу? Дорого. Страшно» — стоим у закрытой входной двери,
+    //  из которой он так и не вышел. Пальто на крючке, обувь у порога.
+    transition static 0.35s
+
+    // Фреди — на светлом пятне слева: только там силуэт читается целиком.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── VO-11 [ОТРИЦАНИЕ]: К психологу? Ну да, сейчас. Дорого. Страшно.
+    //lip 11
+    together {
+        freeman speaks for 3.3s
+        do {
+            camera medium freeman
+            freeman pose "shrug"
+            wait 1.6s
+            freeman pose "calm"
+            freeman overlays "smug"
+            wait 1.4s
+            freeman pose "hips"
+        }
+    }
+
+    wait 0.8s
+
+    // ── VO-12 [ОТРИЦАНИЕ]: И вообще «не настолько всё плохо» — любимая фраза людей, у
+    //lip 12
+    together {
+        freeman speaks for 7.0s
+        do {
+            camera medium freeman
+            freeman pose "calm"
+            freeman overlays "hero_skeptic"
+            wait 2.6s
+            freeman pose "v_upor"
+            wait 2.4s
+            camera medium freeman
+            freeman pose "no"
+            wait 2.0s
+            freeman pose "calm"
+        }
+    }
+
+    wait 0.8s
+
+    // ── VO-13 [ОТРИЦАНИЕ]: А, ещё вариант: поговорить с ИИ. Фу, скажешь ты. С роботом
+    //lip 13
+    together {
+        freeman speaks for 5.6s
+        do {
+            freeman pose "lunge"
+            camera medium freeman
+            freeman overlays "hero_sly"
+            wait 2.4s
+            freeman overlays "flash_grin"
+            wait 1.2s
+            freeman pose "v_upor"
+            wait 1.6s
+            freeman pose "calm"
+        }
+    }
+
+    wait 0.8s
+}
+
+scene "ofis" (duration: 24.6s, set: ofis) {
+    //  «каждому что-то изображал: начальнику — рвение, коллегам — что всё
+    //  под контролем» — сцена, на которой это игралось. Пустая: спектакль кончился.
+    transition static 0.35s
+
+    // Фреди — на светлом пятне слева: только там силуэт читается целиком.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── VO-14 [РАЗВОРОТ]: Теперь следи за рукой. Ты сегодня говорил с десятком живых
+    //lip 14
+    together {
+        freeman speaks for 5.1s
+        do {
+            camera medium freeman
+            freeman pose "point"
+            wait 2.0s
+            freeman pose "open"
+            wait 2.0s
+            freeman pose "hips"
+            wait 1.6s
+        }
+    }
+
+    wait 0.7s
+
+    // ── VO-15 [РАЗВОРОТ]: И каждому что-то изображал: начальнику — рвение, коллегам 
+    //lip 15
+    together {
+        freeman speaks for 8.4s
+        do {
+            camera wide
+            freeman pose "raskryl"
+            wait 2.6s
+            freeman pose "point"
+            wait 2.4s
+            freeman pose "shrug"
+            wait 2.4s
+            freeman pose "no"
+            wait 2.0s
+            freeman pose "calm"
+        }
+    }
+
+    wait 0.7s
+
+    // ── VO-16 [РАЗВОРОТ]: Живым нельзя иначе — они запомнят, обидятся, сделают вывод
+    //lip 16
+    together {
+        freeman speaks for 4.2s
+        do {
+            camera medium freeman
+            freeman overlays "stern"
+            freeman pose "hips"
+            wait 2.0s
+            freeman pose "v_upor"
+            wait 1.8s
+        }
+    }
+
+    wait 0.7s
+
+    // ── VO-17 [РАЗВОРОТ]: Роботу изображать бессмысленно. Ему всё равно, какой ты.
+    //lip 17
+    together {
+        freeman speaks for 3.7s
+        do {
+            camera close-up freeman
+            freeman pose "calm"
+            freeman overlays "flash_pupils"
+            wait 0.16s
+            freeman pose "v_upor"
+            wait 1.8s
+            freeman overlays "stern"
+            wait 1.6s
+            freeman pose "calm"
+        }
+    }
+
+    wait 0.7s
+}
+
+scene "kuhnya" (duration: 13.1s, set: kuhnya) {
+    //  «первый честный разговор за день» — где такие и случаются.
+    //  Локация переходит во вторую часть: шва зритель не увидит.
+    transition static 0.35s
+
+    // Фреди — на светлом пятне слева: только там силуэт читается целиком.
+    place freeman at (0.28, 0.72) facing front
+    freeman scales 0.6 over 0.01s
+    camera wide
+    freeman pose "calm"
+
+    // ── VO-18 [РАЗВОРОТ]: Он не обидится, не запомнит против тебя, не расскажет твое
+    //lip 18
+    together {
+        freeman speaks for 5.1s
+        do {
+            camera medium freeman
+            freeman pose "point"
+            wait 2.0s
+            freeman pose "hips"
+            freeman overlays "hero_sly"
+            wait 2.0s
+            freeman pose "calm"
+        }
+    }
+
+    wait 0.7s
+
+    // ── VO-19 [РАЗВОРОТ]: Смешно: разговор с железкой может оказаться твоим первым ч
+    //lip 19
+    together {
+        freeman speaks for 5.6s
+        do {
+            camera wide
+            freeman pose "raskryl"
+            wait 2.4s
+            freeman pose "shrug"
+            wait 2.0s
+            freeman overlays "hero_grin"
+            freeman pose "calm"
+            wait 1.6s
+        }
+    }
+
+    camera reset over 0.5s
+    freeman pose "calm"
+    wait 0.8s
+}
