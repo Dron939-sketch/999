@@ -51,7 +51,7 @@
 //  ХРОНОМЕТРАЖ 60.8 с: речи 51 с, пауз 9.8 с.
 // =============================================================================
 //
-//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 90873cb3
+//  МИЗАНСЦЕНЫ ПРОСМОТРЕНЫ: 6b6510c2
 import character freeman from "../assets/characters/freeman_rig"
 import set spisok_ruka from "../assets/sets/spisok-ruka.svg"
 import set spisok_naezd from "../assets/sets/spisok-naezd.svg"
@@ -199,8 +199,14 @@ scene "s5" (duration: 1s, set: lodka_asfalt) {
 // ===== 0:21.4–0:31.0 — ЛАДОНИ, И ТРИ СЕКУНДЫ ТИШИНЫ ==========================
 scene "s6" (duration: 1s, set: ladoni) {
     transition static 0.10s
-    camera close-up
-    camera pan-to (0.42, 0.52) over 0.01s
+    //  ПЛАН НЕ КРУПНЕЕ `two-shot`, И ЭТО ПРОВЕРЕНО ГОТОВЫМ ФАЙЛОМ. Первый
+    //  рендер снимал ладонь на `close-up` (зум 3.4): в кадре остались четыре
+    //  чёрных столба и светлые пятна, кисть не читалась вовсе. Рисунок уже
+    //  КРУПНЫЙ ПЛАН сам по себе — ладонь занимает весь холст, — и наводить на
+    //  него ещё и трансфокатор значит срезать ровно ту половину, ради которой
+    //  кадр рисовался (реестр §XLII).
+    camera two-shot
+    camera pan-to (0.455, 0.515) over 0.01s
 
     //lip 6
     //  «Ты гребёшь. Годами.» — два куска, второй тяжелее.
@@ -220,7 +226,7 @@ scene "s6" (duration: 1s, set: ladoni) {
     together {
         freeman speaks for 4.00s
         do {
-            camera pan-to (0.58, 0.48) over 3.90s linear
+            camera pan-to (0.545, 0.485) over 3.90s linear
         }
     }
 
@@ -237,8 +243,8 @@ scene "s6" (duration: 1s, set: ladoni) {
 //  Локация та же и камера та же — рез в паузе отнял бы у неё ровно то, ради
 //  чего она стоит. Меняется только то, что ничего не меняется.
 scene "s6b" (duration: 1s, set: ladoni) {
-    camera close-up
-    camera pan-to (0.58, 0.48) over 0.01s
+    camera two-shot
+    camera pan-to (0.545, 0.485) over 0.01s
     wait 2.99s
 }
 
