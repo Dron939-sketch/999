@@ -74,27 +74,58 @@ jobs:
               | sed -n 's/.*\[only:[[:space:]]*\([A-Za-z0-9_ -]*\)\].*/\1/p' | head -1)
           fi
           if printf '%s' "$SUBJ" | grep -qi '\[all\]'; then ONLY="all"; fi
-          # `[skip render]` сильнее всех прочих маркеров и ручного поля: если
-          # человек сказал «не гони», спорить не о чем.
+
+          # Диапазон пуша считаем ДО разбора маркеров: он нужен и для выбора
+          # продакшенов, и для запрета ниже. Родителя тянем точечно
+          # (--depth=1): полный клон этого репо — 600МБ, качать его ради
+          # одного diff'а незачем.
+          RANGE_OK=0
+          case "$BEFORE" in
+            ""|0000000000000000000000000000000000000000) ;;
+            *) git fetch --no-tags --depth=1 origin "$BEFORE" 2>/dev/null \
+                 && RANGE_OK=1 ;;
+          esac
+          CHANGED=""
+          if [ "$RANGE_OK" = 1 ]; then
+            CHANGED=$(git diff --name-only "$BEFORE" "$GITHUB_SHA")
+            echo "--- изменено в пуше ---"; echo "$CHANGED"
+          fi
+
+          # `[skip render]` сильнее всех прочих маркеров и ручного поля — КРОМЕ
+          # ОДНОГО СЛУЧАЯ. Если правка задела ВНЕШНОСТЬ (риг, локации, пропы),
+          # маркер игнорируется и гоняется весь манифест.
+          #
+          # Правило появилось из двух ошибок подряд, обе мои. Сведение головы
+          # ушло с `[skip render]` — резонно, у рига свой гейт (`turnaround`), —
+          # и golden-кадры на нём не считались вовсе; красным стал следующий
+          # коммит, к голове отношения не имевший. Через час, откатывая ту
+          # правку, я поставил `[skip render]` СНОВА, уже написав в
+          # `tests/golden/README.md`, что так делать нельзя: прогон завершился
+          # за семь секунд и ничего не проверил.
+          #
+          # Вывод не про внимательность, а про устройство: правило, которое
+          # держится на памяти автора коммита, не работает даже у того, кто его
+          # только что записал. Пусть держится на workflow.
+          SKIP_OK=1
+          if [ -n "$CHANGED" ] && printf '%s\n' "$CHANGED" \
+               | grep -qE '^examples/assets/(characters|sets|props)/'; then
+            SKIP_OK=0
+          fi
           if printf '%s' "$SUBJ" | grep -qi '\[skip[ -]render\]'; then
-            echo "RENDER_ONLY=" >> "$GITHUB_ENV"
-            echo "RENDER_SUBSET=skip" >> "$GITHUB_ENV"
-            echo "Маркер [skip render] — рендер пропускается."
-            exit 0
+            if [ "$SKIP_OK" = 1 ]; then
+              echo "RENDER_ONLY=" >> "$GITHUB_ENV"
+              echo "RENDER_SUBSET=skip" >> "$GITHUB_ENV"
+              echo "Маркер [skip render] — рендер пропускается."
+              exit 0
+            fi
+            echo "Маркер [skip render] ПРОИГНОРИРОВАН: правка задела внешность"
+            echo "(examples/assets/characters|sets|props). Такие правки обязаны"
+            echo "пройти golden-гейт — иначе он молчит и ловит их через коммит."
+            ONLY="all"
           fi
 
           if [ -z "$ONLY" ]; then
-            # Диапазон пуша. Родителя тянем точечно (--depth=1): полный клон
-            # этого репо — 600МБ, качать его ради одного diff'а незачем.
-            RANGE_OK=0
-            case "$BEFORE" in
-              ""|0000000000000000000000000000000000000000) ;;
-              *) git fetch --no-tags --depth=1 origin "$BEFORE" 2>/dev/null \
-                   && RANGE_OK=1 ;;
-            esac
             if [ "$RANGE_OK" = 1 ]; then
-              CHANGED=$(git diff --name-only "$BEFORE" "$GITHUB_SHA")
-              echo "--- изменено в пуше ---"; echo "$CHANGED"
               ONLY=$(printf '%s\n' "$CHANGED" | python3 tools/affected.py - | tr '\n' ' ')
             else
               # Новая ветка / история недоступна — считать нечего, гоним всё:
