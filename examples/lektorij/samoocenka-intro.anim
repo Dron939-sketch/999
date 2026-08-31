@@ -1,0 +1,364 @@
+// =============================================================================
+//  «САМООЦЕНКА И УВЕРЕННОСТЬ» — продающее интро курса
+//  (meysternlp.ru/blog/lektorij/samoocenka — 10 лекций, ~2,6 часа).
+//
+//  СКВОЗНАЯ: оценку себе вы взялись выставлять сами, а инструмент взяли чужой.
+//  Опору не оценивают — на неё встают.
+//
+//  ЛОКАЦИИ СНЯТЫ ПОД ЭТОТ СЦЕНАРИЙ, а не взяты со склада. Каждая доказывает
+//  свою реплику деталью, и две из них зарифмованы кадр в кадр:
+//
+//    void            пустота до всякой оценки        приветствие
+//    samo-pedestal   узкая плита на десяти кривых    хук: стоите высоко и
+//                    подпорках, земли не видно       держитесь за воздух
+//    samo-zarubki    косяк с сорока зарубками, все   пулемёт 1: оценку ставили
+//                    чужой рукой, часть перечёркнута другие, и не по разу
+//    samo-sud        кафедра нависает, кресло судьи  пулемёт 2 и финал:
+//                    ПУСТОЕ, а заседание идёт        прокурор — вы
+//    samo-zerkala    коридор рам; чем дальше рама,   разворот: вы не живёте,
+//                    тем чужая фигура КРУПНЕЕ        вы отчитываетесь
+//    samo-opora      та же плита на той же высоте,   взлёт: опора не держится
+//                    но лежит на земле и с корнями   подпорками, она вросла
+//    void снова      кольцо: оценивать больше нечем  жало
+//
+//  РИФМА ПЬЕДЕСТАЛ ↔ ОПОРА — главный приём видеоряда, и он геометрический.
+//  Верх обеих плит стоит на y≈480, то есть персонаж в обоих кадрах ровно на
+//  одной высоте. Разницы «стало выше» нет и быть не должно: меняется не рост,
+//  а то, чем эта высота держится — десять приставленных палок против корней.
+//  Если поднять его на опоре выше, ролик начнёт продавать «поднять самооценку»,
+//  то есть ровно то, против чего курс написан.
+//
+//  ПЛИТЫ СТОЯТ ТАМ, КУДА ВСТАЮТ НОГИ. При `place (0.5, 0.585) scales 0.80`
+//  подошвы приходятся на y≈480 кадра 1280×720 — оттуда и число в обеих
+//  локациях. Иначе `ground-shadow` рисует контактную тень в воздухе, и фигура
+//  читается парящей (эта ошибка уже ловилась на прошлом ролике).
+//
+//  МИМИКА — ТОЛЬКО СЛОЕМ, И ТОЛЬКО ЛИЦЕВАЯ. `overlays` кладёт поверх позы
+//  названные кости; лицевая поза (`hero_sly`, `gab`, `flash_*`) кладёт лицо, а
+//  поза ТЕЛА (`no`, `weary`, `stern`, `gore`) кладёт корпус и руки поверх чужих
+//  ног и даёт гибридный силуэт. Тело — через `pose` (PRAVILA-DVIZHENIYA.md §5).
+//
+//    · персонаж — канон (SIMILARITY.md), голова сведена к 0.293 роста;
+//    · режиссура (HOLLYWOOD.md): каты ВНУТРИ реплик, флэш-морды на сверхкрупе
+//      (§2), наезд на переломе (§4), второй план играет ту же мысль (§4a),
+//      ≥3 разных поля за ролик (§7 — здесь шесть);
+//    · сценарий (SCRIPT-FREEMAN.md) — samoocenka-intro-VO.md, //lip 1..9.
+//
+//  КАМЕРА РЕДКАЯ. Событий камеры 17 на 55 секунд — вдвое реже, чем было в
+//  первых роликах: частая смена крупности и отъезды зрителя нервируют. Каждый
+//  кат стоит на смысловом повороте реплики, а не на такте.
+//
+//  ДЛИНА при потолке приёмщика 60с. `duration` у сцены — ПОЛ, а не потолок:
+//  движок досыпает тишину до объявленного значения, и завышенное число даёт не
+//  паузу, а замершую фигуру в хвосте сцены.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set pustota from "../assets/sets/void.svg"
+import set pedestal from "../assets/sets/samo-pedestal.svg"
+import set zarubki from "../assets/sets/samo-zarubki.svg"
+import set sud from "../assets/sets/samo-sud.svg"
+import set zerkala from "../assets/sets/samo-zerkala.svg"
+import set opora from "../assets/sets/samo-opora.svg"
+import set titry from "../assets/sets/lektorij-final.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 1.9
+    snow: 0.35
+    on-twos: 2
+
+    // Кадр стоит ровно: `gate-weave` и `line-boil` выключены намеренно —
+    // вместе они давали сплошную дрожь краёв (замер: горизонт гулял на 2px
+    // каждый кадр). Зерно, пыль и царапины оставлены: они живут в кадре, но
+    // не двигают рисунок.
+    line-boil: 0.0
+    gate-weave: 0.0
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    film-scratch: 0.25
+    film-dust: 0.5
+
+    ground-shadow: true
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+}
+
+// ═══════════════ СЦЕНА 1: ПУСТОТА — до всякой оценки ══════════════════════
+scene "pustota" (duration: 5.9s, set: pustota) {
+    transition static 0.35s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    camera wide
+    freeman pose "calm"
+    wait 0.7s
+    camera medium freeman
+    freeman overlays "doubt"
+    wait 0.3s
+
+    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1) — сквозное для всех подводок ────────
+    freeman overlays "smug"
+    //lip 1
+    together {
+        freeman speaks for 4.6s
+        do {
+            wait 2.9s
+            freeman pose "open"          // «дорогие мои» — раскрыл руки
+            wait 1.0s
+        }
+    }
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 2: ПЬЕДЕСТАЛ — держитесь за воздух ═════════════════
+//  ХУК (VO-2) и добивка (VO-3). Он на узкой плите, под ней десять кривых палок
+//  и обрыв кадра вместо земли. Реплика про похвалу, которая «не влезает», а
+//  «бездарь» влезает сразу, — про то же самое: подпирают снаружи, держит плохо.
+scene "pedestal" (duration: 6.7s, set: pedestal) {
+    transition static 0.22s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    // ОБЩИЙ ПЛАН ПЕРВЫМ: подпорки — это и есть локация. На крупном от них
+    // остаётся полоса под ногами, и весь смысл кадра пропадает.
+    camera wide
+    freeman pose "shrug"
+    wait 0.5s
+    //lip 2
+    together {
+        freeman speaks for 2.7s
+        do {
+            // Один медленный наезд на всю реплику вместо наезда плюс катов:
+            // движение тянет внимание, каты его дробят.
+            camera zoom-to freeman over 2.2s ease-in
+            freeman overlays "hero_sly"
+            wait 0.5s
+        }
+    }
+    wait 0.3s
+
+    // Добивка: «бездарь» влезает сразу — отмахнулся и в упор.
+    freeman pose "no"
+    //lip 3
+    together {
+        freeman speaks for 2.8s
+        do {
+            camera medium freeman
+            wait 1.5s
+            freeman pose "v_upor"
+            camera extreme-close-up freeman
+            wait 0.9s
+        }
+    }
+    // ФЛЭШ-МОРДА НА СВЕРХКРУПЕ (HOLLYWOOD.md §2): кадр уже сверхкрупный.
+    freeman overlays "flash_pupils"
+    wait 0.08s
+    freeman overlays "hero_skeptic"
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 3: ЗАРУБКИ — оценку ставили другие ═════════════════
+//  ПУЛЕМЁТ 1 (VO-4). Косяк с зарубками роста: сорок отметок, все чужой рукой,
+//  часть перечёркнута и переставлена ниже. Триада имён («Мама. Тренер. Сосед
+//  Серёга.») ложится на кадр без подписи — вот они, эти сорок рук.
+scene "zarubki" (duration: 5.7s, set: zarubki) {
+    transition static 0.22s
+
+    place freeman at (0.62, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    camera wide
+    // Тело — `hips` (руки в боки, зачитывает чужой список), рот — `gab` слоем.
+    freeman pose "hips"
+    freeman overlays "gab"
+    wait 0.4s
+    //lip 4
+    together {
+        freeman speaks for 5.0s
+        do {
+            wait 2.4s
+            freeman pose "point"         // тычет в зарубки: вот они, авторы
+            camera close-up freeman
+            wait 2.0s
+        }
+    }
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 4: СУД — прокурор вы, адвокат не пришёл ════════════
+//  ПУЛЕМЁТ 2 (VO-5) и финал пулемёта (VO-6). Кафедра нависает, кресло судьи
+//  пустое, молоток лежит — а заседание идёт. Внутренний критик показан не
+//  фигурой, а ПУСТОТОЙ на месте судьи: обвинитель и подсудимый один человек.
+scene "sud" (duration: 7.2s, set: sud) {
+    transition static 0.22s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+    let slovo = text("КТО СУДЬЯ?", 120) at (0.5, -2.0) layer 6
+    slovo scales 2.4 over 0.01s
+
+    camera wide
+    freeman pose "hunch"                 // сутулится под кафедрой
+    wait 0.4s
+    //lip 5
+    together {
+        freeman speaks for 2.3s
+        do {
+            wait 1.2s
+            freeman pose "despair"
+            camera medium freeman
+            wait 1.0s
+        }
+    }
+    // Финал пулемёта (VO-6): «Прокурор — вы. Адвокат не пришёл.»
+    freeman pose "otvraschenie"
+    //lip 6
+    together {
+        freeman speaks for 2.9s
+        do {
+            wait 1.7s
+            freeman overlays "hero_skeptic"
+            camera close-up freeman
+            wait 0.9s
+        }
+    }
+    // ── СЛОВО-УДАР + инверсия-панч: инверсия штампа «а судьи кто?» ────────
+    slovo moves-to (0.5, 0.28) over 0.01s
+    slovo scales 1.0 over 0.18s ease-in
+    transition invert 0.16s
+    camera shake 0.3s intensity 3
+    wait 0.5s
+    slovo moves-to (0.5, -2.0) over 0.22s ease-in
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 5: ЗЕРКАЛА — вы отчитываетесь ══════════════════════
+//  ПЕРЕЛОМ (VO-7). Коридор рам, и в каждой чужая фигура с поднятыми руками —
+//  причём чем дальше рама, тем фигура КРУПНЕЕ. Это единственная неправда в
+//  кадре, и она же — устройство ленты: чем дальше от вас человек, тем крупнее
+//  он там выглядит. Своей рамы у него нет: ближняя пустая.
+scene "zerkala" (duration: 6.4s, set: zerkala) {
+    transition static 0.22s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    // ОБЩИЙ ПЛАН ПЕРВЫМ И ДОЛГО: коридор работает, только если зритель успел
+    // прочитать ряд рам. На крупном от него остаётся полоса за спиной.
+    camera wide
+    freeman pose "puppet"                // отчитываться значит быть управляемым
+    freeman overlays "gab"
+    wait 0.5s
+    //lip 7
+    together {
+        freeman speaks for 5.2s
+        do {
+            wait 2.6s
+            // «Лента проверит» не режется катом, а НАЕЗЖАЕТ — один длинный ход
+            // на весь остаток реплики.
+            freeman pose "v_upor"
+            camera zoom-to freeman over 2.6s ease-in
+            wait 0.3s
+        }
+    }
+    camera shake 0.3s intensity 2
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 6: ОПОРА — она вросла ══════════════════════════════
+//  ВЗЛЁТ (VO-8). Та же плита на той же высоте, что и пьедестал, но лежит на
+//  земле и держится корнями. Подпорка одна и та лежит рядом — не нужна.
+scene "opora" (duration: 8.5s, set: opora) {
+    transition static 0.22s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    // МЕДИУМ, А НЕ КРУПНЫЙ: рифма читается только вместе с плитой и корнями.
+    camera medium freeman
+    freeman pose "calm"
+    wait 0.4s
+    //lip 8
+    together {
+        freeman speaks for 7.6s
+        do {
+            wait 2.2s
+            freeman pose "raskryl"       // «на неё встают» — открылся
+            camera wide
+            wait 3.0s
+            freeman pose "confident"     // «это и есть достоинство»
+            camera medium freeman
+            wait 2.0s
+        }
+    }
+    wait 0.3s
+}
+
+// ═══════════════ СЦЕНА 7: ПУСТОТА СНОВА — КОЛЬЦО ══════════════════════════
+//  ЖАЛО-CTA (VO-9) возвращается туда, где ролик начался, и это не экономия
+//  картинок. Между двумя пустотами прошли пьедестал, зарубки, суд, зеркала и
+//  камень — всё, чем зритель себя мерил. Снять их в финале значит оставить
+//  вопрос «на чём вы стои́те» без единой подпорки: отвечать не на что, кроме
+//  себя. Заодно реплика идёт 10 секунд, и держать её на камне значило бы
+//  просидеть в одной локации почти двадцать — треть ролика.
+scene "pustota-final" (duration: 11.4s, set: pustota) {
+    transition static 0.22s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    freeman pose "lunge"
+    //lip 9
+    together {
+        freeman speaks for 10.0s
+        do {
+            camera medium freeman
+            wait 3.4s
+            freeman pose "point"
+            wait 2.6s
+            freeman pose "calm"
+            camera wide
+            wait 2.4s
+            freeman pose "v_upor"
+            camera close-up freeman
+            wait 1.4s
+        }
+    }
+    // ПОДМИГ — ПУАНТ, И ОН НА СВЕРХКРУПЕ.
+    camera extreme-close-up freeman
+    freeman overlays "hero_wink"
+    wait 0.5s
+    camera reset over 0.5s
+    freeman pose "calm"
+    wait 0.3s
+}
+
+// ═══════════════ СЦЕНА 8: ТИТРЫ ═══════════════════════════════════════════
+scene "titry" (duration: 3.4s, set: titry) {
+    transition static 0.45s
+
+    place freeman at (0.5, 3.0) facing front
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 0.9s
+
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6 over 0.01s
+    stamp rotates -7 over 0.01s
+    stamp scales 0.94 over 0.22s ease-in
+    stamp scales 1.0 over 0.1s ease-out
+    stamp rotates -4 over 0.12s
+
+    wait 1.2s
+    transition fade-black 0.7s
+}
