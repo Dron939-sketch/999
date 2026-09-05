@@ -1,0 +1,339 @@
+// =============================================================================
+//  «СВОЁ ДЕЛО С НУЛЯ» — продающее интро курса
+//  (meysternlp.ru/blog/lektorij/svoe-delo — 10 лекций, ~2,3 часа).
+//
+//  СКВОЗНАЯ: идея, которую берегут, не может провалиться — и поэтому никогда
+//  не станет делом. Проверка стоит неделю и ни рубля; мечта стоит годы.
+//
+//  ЛОКАЦИИ СНЯТЫ ПОД ЭТОТ СЦЕНАРИЙ. Каждая доказывает свою реплику деталью,
+//  а не подписью, и две зарифмованы кадр в кадр:
+//
+//    void            пустота до всякой идеи          приветствие
+//    delo-sejf       сейф с лампочкой внутри, три     хук: идея у вас есть,
+//                    календарных листа на полу, пыль третий год, в тепле
+//    delo-vyveska    свежая вывеска над ПУСТОЙ        пулемёт 1: аренда, логотип,
+//                    витриной, стремянка, краска;     заявление — и ни одного
+//                    улица без прохожих               клиента
+//    delo-prilavok   наш нарядный прилавок с биркой   пулемёт 2 и финал: спрос не
+//                    и без очереди; чужая тележка —   спросили, цену поставили
+//                    с хвостом на шесть фигур         мало; вы — хранитель мечты
+//    delo-tri-dveri  чинить / поворачивать /          разворот: боитесь не
+//                    закрывать; ни одна не открыта    провалиться, а узнать
+//    delo-stol       та же лампочка, но на столе, и   взлёт: проверка стоит
+//                    ОДИН клиент на стуле напротив    неделю; первый клиент
+//    void снова      кольцо: идея снова одна          жало
+//
+//  РИФМА СЕЙФ ↔ СТОЛ — главный приём видеоряда. В сейфе лампочка заперта и
+//  одна, за ней три года пыли. На столе та же лампочка вынута и стоит на виду,
+//  а напротив — один стул и один человек на нём. Больше ничего: ни вывески,
+//  ни витрины. Ролик не обещает «бизнес», он обещает первого клиента — ровно
+//  то, что курс и делает (лекции 3–4).
+//
+//  ТРИ ДВЕРИ — РАЗВОРОТ. Лекция 9 курса про то, чего нигде не пишут: понять,
+//  что пора не чинить, а поворачивать или закрывать. Здесь он стоит перед
+//  тремя дверями и не открывает ни одну — потому что за любой из них ОТВЕТ.
+//  «Вы бои́тесь не провали́ться. Вы бои́тесь узна́ть» — это и есть кадр.
+//
+//  МИМИКА — ТОЛЬКО СЛОЕМ, И ТОЛЬКО ЛИЦЕВАЯ (PRAVILA-DVIZHENIYA.md §5).
+//
+//    · персонаж — канон (SIMILARITY.md), с правкой плеч и кистей 05.09.2026;
+//    · режиссура (HOLLYWOOD.md): каты ВНУТРИ реплик, флэш-морды на сверхкрупе
+//      (§2), наезд на переломе (§4), второй план играет ту же мысль (§4a),
+//      ≥3 разных поля за ролик (§7 — здесь шесть);
+//    · сценарий (SCRIPT-FREEMAN.md) — svoe-delo-intro-VO.md, //lip 1..9.
+//
+//  ДЛИНА при потолке приёмщика 60с. `duration` у сцены — ПОЛ, а не потолок.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set pustota from "../assets/sets/void.svg"
+import set sejf from "../assets/sets/delo-sejf.svg"
+import set vyveska from "../assets/sets/delo-vyveska.svg"
+import set prilavok from "../assets/sets/delo-prilavok.svg"
+import set dveri from "../assets/sets/delo-tri-dveri.svg"
+import set stol from "../assets/sets/delo-stol.svg"
+import set titry from "../assets/sets/lektorij-final.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 1.9
+    snow: 0.35
+    on-twos: 2
+
+    line-boil: 0.0
+    gate-weave: 0.0
+    film-grain: 0.05
+    vignette: 0.12
+    film-flicker: 0.025
+    film-scratch: 0.25
+    film-dust: 0.5
+
+    ground-shadow: true
+    light-angle: 45
+    form-shadow: 0.0
+    rim-light: 0.0
+}
+
+// ═══════════════ СЦЕНА 1: ПУСТОТА — до всякой идеи ════════════════════════
+scene "pustota" (duration: 5.9s, set: pustota) {
+    transition static 0.35s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    camera wide
+    freeman pose "calm"
+    wait 0.7s
+    camera medium freeman
+    freeman overlays "doubt"
+    wait 0.3s
+
+    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1) ─────────────────────────────────────
+    freeman overlays "smug"
+    //lip 1
+    together {
+        freeman speaks for 4.6s
+        do {
+            wait 2.9s
+            freeman pose "open"
+            wait 1.0s
+        }
+    }
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 2: СЕЙФ — идея в тепле ═════════════════════════════
+//  ХУК (VO-2) и добивка (VO-3). Он стоит перед сейфом, дверца приоткрыта на
+//  ладонь, внутри лампочка. На полу три календарных листа. Хук — про то, что
+//  идея есть и он к ней возвращается по дороге с работы; добивка — что она не
+//  провалится, потому что её никто не проверял. Она просто тухнет.
+scene "sejf" (duration: 7.0s, set: sejf) {
+    transition static 0.22s
+
+    place freeman at (0.36, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    // ОБЩИЙ ПЛАН ПЕРВЫМ: сейф и листы на полу — это и есть локация.
+    camera wide
+    freeman pose "think"
+    wait 0.5s
+    //lip 2
+    together {
+        freeman speaks for 3.0s
+        do {
+            camera zoom-to freeman over 2.4s ease-in
+            freeman overlays "hero_sly"
+            wait 0.6s
+        }
+    }
+    wait 0.3s
+
+    // Добивка: отмахнулся — «провал ей не грозит» — и в упор: «она тухнет».
+    freeman pose "no"
+    //lip 3
+    together {
+        freeman speaks for 2.8s
+        do {
+            camera medium freeman
+            wait 1.6s
+            freeman pose "v_upor"
+            camera extreme-close-up freeman
+            wait 0.8s
+        }
+    }
+    freeman overlays "flash_disgust"
+    wait 0.08s
+    freeman overlays "hero_skeptic"
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 3: ВЫВЕСКА — раньше клиента ════════════════════════
+//  ПУЛЕМЁТ 1 (VO-4). Свежая вывеска над пустой витриной, стремянка, банки
+//  краски, рулон с эмблемой — и ни одного прохожего на всей улице. Триада
+//  «Аренда. Логотип. Заявление об уходе.» ложится на кадр без подписи.
+scene "vyveska" (duration: 6.0s, set: vyveska) {
+    transition static 0.22s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    camera wide
+    freeman pose "hips"
+    freeman overlays "gab"
+    wait 0.4s
+    //lip 4
+    together {
+        freeman speaks for 5.2s
+        do {
+            wait 2.6s
+            freeman pose "point"         // тычет в вывеску: вот куда ушло
+            camera close-up freeman
+            wait 2.0s
+        }
+    }
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 4: ПРИЛАВОК — спрос не там ═════════════════════════
+//  ПУЛЕМЁТ 2 (VO-5) и финал (VO-6). Наш нарядный прилавок с крошечной биркой
+//  и без единого покупателя; поодаль чужая тележка без навеса — и к ней хвост
+//  на шесть фигур. Спрос есть, только его не спросили.
+scene "prilavok" (duration: 7.0s, set: prilavok) {
+    transition static 0.22s
+
+    place freeman at (0.3, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+    let slovo = text("КТО ПЛАТИТ?", 120) at (0.5, -2.0) layer 6
+    slovo scales 2.4 over 0.01s
+
+    camera wide
+    freeman pose "shrug"                 // за прилавком, покупателей ноль
+    wait 0.2s
+    //lip 5
+    together {
+        freeman speaks for 2.6s
+        do {
+            wait 1.3s
+            freeman pose "hunch"
+            camera medium freeman
+            wait 1.0s
+        }
+    }
+    // Финал пулемёта (VO-6): «Вы не предприниматель. Вы хранитель.»
+    freeman pose "otvraschenie"
+    //lip 6
+    together {
+        freeman speaks for 3.0s
+        do {
+            wait 1.8s
+            freeman overlays "hero_skeptic"
+            camera close-up freeman
+            wait 0.9s
+        }
+    }
+    // ── СЛОВО-УДАР + инверсия-панч ────────────────────────────────────────
+    slovo moves-to (0.5, 0.28) over 0.01s
+    slovo scales 1.0 over 0.18s ease-in
+    transition invert 0.16s
+    camera shake 0.3s intensity 3
+    wait 0.4s
+    slovo moves-to (0.5, -2.0) over 0.22s ease-in
+    wait 0.1s
+}
+
+// ═══════════════ СЦЕНА 5: ТРИ ДВЕРИ — узнать страшнее ═════════════════════
+//  ПЕРЕЛОМ (VO-7). Три двери: приоткрытая с молотком, с стрелкой-поворотом,
+//  заколоченная. Он не открывает ни одну. Общий план держится долго — двери
+//  надо успеть прочитать.
+scene "dveri" (duration: 6.6s, set: dveri) {
+    transition static 0.22s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    camera wide
+    freeman pose "puppet"
+    freeman overlays "gab"
+    wait 0.5s
+    //lip 7
+    together {
+        freeman speaks for 5.2s
+        do {
+            wait 2.6s
+            // «Вы бои́тесь узна́ть» НАЕЗЖАЕТ — один долгий ход.
+            freeman pose "v_upor"
+            camera zoom-to freeman over 2.6s ease-in
+            wait 0.3s
+        }
+    }
+    camera shake 0.3s intensity 2
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 6: СТОЛ — первый клиент ════════════════════════════
+//  ВЗЛЁТ (VO-8). Та же лампочка на столе, одна монета, один стул и один
+//  человек на нём. Медиум, а не крупный: рифма читается только со столом.
+scene "stol" (duration: 9.0s, set: stol) {
+    transition static 0.22s
+
+    place freeman at (0.34, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    camera medium freeman
+    freeman pose "calm"
+    wait 0.4s
+    //lip 8
+    together {
+        freeman speaks for 8.0s
+        do {
+            wait 2.2s
+            freeman pose "raskryl"       // «и ни рубля» — открылся
+            camera wide
+            wait 3.2s
+            freeman pose "confident"     // «это и есть свобода»
+            camera medium freeman
+            wait 2.2s
+        }
+    }
+    wait 0.3s
+}
+
+// ═══════════════ СЦЕНА 7: ПУСТОТА СНОВА — КОЛЬЦО ══════════════════════════
+//  ЖАЛО-CTA (VO-9). Между двумя пустотами прошли сейф, вывеска, прилавок,
+//  двери и стол. Снять их — оставить его один на один с вопросом «кто уже
+//  заплатил?», а платить некому.
+scene "pustota-final" (duration: 11.4s, set: pustota) {
+    transition static 0.22s
+
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    freeman pose "lunge"
+    //lip 9
+    together {
+        freeman speaks for 10.0s
+        do {
+            camera medium freeman
+            wait 3.4s
+            freeman pose "point"
+            wait 2.6s
+            freeman pose "calm"
+            camera wide
+            wait 2.4s
+            freeman pose "v_upor"
+            camera close-up freeman
+            wait 1.4s
+        }
+    }
+    camera extreme-close-up freeman
+    freeman overlays "hero_wink"
+    wait 0.5s
+    camera reset over 0.5s
+    freeman pose "calm"
+    wait 0.3s
+}
+
+// ═══════════════ СЦЕНА 8: ТИТРЫ ═══════════════════════════════════════════
+scene "titry" (duration: 3.4s, set: titry) {
+    transition static 0.45s
+
+    place freeman at (0.5, 3.0) facing front
+    let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
+    stamp hides
+    wait 0.9s
+
+    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp shows
+    stamp scales 2.6 over 0.01s
+    stamp rotates -7 over 0.01s
+    stamp scales 0.94 over 0.22s ease-in
+    stamp scales 1.0 over 0.1s ease-out
+    stamp rotates -4 over 0.12s
+
+    wait 1.2s
+    transition fade-black 0.7s
+}
