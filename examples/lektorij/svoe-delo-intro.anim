@@ -96,7 +96,7 @@ scene "pustota" (duration: 5.9s, set: pustota) {
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 4.6s
+        freeman speaks for 4.5s
         do {
             wait 2.9s
             freeman pose "open"
@@ -111,7 +111,7 @@ scene "pustota" (duration: 5.9s, set: pustota) {
 //  ладонь, внутри лампочка. На полу три календарных листа. Хук — про то, что
 //  идея есть и он к ней возвращается по дороге с работы; добивка — что она не
 //  провалится, потому что её никто не проверял. Она просто тухнет.
-scene "sejf" (duration: 7.0s, set: sejf) {
+scene "sejf" (duration: 1.0s, set: sejf) {
     transition static 0.22s
 
     place freeman at (0.36, 0.585) facing front
@@ -120,10 +120,10 @@ scene "sejf" (duration: 7.0s, set: sejf) {
     // ОБЩИЙ ПЛАН ПЕРВЫМ: сейф и листы на полу — это и есть локация.
     camera wide
     freeman pose "think"
-    wait 0.5s
+    wait 0.35s
     //lip 2
     together {
-        freeman speaks for 3.0s
+        freeman speaks for 4.1s
         do {
             camera zoom-to freeman over 2.4s ease-in
             freeman overlays "hero_sly"
@@ -136,7 +136,7 @@ scene "sejf" (duration: 7.0s, set: sejf) {
     freeman pose "no"
     //lip 3
     together {
-        freeman speaks for 2.8s
+        freeman speaks for 3.1s
         do {
             camera medium freeman
             wait 1.6s
@@ -155,7 +155,7 @@ scene "sejf" (duration: 7.0s, set: sejf) {
 //  ПУЛЕМЁТ 1 (VO-4). Свежая вывеска над пустой витриной, стремянка, банки
 //  краски, рулон с эмблемой — и ни одного прохожего на всей улице. Триада
 //  «Аренда. Логотип. Заявление об уходе.» ложится на кадр без подписи.
-scene "vyveska" (duration: 6.0s, set: vyveska) {
+scene "vyveska" (duration: 1.0s, set: vyveska) {
     transition static 0.22s
 
     place freeman at (0.5, 0.585) facing front
@@ -167,7 +167,7 @@ scene "vyveska" (duration: 6.0s, set: vyveska) {
     wait 0.4s
     //lip 4
     together {
-        freeman speaks for 5.2s
+        freeman speaks for 3.5s
         do {
             wait 2.6s
             freeman pose "point"         // тычет в вывеску: вот куда ушло
@@ -182,7 +182,7 @@ scene "vyveska" (duration: 6.0s, set: vyveska) {
 //  ПУЛЕМЁТ 2 (VO-5) и финал (VO-6). Наш нарядный прилавок с крошечной биркой
 //  и без единого покупателя; поодаль чужая тележка без навеса — и к ней хвост
 //  на шесть фигур. Спрос есть, только его не спросили.
-scene "prilavok" (duration: 7.0s, set: prilavok) {
+scene "prilavok" (duration: 1.0s, set: prilavok) {
     transition static 0.22s
 
     place freeman at (0.3, 0.585) facing front
@@ -195,7 +195,7 @@ scene "prilavok" (duration: 7.0s, set: prilavok) {
     wait 0.2s
     //lip 5
     together {
-        freeman speaks for 2.6s
+        freeman speaks for 1.2s
         do {
             wait 1.3s
             freeman pose "hunch"
@@ -207,7 +207,7 @@ scene "prilavok" (duration: 7.0s, set: prilavok) {
     freeman pose "otvraschenie"
     //lip 6
     together {
-        freeman speaks for 3.0s
+        freeman speaks for 3.6s
         do {
             wait 1.8s
             freeman overlays "hero_skeptic"
@@ -220,16 +220,15 @@ scene "prilavok" (duration: 7.0s, set: prilavok) {
     slovo scales 1.0 over 0.18s ease-in
     transition invert 0.16s
     camera shake 0.3s intensity 3
-    wait 0.4s
+    wait 0.25s
     slovo moves-to (0.5, -2.0) over 0.22s ease-in
-    wait 0.1s
 }
 
 // ═══════════════ СЦЕНА 5: ТРИ ДВЕРИ — узнать страшнее ═════════════════════
 //  ПЕРЕЛОМ (VO-7). Три двери: приоткрытая с молотком, с стрелкой-поворотом,
 //  заколоченная. Он не открывает ни одну. Общий план держится долго — двери
 //  надо успеть прочитать.
-scene "dveri" (duration: 6.6s, set: dveri) {
+scene "dveri" (duration: 1.0s, set: dveri) {
     transition static 0.22s
 
     place freeman at (0.5, 0.585) facing front
@@ -238,16 +237,16 @@ scene "dveri" (duration: 6.6s, set: dveri) {
     camera wide
     freeman pose "puppet"
     freeman overlays "gab"
-    wait 0.5s
+    wait 0.3s
     //lip 7
     together {
-        freeman speaks for 5.2s
+        freeman speaks for 4.5s
         do {
-            wait 2.6s
+            wait 2.0s
             // «Вы бои́тесь узна́ть» НАЕЗЖАЕТ — один долгий ход.
             freeman pose "v_upor"
-            camera zoom-to freeman over 2.6s ease-in
-            wait 0.3s
+            camera zoom-to freeman over 2.0s ease-in
+            wait 0.2s
         }
     }
     camera shake 0.3s intensity 2
@@ -257,26 +256,27 @@ scene "dveri" (duration: 6.6s, set: dveri) {
 // ═══════════════ СЦЕНА 6: СТОЛ — первый клиент ════════════════════════════
 //  ВЗЛЁТ (VO-8). Та же лампочка на столе, одна монета, один стул и один
 //  человек на нём. Медиум, а не крупный: рифма читается только со столом.
-scene "stol" (duration: 9.0s, set: stol) {
+scene "stol" (duration: 1.0s, set: stol) {
     transition static 0.22s
 
     place freeman at (0.34, 0.585) facing front
     freeman scales 0.80 over 0.01s
 
-    camera medium freeman
+    // ОБЩИЙ ПЛАН ПЕРВЫМ: рифма со столом и стулом читается только целиком.
+    camera wide
     freeman pose "calm"
     wait 0.4s
     //lip 8
     together {
-        freeman speaks for 8.0s
+        freeman speaks for 6.0s
         do {
-            wait 2.2s
+            wait 1.6s
             freeman pose "raskryl"       // «и ни рубля» — открылся
-            camera wide
-            wait 3.2s
-            freeman pose "confident"     // «это и есть свобода»
             camera medium freeman
-            wait 2.2s
+            wait 2.4s
+            freeman pose "confident"     // «вы свободны»
+            camera close-up freeman
+            wait 1.6s
         }
     }
     wait 0.3s
@@ -286,7 +286,7 @@ scene "stol" (duration: 9.0s, set: stol) {
 //  ЖАЛО-CTA (VO-9). Между двумя пустотами прошли сейф, вывеска, прилавок,
 //  двери и стол. Снять их — оставить его один на один с вопросом «кто уже
 //  заплатил?», а платить некому.
-scene "pustota-final" (duration: 11.4s, set: pustota) {
+scene "pustota-final" (duration: 1.0s, set: pustota) {
     transition static 0.22s
 
     place freeman at (0.5, 0.585) facing front
@@ -295,18 +295,18 @@ scene "pustota-final" (duration: 11.4s, set: pustota) {
     freeman pose "lunge"
     //lip 9
     together {
-        freeman speaks for 10.0s
+        freeman speaks for 7.0s
         do {
             camera medium freeman
-            wait 3.4s
+            wait 2.4s
             freeman pose "point"
-            wait 2.6s
+            wait 1.8s
             freeman pose "calm"
             camera wide
-            wait 2.4s
+            wait 1.6s
             freeman pose "v_upor"
             camera close-up freeman
-            wait 1.4s
+            wait 1.0s
         }
     }
     camera extreme-close-up freeman

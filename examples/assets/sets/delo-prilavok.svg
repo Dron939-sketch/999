@@ -13,7 +13,7 @@
   <path d="M-10 604 Q640 598 1290 606" stroke="#141410" stroke-width="6" fill="none"/>
 
   <!-- НАШ ПРИЛАВОК: чёрная тумба, над ней навес-полоска на двух стойках -->
-  <path d="M160 470 L620 470 L626 604 L154 604 Z" fill="#141410"/>
+  <path d="M160 470 L620 470 L626 604 L154 604 Z" fill="#5f625b" stroke="#141410" stroke-width="7"/>
   <path d="M150 460 L630 460 L630 476 L150 476 Z" fill="#141410"/>
   <path d="M176 460 L176 250 M604 460 L604 250" stroke="#141410" stroke-width="9"/>
   <path d="M130 250 Q390 210 650 250 L650 300 Q390 262 130 300 Z" fill="#141410"/>
@@ -32,7 +32,7 @@
   </g>
 
   <!-- ЧУЖАЯ ТЕЛЕЖКА: дальше, проще, без навеса -->
-  <path d="M900 452 L1120 452 L1124 530 L896 530 Z" fill="#141410"/>
+  <path d="M900 452 L1120 452 L1124 530 L896 530 Z" fill="#5f625b" stroke="#141410" stroke-width="7"/>
   <circle cx="930" cy="546" r="16" fill="#141410"/><circle cx="1090" cy="546" r="16" fill="#141410"/>
   <path d="M896 500 L860 520" stroke="#141410" stroke-width="8" stroke-linecap="round"/>
   <path d="M960 440 Q1010 410 1060 440" stroke="#141410" stroke-width="6" fill="none"/>

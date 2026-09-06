@@ -108,7 +108,7 @@ scene "pustota" (duration: 5.9s, set: pustota) {
     freeman overlays "smug"
     //lip 1
     together {
-        freeman speaks for 4.6s
+        freeman speaks for 4.5s
         do {
             wait 2.9s
             freeman pose "open"          // «дорогие мои» — раскрыл руки
@@ -122,7 +122,7 @@ scene "pustota" (duration: 5.9s, set: pustota) {
 //  ХУК (VO-2) и добивка (VO-3). Он на узкой плите, под ней десять кривых палок
 //  и обрыв кадра вместо земли. Реплика про похвалу, которая «не влезает», а
 //  «бездарь» влезает сразу, — про то же самое: подпирают снаружи, держит плохо.
-scene "pedestal" (duration: 6.7s, set: pedestal) {
+scene "pedestal" (duration: 1.0s, set: pedestal) {
     transition static 0.22s
 
     place freeman at (0.5, 0.585) facing front
@@ -135,7 +135,7 @@ scene "pedestal" (duration: 6.7s, set: pedestal) {
     wait 0.5s
     //lip 2
     together {
-        freeman speaks for 2.7s
+        freeman speaks for 3.6s
         do {
             // Один медленный наезд на всю реплику вместо наезда плюс катов:
             // движение тянет внимание, каты его дробят.
@@ -150,7 +150,7 @@ scene "pedestal" (duration: 6.7s, set: pedestal) {
     freeman pose "no"
     //lip 3
     together {
-        freeman speaks for 2.8s
+        freeman speaks for 3.6s
         do {
             camera medium freeman
             wait 1.5s
@@ -170,7 +170,7 @@ scene "pedestal" (duration: 6.7s, set: pedestal) {
 //  ПУЛЕМЁТ 1 (VO-4). Косяк с зарубками роста: сорок отметок, все чужой рукой,
 //  часть перечёркнута и переставлена ниже. Триада имён («Мама. Тренер. Сосед
 //  Серёга.») ложится на кадр без подписи — вот они, эти сорок рук.
-scene "zarubki" (duration: 5.7s, set: zarubki) {
+scene "zarubki" (duration: 1.0s, set: zarubki) {
     transition static 0.22s
 
     place freeman at (0.62, 0.585) facing front
@@ -183,7 +183,7 @@ scene "zarubki" (duration: 5.7s, set: zarubki) {
     wait 0.4s
     //lip 4
     together {
-        freeman speaks for 5.0s
+        freeman speaks for 4.5s
         do {
             wait 2.4s
             freeman pose "point"         // тычет в зарубки: вот они, авторы
@@ -198,7 +198,7 @@ scene "zarubki" (duration: 5.7s, set: zarubki) {
 //  ПУЛЕМЁТ 2 (VO-5) и финал пулемёта (VO-6). Кафедра нависает, кресло судьи
 //  пустое, молоток лежит — а заседание идёт. Внутренний критик показан не
 //  фигурой, а ПУСТОТОЙ на месте судьи: обвинитель и подсудимый один человек.
-scene "sud" (duration: 7.2s, set: sud) {
+scene "sud" (duration: 1.0s, set: sud) {
     transition static 0.22s
 
     place freeman at (0.5, 0.585) facing front
@@ -208,10 +208,10 @@ scene "sud" (duration: 7.2s, set: sud) {
 
     camera wide
     freeman pose "hunch"                 // сутулится под кафедрой
-    wait 0.4s
+    wait 0.2s
     //lip 5
     together {
-        freeman speaks for 2.3s
+        freeman speaks for 2.2s
         do {
             wait 1.2s
             freeman pose "despair"
@@ -223,7 +223,7 @@ scene "sud" (duration: 7.2s, set: sud) {
     freeman pose "otvraschenie"
     //lip 6
     together {
-        freeman speaks for 2.9s
+        freeman speaks for 3.6s
         do {
             wait 1.7s
             freeman overlays "hero_skeptic"
@@ -236,9 +236,8 @@ scene "sud" (duration: 7.2s, set: sud) {
     slovo scales 1.0 over 0.18s ease-in
     transition invert 0.16s
     camera shake 0.3s intensity 3
-    wait 0.5s
+    wait 0.25s
     slovo moves-to (0.5, -2.0) over 0.22s ease-in
-    wait 0.2s
 }
 
 // ═══════════════ СЦЕНА 5: ЗЕРКАЛА — вы отчитываетесь ══════════════════════
@@ -246,7 +245,7 @@ scene "sud" (duration: 7.2s, set: sud) {
 //  причём чем дальше рама, тем фигура КРУПНЕЕ. Это единственная неправда в
 //  кадре, и она же — устройство ленты: чем дальше от вас человек, тем крупнее
 //  он там выглядит. Своей рамы у него нет: ближняя пустая.
-scene "zerkala" (duration: 6.4s, set: zerkala) {
+scene "zerkala" (duration: 1.0s, set: zerkala) {
     transition static 0.22s
 
     place freeman at (0.5, 0.585) facing front
@@ -257,10 +256,10 @@ scene "zerkala" (duration: 6.4s, set: zerkala) {
     camera wide
     freeman pose "puppet"                // отчитываться значит быть управляемым
     freeman overlays "gab"
-    wait 0.5s
+    wait 0.3s
     //lip 7
     together {
-        freeman speaks for 5.2s
+        freeman speaks for 5.5s
         do {
             wait 2.6s
             // «Лента проверит» не режется катом, а НАЕЗЖАЕТ — один длинный ход
@@ -277,7 +276,7 @@ scene "zerkala" (duration: 6.4s, set: zerkala) {
 // ═══════════════ СЦЕНА 6: ОПОРА — она вросла ══════════════════════════════
 //  ВЗЛЁТ (VO-8). Та же плита на той же высоте, что и пьедестал, но лежит на
 //  земле и держится корнями. Подпорка одна и та лежит рядом — не нужна.
-scene "opora" (duration: 8.5s, set: opora) {
+scene "opora" (duration: 1.0s, set: opora) {
     transition static 0.22s
 
     place freeman at (0.5, 0.585) facing front
@@ -289,7 +288,7 @@ scene "opora" (duration: 8.5s, set: opora) {
     wait 0.4s
     //lip 8
     together {
-        freeman speaks for 7.6s
+        freeman speaks for 7.0s
         do {
             wait 2.2s
             freeman pose "raskryl"       // «на неё встают» — открылся
@@ -310,7 +309,7 @@ scene "opora" (duration: 8.5s, set: opora) {
 //  вопрос «на чём вы стои́те» без единой подпорки: отвечать не на что, кроме
 //  себя. Заодно реплика идёт 10 секунд, и держать её на камне значило бы
 //  просидеть в одной локации почти двадцать — треть ролика.
-scene "pustota-final" (duration: 11.4s, set: pustota) {
+scene "pustota-final" (duration: 1.0s, set: pustota) {
     transition static 0.22s
 
     place freeman at (0.5, 0.585) facing front
@@ -319,18 +318,18 @@ scene "pustota-final" (duration: 11.4s, set: pustota) {
     freeman pose "lunge"
     //lip 9
     together {
-        freeman speaks for 10.0s
+        freeman speaks for 8.0s
         do {
             camera medium freeman
-            wait 3.4s
-            freeman pose "point"
             wait 2.6s
+            freeman pose "point"
+            wait 2.2s
             freeman pose "calm"
             camera wide
-            wait 2.4s
+            wait 2.0s
             freeman pose "v_upor"
             camera close-up freeman
-            wait 1.4s
+            wait 1.0s
         }
     }
     // ПОДМИГ — ПУАНТ, И ОН НА СВЕРХКРУПЕ.
