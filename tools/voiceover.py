@@ -36,6 +36,11 @@ API_URL = "https://api.fish.audio/v1/tts"
 # — get(..., default) вернул бы "", а нам нужен дефолтный адрес.
 FREDERICK_BASE = (os.environ.get("FREDERICK_TTS_URL") or "https://ffred-ddd989.amvera.io").rstrip("/")
 FREDERICK_TOKEN = os.environ.get("FREDERICK_ADMIN_TOKEN") or ""
+# Множитель темпа синтеза Fish (`prosody.speed`), см. tts_fish_audio.
+try:
+    FISH_SPEED = float(os.environ.get("FISH_SPEED") or "1.0")
+except ValueError:
+    FISH_SPEED = 1.0
 
 # Ударения в VO-сценариях размечены знаком U+0301 сразу после ударной гласной
 # («уже́», «три сло́ва»). По умолчанию они уходят в синтез КАК ЕСТЬ: без них
@@ -179,6 +184,15 @@ def tts_fish_audio(text, api_key, voice_id=None, model=None):
     payload = {"text": text, "format": "mp3"}
     if voice_id:
         payload["reference_id"] = voice_id
+    # ТЕМП — РОДНОЙ, А НЕ РАСТЯЖКОЙ. До этого единственным регулятором темпа
+    # был ffmpeg `atempo` по ремарке (клампом 0.88..1.12): он тянет уже
+    # готовую запись и на ×1.3 даёт слышимую «резину». У Fish есть свой
+    # `prosody.speed` — модель сама говорит быстрее, с естественными паузами.
+    # Студия попросила ускорить: Фримен в оригинале тараторит, а s2 по
+    # умолчанию читает размеренно, и ролики вылезали за минуту. Значение —
+    # переменная FISH_SPEED (задаётся в workflow), 1.0 = как было.
+    if FISH_SPEED != 1.0:
+        payload["prosody"] = {"speed": FISH_SPEED}
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
