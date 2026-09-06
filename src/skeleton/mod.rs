@@ -378,8 +378,20 @@ pub fn apply_pose_variance(states: &mut [BoneState], seed: u64) {
 }
 
 /// Apply idle breathing/swaying animation to bone states.
-pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f64) {
+pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f64, live: f64) {
     let tau = 2.0 * PI;
+    // ПОКОЙ, КОТОРЫЙ ДЫШИТ. Прежние амплитуды (крен головы 0.45°, перенос веса
+    // 0.7px за 8 секунд) были подобраны от жалобы на «дёрганье» — и ушли в ноль:
+    // фигура стояла как вкопанная. Дёрганье давала ЧАСТОТА (случайные скачки
+    // 5 раз в секунду), а не размах. Покадровый разбор part 00 показывает
+    // другое: медленные (0.4–1 Гц) и крупные качания — вес с ноги на ногу
+    // каждые ~1.5с, голова кренится на 5–8°, плечи ходят. Ниже — эти амплитуды
+    // при live = 1.0; частоты низкие, шаг on-twos, случайных скачков нет.
+    let live = live.max(0.0);
+    // Переминание: перенос веса ~0.45 Гц + медленный дрейф; ноги идут в
+    // противофазе корпусу (опорная нога держит, свободная отставлена).
+    let step = (time * 0.45 * tau).sin();
+    let cock = (time * 0.8 * tau + 0.7).sin() * 0.6 + (time * 0.31 * tau).sin() * 0.4;
     // Multi-frequency breathing/sway reads more organic than a single sine.
     let breath = (time * 1.05 * tau).sin();
     let sway = (time * 0.33 * tau).sin() * 0.6 + (time * 0.19 * tau).sin() * 0.4;
@@ -434,23 +446,28 @@ pub fn apply_idle_motion(states: &mut [BoneState], _skeleton: &Skeleton, time: f
             // must nearly HOLD (like the original) — life comes from deliberate
             // gestures + the occasional blink, not constant breathing/bobbing.
             "torso" => {
-                state.scale.1 *= 1.0 + breath * 0.008; // faint breathing
-                state.offset.0 += shift * 0.7; // slow weight shift
-                state.rotation += sway * 0.3 + shift * 0.25;
-                state.bend += sway * 0.02 + shift * 0.025 + breath * 0.005;
+                state.scale.1 *= 1.0 + breath * 0.010 * live;
+                state.offset.0 += (shift * 0.7 + step * 8.0) * live;      // вес с ноги на ногу
+                state.rotation += (sway * 0.3 + shift * 0.25 + step * 3.2) * live;
+                state.bend += (sway * 0.02 + shift * 0.025 + breath * 0.005 + step * 0.02) * live;
             }
             "head" => {
-                state.offset.1 += breath * 0.5;
-                // very slow "looking" life, small
-                state.offset.0 += shift * 0.5 + (time * 0.19 * tau).sin() * 0.35;
-                state.rotation += (time * 0.29 * tau).sin() * 0.45 + sway * 0.2 - shift * 0.3;
+                state.offset.1 += breath * 0.9 * live;
+                // голова ведёт против переноса веса и «прислушивается» — крен
+                state.offset.0 += (shift * 0.5 - step * 4.0 + (time * 0.19 * tau).sin() * 2.0) * live;
+                state.rotation += ((time * 0.29 * tau).sin() * 0.45 + sway * 0.2 - shift * 0.3
+                    + cock * 12.0 - step * 3.0) * live;
             }
             name if name.contains("thigh") => {
-                state.offset.0 += shift * 0.22;
+                let side = if name.contains("left") { 1.0 } else { -1.0 };
+                state.offset.0 += (shift * 0.22 + step * 0.9) * live;
+                state.rotation += (step * side * 5.5 - step.abs() * 1.6) * live;  // опорная/свободная
             }
             name if name.contains("arm") => {
                 let phase = if name.contains("right") { PI } else { 0.0 };
-                state.rotation += (time * 0.5 * tau + phase).sin() * 0.5 + shift * 0.22;
+                let sign = if name.contains("right") { -1.0 } else { 1.0 };
+                state.rotation += ((time * 0.5 * tau + phase).sin() * 7.0 + shift * 0.22
+                    + step * sign * 3.5) * live;
             }
             _ => {}
         }

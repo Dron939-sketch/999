@@ -110,6 +110,7 @@ config {
 | `film-grain` | Float     | Aged-film grain intensity (0 = off, 0.3–0.7 typical) | `0` |
 | `vignette`   | Float     | Darkened-corners vignette intensity (0 = off, 0.3–0.6 typical) | `0` |
 | `light-angle`| Float     | Light direction in degrees (0 = overhead, >0 = from the right, <0 = left). Drives shadow lean and the lit side | `35` |
+| `liveliness` | Float | Liveliness of idle and speech body motion: weight shifts, head cocking, arm float, gesture strikes on stressed syllables. 0 = mannequin, 1 = calibrated to the original Freeman footage, >1 = grotesque | `1.0` |
 | `ground-shadow` | Boolean | Soft contact ellipse under the feet — pins the figure to the floor | `false` |
 | `cast-shadow`| Float     | Thrown silhouette-shadow strength projected onto the ground by `light-angle` (0 = off, 0.3–0.6 typical) | `0` |
 | `form-shadow`| Float     | Self (form) shadow: the side away from the light darkens with a hard cel edge — volume on the mask (0 = off, 0.35–0.5 typical) | `0` |

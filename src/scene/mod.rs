@@ -48,6 +48,13 @@ pub struct RenderConfig {
     /// Мягкая контактная тень под ногами персонажа (0/false = выкл). Прибивает
     /// фигуру к полу — она перестаёт «парить». Включать в сценах, где персонаж
     /// стоит на поверхности (не в пустоте/полёте).
+    /// ЖИВОСТЬ ПОКОЯ И РЕЧИ (0 = манекен, 1 = как оригинал, >1 = гротеск).
+    /// Множитель на слой idle (переминание, крен головы, дыхание) и на
+    /// межударный флоат речи. Введён после покадрового сравнения с part 00:
+    /// у Фримена за три секунды речи нет двух одинаковых кадров, у нас
+    /// стояло 24 кадра подряд одна фигура. Амплитуды в skeleton::
+    /// apply_idle_motion откалиброваны под 1.0 по тем же кадрам.
+    pub liveliness: f64,
     pub ground_shadow: bool,
     /// Отбрасываемая тень-силуэт персонажа на пол (0 = выкл; ~0.3–0.6 сила).
     /// Силуэт проецируется на землю по направлению света — киношный объём.
@@ -94,6 +101,7 @@ impl Default for RenderConfig {
             on_twos: 2,
             snow: 0.0,
             line_boil: 0.6,
+            liveliness: 1.0,
             ground_shadow: false,
             cast_shadow: 0.0,
             light_angle: 35.0,
@@ -176,6 +184,11 @@ impl RenderConfig {
                 "line-boil" => {
                     if let Value::Number(n) = &entry.value {
                         cfg.line_boil = *n;
+                    }
+                }
+                "liveliness" => {
+                    if let Value::Number(n) = &entry.value {
+                        cfg.liveliness = n.max(0.0);
                     }
                 }
                 "ground-shadow" => match &entry.value {

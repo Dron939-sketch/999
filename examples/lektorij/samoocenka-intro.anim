@@ -173,7 +173,10 @@ scene "pedestal" (duration: 1.0s, set: pedestal) {
 scene "zarubki" (duration: 1.0s, set: zarubki) {
     transition static 0.22s
 
-    place freeman at (0.62, 0.585) facing front
+    // 0.55, а не 0.62: на 0.62 он вставал ровно перед линейкой, прислонённой к
+    // косяку (x≈760..836), и она торчала у него из макушки антенной — видно на
+    // покадровой полоске, на обычном просмотре глаз списывал это на декорацию.
+    place freeman at (0.55, 0.585) facing front
     freeman scales 0.80 over 0.01s
 
     camera wide

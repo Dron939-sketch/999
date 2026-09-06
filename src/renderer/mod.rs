@@ -28,6 +28,8 @@ pub struct LightCfg {
     pub form_shadow: f64,
     /// Rim/back light strength: bright contour on the lit edge (0 = off).
     pub rim: f64,
+    /// Liveliness multiplier for idle/speech body motion (config `liveliness`).
+    pub live: f64,
 }
 
 use crate::assets::{AssetRegistry, CharacterAsset};
@@ -318,6 +320,7 @@ pub fn render_frame(
                             light_angle: config.light_angle,
                             form_shadow: config.form_shadow,
                             rim: config.rim_light,
+                            live: config.liveliness,
                         },
                         step_dt,
                     )?;
@@ -580,7 +583,7 @@ fn render_rigged_character(
         apply_walk_cycle(&mut bone_states, walk_phase, walk_intensity);
     } else {
         // Idle breathing/sway.
-        apply_idle_motion(&mut bone_states, &rig.skeleton, t);
+        apply_idle_motion(&mut bone_states, &rig.skeleton, t, light.live);
     }
 
     // Apply squash and stretch based on vertical velocity.
@@ -593,7 +596,7 @@ fn render_rigged_character(
     let speak = speaking_intensity(&events, pose_time);
     let (accent, beat) = speech_accent(&events, pose_time);
     if speak > 0.001 || accent > 0.001 {
-        apply_speaking_motion(&mut bone_states, t, speak, accent, beat);
+        apply_speaking_motion(&mut bone_states, t, speak, accent, beat, light.live);
     }
 
     // Follow-through: the head and hands ride an under-damped spring behind
@@ -608,13 +611,13 @@ fn render_rigged_character(
     if is_walking {
         apply_walk_cycle(&mut bone_states_prev, (t_prev * 2.5) % 1.0, (speed * 8.0).min(1.0));
     } else {
-        apply_idle_motion(&mut bone_states_prev, &rig.skeleton, t_prev);
+        apply_idle_motion(&mut bone_states_prev, &rig.skeleton, t_prev, light.live);
     }
     apply_squash_stretch(&mut bone_states_prev, velocity.0, velocity.1);
     let speak_prev = speaking_intensity(&events, pose_time - 1.0 / 12.0);
     let (accent_prev, beat_prev) = speech_accent(&events, pose_time - 1.0 / 12.0);
     if speak_prev > 0.001 || accent_prev > 0.001 {
-        apply_speaking_motion(&mut bone_states_prev, t_prev, speak_prev, accent_prev, beat_prev);
+        apply_speaking_motion(&mut bone_states_prev, t_prev, speak_prev, accent_prev, beat_prev, light.live);
     }
 
     // Compute the character's screen position.
@@ -1404,7 +1407,7 @@ fn speaking_intensity(events: &[&PoseEvent], t: f64) -> f64 {
 /// of that stressed beat, so the gesture layer can pick a DIFFERENT gesture per
 /// beat (cycling vocabulary) instead of one mechanical strike.
 fn speech_accent(events: &[&PoseEvent], t: f64) -> (f64, u32) {
-    let loud = |p: &str| matches!(p.trim_end_matches("_acc"), "gab" | "wide" | "visD" | "visC");
+    let loud = |p: &str| matches!(p.trim_end_matches("_acc"), "gab" | "wide" | "visD" | "visC" | "visE");
     let mut a: f64 = 0.0;
     let mut ordinal: u32 = 0;
     let mut count: u32 = 0;
@@ -1423,8 +1426,21 @@ fn speech_accent(events: &[&PoseEvent], t: f64) -> (f64, u32) {
         }
         // This is the `count`-th stressed beat (rising edge), in time order.
         let dt = t - e.time;
-        if (0.0..0.6).contains(&dt) {
-            let p = (-dt * 9.0).exp(); // резкий удар, спад ~0.25с
+        // ОГИБАЮЩАЯ УДАРА: АТАКА — УДЕРЖАНИЕ — СПАД, а не игла. Прежний
+        // `exp(-dt*9)` затухал за 0.11с: пружина плеча (ω=15 рад/с, период
+        // 0.4с) такую иглу не успевала отработать, и на экран доходило
+        // 15–25% размаха — жест в 34–55° из словаря читался подрагиванием.
+        // Покадровый разбор part 00: жест ВХОДИТ за кадр и ДЕРЖИТСЯ на
+        // двойках-тройках (0.25–0.4с), потом сменяется следующим. Здесь —
+        // вход 0.06с, полка 0.30с, спад ~0.2с; окно удара 0.9с.
+        if (0.0..0.9).contains(&dt) {
+            let p = if dt < 0.06 {
+                dt / 0.06
+            } else if dt < 0.36 {
+                1.0
+            } else {
+                (-(dt - 0.36) * 7.0).exp()
+            };
             if p >= a {
                 a = p;
                 ordinal = count;
@@ -1439,9 +1455,15 @@ fn speech_accent(events: &[&PoseEvent], t: f64) -> (f64, u32) {
 /// and turns, the torso gives a little emphasis, and the left hand does a gentle
 /// beat gesture. Additive and subtle — the pose still reads, but the delivery is
 /// alive. `amt` (0..1) scales the whole thing by how strongly we're speaking.
-fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64, accent: f64, beat: u32) {
+fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64, accent: f64, beat: u32, live: f64) {
     let tau = std::f64::consts::TAU;
     let nod = (t * 2.3 * tau).sin();
+    // МЕЖУДАРНЫЙ ФЛОАТ — БОЛЬШЕ НЕ ШЁПОТ. Покадровое сравнение с part 00
+    // (26с, 62с, 118с; 8 к/с): пока Фримен говорит, голова кланяется и
+    // кренится на каждой группе слогов, руки не висят ни одного кадра. У нас
+    // между ударами голова качалась на 1°, руки на 1.2° — на экране ноль.
+    // `live` — config `liveliness`; при 1.0 амплитуды ниже сняты с кадров.
+    let amt = amt * live;
 
     // --- Жест-слой v2 -------------------------------------------------------
     // Раньше на КАЖДЫЙ удар была одна и та же рубка левой рукой — механический
@@ -1477,10 +1499,10 @@ fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64, accent: f64
             // constant «дёрганье». The STRESS accents still punch; the between-
             // beats float is a whisper so the delivery reads without buzzing.
             "head" => {
-                state.rotation += nod * 1.1 * amt;
+                state.rotation += nod * 6.0 * amt + (t * 0.7 * tau + 0.9).sin() * 5.0 * amt;
                 // Accent: the head dips INTO the stressed syllable (down-beat).
-                state.offset.1 += nod * 0.8 * amt - accent * 2.6;
-                state.offset.0 += (t * 0.9 * tau).sin() * 0.6 * amt; // slight turn
+                state.offset.1 += nod * 3.5 * amt - accent * 4.0;
+                state.offset.0 += (t * 0.9 * tau).sin() * 4.0 * amt; // turn
                 // Голова отворачивается ПРОТИВ корпуса — контрапост живой
                 // подачи: тело ведёт жест, взгляд держит зрителя.
                 state.rotation -= accent * lean * 0.45;
@@ -1499,8 +1521,9 @@ fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64, accent: f64
                 state.scale.0 *= 1.0 + accent * 0.030;
             }
             "torso" => {
-                state.rotation += nod * 0.25 * amt + accent * lean;
-                state.bend += nod * 0.018 * amt + accent * 0.03;
+                state.rotation += nod * 2.0 * amt + accent * lean;
+                state.bend += nod * 0.03 * amt + accent * 0.03;
+                state.offset.0 += (t * 0.55 * tau).sin() * 5.5 * amt; // переминается, говоря
                 // Корпус «оседает» под ударом акцента (приземление downbeat'а):
                 // squash по Y + разбег по X, восстанавливается со спадом импульса.
                 state.scale.1 *= 1.0 - accent * 0.060;
@@ -1508,19 +1531,28 @@ fn apply_speaking_motion(states: &mut [BoneState], t: f64, amt: f64, accent: f64
             }
             // Обе руки: тихий флоат между ударами + жест словаря на пике акцента.
             "upper_arm_left" => {
-                state.rotation += (t * 1.7 * tau).sin() * 1.2 * amt + accent * ul;
+                state.rotation += (t * 1.7 * tau).sin() * 9.0 * amt + accent * ul;
             }
             "forearm_left" => {
-                state.rotation += (t * 1.7 * tau + 0.6).sin() * 1.6 * amt + accent * fl;
+                state.rotation += (t * 1.7 * tau + 0.6).sin() * 12.0 * amt + accent * fl;
             }
             "hand_left" => {
                 state.rotation += accent * hl; // защёлк кисти в жесте
             }
             "upper_arm_right" => {
-                state.rotation += (t * 1.6 * tau + 1.1).sin() * 1.2 * amt + accent * ur;
+                state.rotation += (t * 1.6 * tau + 1.1).sin() * 9.0 * amt + accent * ur;
             }
             "forearm_right" => {
-                state.rotation += (t * 1.6 * tau + 1.7).sin() * 1.6 * amt + accent * fr;
+                state.rotation += (t * 1.6 * tau + 1.7).sin() * 12.0 * amt + accent * fr;
+            }
+            // ГЛАЗА ЖИВУТ НА УДАРЕ. У оригинала выражение меняется каждые
+            // два-три кадра при 8 к/с: веко то щурится, то распахивается. Удар
+            // с чётным номером щурит оба глаза, с нечётным — распахивает;
+            // импульс спадает за ~0.25с вместе с жестом. Форму глаза несёт
+            // масштаб по Y — работает на любом рисунке глаза.
+            n if n.starts_with("eye") => {
+                let k = if beat % 2 == 0 { 1.0 - 0.45 * accent } else { 1.0 + 0.22 * accent };
+                state.scale.1 *= k.max(0.2);
             }
             "hand_right" => {
                 state.rotation += accent * hr;
