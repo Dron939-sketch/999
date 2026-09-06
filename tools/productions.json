@@ -90,6 +90,14 @@
       "desc": "Стенд персонажа: 15 секунд на проверку гипотез о пластике и сходстве. Не ролик — верстак (разворот, шаг, удержание жеста, лицо на сверхкрупе, покой).",
       "anim": "examples/lektorij/proba-15s.anim",
       "planka": true
+    },
+    {
+      "id": "udarenie-proba",
+      "desc": "Стенд ударений: одна фраза в четырёх разметках голосом Фримена. Не ролик — слушать voice.mp3 из релиза.",
+      "anim": "examples/lektorij/udarenie-proba.anim",
+      "vo": "examples/lektorij/udarenie-proba-VO.md",
+      "_montage": "Стенд для ушей: один план на полминуты. Приёмщик режиссуры здесь не о том.",
+      "montage": false
     }
   ]
 }

@@ -1,0 +1,46 @@
+// =============================================================================
+//  ПРОБА УДАРЕНИЙ — не ролик, а стенд для ушей.
+//
+//  Одна и та же фраза с коварными словами («сто́ит», «уже́», «заплати́л»,
+//  «влеза́ет») четыре раза, в четырёх разметках ударения. Голос — клон
+//  Фримена из секретов CI: из песочницы до него не дотянуться, а публичная
+//  ручка Frederick говорит голосом Фреди, и проба на ней ничего не решает.
+//  Кто прав — акута, плюс, заглавная или ничего, — решает человек по
+//  udarenie-proba-voice.mp3 из релиза. Картинка здесь неважна.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set pustota from "../assets/sets/void.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 1.9
+    on-twos: 2
+    line-boil: 0.0
+    gate-weave: 0.0
+    ground-shadow: true
+}
+
+scene "proba" (duration: 1.0s, set: pustota) {
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+    wait 0.6s
+    //lip 1
+    freeman speaks for 6.0s
+    wait 1.0s
+    //lip 2
+    freeman speaks for 6.0s
+    wait 1.0s
+    //lip 3
+    freeman speaks for 6.0s
+    wait 1.0s
+    //lip 4
+    freeman speaks for 6.0s
+    wait 0.6s
+}
