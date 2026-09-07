@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- РУПОР НА СТОЛБЕ.
+       «Кто сказал? Кто-то.» — пустая площадь, один столб, на нём рупор
+       громкоговорителя, из раструба расходятся дуги: говорит, и давно. Под
+       столбом никого — слушают все, но никого не видно. Земля усыпана
+       одинаковыми бумажками, как листвой. Пол на y≈604; персонаж стоит под
+       рупором, чуть правее центра, единственный на площади. -->
+  <rect width="1280" height="720" fill="#d4d7cf"/>
+  <rect width="1280" height="120" fill="#5f625b"/>
+  <rect y="120" width="1280" height="484" fill="#c9ccc3"/>
+  <rect y="604" width="1280" height="116" fill="#a2a59d"/>
+  <path d="M-10 604 Q640 598 1290 606" stroke="#141410" stroke-width="6" fill="none"/>
+  <path d="M-10 120 Q640 126 1290 118" stroke="#141410" stroke-width="6" fill="none"/>
+
+  <!-- ДАЛЬНИЙ КРАЙ ПЛОЩАДИ: низкий глухой парапет -->
+  <path d="M-10 470 L1290 464 L1290 500 L-10 506 Z" fill="#a2a59d" stroke="#141410" stroke-width="6"/>
+
+  <!-- СТОЛБ: от пола выше кадра -->
+  <path d="M312 -10 L336 -10 L344 604 L304 604 Z" fill="#141410"/>
+  <path d="M292 604 L356 604 L364 626 L284 626 Z" fill="#141410"/>
+  <!-- РУПОР: кронштейн и раструб вправо-вниз, на площадь -->
+  <path d="M336 150 L420 190" stroke="#141410" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M400 170 L440 156 L560 236 L536 300 L392 232 Z" fill="#141410"/>
+  <path d="M536 300 L560 236 Q600 244 600 276 Q596 310 556 306 Z" fill="#5f625b" stroke="#141410" stroke-width="6"/>
+  <!-- ДУГИ ЗВУКА: три, всё шире; говорит, и давно -->
+  <g stroke="#141410" stroke-width="7" fill="none" stroke-linecap="round">
+    <path d="M640 220 Q690 270 640 330"/>
+    <path d="M700 190 Q790 270 700 360"/>
+    <path d="M770 156 Q900 270 770 396"/>
+  </g>
+
+  <!-- БУМАЖКИ НА ЗЕМЛЕ: одинаковые, как листва после ветра -->
+  <g fill="#f2f4ec" stroke="#141410" stroke-width="4">
+    <rect x="80" y="630" width="30" height="30" rx="5" transform="rotate(-12 95 645)"/>
+    <rect x="190" y="668" width="30" height="30" rx="5" transform="rotate(20 205 683)"/>
+    <rect x="430" y="640" width="30" height="30" rx="5" transform="rotate(8 445 655)"/>
+    <rect x="560" y="676" width="30" height="30" rx="5" transform="rotate(-25 575 691)"/>
+    <rect x="700" y="628" width="30" height="30" rx="5" transform="rotate(14 715 643)"/>
+    <rect x="820" y="672" width="30" height="30" rx="5" transform="rotate(-6 835 687)"/>
+    <rect x="960" y="636" width="30" height="30" rx="5" transform="rotate(30 975 651)"/>
+    <rect x="1080" y="682" width="30" height="30" rx="5" transform="rotate(-18 1095 697)"/>
+    <rect x="1180" y="626" width="30" height="30" rx="5" transform="rotate(10 1195 641)"/>
+    <rect x="1010" y="540" width="24" height="24" rx="4" transform="rotate(22 1022 552)"/>
+    <rect x="880" y="530" width="22" height="22" rx="4" transform="rotate(-14 891 541)"/>
+    <rect x="140" y="548" width="22" height="22" rx="4" transform="rotate(6 151 559)"/>
+  </g>
+  <g stroke="#141410" stroke-width="3" fill="none">
+    <path d="M436 655 Q445 645 454 655 Q445 665 436 655"/><path d="M706 643 Q715 633 724 643 Q715 653 706 643"/>
+    <path d="M966 651 Q975 641 984 651 Q975 661 966 651"/><path d="M86 645 Q95 635 104 645 Q95 655 86 645"/>
+  </g>
+</svg>
