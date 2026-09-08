@@ -44,6 +44,17 @@
 //
 //  ДЛИНА при потолке приёмщика 60с. `duration` у сцены — ПОЛ, а не потолок.
 //  `speaks for` вписаны `tools/vo_budget.py --patch-anim`, не на глаз.
+//
+//  ЖЕСТЫ СТОЯТ НА СЛОВАХ, А НЕ НА СЕКУНДАХ. Первая версия ставила паузы в
+//  блоках `do` на глаз, и на озвучке жесты разъехались с речью: обвис на
+//  «Так надо» приходился на «Ленту», голова втягивалась на «сказал?» вместо
+//  «Кто-то», раскрытие на «Ответ пишете вы» случалось посреди предыдущего
+//  предложения, а хук и самая презрительная реплика обходились вообще без
+//  жеста рук. Теперь каждая пауза — ДОЛЯ реплики, а не секунды: доли сняты с
+//  готовой дорожки (границы слов по энергии сигнала) и записаны в комментарии
+//  рядом с каждой позой. `prep_lipsync` тянет блок `do` пропорционально
+//  фактической длине mp3, поэтому доля переживает и пересинтез, и смену темпа,
+//  а секунда — нет.
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
@@ -99,9 +110,9 @@ scene "pustota" (duration: 5.9s, set: pustota) {
     together {
         freeman speaks for 4.5s
         do {
-            wait 2.9s
-            freeman pose "open"
-            wait 1.0s
+            wait 3.4s
+            freeman pose "open"          // «Дороги́е мои́» (0.75) — руки в стороны
+            wait 1.1s
         }
     }
     wait 0.2s
@@ -131,26 +142,30 @@ scene "avtomat" (duration: 1.0s, set: avtomat) {
         do {
             camera zoom-to freeman over 2.2s ease-in
             freeman overlays "smug"
-            wait 0.6s
+            wait 2.9s
+            freeman pose "confident"     // «Го́рдо» (0.81) — грудь колесом, иронично
+            wait 0.5s
         }
     }
     wait 0.1s
 
     // Добивка: тычет в кнопку — бумажка падает — и в упор: «третья сверху».
     camera wide
-    freeman pose "point"
+    freeman pose "think"                 // пока только смотрит на панель
     //lip 3
     together {
         freeman speaks for 2.6s
         do {
-            wait 1.2s
-            zapiska shows
+            wait 1.1s
+            freeman pose "point"         // «тре́тья» (0.42) — палец в панель
+            wait 0.3s
+            zapiska shows                // «кно́пка» (0.54) — записка пошла в лоток
             zapiska moves-to (0.742, 0.755) over 0.3s ease-in
             zapiska rotates 40 over 0.3s
-            wait 0.4s
-            freeman pose "v_upor"
+            wait 0.45s
+            freeman pose "v_upor"        // «све́рху» (0.71) — в упор к зрителю
             camera extreme-close-up freeman
-            wait 0.7s
+            wait 0.5s
         }
     }
     freeman overlays "flash_disgust"
@@ -177,12 +192,15 @@ scene "ochered" (duration: 1.0s, set: ochered) {
     together {
         freeman speaks for 5.4s
         do {
-            wait 1.0s
-            freeman pose "puppet_jerk"
-            wait 1.0s
-            freeman overlays "weary"      // «так надо» — обвис лицом, тело держит
+            wait 0.9s
+            freeman pose "puppet_jerk"   // «Рабо́та» (0.17) — рывок
+            wait 1.5s
+            freeman pose "puppet"        // «Ле́нта» (0.44) — дёрнуло обратно
+            wait 0.8s
+            freeman pose "ugryumo"       // «Та́к на́до» (0.59) — обвис ВСЕМ телом
+            freeman overlays "weary"
             camera medium freeman
-            wait 1.9s
+            wait 1.6s
         }
     }
     wait 0.1s
@@ -206,10 +224,10 @@ scene "rupor" (duration: 1.0s, set: rupor) {
     together {
         freeman speaks for 2.6s
         do {
-            wait 1.2s
-            freeman pose "hunch"          // «кто-то» — втянул голову
+            wait 1.9s
+            freeman pose "hunch"          // «Кто́-то» (0.74) — втянул голову
             camera medium freeman
-            wait 1.0s
+            wait 0.6s
         }
     }
     // Финал пулемёта (VO-6): «Вы не думаете. Вы цитируете.»
@@ -218,10 +236,11 @@ scene "rupor" (duration: 1.0s, set: rupor) {
     together {
         freeman speaks for 3.6s
         do {
-            wait 1.6s
+            wait 2.0s
+            freeman pose "point"          // «Вы цити́руете» (0.63) — палец в зрителя
             freeman overlays "hero_skeptic"
             camera close-up freeman
-            wait 0.9s
+            wait 1.0s
         }
     }
     // ── СЛОВО-УДАР + инверсия-панч ────────────────────────────────────────
@@ -251,10 +270,10 @@ scene "golova" (duration: 1.0s, set: golova) {
     together {
         freeman speaks for 5.0s
         do {
-            wait 2.0s
-            // «Всё» НАЕЗЖАЕТ — один долгий ход.
-            freeman pose "v_upor"
-            camera zoom-to freeman over 2.0s ease-in
+            wait 2.8s
+            freeman pose "v_upor"        // «чужо́е» (0.62)
+            // наезд доезжает ровно на «Всё» (0.93), а не после него
+            camera zoom-to freeman over 1.5s ease-in
             wait 0.2s
         }
     }
@@ -279,13 +298,13 @@ scene "stol" (duration: 1.0s, set: stol) {
     together {
         freeman speaks for 8.4s
         do {
-            wait 1.8s
-            freeman pose "raskryl"       // «ответ пишете вы» — открылся
+            wait 3.2s
+            freeman pose "raskryl"       // «Отве́т пи́шете вы» (0.49) — открылся
             camera medium freeman
-            wait 2.6s
-            freeman pose "confident"     // «это и есть свобода»
+            wait 1.7s
+            freeman pose "confident"     // «Э́то и есть свобо́да» (0.75)
             camera close-up freeman
-            wait 1.6s
+            wait 1.4s
         }
     }
     wait 0.3s
@@ -307,13 +326,13 @@ scene "pustota-final" (duration: 1.0s, set: pustota) {
         freeman speaks for 7.0s
         do {
             camera medium freeman
-            wait 2.4s
-            freeman pose "point"
-            wait 1.8s
-            freeman pose "calm"
+            wait 2.5s
+            freeman pose "point"         // «де́сять ле́кций» (0.36)
+            wait 1.7s
+            freeman pose "calm"          // «Своя́ голова́» (0.60)
             camera wide
             wait 1.6s
-            freeman pose "v_upor"
+            freeman pose "v_upor"        // «а чья́ в не́й мы́сль?» (0.83)
             camera close-up freeman
             wait 1.0s
         }
