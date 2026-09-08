@@ -1,51 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
   <!-- РУПОР НА СТОЛБЕ.
        «Кто сказал? Кто-то.» — пустая площадь, один столб, на нём рупор
-       громкоговорителя, из раструба расходятся дуги: говорит, и давно. Под
-       столбом никого — слушают все, но никого не видно. Земля усыпана
-       одинаковыми бумажками, как листвой. Пол на y≈604; персонаж стоит под
-       рупором, чуть правее центра, единственный на площади. -->
-  <rect width="1280" height="720" fill="#d4d7cf"/>
-  <rect width="1280" height="120" fill="#5f625b"/>
-  <rect y="120" width="1280" height="484" fill="#c9ccc3"/>
-  <rect y="604" width="1280" height="116" fill="#a2a59d"/>
-  <path d="M-10 604 Q640 598 1290 606" stroke="#141410" stroke-width="6" fill="none"/>
-  <path d="M-10 120 Q640 126 1290 118" stroke="#141410" stroke-width="6" fill="none"/>
+       громкоговорителя, из раструба расходятся дуги: говорит, и давно.
+       Под столбом никого. Земля усыпана теми же записками, как листвой.
 
-  <!-- ДАЛЬНИЙ КРАЙ ПЛОЩАДИ: низкий глухой парапет -->
-  <path d="M-10 470 L1290 464 L1290 500 L-10 506 Z" fill="#a2a59d" stroke="#141410" stroke-width="6"/>
+       ЯЗЫК КАДРА СВЕРЕН С СОСЕДЯМИ 08.09.2026, как и у очереди: чистое поле
+       и одна рисованная линия земли вместо полос потолка, парапета и пола.
+       Парапет убран совсем — он держал глубину, но той же тональной полосой,
+       из-за которой сцена читалась темнее генерированных соседей.
 
-  <!-- СТОЛБ: от пола выше кадра -->
-  <path d="M312 -10 L336 -10 L344 604 L304 604 Z" fill="#141410"/>
-  <path d="M292 604 L356 604 L364 626 L284 626 Z" fill="#141410"/>
+       Линия земли — 0.775; персонаж на 0.839 стоит перед ней, под рупором,
+       чуть правее центра. -->
+  <rect width="1280" height="720" fill="#e2e3e0"/>
+
+  <!-- ЛИНИЯ ЗЕМЛИ -->
+  <path d="M-10 558 Q240 552 500 559 Q760 566 1010 556 Q1160 551 1290 557"
+        stroke="#141410" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- СТОЛБ: от земли выше кадра -->
+  <path d="M300 -10 L324 -10 L332 566 L292 566 Z" fill="#141410"/>
+  <path d="M282 566 L342 566 L350 586 L274 586 Z" fill="#141410"/>
+
   <!-- РУПОР: кронштейн и раструб вправо-вниз, на площадь -->
-  <path d="M336 150 L420 190" stroke="#141410" stroke-width="12" fill="none" stroke-linecap="round"/>
-  <path d="M400 170 L440 156 L560 236 L536 300 L392 232 Z" fill="#141410"/>
-  <path d="M536 300 L560 236 Q600 244 600 276 Q596 310 556 306 Z" fill="#5f625b" stroke="#141410" stroke-width="6"/>
+  <path d="M324 150 L408 190" stroke="#141410" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M388 170 L428 156 L548 236 L524 300 L380 232 Z" fill="#141410"/>
+  <path d="M524 300 L548 236 Q588 244 588 276 Q584 310 544 306 Z"
+        fill="#7d8078" stroke="#141410" stroke-width="6"/>
+
   <!-- ДУГИ ЗВУКА: три, всё шире; говорит, и давно -->
   <g stroke="#141410" stroke-width="7" fill="none" stroke-linecap="round">
-    <path d="M640 220 Q690 270 640 330"/>
-    <path d="M700 190 Q790 270 700 360"/>
-    <path d="M770 156 Q900 270 770 396"/>
+    <path d="M628 220 Q678 270 628 330"/>
+    <path d="M688 190 Q778 270 688 360"/>
+    <path d="M758 156 Q888 270 758 396"/>
   </g>
 
-  <!-- БУМАЖКИ НА ЗЕМЛЕ: одинаковые, как листва после ветра -->
-  <g fill="#f2f4ec" stroke="#141410" stroke-width="4">
-    <rect x="80" y="630" width="30" height="30" rx="5" transform="rotate(-12 95 645)"/>
-    <rect x="190" y="668" width="30" height="30" rx="5" transform="rotate(20 205 683)"/>
-    <rect x="430" y="640" width="30" height="30" rx="5" transform="rotate(8 445 655)"/>
-    <rect x="560" y="676" width="30" height="30" rx="5" transform="rotate(-25 575 691)"/>
-    <rect x="700" y="628" width="30" height="30" rx="5" transform="rotate(14 715 643)"/>
-    <rect x="820" y="672" width="30" height="30" rx="5" transform="rotate(-6 835 687)"/>
-    <rect x="960" y="636" width="30" height="30" rx="5" transform="rotate(30 975 651)"/>
-    <rect x="1080" y="682" width="30" height="30" rx="5" transform="rotate(-18 1095 697)"/>
-    <rect x="1180" y="626" width="30" height="30" rx="5" transform="rotate(10 1195 641)"/>
-    <rect x="1010" y="540" width="24" height="24" rx="4" transform="rotate(22 1022 552)"/>
-    <rect x="880" y="530" width="22" height="22" rx="4" transform="rotate(-14 891 541)"/>
-    <rect x="140" y="548" width="22" height="22" rx="4" transform="rotate(6 151 559)"/>
+  <!-- ЗАПИСКИ НА ЗЕМЛЕ: те же, что в автомате и в голове -->
+  <g fill="#f7f7f4" stroke="#141410" stroke-width="3.5">
+    <rect x="80" y="620" width="30" height="30" rx="5" transform="rotate(-12 95 635)"/>
+    <rect x="196" y="664" width="30" height="30" rx="5" transform="rotate(20 211 679)"/>
+    <rect x="430" y="632" width="30" height="30" rx="5" transform="rotate(8 445 647)"/>
+    <rect x="556" y="676" width="30" height="30" rx="5" transform="rotate(-25 571 691)"/>
+    <rect x="700" y="620" width="30" height="30" rx="5" transform="rotate(14 715 635)"/>
+    <rect x="826" y="670" width="30" height="30" rx="5" transform="rotate(-6 841 685)"/>
+    <rect x="962" y="628" width="30" height="30" rx="5" transform="rotate(30 977 643)"/>
+    <rect x="1086" y="680" width="30" height="30" rx="5" transform="rotate(-18 1101 695)"/>
+    <rect x="1186" y="616" width="30" height="30" rx="5" transform="rotate(10 1201 631)"/>
+    <rect x="1010" y="580" width="24" height="24" rx="4" transform="rotate(22 1022 592)"/>
+    <rect x="884" y="572" width="22" height="22" rx="4" transform="rotate(-14 895 583)"/>
+    <rect x="150" y="580" width="22" height="22" rx="4" transform="rotate(6 161 591)"/>
+    <rect x="1240" y="596" width="24" height="24" rx="4" transform="rotate(-9 1252 608)"/>
   </g>
-  <g stroke="#141410" stroke-width="3" fill="none">
-    <path d="M436 655 Q445 645 454 655 Q445 665 436 655"/><path d="M706 643 Q715 633 724 643 Q715 653 706 643"/>
-    <path d="M966 651 Q975 641 984 651 Q975 661 966 651"/><path d="M86 645 Q95 635 104 645 Q95 655 86 645"/>
+  <g stroke="#141410" stroke-width="2.8" fill="none">
+    <path d="M437 645 Q446 636 455 645 Q446 654 437 645"/>
+    <path d="M707 633 Q716 624 725 633 Q716 642 707 633"/>
+    <path d="M969 641 Q978 632 987 641 Q978 650 969 641"/>
+    <path d="M87 633 Q96 624 105 633 Q96 642 87 633"/>
+    <path d="M833 683 Q842 674 851 683 Q842 692 833 683"/>
+    <path d="M1193 629 Q1202 620 1211 629 Q1202 638 1193 629"/>
   </g>
 </svg>
