@@ -15,6 +15,16 @@ prep_lipsync.py — впаивает липсинк по реальной озв
 а тело держит позу (lips — overlay). Если mp3 нет — строка `speaks for` остаётся
 как есть, так что сценарий рендерится всегда.
 
+ЖЕСТЫ САЖАЮТСЯ НА СЛОВА. Второе дело препроцессора, кроме рта. Соседний с
+речью блок `do` держит режиссуру реплики: наезды, каты, смены позы. Его паузы
+писались до озвучки, поэтому раньше блок просто растягивался в то же число раз,
+на какое разъехалась речь, — жест оставался на своей ДОЛЕ реплики. Этого мало:
+синтез каждый раз распределяет паузы иначе, и доля, снятая с прошлой дорожки,
+уезжает от слова на 0.1–0.15 реплики (на «Философии» это 0.6с на фразе
+«Утро. Работа. Лента. Так надо.» — обвис приходился на «Ленту»). Поэтому после
+растяжки каждая смена позы подтягивается к ближайшему НАЧАЛУ СЛОВА, если оно
+ближе 0.35с; дальше не тянем — значит, режиссёр метил в другое слово.
+
 Использование:
     python3 tools/prep_lipsync.py scene.anim --parts videos/<id>-parts \
         -o scene.lipsynced.anim
@@ -47,6 +57,111 @@ RHUBARB_MAP = {
     "A": "visA", "B": "visB", "C": "visC", "D": "visD",
     "E": "visE", "F": "visF", "G": "visB", "H": "visC", "X": "visA",
 }
+
+
+# Начало жеста ловится на СЛОВЕ, а не на секунде: см. ниже `speech_onsets`
+# и `retime_block`. Порог «тише десятой доли пика» и минимальная тишина в 60мс
+# подобраны по нашим репликам Fish: слоги внутри слова тише не проваливаются,
+# а межсловная пауза проваливается всегда.
+ONSET_REL = 0.10          # доля пика, ниже которой считаем, что звука нет
+ONSET_GAP_S = 0.06        # столько тишины должно быть ПЕРЕД началом слова
+ONSET_MIN_SEP_S = 0.12    # ближе этого два начала не различаем — это один слог
+SNAP_TOL_S = 0.35         # дальше этого к слову не тянем — значит, метили не туда
+
+
+def speech_onsets(mp3, hop_s=0.01):
+    """Начала слов и слогов в реплике (секунды от её начала).
+
+    Двумя способами сразу, и это не перестраховка. Первый — выход из тишины:
+    надёжен, но во фразе, сказанной на одном дыхании, тишины между словами нет
+    вовсе. На «Смысл жизни — третья кнопка сверху» такой поиск нашёл РОВНО ОДНО
+    начало — первое, — и жест не к чему было притягивать.
+
+    Второй — подъём громкости (половинчатая разность огибающей с порогом от
+    скользящего среднего). Он ловит начало слога и внутри слитной речи, где
+    громкость проваливается на согласном, но до тишины не доходит.
+
+    Точность здесь нужна не фонетическая: жест должен попасть в слово, а не в
+    середину гласной. Ошибка в пределах согласного эту задачу решает.
+    """
+    try:
+        env = extract_envelope(mp3, hop_s)
+    except Exception:                                        # noqa: BLE001
+        return []
+    if not env or max(env) <= 0:
+        return []
+    peak = max(env)
+    cand = []
+
+    # 1) выход из тишины
+    thr = peak * ONSET_REL
+    gap = max(1, int(ONSET_GAP_S / hop_s))
+    quiet = gap
+    for i, v in enumerate(env):
+        if v > thr:
+            if quiet >= gap:
+                cand.append(i)
+            quiet = 0
+        else:
+            quiet += 1
+
+    # 2) подъём громкости внутри слитной речи
+    flux = [max(0.0, env[i] - env[i - 1]) for i in range(1, len(env))]
+    win = max(3, int(0.25 / hop_s))
+    for i, f in enumerate(flux):
+        lo, hi = max(0, i - win), min(len(flux), i + win + 1)
+        local = sum(flux[lo:hi]) / (hi - lo)
+        if f > max(local * 1.8, peak * 0.02) and env[i + 1] > peak * 0.18:
+            if f >= max(flux[max(0, i - 2):min(len(flux), i + 3)]):
+                cand.append(i + 1)
+
+    # слить близкие: два подъёма ближе 0.12с — это один слог, а не два слова
+    sep = max(1, int(ONSET_MIN_SEP_S / hop_s))
+    out, last = [], -10 ** 9
+    for i in sorted(set(cand)):
+        if i - last >= sep:
+            out.append(i * hop_s)
+            last = i
+    return out
+
+
+def retime_block(lines, k, onsets):
+    """Растянуть блок `do` в k раз и посадить жесты на начала слов.
+
+    Растяжка одна сохраняет ДОЛЮ реплики, на которой стоит жест, и этого мало:
+    синтез каждый раз распределяет паузы чуть иначе, и доля, снятая с прошлой
+    дорожки, уезжает от слова на 0.1–0.15 реплики. Поэтому после растяжки
+    каждый жест подтягивается к ближайшему началу слова, если оно ближе
+    SNAP_TOL_S. Дальше — не трогаем: значит, метили не в это слово, и лучше
+    оставить как поставил режиссёр, чем притянуть к чужому.
+    """
+    # где в блоке стоят жесты: строка со сменой позы или появлением предмета
+    gesture = [bool(re.search(r'\bpose\s+"|\b\w+\s+shows\b', ln)) for ln in lines]
+    out, t, moved = [], 0.0, 0
+    for i, ln in enumerate(lines):
+        m = re.search(r"\b(wait\s+)([\d.]+)s", ln)
+        if m:
+            new = float(m.group(2)) * k
+            # следующая содержательная строка — жест? тогда время его прихода
+            j = i + 1
+            while j < len(lines) and not lines[j].strip():
+                j += 1
+            if j < len(lines) and gesture[j] and onsets:
+                want = t + new
+                near = min(onsets, key=lambda o: abs(o - want))
+                if abs(near - want) <= SNAP_TOL_S:
+                    adj = max(0.02, new + (near - want))
+                    if abs(adj - new) > 0.01:
+                        moved += 1
+                    new = adj
+            t += new
+            ln = ln[:m.start()] + f"{m.group(1)}{round(new, 2)}s" + ln[m.end():]
+            out.append(ln)
+            continue
+        # прочие длительности (наезд, тряска) просто тянутся вместе с речью
+        out.append(TIMED.sub(
+            lambda mm: f"{mm.group(1)}{round(float(mm.group(2)) * k, 2)}s", ln))
+    return out, moved
 
 
 def rhubarb_bin():
@@ -225,8 +340,10 @@ def lips_track_lines(entity, mp3, indent, fps=11.0):
 def process(text, parts_dir):
     out, pending, subbed, fell, skipped = [], None, 0, 0, 0
     order = []  # номера vo-N в порядке появления речевых блоков в файле
-    stretch = None   # (коэффициент, отступ блока `do`) для соседних катов
+    stretch = None   # (коэффициент, отступ блока `do`, начала слов реплики)
     depth = None     # глубина скобок внутри растягиваемого `do`
+    buf = []         # строки блока `do`: пересчитываются целиком на закрытии
+    snapped = 0      # сколько жестов подтянуто к началу слова
     for line in text.splitlines():
         # РАСТЯЖКА СОСЕДНЕГО БЛОКА КАТОВ. Реплика пишется так:
         #
@@ -243,10 +360,10 @@ def process(text, parts_dir):
         # же отношение, на какое разъехалась речь, — каты остаются там же по
         # ДОЛЕ реплики, где их поставил режиссёр.
         if stretch is not None:
-            k, blk_indent = stretch
+            k, blk_indent, onsets = stretch
             if depth is None:
                 if re.match(rf"^{blk_indent}do\s*\{{\s*$", line):
-                    depth = 1
+                    depth, buf = 1, []
                     out.append(line)
                     continue
                 if line.strip() and not line.strip().startswith("//"):
@@ -254,12 +371,15 @@ def process(text, parts_dir):
             else:
                 depth += line.count("{") - line.count("}")
                 if depth <= 0:
-                    stretch, depth = None, None
+                    # БЛОК ЗАКРЫЛСЯ — только теперь его можно пересчитать: чтобы
+                    # посадить жест на слово, надо видеть, что стоит ПОСЛЕ паузы,
+                    # а построчный проход этого не знает.
+                    fixed, moved = retime_block(buf, k, onsets)
+                    out.extend(fixed)
+                    snapped += moved
+                    stretch, depth, buf = None, None, []
                 else:
-                    line = TIMED.sub(
-                        lambda mm: f"{mm.group(1)}{round(float(mm.group(2)) * k, 2)}s",
-                        line)
-                    out.append(line)
+                    buf.append(line)
                     continue
         m = LIP.match(line)
         if m:
@@ -275,8 +395,9 @@ def process(text, parts_dir):
                 real, declared = mp3_duration(mp3), float(dur)
                 if real > 0 and declared > 0.05:
                     k = round(real / declared, 4)
-                    if abs(k - 1.0) > 0.02:
-                        stretch, depth = (k, indent), None
+                    # Блок пересчитываем ВСЕГДА, даже при k≈1: растяжка — не
+                    # единственная его работа, жесты ещё надо посадить на слова.
+                    stretch, depth = (k, indent, speech_onsets(mp3)), None
             else:
                 out.append(line)  # запасной путь: обычные флэпы
                 fell += 1
@@ -306,7 +427,7 @@ def process(text, parts_dir):
             continue
         pending, skipped = None, 0
         out.append(line)
-    return "\n".join(out) + "\n", subbed, fell, order
+    return "\n".join(out) + "\n", subbed, fell, order, snapped
 
 
 def main(argv):
@@ -319,7 +440,7 @@ def main(argv):
     args = ap.parse_args(argv)
 
     text = open(args.anim, encoding="utf-8").read()
-    result, subbed, fell, order = process(text, args.parts)
+    result, subbed, fell, order, snapped = process(text, args.parts)
 
     # СВЕРКА: все ли синтезированные реплики нашли себе речевой блок в сцене.
     # Голос собирается по VO-таблице целиком, а рот открывается только там, где
@@ -353,7 +474,8 @@ def main(argv):
     # временам движка (animdsl timing) — синхрон по конструкции.
     with open(args.output + ".map.json", "w", encoding="utf-8") as f:
         json.dump(order, f)
-    print(f"OK: {args.output} — липсинк по звуку: {subbed}, флэп-фолбэк: {fell}; карта блоков: {order}")
+    print(f"OK: {args.output} — липсинк по звуку: {subbed}, флэп-фолбэк: {fell}; "
+          f"жестов посажено на слово: {snapped}; карта блоков: {order}")
     return 0
 
 
