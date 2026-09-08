@@ -66,7 +66,8 @@ RHUBARB_MAP = {
 ONSET_REL = 0.10          # доля пика, ниже которой считаем, что звука нет
 ONSET_GAP_S = 0.06        # столько тишины должно быть ПЕРЕД началом слова
 ONSET_MIN_SEP_S = 0.12    # ближе этого два начала не различаем — это один слог
-SNAP_TOL_S = 0.35         # дальше этого к слову не тянем — значит, метили не туда
+SNAP_TOL_S = 0.35         # допуск посадки: не меньше этого…
+SNAP_TOL_REL = 0.10       # …и не меньше десятой доли самой реплики
 
 
 def speech_onsets(mp3, hop_s=0.01):
@@ -137,6 +138,12 @@ def retime_block(lines, k, onsets):
     """
     # где в блоке стоят жесты: строка со сменой позы или появлением предмета
     gesture = [bool(re.search(r'\bpose\s+"|\b\w+\s+shows\b', ln)) for ln in lines]
+    # ДОПУСК РАСТЁТ С ДЛИНОЙ РЕПЛИКИ. Расхождение доли со словом даёт синтез,
+    # и оно пропорционально: на реплике в две секунды доля уезжает на десятые,
+    # на восьмисекундной — на полсекунды. Фиксированные 0.35с спасали короткие
+    # реплики и не дотягивались до двух жестов в длинных («Это и есть свобода»,
+    # «Своя голова»), где промах был 0.44 и 0.55с.
+    tol = max(SNAP_TOL_S, SNAP_TOL_REL * (onsets[-1] if onsets else 0.0))
     out, t, moved = [], 0.0, 0
     for i, ln in enumerate(lines):
         m = re.search(r"\b(wait\s+)([\d.]+)s", ln)
@@ -149,7 +156,7 @@ def retime_block(lines, k, onsets):
             if j < len(lines) and gesture[j] and onsets:
                 want = t + new
                 near = min(onsets, key=lambda o: abs(o - want))
-                if abs(near - want) <= SNAP_TOL_S:
+                if abs(near - want) <= tol:
                     adj = max(0.02, new + (near - want))
                     if abs(adj - new) > 0.01:
                         moved += 1
