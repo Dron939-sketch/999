@@ -143,6 +143,9 @@ scene "kuhnya" (duration: 1.0s, set: kuhnya) {
     // это желаемая высота, делённая на 216: ребёнок ростом 330px → 1.53.
     let rebenok = prop("rebenok", "../assets/props/gnev-rebenok.svg") at (0.934, 0.557)
     rebenok scales 1.53 over 0.01s
+    let kaplya = prop("kaplya", "../assets/props/gnev-kaplya.svg") at (0.466, 0.761)
+    kaplya scales 0.11 over 0.01s
+    kaplya hides
 
     camera wide
     freeman pose "hips"
@@ -159,6 +162,10 @@ scene "kuhnya" (duration: 1.0s, set: kuhnya) {
         do {
             wait 0.5s
             rebenok moves-to (1.16, 0.557) over 1.5s ease-in
+            kaplya shows
+            kaplya moves-to (0.466, 0.833) over 0.28s ease-in
+            kaplya hides
+            kaplya moves-to (0.466, 0.761) over 0.01s
         }
     }
     wait 0.1s
@@ -173,6 +180,12 @@ scene "kuhnya" (duration: 1.0s, set: kuhnya) {
             freeman pose "za_golovu"     // «себя́ гры́зли» (0.55) — схватился за голову
             camera close-up freeman
             wait 0.7s
+        }
+        do {
+            wait 0.35s
+            kaplya shows
+            kaplya moves-to (0.466, 0.833) over 0.28s ease-in
+            kaplya hides
         }
     }
     freeman overlays "hero_skeptic"
@@ -262,6 +275,7 @@ scene "kryshka" (duration: 1.0s, set: kryshka) {
             wait 1.7s
             kamen moves-to (0.695, 0.310) over 1.2s ease-in-out   // давит глубже
         }
+        freeman scales 0.855 over 3.1s ease-in-out                // наступает на зрителя
     }
     // ── СЛОВО-УДАР + инверсия-панч ────────────────────────────────────────
     slovo moves-to (0.5, 0.28) over 0.01s
@@ -360,6 +374,7 @@ scene "pustota-final" (duration: 1.0s, set: pustota) {
     //lip 9
     together {
         freeman speaks for 5.6s
+        freeman scales 0.88 over 5.5s ease-in-out                 // подходит к зрителю
         do {
             camera medium freeman
             wait 3.1s
