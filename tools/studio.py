@@ -870,12 +870,34 @@ def lint_udareniya(prod):
         from script_lint import accent_problems, parse as parse_vo
     except ImportError:                                      # noqa: BLE001
         return [], []
+    hard, soft = [], []
+
+    # МЕСТО ударения — сверка со словарём (`tools/udareniya.py`). Это HARD:
+    # «полно́чи» вместо «по́лночи» — не «ролик выйдет хуже», а ролик, в первой
+    # строке которого слышно неграмотность. Проверка дешёвая и до озвучки.
+    try:
+        from udareniya import proverit                         # noqa: E402
+        oshibki, novye = proverit(ROOT / vo)
+        if oshibki:
+            show = ", ".join(f"{n} «{w}» — {why}" for n, w, why in oshibki[:5])
+            hard.append(f"{prod['id']}: ударение не на том слоге "
+                        f"({Path(vo).name}): {show}"
+                        + (" …" if len(oshibki) > 5 else ""))
+        if novye:
+            show = ", ".join(f"{n} «{w}»" for n, w in novye[:5])
+            soft.append(f"{prod['id']}: слов вне словаря ударений "
+                        f"{len(novye)}: {show}"
+                        + (" …" if len(novye) > 5 else "")
+                        + " — проверь и внеси в tools/udareniya-slovar.json")
+    except Exception:                                          # noqa: BLE001
+        pass
+
     bad = accent_problems(parse_vo(ROOT / vo))
-    if not bad:
-        return [], []
-    show = ", ".join(f"{n} «{w}» — {why}" for n, w, why in bad[:5])
-    return [], [f"{prod['id']}: {len(bad)} слов(а) без разметки ударения "
-                f"({Path(vo).name}): {show}" + (" …" if len(bad) > 5 else "")]
+    if bad:
+        show = ", ".join(f"{n} «{w}» — {why}" for n, w, why in bad[:5])
+        soft.append(f"{prod['id']}: {len(bad)} слов(а) без разметки ударения "
+                    f"({Path(vo).name}): {show}" + (" …" if len(bad) > 5 else ""))
+    return hard, soft
 
 
 def lint_dlina(prod, final_mp4):

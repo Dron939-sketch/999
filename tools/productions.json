@@ -121,6 +121,14 @@
       "vo": "examples/lektorij/udarenie-proba-VO.md",
       "_montage": "Стенд для ушей: один план на полминуты. Приёмщик режиссуры здесь не о том.",
       "montage": false
+    },
+    {
+      "id": "udarenie-proba2",
+      "desc": "Стенд ударений №2: три минимальные пары в четырёх разметках. Не ролик — дорожку меряет tools/udareniya.py --proba.",
+      "anim": "examples/lektorij/udarenie-proba2.anim",
+      "vo": "examples/lektorij/udarenie-proba2-VO.md",
+      "_montage": "Стенд для измерения: один план, слова через паузу. Приёмщик режиссуры здесь не о том.",
+      "montage": false
     }
   ]
 }

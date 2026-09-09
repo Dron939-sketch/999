@@ -168,7 +168,7 @@ scene "kryshka" (duration: 1.0s, set: kryshka) {
             wait 1.1s
             freeman pose "v_upor"        // «держа́ться» (0.30) — давит крышку
             wait 1.4s
-            freeman pose "puppet_jerk"   // «сорва́лись» (0.70) — рвануло
+            freeman pose "puppet_jerk"   // «сорвали́сь» (0.70) — рвануло
             camera medium freeman
             wait 0.9s
         }
