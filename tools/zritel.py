@@ -10,11 +10,13 @@ zritel.py — ЗРИТЕЛЬНЫЙ ЗАЛ: смотровой лист для п
 
 Этот инструмент НЕ СУДИТ. Он готовит то, по чему судят:
 
-  * кадр на каждую реплику — чтобы смотреть, а не вспоминать. Кадры берутся
-    по тайм-кодам ИЗ VO-таблицы, а она отстаёт от свежей сборки на длину
-    расхождения синтеза: если таблицу не переснимали, кадр может уехать на
-    полсекунды и попасть в соседний план. Для разговора о содержании этого
-    хватает; для разговора о монтаже — переснять таблицу `animdsl timing`;
+  * кадр на каждую реплику — чтобы смотреть, а не вспоминать. Границы реплик
+    МЕРЯЮТСЯ ПО ЗВУКУ собранного ролика (паузы между репликами), а не берутся
+    из VO-таблицы. Так вышло не от любви к точности: на «Гневе» таблица
+    считала 53.6с, живая сборка шла 49.96с, и лист показывал кадры на чужих
+    словах — реплику про дверь иллюстрировала кухня. Зал по такому листу судит
+    не тот ролик. Если пауз найдено не столько, сколько реплик, инструмент
+    честно говорит об этом и откатывается на тайм-коды таблицы;
   * дорожку текста с тайм-кодами;
   * факты, которые можно проверить счётом, а не вкусом (см. ниже).
 
@@ -138,18 +140,132 @@ def facts(pid):
     return out, rows
 
 
-def sheet(pid, rows, dst):
+def pauzy_zvuka(zvuk, porog="-40dB", dlit=0.28):
+    """Все паузы в дорожке: [(нача́ло, коне́ц), …] по silencedetect."""
+    out = subprocess.run(
+        ["ffmpeg", "-v", "info", "-i", str(zvuk), "-af",
+         f"silencedetect=noise={porog}:d={dlit}", "-f", "null", "-"],
+        capture_output=True, text=True).stderr
+    pauzy, nachalo = [], None
+    for m in re.finditer(r"silence_(start|end): *(-?[0-9.]+)", out):
+        if m.group(1) == "start":
+            nachalo = float(m.group(2))
+        elif nachalo is not None:
+            pauzy.append((nachalo, float(m.group(2))))
+            nachalo = None
+    return pauzy
+
+
+def deklarirovannye(anim, engine):
+    """Тайм-коды реплик, как их СЧИТАЕТ ДВИЖОК по .anim: [(start, end), …]."""
+    if not Path(anim).exists() or not Path(engine).exists():
+        return None
+    r = subprocess.run([str(engine), "timing", str(anim)],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return None
+    try:
+        d = json.loads(r.stdout)
+    except json.JSONDecodeError:
+        return None
+    return [(b["start"], b["end"]) for b in d.get("blocks", [])]
+
+
+def granicy_replik(zvuk, deklar):
+    """Границы реплик в СОБРАННОМ ролике: [(нача́ло, коне́ц), …].
+
+    ПОЧЕМУ НЕ ПРОСТО «САМЫЕ ДЛИННЫЕ ПАУЗЫ». Пробовали: не работает. В «Гневе»
+    пауза внутри реплики («Ну-у-у… здравствуйте») длиннее, чем шов между
+    четвёртой и пятой, и восемь самых длинных тишин дают не те восемь швов.
+    Порогом это тоже не лечится — длины перекрываются.
+
+    Работает связка: движок знает, СКОЛЬКО реплик и в каком порядке
+    (`animdsl timing` по .anim), звук знает, ГДЕ на самом деле паузы. Ставим
+    объявленные швы на измеренный отрезок речи пропорционально и притягиваем
+    каждый к ближайшей найденной паузе, слева направо и без повторов.
+
+    None — если притянуть не удалось. Лучше сказать «не смог», чем нарезать
+    лист по чужим секундам: зал по такому листу судит не тот ролик.
+    """
+    if not deklar or len(deklar) < 2:
+        return None
+    pauzy = pauzy_zvuka(zvuk)
+    if not pauzy:
+        return None
+    dlina = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+                            "format=duration", "-of", "csv=p=0", str(zvuk)],
+                           capture_output=True, text=True).stdout.strip()
+    if not dlina:
+        return None
+    konec_fajla = float(dlina)
+
+    # Отрезок реальной речи: от конца головной тишины до начала хвостовой.
+    rech_ot = pauzy[0][1] if pauzy[0][0] < 0.3 else 0.0
+    rech_do = konec_fajla
+    if pauzy[-1][1] > konec_fajla - 0.3:
+        rech_do = pauzy[-1][0]
+    vnutri = [p for p in pauzy if p[0] > rech_ot + 0.05 and p[1] < rech_do - 0.05]
+    if len(vnutri) < len(deklar) - 1:
+        return None
+
+    dek_ot, dek_do = deklar[0][0], deklar[-1][1]
+    if dek_do <= dek_ot:
+        return None
+    k = (rech_do - rech_ot) / (dek_do - dek_ot)
+
+    shvy, zanyato = [], set()
+    for i in range(len(deklar) - 1):
+        seredina = (deklar[i][1] + deklar[i + 1][0]) / 2
+        cel = rech_ot + (seredina - dek_ot) * k
+        kand = [(abs((p[0] + p[1]) / 2 - cel), j) for j, p in enumerate(vnutri)
+                if j not in zanyato and (not shvy or p[0] > shvy[-1][1])]
+        if not kand:
+            return None
+        j = min(kand)[1]
+        zanyato.add(j)
+        shvy.append(vnutri[j])
+
+    granicy, t = [], rech_ot
+    for a, b in shvy:
+        granicy.append((t, a))
+        t = b
+    granicy.append((t, rech_do))
+    return granicy
+
+
+def sheet(pid, rows, dst, engine=None):
     """Кадр на каждую реплику: зал смотрит, а не вспоминает."""
     mp4 = ROOT / "videos" / f"{pid}-final.mp4"
     if not mp4.exists():
         return None
     tmp = Path(dst).parent / f".{pid}-frames"
     tmp.mkdir(parents=True, exist_ok=True)
+    # 0.62 длины реплики: на первой трети персонаж ещё доигрывает предыдущий
+    # жест, на последней уже уходит в следующий план.
+    #
+    # Мерить лучше по голосовой дорожке: в финальном миксе есть подложка и
+    # шум плёнки, и тишины между репликами там уже не тишины. Порядок и число
+    # реплик берутся у движка по .anim, места пауз — из дорожки.
+    p = prod(pid)
+    anim = ROOT / p["anim"]
+    prepped = anim.with_name(f".{anim.stem}.lipsynced.anim")
+    engine = Path(engine or os.environ.get("ANIMDSL")
+                  or ROOT / "target" / "release" / "animdsl")
+    deklar = deklarirovannye(prepped if prepped.exists() else anim, engine)
+    golos = ROOT / "videos" / f"{pid}-voice.mp3"
+    granicy = granicy_replik(golos if golos.exists() else mp4, deklar)
+    print("  границы реплик: измерены по дорожке" if granicy else
+          "  границы реплик: ПО VO-ТАБЛИЦЕ — швы не притянулись, кадры могут "
+          "уехать на соседний план")
     files = []
     for i, r in enumerate(rows, 1):
-        t0 = L.first_time(r["time"]) or 0
+        if granicy:
+            a, b = granicy[i - 1]
+            t0 = a + 0.62 * (b - a)
+        else:
+            t0 = (L.first_time(r["time"]) or 0) + 0.9
         f = tmp / f"{i:02d}.png"
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(t0 + 0.9),
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(round(t0, 2)),
                         "-i", str(mp4), "-frames:v", "1", "-vf", "scale=420:-1",
                         str(f)], check=True)
         files.append(f)
