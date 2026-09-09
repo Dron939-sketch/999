@@ -105,7 +105,20 @@
       "desc": "Подводка к курсу «Гнев и агрессия»: держаться — не стратегия, а причина срыва. Рифма кухня вечером ↔ та же кухня утром. 10 лекций, ~2,3 часа.",
       "anim": "examples/lektorij/gnev-intro.anim",
       "vo": "examples/lektorij/gnev-intro-VO.md",
-      "images": [],
+      "images": [
+        {
+          "out": "examples/assets/sets/src/gnev-kryshka.png",
+          "wrap_svg": "examples/assets/sets/gnev-kryshka-gen.svg",
+          "size": "1920x1080",
+          "prompt": "a huge battered cooking pot with a thick black outline standing on a squat dark grey gas stove in the right half of an empty kitchen, the pot taller than a man's waist, two heavy side handles, its flat lid lying loose and slightly askew on top with nothing on it, six flat black flame tongues licking up the front face of the stove, three thick jets of steam forcing their way out from under the lid and bending in the air, a scorched wall behind, the left third of the frame completely empty floor. hand-drawn 2D cartoon in the style of Mr. Freeman, thick wobbly hand-inked black outlines, flat light-gray paper background, stark high-contrast black and white, no gradients, no soft shading, flat fills only, three or four tonal planes separated by black contour, graphic and minimal, five strong black shapes rather than fifty small ones, no text or lettering anywhere, floor line at 84% of the image height, empty space left free for a character to stand in, 16:9"
+        },
+        {
+          "out": "examples/assets/sets/src/gnev-dver.png",
+          "wrap_svg": "examples/assets/sets/gnev-dver-gen.svg",
+          "size": "1920x1080",
+          "prompt": "a narrow apartment hallway at night, on the right a massive black door frame with the door itself absent, showing a tall bright rectangle of light from the room beyond, a small child sitting on the floor inside that lit rectangle seen in profile, knees pulled up, arms around them, head lowered; on the left wall a coat rack with three hooks, a small child's jacket hanging on the far hook and the two near hooks empty; a toy brick lying on the floor between the rack and the door, the middle of the frame empty floor. hand-drawn 2D cartoon in the style of Mr. Freeman, thick wobbly hand-inked black outlines, flat light-gray paper background, stark high-contrast black and white, no gradients, no soft shading, flat fills only, three or four tonal planes separated by black contour, graphic and minimal, five strong black shapes rather than fifty small ones, no text or lettering anywhere, floor line at 84% of the image height, empty space left free for a character to stand in, 16:9"
+        }
+      ],
       "allow_latin": true
     },
     {

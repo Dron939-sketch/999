@@ -98,6 +98,13 @@ def facts(pid):
                            capture_output=True, text=True).stdout.strip()
         out["длина, с"] = round(float(d), 1) if d else None
 
+    if mp4.exists():
+        zh = zhivost(mp4)
+        if zh:
+            dolya, dlina, nachalo = zh
+            out["в кадре только рот"] = (
+                f"{dolya:.0%} времени; дольше всего {dlina:.1f}с с {nachalo:.1f}с")
+
     out["первое слово, с"] = L.first_time(rows[0]["time"]) if rows else None
     for beat, name in (("ХУК", "хук, с"), ("РАЗВОРОТ", "разворот, с"), ("ЖАЛО", "жало, с")):
         r = next((r for r in rows if beat in r["beat"].upper()), None)
@@ -138,6 +145,56 @@ def facts(pid):
     out["реплик с «вы/ты»"] = sum(1 for r in rows if L.ADDRESS.search(r["text"]))
     out["вопросов к зрителю"] = text.count("?")
     return out, rows
+
+
+def zhivost(mp4, fps=8, porog_ploshchadi=0.02):
+    """Сколько времени в кадре не происходит ничего, кроме рта.
+
+    ЗАЧЕМ. «Не интересно смотреть» — приговор, который приёмщики завода не
+    выносят: сверхкруп и смена крупности зелёные и у ролика, где пятьдесят
+    секунд говорящая голова стоит перед нарисованным задником. Зрителю №7
+    («видел лучше») нужен ответ на вопрос «на какой секунде картинка перестала
+    меняться», и это число можно посчитать.
+
+    КАК. Кадр уменьшается до 160×90 и переводится в серое; берётся доля
+    пикселей, изменившихся СИЛЬНО (больше 40 из 255) по сравнению с предыдущим
+    кадром. Порог по амплитуде отсекает зерно плёнки и снег — они меняют
+    каждый пиксель, но чуть-чуть. Остаётся настоящее движение, и меряется его
+    ПЛОЩАДЬ: если меняется меньше 2% кадра, значит шевелится один рот.
+
+    Возвращает (доля мелкой жизни, самый долгий такой кусок в секундах, его
+    начало). Числа грубые: они не отличают хорошую сцену от плохой, они
+    отличают сцену, где что-то происходит, от сцены, где ничего.
+    """
+    try:
+        raw = subprocess.run(
+            ["ffmpeg", "-v", "error", "-i", str(mp4), "-vf",
+             f"fps={fps},scale=160:90,format=gray", "-f", "rawvideo", "-"],
+            capture_output=True, check=True).stdout
+    except (subprocess.CalledProcessError, OSError):
+        return None
+    try:
+        import numpy as np
+    except ImportError:
+        return None
+    a = np.frombuffer(raw, dtype=np.uint8)
+    n = len(a) // (160 * 90)
+    if n < 3:
+        return None
+    a = a[:n * 160 * 90].reshape(n, 90, 160).astype(np.int16)
+    dolya = (np.abs(np.diff(a, axis=0)) > 40).mean(axis=(1, 2))
+    tiho = dolya < porog_ploshchadi
+    best = cur = start = bstart = 0
+    for i, s in enumerate(tiho):
+        if s:
+            if cur == 0:
+                start = i
+            cur += 1
+            if cur > best:
+                best, bstart = cur, start
+        else:
+            cur = 0
+    return float(tiho.mean()), best / fps, bstart / fps
 
 
 def pauzy_zvuka(zvuk, porog="-40dB", dlit=0.28):

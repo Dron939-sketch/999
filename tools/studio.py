@@ -34,6 +34,7 @@ import io
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from contextlib import redirect_stdout
@@ -105,6 +106,19 @@ def step_images(prod, out_dir):
                 log(f"  [художник] не смог сделать сет {img['wrap_svg']}: {e}")
         elif dst.exists():
             log(f"  [картинки] уже есть: {img['out']} — пропуск.")
+
+        # СГЕНЕРЁННОЕ НАДО УВИДЕТЬ. Художник пишет картинки в дерево репозитория,
+        # а раннер после сборки исчезает вместе с ним: в релиз уходят только
+        # videos/*. Локация, нарисованная генератором, оказывалась невидимой —
+        # ни принять, ни отбраковать её было нельзя, и «слабые локации»
+        # чинились вслепую. Поэтому копия каждой объявленной картинки ложится
+        # в videos/ под именем продакшена и уезжает в релиз вместе с роликом.
+        if dst.exists():
+            try:
+                out_dir.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(dst, out_dir / f"{prod['id']}-{dst.name}")
+            except OSError as e:                              # noqa: BLE001
+                log(f"  [картинки] не смог положить {dst.name} в релиз: {e}")
 
 
 # ВЕРТИКАЛЬНЫЙ ФОРМАТ — ВТОРОЙ КАДР, А НЕ ОБРЕЗКА. Ролики живут в двух местах:

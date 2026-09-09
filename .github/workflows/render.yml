@@ -269,7 +269,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           shopt -s nullglob
-          assets=(videos/*.mp4 videos/*.mp3)
+          # *.png — картинки художника: сгенерённая локация обязана
+          # быть видна, иначе её нельзя ни принять, ни отбраковать.
+          assets=(videos/*.mp4 videos/*.mp3 videos/*.png)
           if [ ${#assets[@]} -eq 0 ]; then
             echo "Нет готовых роликов — заливать нечего."
             exit 0
