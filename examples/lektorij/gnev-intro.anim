@@ -328,6 +328,11 @@ scene "utro" (duration: 1.0s, set: utro) {
 
     place freeman at (0.13, 0.585) facing front
     freeman scales 0.80 over 0.01s
+    // Пар над кружками: восемь секунд взлёта были самым мёртвым местом ролика
+    // (зал, раунд 5). Высота пропа 90px → scales 0.42 из 216 базовых.
+    let par = prop("par", "../assets/props/gnev-par.svg") at (0.556, 0.415)
+    par scales 0.42 over 0.01s
+    par fades-to 0.0 over 0.01s
 
     camera wide
     together {
@@ -354,7 +359,18 @@ scene "utro" (duration: 1.0s, set: utro) {
             wait 3.4s
             freeman pose "raskryl"       // «пойма́ете сигна́л» (0.70) — раскрылся
             camera medium freeman
-            wait 1.6s
+            wait 1.0s
+            camera wide                  // воздух перед жалом и седьмая крупность
+            wait 0.6s
+        }
+        do {
+            par fades-to 0.85 over 0.5s
+            par moves-to (0.556, 0.325) over 3.0s
+            par fades-to 0.0 over 0.6s
+            par moves-to (0.556, 0.415) over 0.01s
+            par fades-to 0.8 over 0.5s
+            par moves-to (0.556, 0.330) over 2.8s
+            par fades-to 0.0 over 0.6s
         }
     }
     wait 0.3s
@@ -367,16 +383,28 @@ scene "utro" (duration: 1.0s, set: utro) {
 scene "pustota-final" (duration: 1.0s, set: pustota) {
     transition static 0.22s
 
-    place freeman at (0.5, 0.585) facing front
+    place freeman at (0.40, 0.585) facing front
     freeman scales 0.80 over 0.01s
 
-    freeman pose "lunge"
+    // Шов утро → пустота был вторым мёртвым местом (зал, раунд 5): картинка
+    // менялась, а движения в ней не было. Теперь он ВЫХОДИТ на своё место.
+    camera medium freeman
+    together {
+        freeman moves-to (0.5, 0.585) over 0.9s ease-out
+        do {
+            freeman pose "shag_levoj"
+            wait 0.3s
+            freeman pose "shag_pravoj"
+            wait 0.3s
+            freeman pose "lunge"
+            wait 0.3s
+        }
+    }
     //lip 9
     together {
         freeman speaks for 5.6s
         freeman scales 0.88 over 5.5s ease-in-out                 // подходит к зрителю
         do {
-            camera medium freeman
             wait 3.1s
             freeman pose "point"         // «На ко́м» (0.55) — палец в зрителя
             wait 1.5s
