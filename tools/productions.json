@@ -30,7 +30,8 @@
       "id": "prison-intro",
       "desc": "Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото). Три речевых удара, синхрон по //lip.",
       "anim": "examples/lektorij/prison-intro.anim",
-      "vo": "examples/lektorij/prison-intro-VO.md"
+      "vo": "examples/lektorij/prison-intro-VO.md",
+      "allow_latin": true
     },
     {
       "id": "fredi-expressions",
@@ -48,56 +49,64 @@
       "id": "snova-zhivoj-intro",
       "desc": "Подводка к курсу «Снова живой»: выключенный человек — дышит, но не живёт. Пустое поле (канон), персонаж по SIMILARITY, режиссура по HOLLYWOOD.",
       "anim": "examples/lektorij/snova-zhivoj-intro.anim",
-      "vo": "examples/lektorij/snova-zhivoj-intro-VO.md"
+      "vo": "examples/lektorij/snova-zhivoj-intro-VO.md",
+      "allow_latin": true
     },
     {
       "id": "teorii-lichnosti-intro",
       "desc": "Подводка к курсу «Теории личности»: чужие очки садятся на маску в первые 3 секунды и слетают на взлёте. 13 лекций — 20 линз.",
       "anim": "examples/lektorij/teorii-lichnosti-intro.anim",
       "vo": "examples/lektorij/teorii-lichnosti-intro-VO.md",
-      "images": []
+      "images": [],
+      "allow_latin": true
     },
     {
       "id": "myshlenie-intro",
       "desc": "Подводка к курсу «Мышление и когнитивные искажения»: за тебя решили за полсекунды. 10 лекций, Канеман и Тверски.",
       "anim": "examples/lektorij/myshlenie-intro.anim",
       "vo": "examples/lektorij/myshlenie-intro-VO.md",
-      "images": []
+      "images": [],
+      "allow_latin": true
     },
     {
       "id": "istoriya-idej-intro",
       "desc": "Подводка к курсу «История идей»: у каждой мысли есть год выпуска и владелец до тебя. Даты впечатываются за спиной и осыпаются на взлёте. 10 лекций, ~4 часа.",
       "anim": "examples/lektorij/istoriya-idej-intro.anim",
       "vo": "examples/lektorij/istoriya-idej-intro-VO.md",
-      "images": []
+      "images": [],
+      "allow_latin": true
     },
     {
       "id": "samoocenka-intro",
       "desc": "Подводка к курсу «Самооценка и уверенность»: высокая самооценка как плита на десяти подпорках. Рифма пьедестал ↔ вросший камень на одной высоте. 10 лекций, ~2,6 часа.",
       "anim": "examples/lektorij/samoocenka-intro.anim",
       "vo": "examples/lektorij/samoocenka-intro-VO.md",
-      "images": []
+      "images": [],
+      "allow_latin": true
     },
     {
       "id": "svoe-delo-intro",
       "desc": "Подводка к курсу «Своё дело с нуля»: идея, которую берегут, не может провалиться — и никогда не станет делом. Рифма сейф ↔ стол с первым клиентом. 10 лекций, ~2,3 часа.",
       "anim": "examples/lektorij/svoe-delo-intro.anim",
       "vo": "examples/lektorij/svoe-delo-intro-VO.md",
-      "images": []
+      "images": [],
+      "allow_latin": true
     },
     {
       "id": "filosofiya-intro",
       "desc": "Подводка к курсу «Философия»: готовые ответы — как бумажки из автомата; своя голова, а мысль в ней чужая. Рифма автомат ↔ чистый лист на столе. 10 лекций, ~2,9 часа.",
       "anim": "examples/lektorij/filosofiya-intro.anim",
       "vo": "examples/lektorij/filosofiya-intro-VO.md",
-      "images": []
+      "images": [],
+      "allow_latin": true
     },
     {
       "id": "gnev-intro",
       "desc": "Подводка к курсу «Гнев и агрессия»: держаться — не стратегия, а причина срыва. Рифма кухня вечером ↔ та же кухня утром. 10 лекций, ~2,3 часа.",
       "anim": "examples/lektorij/gnev-intro.anim",
       "vo": "examples/lektorij/gnev-intro-VO.md",
-      "images": []
+      "images": [],
+      "allow_latin": true
     },
     {
       "id": "proba-15s",

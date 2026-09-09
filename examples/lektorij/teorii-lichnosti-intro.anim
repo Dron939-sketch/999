@@ -429,7 +429,7 @@ scene "titry" (duration: 6s, set: titry) {
     stamp hides
     wait 1.2s
 
-    stamp moves-to (0.5, 0.80) over 0.01s
+    stamp moves-to (0.5, 0.66) over 0.01s
     stamp shows
     stamp scales 2.6 over 0.01s
     stamp rotates -7 over 0.01s
