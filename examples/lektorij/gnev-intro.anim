@@ -237,7 +237,7 @@ scene "kryshka" (duration: 1.0s, set: kryshka) {
         }
         do {
             wait 3.2s
-            kamen moves-to (0.695, 0.185) over 0.45s ease-out     // камень снят
+            kamen moves-to (0.695, 0.215) over 0.45s ease-out     // камень снят
             wait 0.85s
             kamen moves-to (0.695, 0.300) over 0.14s ease-in      // рухнул обратно
         }
