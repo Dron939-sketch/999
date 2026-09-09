@@ -914,6 +914,43 @@ def lint_udareniya(prod):
     return hard, soft
 
 
+def lint_zhivost(prod, final_mp4):
+    """Приёмщик ЖИВОСТИ: в кадре шевелится один рот. (hard, soft).
+
+    «Не интересно смотреть» — приговор, которого не выносил ни один приёмщик.
+    Сверхкруп и смена крупности бывают зелёными и у ролика, где полсотни секунд
+    говорящая голова стоит перед нарисованным задником: каты есть, крупности
+    меняются, а НА ЭКРАНЕ НЕ ПРОИСХОДИТ НИЧЕГО. Так и вышел «Гнев» первой
+    сборки: 46% времени в кадре менялось меньше 2% площади, и самый долгий
+    такой кусок длился три секунды.
+
+    Считает `zritel.zhivost`: доля пикселей, изменившихся СИЛЬНО (порог по
+    амплитуде отсекает зерно и снег — они красят весь кадр, но чуть-чуть).
+    Меньше 2% площади — значит двигается только рот.
+
+    Soft: это режиссура, а не брак сборки. Но молчать об этом больше нельзя.
+    """
+    if not Path(final_mp4).exists():
+        return [], []
+    try:
+        sys.path.insert(0, str(TOOLS))
+        from zritel import zhivost                             # noqa: E402
+        z = zhivost(Path(final_mp4))
+    except Exception:                                          # noqa: BLE001
+        return [], []
+    if not z:
+        return [], []
+    dolya, dlina, nachalo = z
+    soft = []
+    if dolya > 0.35:
+        soft.append(f"{prod['id']}: {dolya:.0%} времени в кадре двигается один "
+                    f"рот (цель <= 35%) — второй план ничего не играет")
+    if dlina > 2.0:
+        soft.append(f"{prod['id']}: {dlina:.1f}с подряд без движения с "
+                    f"{nachalo:.1f}с (цель <= 2.0с) — здесь зритель уходит")
+    return [], soft
+
+
 def lint_dlina(prod, final_mp4):
     """Приёмщик ДЛИНЫ: ролик длиннее потолка. (hard, soft)."""
     if not Path(final_mp4).exists() or not have_ffmpeg():
@@ -1284,6 +1321,9 @@ def build_one(prod, engine, videos_dir, voice_expected=False):
     dh, ds = lint_dlina(prod, final_mp4)          # приёмщик длины
     hard += dh
     soft += ds
+    zh, zs = lint_zhivost(prod, final_mp4)        # приёмщик живости кадра
+    hard += zh
+    soft += zs
 
     # Планка Фримена: на эталонных продакшенах (флаг "planka") гоняем машинные
     # метрики Рубежа 2 — средняя длина плана / скорость рендера / golden-frame /
