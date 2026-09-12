@@ -1,0 +1,41 @@
+{
+ "ref": null,
+ "videos": [
+  {
+   "file": "Mr. Freeman, part 00 - Mr. Freeman (Русский) (720p).mp4",
+   "duration": 177.7,
+   "shots": 128,
+   "shots_min": 43.2,
+   "shot_len_mean": 1.39,
+   "shot_len_p50": 1.12,
+   "flash_share": 0.2,
+   "long_share": 0.0,
+   "scale_wide": 0.06,
+   "scale_medium": 0.2,
+   "scale_close": 0.48,
+   "scale_ecu": 0.26,
+   "scale_var": 0.197,
+   "scale_jump": 0.6,
+   "off_center": 0.28,
+   "churn": 0.16
+  },
+  {
+   "file": "_9 октября 2024.mp4",
+   "duration": 53.6,
+   "shots": 27,
+   "shots_min": 30.2,
+   "shot_len_mean": 1.98,
+   "shot_len_p50": 0.96,
+   "flash_share": 0.15,
+   "long_share": 0.32,
+   "scale_wide": 0.11,
+   "scale_medium": 0.35,
+   "scale_close": 0.34,
+   "scale_ecu": 0.2,
+   "scale_var": 0.203,
+   "scale_jump": 0.5,
+   "off_center": 0.16,
+   "churn": 0.07
+  }
+ ]
+}

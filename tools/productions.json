@@ -1,66 +1,146 @@
 {
- "_comment": "Манифест завода Лектория. Каждый продакшен → готовый ролик в videos/. Поля: id (имя файлов), anim (сценарий движка), vo (VO-сценарий для Fish Audio, опц.), images (картинки для генерации Nano Banana, опц.), planka (эталон: гнать метрики Рубежа 2 через tools/qc_metrics.py, голдены в tests/golden/<id>). studio.py прогоняет: картинки → рендер → озвучка → сведение → (для planka) метрики.",
- "productions": [
-  {
-   "id": "etalon-15s",
-   "desc": "Эталон планки Фримена: контрольный 15-сек кусок для машинных метрик Рубежа 2 (длина плана/скорость/golden-frame/громкость). Не витрина — измеритель.",
-   "anim": "examples/lektorij/etalon-15s.anim",
-   "planka": true
-  },
-  {
-   "id": "pereproshivka-intro",
-   "desc": "Подводка к курсу «Перепрошивка»: камера-хук, книга, оживающая картинка",
-   "anim": "examples/lektorij/pereproshivka-intro.anim",
-   "vo": "examples/lektorij/pereproshivka-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "biznes-myshlenie-intro",
-   "desc": "Подводка к курсу «Бизнес-мышление»: толпа обходит красную «проблему», Фримен поднимает — это куш. Оптика. Свет/тень + ракурсы.",
-   "anim": "examples/lektorij/biznes-myshlenie-intro.anim",
-   "vo": "examples/lektorij/biznes-myshlenie-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "freeman-monologue",
-   "desc": "Мистер Фримен: монолог в камеру (витрина стиля)",
-   "anim": "examples/freeman-monologue.anim"
-  },
-  {
-   "id": "prison-intro",
-   "desc": "Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото). Три речевых удара, синхрон по //lip.",
-   "anim": "examples/lektorij/prison-intro.anim",
-   "vo": "examples/lektorij/prison-intro-VO.md"
-  },
-  {
-   "id": "fredi-expressions",
-   "desc": "Фреди: библиотека мимики",
-   "anim": "examples/lektorij/fredi-expressions-demo.anim"
-  },
-  {
-   "id": "lekciya-2-frejd",
-   "desc": "Пилот лекции (Фрейд, курс «Теории личности»)",
-   "anim": "examples/lektorij/lekciya-2-frejd-psihodinamika.anim"
-  },
-  {
-   "id": "snova-zhivoj-intro",
-   "desc": "Подводка к курсу «Снова живой»: выключенный человек — дышит, но не живёт. Пустое поле (канон), персонаж по SIMILARITY, режиссура по HOLLYWOOD.",
-   "anim": "examples/lektorij/snova-zhivoj-intro.anim",
-   "vo": "examples/lektorij/snova-zhivoj-intro-VO.md"
-  },
-  {
-   "id": "teorii-lichnosti-intro",
-   "desc": "Подводка к курсу «Теории личности»: чужие очки садятся на маску в первые 3 секунды и слетают на взлёте. 13 лекций — 20 линз.",
-   "anim": "examples/lektorij/teorii-lichnosti-intro.anim",
-   "vo": "examples/lektorij/teorii-lichnosti-intro-VO.md",
-   "images": []
-  },
-  {
-   "id": "myshlenie-intro",
-   "desc": "Подводка к курсу «Мышление и когнитивные искажения»: за тебя решили за полсекунды. 10 лекций, Канеман и Тверски.",
-   "anim": "examples/lektorij/myshlenie-intro.anim",
-   "vo": "examples/lektorij/myshlenie-intro-VO.md",
-   "images": []
-  }
- ]
+  "_comment": "Манифест завода Лектория. Каждый продакшен → готовый ролик в videos/. Поля: id (имя файлов), anim (сценарий движка), vo (VO-сценарий для Fish Audio, опц.), images (картинки для генерации Nano Banana, опц.), planka (эталон: гнать метрики Рубежа 2 через tools/qc_metrics.py, голдены в tests/golden/<id>). studio.py прогоняет: картинки → рендер → озвучка → сведение → (для planka) метрики.",
+  "productions": [
+    {
+      "id": "etalon-15s",
+      "desc": "Эталон планки Фримена: контрольный 15-сек кусок для машинных метрик Рубежа 2 (длина плана/скорость/golden-frame/громкость). Не витрина — измеритель.",
+      "anim": "examples/lektorij/etalon-15s.anim",
+      "planka": true
+    },
+    {
+      "id": "pereproshivka-intro",
+      "desc": "Подводка к курсу «Перепрошивка»: камера-хук, книга, оживающая картинка",
+      "anim": "examples/lektorij/pereproshivka-intro.anim",
+      "vo": "examples/lektorij/pereproshivka-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "biznes-myshlenie-intro",
+      "desc": "Подводка к курсу «Бизнес-мышление»: толпа обходит красную «проблему», Фримен поднимает — это куш. Оптика. Свет/тень + ракурсы.",
+      "anim": "examples/lektorij/biznes-myshlenie-intro.anim",
+      "vo": "examples/lektorij/biznes-myshlenie-intro-VO.md",
+      "images": []
+    },
+    {
+      "id": "freeman-monologue",
+      "desc": "Мистер Фримен: монолог в камеру (витрина стиля)",
+      "anim": "examples/freeman-monologue.anim"
+    },
+    {
+      "id": "prison-intro",
+      "desc": "Тюрьма ума: Фример в нарисованной камере (flat-ink локация, не фото). Три речевых удара, синхрон по //lip.",
+      "anim": "examples/lektorij/prison-intro.anim",
+      "vo": "examples/lektorij/prison-intro-VO.md",
+      "allow_latin": true
+    },
+    {
+      "id": "fredi-expressions",
+      "desc": "Фреди: библиотека мимики",
+      "anim": "examples/lektorij/fredi-expressions-demo.anim",
+      "_montage": "Витрина лиц, а не ролик: один портретный план на все 28 секунд — это её назначение. Приёмщик режиссуры (сверхкруп, смена крупности) здесь меряет не то и всегда красный.",
+      "montage": false
+    },
+    {
+      "id": "lekciya-2-frejd",
+      "desc": "Пилот лекции (Фрейд, курс «Теории личности»)",
+      "anim": "examples/lektorij/lekciya-2-frejd-psihodinamika.anim"
+    },
+    {
+      "id": "snova-zhivoj-intro",
+      "desc": "Подводка к курсу «Снова живой»: выключенный человек — дышит, но не живёт. Пустое поле (канон), персонаж по SIMILARITY, режиссура по HOLLYWOOD.",
+      "anim": "examples/lektorij/snova-zhivoj-intro.anim",
+      "vo": "examples/lektorij/snova-zhivoj-intro-VO.md",
+      "allow_latin": true
+    },
+    {
+      "id": "teorii-lichnosti-intro",
+      "desc": "Подводка к курсу «Теории личности»: чужие очки садятся на маску в первые 3 секунды и слетают на взлёте. 13 лекций — 20 линз.",
+      "anim": "examples/lektorij/teorii-lichnosti-intro.anim",
+      "vo": "examples/lektorij/teorii-lichnosti-intro-VO.md",
+      "images": [],
+      "allow_latin": true
+    },
+    {
+      "id": "myshlenie-intro",
+      "desc": "Подводка к курсу «Мышление и когнитивные искажения»: ошибка одна, одежда разная — вчера ценник, сегодня спор, завтра «я знал». Холодный старт: фокус с ценником показывается на зрителе. 10 лекций, ~2,7 часа.",
+      "anim": "examples/lektorij/myshlenie-intro.anim",
+      "vo": "examples/lektorij/myshlenie-intro-VO.md",
+      "allow_latin": true
+    },
+    {
+      "id": "istoriya-idej-intro",
+      "desc": "Подводка к курсу «История идей»: у каждой мысли есть год выпуска и владелец до тебя. Даты впечатываются за спиной и осыпаются на взлёте. 10 лекций, ~4 часа.",
+      "anim": "examples/lektorij/istoriya-idej-intro.anim",
+      "vo": "examples/lektorij/istoriya-idej-intro-VO.md",
+      "images": [],
+      "allow_latin": true
+    },
+    {
+      "id": "samoocenka-intro",
+      "desc": "Подводка к курсу «Самооценка и уверенность»: высокая самооценка как плита на десяти подпорках. Рифма пьедестал ↔ вросший камень на одной высоте. 10 лекций, ~2,6 часа.",
+      "anim": "examples/lektorij/samoocenka-intro.anim",
+      "vo": "examples/lektorij/samoocenka-intro-VO.md",
+      "images": [],
+      "allow_latin": true
+    },
+    {
+      "id": "svoe-delo-intro",
+      "desc": "Подводка к курсу «Своё дело с нуля»: идея, которую берегут, не может провалиться — и никогда не станет делом. Рифма сейф ↔ стол с первым клиентом. 10 лекций, ~2,3 часа.",
+      "anim": "examples/lektorij/svoe-delo-intro.anim",
+      "vo": "examples/lektorij/svoe-delo-intro-VO.md",
+      "images": [],
+      "allow_latin": true
+    },
+    {
+      "id": "filosofiya-intro",
+      "desc": "Подводка к курсу «Философия»: готовые ответы — как бумажки из автомата; своя голова, а мысль в ней чужая. Рифма автомат ↔ чистый лист на столе. 10 лекций, ~2,9 часа.",
+      "anim": "examples/lektorij/filosofiya-intro.anim",
+      "vo": "examples/lektorij/filosofiya-intro-VO.md",
+      "images": [],
+      "allow_latin": true
+    },
+    {
+      "id": "gnev-intro",
+      "desc": "Подводка к курсу «Гнев и агрессия»: держаться — не стратегия, а причина срыва. Рифма кухня вечером ↔ та же кухня утром. 10 лекций, ~2,3 часа.",
+      "anim": "examples/lektorij/gnev-intro.anim",
+      "vo": "examples/lektorij/gnev-intro-VO.md",
+      "images": [
+        {
+          "out": "examples/assets/sets/src/gnev-kryshka.png",
+          "wrap_svg": "examples/assets/sets/gnev-kryshka-gen.svg",
+          "size": "1920x1080",
+          "prompt": "a huge battered cooking pot with a thick black outline standing on a squat dark grey gas stove in the right half of an empty kitchen, the pot taller than a man's waist, two heavy side handles, its flat lid lying loose and slightly askew on top with nothing on it, six flat black flame tongues licking up the front face of the stove, three thick jets of steam forcing their way out from under the lid and bending in the air, a scorched wall behind, the left third of the frame completely empty floor. hand-drawn 2D cartoon in the style of Mr. Freeman, thick wobbly hand-inked black outlines, flat light-gray paper background, stark high-contrast black and white, no gradients, no soft shading, flat fills only, three or four tonal planes separated by black contour, graphic and minimal, five strong black shapes rather than fifty small ones, no text or lettering anywhere, floor line at 84% of the image height, empty space left free for a character to stand in, 16:9"
+        },
+        {
+          "out": "examples/assets/sets/src/gnev-dver.png",
+          "wrap_svg": "examples/assets/sets/gnev-dver-gen.svg",
+          "size": "1920x1080",
+          "prompt": "a narrow apartment hallway at night, on the right a massive black door frame with the door itself absent, showing a tall bright rectangle of light from the room beyond, a small child sitting on the floor inside that lit rectangle seen in profile, knees pulled up, arms around them, head lowered; on the left wall a coat rack with three hooks, a small child's jacket hanging on the far hook and the two near hooks empty; a toy brick lying on the floor between the rack and the door, the middle of the frame empty floor. hand-drawn 2D cartoon in the style of Mr. Freeman, thick wobbly hand-inked black outlines, flat light-gray paper background, stark high-contrast black and white, no gradients, no soft shading, flat fills only, three or four tonal planes separated by black contour, graphic and minimal, five strong black shapes rather than fifty small ones, no text or lettering anywhere, floor line at 84% of the image height, empty space left free for a character to stand in, 16:9"
+        }
+      ],
+      "allow_latin": true
+    },
+    {
+      "id": "proba-15s",
+      "desc": "Стенд персонажа: 15 секунд на проверку гипотез о пластике и сходстве. Не ролик — верстак (разворот, шаг, удержание жеста, лицо на сверхкрупе, покой).",
+      "anim": "examples/lektorij/proba-15s.anim",
+      "planka": true
+    },
+    {
+      "id": "udarenie-proba",
+      "desc": "Стенд ударений: одна фраза в четырёх разметках голосом Фримена. Не ролик — слушать voice.mp3 из релиза.",
+      "anim": "examples/lektorij/udarenie-proba.anim",
+      "vo": "examples/lektorij/udarenie-proba-VO.md",
+      "_montage": "Стенд для ушей: один план на полминуты. Приёмщик режиссуры здесь не о том.",
+      "montage": false
+    },
+    {
+      "id": "udarenie-proba2",
+      "desc": "Стенд ударений №2: три минимальные пары в четырёх разметках. Не ролик — дорожку меряет tools/udareniya.py --proba.",
+      "anim": "examples/lektorij/udarenie-proba2.anim",
+      "vo": "examples/lektorij/udarenie-proba2-VO.md",
+      "_montage": "Стенд для измерения: один план, слова через паузу. Приёмщик режиссуры здесь не о том.",
+      "montage": false
+    }
+  ]
 }

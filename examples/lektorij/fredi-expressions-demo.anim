@@ -17,7 +17,11 @@ config {
 
 scene "expressions" (duration: 28s, set: paper) {
     place fredi at center facing front
-    camera close-up fredi
+    // Витрине мимики нужен ПОРТРЕТ: лицо на весь кадр, иначе смотреть не на
+    // что. `close-up` теперь показывает фигуру целиком (лестница планов
+    // разведена по размеру, FREEMAN_TARGET §3a) — для ролика про выражения
+    // лица это означало голову в несколько пикселей. Здесь нужен `ecu`.
+    camera extreme-close-up fredi
 
     fredi pose "fredi-calm"
     wait 1.2s

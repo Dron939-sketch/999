@@ -27,6 +27,10 @@ import json
 import os
 import sys
 import urllib.request
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import vectorize
 
 FREEMAN_STYLE = (
     "hand-drawn 2D cartoon in the style of Mr. Freeman, thick wobbly "
@@ -100,17 +104,18 @@ def gen_openai(prompt, api_key, size):
 PROVIDERS = {"gemini": gen_gemini, "openai": gen_openai, "fal": gen_fal}
 
 
-def wrap_in_svg(png_path, svg_path, size):
-    """Оборачивает PNG в SVG-сет (data-URI <image>), чтобы движок его отрендерил."""
-    w, h = (size or "1280x720").split("x")
-    b64 = base64.b64encode(open(png_path, "rb").read()).decode("ascii")
-    svg = (f'<svg xmlns="http://www.w3.org/2000/svg" '
-           f'xmlns:xlink="http://www.w3.org/1999/xlink" '
-           f'viewBox="0 0 {w} {h}" width="{w}" height="{h}">\n'
-           f'  <image x="0" y="0" width="{w}" height="{h}" '
-           f'xlink:href="data:image/png;base64,{b64}"/>\n</svg>\n')
-    with open(svg_path, "w", encoding="utf-8") as f:
-        f.write(svg)
+def wrap_in_svg(png_path, svg_path, size, mode="auto"):
+    """Делает из картинки SVG-сет для движка — обводкой или вставкой.
+
+    Раньше здесь стояла своя копия вставки растром: сгенерённая картинка ВСЕГДА
+    попадала в кадр растром и мылилась на сверхкрупе, а mime был захардкожен
+    как png, хотя провайдер мог вернуть jpeg. Теперь этим занимается художник
+    (`tools/vectorize.py`): рисунок обводится в настоящие пути, фото
+    вставляется, формат берётся по сигнатуре файла. Режим — по замеру, если не
+    задан явно.
+    """
+    w, h = (size or "1280x720").lower().split("x")
+    return vectorize.convert(png_path, svg_path, mode=mode, size=(int(w), int(h)))
 
 
 def main(argv):
@@ -118,7 +123,9 @@ def main(argv):
     ap.add_argument("-o", "--output", required=True, help="куда писать PNG")
     ap.add_argument("--prompt", required=True)
     ap.add_argument("--size", default="1280x720")
-    ap.add_argument("--wrap-svg", help="также обернуть PNG в SVG-сет по этому пути")
+    ap.add_argument("--wrap-svg", help="также сделать из PNG SVG-сет по этому пути")
+    ap.add_argument("--wrap-mode", choices=("auto", "trace", "embed"), default="auto",
+                    help="обводить в вектор, вставить растром или решить замером")
     args = ap.parse_args(argv)
 
     api_key = os.environ.get("IMAGE_API_KEY")
@@ -137,8 +144,8 @@ def main(argv):
         f.write(png)
     print(f"OK: {args.output} ({len(png)} байт)")
     if args.wrap_svg:
-        wrap_in_svg(args.output, args.wrap_svg, args.size)
-        print(f"OK: обёртка-сет {args.wrap_svg}")
+        used = wrap_in_svg(args.output, args.wrap_svg, args.size, args.wrap_mode)
+        print(f"OK: сет {args.wrap_svg} ({used})")
     return 0
 
 

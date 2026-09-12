@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- СТЕНА С ЗАРУБКАМИ РОСТА.
+       Косяк, на котором в детстве отмечали, кто насколько вырос. Здесь отметок
+       сорок, они идут выше человеческого роста и уходят за верхнюю рамку —
+       мерить не переставали. Каждая проведена ДРУГОЙ рукой: разный нажим,
+       разный наклон, разная длина. Половина перечёркнута и переставлена ниже.
+       Подписывать «оценку вам ставили другие» не нужно — это видно. -->
+  <rect width="1280" height="720" fill="#d4d7cf"/>
+  <rect width="1280" height="150" fill="#5f625b"/>
+  <rect y="150" width="1280" height="452" fill="#c9ccc3"/>
+  <rect y="602" width="1280" height="118" fill="#a2a59d"/>
+  <path d="M-10 602 Q640 596 1290 604" stroke="#141410" stroke-width="6" fill="none"/>
+  <path d="M-10 150 Q640 156 1290 148" stroke="#141410" stroke-width="6" fill="none"/>
+
+  <!-- КОСЯК: широкая чёрная стойка от пола за верхнюю рамку -->
+  <path d="M300 -10 Q292 300 300 604 L376 604 Q384 300 376 -10 Z" fill="#141410"/>
+  <!-- вторая стойка справа: мерили и там -->
+  <path d="M968 -10 Q962 300 968 604 L1012 604 Q1018 300 1012 -10 Z" fill="#141410"/>
+
+  <!-- ЗАРУБКИ: слева от косяка, каждая своей рукой -->
+  <g stroke="#141410" fill="none" stroke-linecap="round">
+    <path d="M300 566 L214 570" stroke-width="12"/>
+    <path d="M300 528 L166 520" stroke-width="10"/>
+    <path d="M300 494 L232 500" stroke-width="14"/>
+    <path d="M300 452 L142 444" stroke-width="9"/>
+    <path d="M300 420 L206 428" stroke-width="13"/>
+    <path d="M300 380 L120 372" stroke-width="11"/>
+    <path d="M300 344 L228 350" stroke-width="15"/>
+    <path d="M300 302 L158 296" stroke-width="10"/>
+    <path d="M300 266 L196 274" stroke-width="12"/>
+    <path d="M300 224 L106 216" stroke-width="9"/>
+    <path d="M300 188 L236 194" stroke-width="14"/>
+    <path d="M300 146 L150 138" stroke-width="11"/>
+    <path d="M300 104 L212 112" stroke-width="10"/>
+    <path d="M300 62 L128 54" stroke-width="12"/>
+    <path d="M300 22 L224 28" stroke-width="13"/>
+  </g>
+
+  <!-- ПЕРЕЧЁРКНУТЫЕ И ПЕРЕСТАВЛЕННЫЕ НИЖЕ: оценку пересматривали -->
+  <g stroke="#141410" fill="none" stroke-linecap="round" stroke-width="6">
+    <path d="M150 358 L226 388"/>
+    <path d="M226 358 L150 388"/>
+    <path d="M162 210 L232 238"/>
+    <path d="M232 210 L162 238"/>
+    <path d="M186 486 L246 512"/>
+    <path d="M246 486 L186 512"/>
+  </g>
+
+  <!-- Правый косяк: отметки чужие и выше всех наших -->
+  <g stroke="#141410" fill="none" stroke-linecap="round">
+    <path d="M1012 470 L1146 476" stroke-width="13"/>
+    <path d="M1012 396 L1198 388" stroke-width="11"/>
+    <path d="M1012 316 L1120 322" stroke-width="14"/>
+    <path d="M1012 232 L1210 224" stroke-width="10"/>
+    <path d="M1012 150 L1132 158" stroke-width="12"/>
+    <path d="M1012 68 L1224 60" stroke-width="11"/>
+  </g>
+
+  <!-- карандаш на полу и линейка, прислонённая к косяку: инструмент остался -->
+  <path d="M404 588 L512 574 L520 592 L410 604 Z" fill="#141410"/>
+  <path d="M520 592 L544 580 L522 574 Z" fill="#141410"/>
+  <path d="M760 604 L806 236 L836 240 L790 604 Z" fill="#141410"/>
+  <g stroke="#d4d7cf" stroke-width="4">
+    <path d="M792 560 L818 562"/><path d="M798 500 L824 502"/>
+    <path d="M804 440 L830 442"/><path d="M810 380 L836 382"/>
+    <path d="M816 320 L842 322"/>
+  </g>
+</svg>

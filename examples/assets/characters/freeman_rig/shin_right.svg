@@ -1,3 +1,7 @@
+<!-- СТОПА-САПОЖОК. Прежний загиб в 6 единиц на полноразмерном кадре терялся
+     вовсе: ноги читались двумя палками, упёртыми в пол. У оригинала стопа —
+     горизонтальный сапожок шириной в две-три ноги, носком НАРУЖУ, с круглым
+     пятком; это одна из пяти сильных форм силуэта. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 112" width="52" height="112"><defs><filter id="ink" x="-40%" y="-40%" width="180%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="1" seed="22" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
 <!-- Голень с каплей-стопой наружу, как у оригинала. -->
-<g filter="url(#ink)"><path d="M17 4 Q15 48 16 88 Q14 98 44 104 Q40 96 24 90 Q26 48 27 4 Z" fill="#0e0e0e"/></g></svg>
+<g filter="url(#ink)"><path d="M12 4 Q9 48 11 88 Q10 100 10 110 L42 112 Q52 112 52 103 Q50 95 32 96 L32 88 Q34 48 31 4 Z" fill="#0e0e0e"/></g></svg>

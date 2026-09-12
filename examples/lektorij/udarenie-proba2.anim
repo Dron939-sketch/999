@@ -1,0 +1,105 @@
+// =============================================================================
+//  ПРОБА УДАРЕНИЙ №2 — стенд для ИЗМЕРЕНИЯ, а не для ушей.
+//
+//  Двадцать три коротких реплики: три минимальные пары («за́мок/замо́к»,
+//  «му́ка/мука́», «сто́ит/стои́т») в четырёх разметках плюс односложное слово
+//  с акутой и без. Картинка не нужна вовсе — нужен voice.mp3 из релиза, по
+//  которому `tools/udareniya.py --proba` считает, какую разметку синтез читает.
+//
+//  Между репликами 0.9с тишины: по ним инструмент режет дорожку на слова.
+//  Менять паузы и порядок реплик нельзя — разбор поедет.
+// =============================================================================
+
+import character freeman from "../assets/characters/freeman_rig"
+import set pustota from "../assets/sets/void.svg"
+
+config {
+    width: 1280
+    height: 720
+    fps: 24
+    background: #b0b3ab
+    monochrome: true
+    mono-contrast: 1.9
+    on-twos: 2
+    line-boil: 0.0
+    gate-weave: 0.0
+    ground-shadow: true
+}
+
+scene "proba" (duration: 1.0s, set: pustota) {
+    place freeman at (0.5, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+    camera medium freeman
+    freeman pose "calm"
+    wait 1.0s
+
+    //lip 1
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 2
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 3
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 4
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 5
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 6
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 7
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 8
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 9
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 10
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 11
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 12
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 13
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 14
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 15
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 16
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 17
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 18
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 19
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 20
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 21
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 22
+    freeman speaks for 1.0s
+    wait 0.9s
+    //lip 23
+    freeman speaks for 1.0s
+    wait 1.0s
+}
