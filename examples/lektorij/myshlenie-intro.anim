@@ -328,29 +328,26 @@ scene "pustota" (duration: 1.0s, set: pustota) {
     cennikf scales 0.51 over 0.01s
     cennikf hides
 
+    // Выход в пустоту идёт ВНУТРИ реплики: зал (раунд 1) назвал 2.6с покоя
+    // перед жалом — он входил шагом, останавливался и ждал голоса.
     camera medium freeman
+    //lip 8
     together {
-        freeman moves-to (0.5, 0.585) over 0.9s ease-out
+        freeman speaks for 6.0s
         do {
             freeman pose "shag_levoj"
             wait 0.3s
             freeman pose "shag_pravoj"
             wait 0.3s
             freeman pose "lunge"
-            wait 0.3s
-        }
-    }
-    //lip 8
-    together {
-        freeman speaks for 6.0s
-        do {
-            wait 1.8s
+            wait 1.2s
             freeman pose "point"         // «беспла́тно» (0.30) — палец
             wait 2.7s
             freeman pose "v_upor"        // «три ты́сячи» (0.75) — в упор
             camera close-up freeman
             wait 1.5s
         }
+        freeman moves-to (0.5, 0.585) over 0.9s ease-out
         do {
             wait 4.3s
             cennikf shows
