@@ -220,7 +220,7 @@ def main(argv=None):
     if a.proba:
         return proba(a.proba)
 
-    files = [Path(p) for p in a.vo] or sorted(
+    files = [Path(p).resolve() for p in a.vo] or sorted(
         (ROOT / "examples" / "lektorij").glob("*-VO.md"))
     sl = slovar()
     vsego_o, vsego_n = 0, 0

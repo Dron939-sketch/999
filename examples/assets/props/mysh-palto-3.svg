@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 300" width="150" height="300">
+  <!-- ПАЛЬТО №3 — халат с поясом, «я знал». Третья одежда ошибки.
+       Падает на «я знал». Тёмный тон с белым поясом: третий силуэт и третий
+       тон. Домашний халат нарочно: «я так и знал» говорят себе дома, задним
+       числом, а не в магазине и не в споре. -->
+  <path d="M75 4 L75 22" stroke="#141410" stroke-width="6"/>
+  <path d="M22 50 Q75 30 128 50 L128 24 L22 24 Z" fill="#141410"/>
+  <path d="M30 54 L120 54 L142 96 L130 104 L136 292 L14 292 L20 104 L8 96 Z"
+        fill="#5f625b" stroke="#141410" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M56 56 L75 150 L94 56" stroke="#141410" stroke-width="5" fill="none"/>
+  <path d="M18 170 L132 170" stroke="#f7f7f4" stroke-width="10"/>
+  <path d="M80 172 Q96 200 84 232" stroke="#f7f7f4" stroke-width="8" fill="none" stroke-linecap="round"/>
+</svg>

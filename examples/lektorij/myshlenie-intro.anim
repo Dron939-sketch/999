@@ -1,246 +1,382 @@
 // =============================================================================
 //  «МЫШЛЕНИЕ И КОГНИТИВНЫЕ ИСКАЖЕНИЯ» — продающее интро курса
+//  (meysternlp.ru/blog/lektorij/myshlenie — 10 лекций, ~2,7 часа).
 //
-//  ФИШКА — ДВЕРЬ, КОТОРАЯ ЗАКРЫЛАСЬ (PRODAZHA.md §2). Мысль не проговаривается,
-//  а ПОКАЗЫВАЕТСЯ, и весь монтаж построен на этом:
+//  СКВОЗНАЯ: ошибка одна, одежда разная — вчера ценник, сегодня спор, завтра
+//  «я знал». Грабли те же, вы их не узнаёте в лицо.
 //
-//    · ролик открывается СО СПИНЫ: Фримен стоит лицом к закрытой двери, и
-//      зритель первые секунды смотрит туда же, куда он. Ракурс `spina` — тот
-//      самый, что до этой недели был сломан и не использовался ни разу;
-//    · на хуке он ОБОРАЧИВАЕТСЯ к камере — три четверти, потом в упор. Поворот
-//      и есть склейка: дверь остаётся за спиной, зритель остаётся с ним;
-//    · на отрицании он ИДЁТ НА КАМЕРУ, переставляя ногами (цикл ходьбы чинен
-//      в этом же заходе) — уходит от двери, как уходит зритель от мысли;
-//    · на пулемёте за спиной ОДНА ЗА ДРУГОЙ ВСТАЮТ ЕЩЁ ДВЕ ЗАКРЫТЫЕ ДВЕРИ.
-//      Ни одного слова про «каждое решение» — это видно;
-//    · на взлёте сбоку выезжает ОТКРЫТАЯ дверь: единственное светлое пятно в
-//      кадре. «А следующая — прямо перед тобой» сказано светом, а не словом;
-//    · под жало открытая дверь МЕДЛЕННО ЗАКРЫВАЕТСЯ. Финальный кадр — она
-//      почти закрыта, и вопрос «сколько дверей ты закрыл сегодня?» повисает
-//      над тем, что зритель видит своими глазами.
+//  ХОЛОДНЫЙ СТАРТ. Приветствие идёт ТРЕТЬИМ: сначала зрителю продают коробку
+//  (ценник «9000» перечёркивается, влетает «3000» — на 1.6-й секунде), он
+//  кивает, его ловят на том, что не спросил, что в коробке, и только потом с
+//  ним здороваются, как с уличённым. Фокус показан НА ЗРИТЕЛЕ, а не
+//  рассказан, — это и есть «цеплять с первых секунд».
 //
-//  Проверка фишки: выключи звук — понятно, о чём ролик. Это и отличает
-//  локацию-вещдок от локации-фона.
+//  ЛОКАЦИИ СНЯТЫ ПОД СЦЕНАРИЙ, и в каждой предмет играет реплику:
+//
+//    mysh-vitrina    прилавок, коробка без надписи; ХУК, добивка, приветствие
+//                    ценник-проп меняется, на коробку
+//                    впечатывается «?»
+//    mysh-garderob   вешалка, три пальто падают   ПУЛЕМЁТ: ценник / спор /
+//                    одно за другим, под каждым —  я знал; ошибка одна
+//                    грабли
+//    mysh-pole       дорога, грабли зубьями вверх; РАЗВОРОТ: грабли те же
+//                    персонаж наступает, черенок
+//                    бьёт в лоб ДО реплики
+//    mysh-galereya   три портрета — грабли в трёх  ВЗЛЁТ: схему можно
+//                    пальто; персонаж проходит     выучить в лицо
+//                    вдоль них шагом
+//    void            пустота; ценник «3000» падает ЖАЛО: так что там было
+//                    в руку                        за три тысячи?
+//
+//  ГРАБЛИ — СКВОЗНОЙ ПРЕДМЕТ: под пальто, под ногой, в рамке. Это обещание
+//  курса словами его страницы: «не стань гением, а перестань попадаться на
+//  одни и те же грабли».
+//
+//  ПРОП МАСШТАБИРУЕТСЯ ПО ВЫСОТЕ: движок кладёт любой предмет в 30% высоты
+//  кадра (216px), `scales` = желаемая высота / 216. Черенок вращается вокруг
+//  центра рисунка — поэтому его рисунок вдвое выше самого черенка (см. проп).
+//
+//  ЖЕСТЫ СТОЯТ НА СЛОВАХ (RULES.md): пауза в первом `do` после `speaks` — доля
+//  реплики; `prep_lipsync` тянет блок под mp3 и сажает позы на атаки слогов.
+//  Второй `do` в том же `together` — дорожка предметов, идёт параллельно.
+//
+//  Приёмщики: живость (≤35% времени «только рот»), режиссура (сверхкруп,
+//  смена крупности), длина ≤60с, ударения по словарю, зал из семерых.
 // =============================================================================
 
 import character freeman from "../assets/characters/freeman_rig"
+import set vitrina from "../assets/sets/mysh-vitrina.svg"
+import set garderob from "../assets/sets/mysh-garderob.svg"
+import set pole from "../assets/sets/mysh-pole.svg"
+import set galereya from "../assets/sets/mysh-galereya.svg"
+import set pustota from "../assets/sets/void.svg"
 import set titry from "../assets/sets/lektorij-final.svg"
-import set dveri from "../assets/sets/doors-empty.svg"
 
 config {
     width: 1280
     height: 720
     fps: 24
-    background: #b9bbb4
+    background: #b0b3ab
     monochrome: true
-    mono-contrast: 2.2
+    mono-contrast: 1.9
     snow: 0.35
     on-twos: 2
-    line-boil: 0.55
+
+    line-boil: 0.0
+    gate-weave: 0.0
     film-grain: 0.05
-    vignette: 0.14
+    vignette: 0.12
     film-flicker: 0.025
-    gate-weave: 0.35
     film-scratch: 0.25
     film-dust: 0.5
+
+    ground-shadow: true
     light-angle: 45
     form-shadow: 0.0
     rim-light: 0.0
 }
 
-scene "dver" (duration: 50s, set: dveri) {
-    transition static 0.35s
+// ═══════════════ СЦЕНА 1: ВИТРИНА — фокус на зрителе ══════════════════════
+//  ХУК (VO-1), добивка (VO-2), приветствие (VO-3). Ценник висит с первого
+//  кадра; на 1.6с «9000» сменяется на «3000» ударом печати. На «не спросили»
+//  на коробку впечатывается «?». Общий план держится до приветствия: фокус
+//  должен быть виден целиком.
+scene "vitrina" (duration: 1.0s, set: vitrina) {
+    transition static 0.3s
 
-    place freeman at (0.375, 0.66) facing front
-    freeman scales 0.62 over 0.01s
-    let d2 = prop("door-closed", "../assets/props/door-closed.svg") at (0.5, -1.0) layer 1
-    d2 scales 0.55 over 0.01s
-    let d3 = prop("door-closed", "../assets/props/door-closed.svg") at (0.5, -1.0) layer 1
-    d3 scales 0.55 over 0.01s
-    let dopen = prop("door-open", "../assets/props/door-open.svg") at (1.4, 0.462) layer 1
-    dopen scales 0.74 over 0.01s
-    let slovo = text("СКОЛЬКО?", 130) at (0.5, -2.0) layer 6
-    slovo scales 2.4 over 0.01s
+    place freeman at (0.32, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+    let cennik9 = prop("cennik9", "../assets/props/mysh-cennik-9.svg") at (0.62, 0.66) layer 3
+    cennik9 scales 0.51 over 0.01s
+    let cennik3 = prop("cennik3", "../assets/props/mysh-cennik-3.svg") at (0.62, 0.66) layer 3
+    cennik3 scales 0.51 over 0.01s
+    cennik3 hides
+    let vopros = text("?", 150) at (0.689, -2.0) layer 6
+    vopros scales 2.4 over 0.01s
 
-    // ── БЕЗ СЛОВ: он стоит СПИНОЙ, лицом к закрытой двери ─────────────────
     camera wide
-    freeman pose "spina"
-    wait 1.5s
-
-    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-1): всё ещё спиной ──────────────────────
+    freeman pose "smug"
+    wait 0.3s
     //lip 1
     together {
-        freeman speaks for 3.3s
+        freeman speaks for 5.0s
         do {
-            wait 1.6s
-            camera medium freeman
+            wait 2.25s
+            freeman pose "point"         // «Ста́ло три» (0.45) — ладонь на коробку
+            wait 1.75s
+            freeman overlays "hero_sly"  // «Вы берёте?» (0.80) — бровь
+            wait 1.0s
+        }
+        do {
+            wait 0.8s
+            cennik9 hides
+            cennik3 shows
+            cennik3 scales 0.95 over 0.01s
+            cennik3 scales 0.51 over 0.18s ease-in      // удар печати
+            camera shake 0.2s intensity 2
         }
     }
+    wait 0.3s
 
-    // ── ХУК (VO-2): ОБОРАЧИВАЕТСЯ. Поворот и есть склейка ─────────────────
+    // Добивка: зритель кивнул — и не спросил, что в коробке.
     //lip 2
     together {
-        freeman speaks for 4.6s
+        freeman speaks for 4.1s
         do {
-            freeman pose "polu_spina"
-            wait 0.7s
-            camera close-up freeman
-            freeman pose "chetvert_levo"
-            wait 1.0s
-            freeman pose "v_upor"
-            wait 0.7s
-            freeman pose "point"
-            wait 0.7s
-            freeman pose "no"              // «да не думал ты» — развёл руками
-            camera medium freeman
+            wait 0.4s
+            freeman pose "point"         // «Кивну́ли» (0.10) — палец в зрителя
+            wait 2.25s
+            freeman pose "shrug"         // «не спроси́ли» (0.65) — плечи
+            wait 1.45s
+        }
+        do {
+            wait 2.7s
+            vopros moves-to (0.689, 0.442) over 0.01s
+            vopros scales 1.0 over 0.18s ease-in        // «?» впечатался в коробку
+            camera shake 0.15s intensity 1
         }
     }
+    wait 0.3s
 
-    // ── ОТРИЦАНИЕ (VO-3): ИДЁТ НА КАМЕРУ, уходя от двери ──────────────────
-    freeman pose "calm"
+    // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-3), как с уличённым ────────────────────
+    camera medium freeman
     freeman overlays "smug"
     //lip 3
     together {
-        freeman speaks for 7.9s
+        freeman speaks for 4.5s
         do {
-            camera wide
-            freeman moves-to (0.46, 0.72) over 2.6s
-            wait 0.4s
-            camera medium freeman
-            freeman pose "idet"            // идёт на камеру, переставляя ноги
-            freeman overlays "doubt"
-            freeman moves-to (0.44, 0.79) over 2.4s
-            wait 0.5s
-            camera close-up freeman
-            freeman pose "hips"            // остановился, руки в боки
-            freeman overlays "hero_skeptic"
+            wait 3.4s
+            freeman pose "open"          // «Дороги́е мои́» (0.75) — руки в стороны
+            wait 1.1s
         }
+        camera zoom-to freeman over 4.4s ease-in-out
     }
+    wait 0.2s
+}
 
-    // ── ПУЛЕМЁТ (VO-4): за спиной встают ещё две закрытые двери ───────────
-    freeman pose "puppet"
+// ═══════════════ СЦЕНА 2: ГАРДЕРОБ — одна ошибка, три одежды ══════════════
+//  ПУЛЕМЁТ (VO-4, VO-5). На каждом слове одно пальто падает на пол, и под
+//  ним оказываются грабли. К «Ошибка одна» стоят три одинаковых грабель.
+scene "garderob" (duration: 1.0s, set: garderob) {
+    transition static 0.22s
+
+    place freeman at (0.22, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+    // грабли — слоем НИЖЕ пальто: видны только когда пальто упало
+    let grabli1 = prop("grabli1", "../assets/props/mysh-grabli.svg") at (0.484, 0.546) layer 1
+    grabli1 scales 1.53 over 0.01s
+    let grabli2 = prop("grabli2", "../assets/props/mysh-grabli.svg") at (0.648, 0.546) layer 1
+    grabli2 scales 1.53 over 0.01s
+    let grabli3 = prop("grabli3", "../assets/props/mysh-grabli.svg") at (0.8125, 0.546) layer 1
+    grabli3 scales 1.53 over 0.01s
+    let palto1 = prop("palto1", "../assets/props/mysh-palto-1.svg") at (0.484, 0.556) layer 2
+    palto1 scales 1.39 over 0.01s
+    let palto2 = prop("palto2", "../assets/props/mysh-palto-2.svg") at (0.648, 0.556) layer 2
+    palto2 scales 1.39 over 0.01s
+    let palto3 = prop("palto3", "../assets/props/mysh-palto-3.svg") at (0.8125, 0.556) layer 2
+    palto3 scales 1.39 over 0.01s
+
+    camera wide
+    freeman pose "hips"
+    wait 0.3s
     //lip 4
     together {
-        freeman speaks for 7.3s
+        freeman speaks for 5.5s
         do {
-            camera wide
-            d2 moves-to (0.235, 0.478) over 0.01s
-            d2 shows
-            camera shake 0.18s intensity 1
-            wait 1.6s
-            camera medium freeman
-            freeman pose "shrug"
-            wait 0.6s
-            freeman pose "puppet_jerk"
-            wait 0.6s
-            camera wide
-            freeman pose "puppet"
-            d3 moves-to (0.765, 0.478) over 0.01s
-            d3 shows
-            camera shake 0.18s intensity 1
-            wait 1.8s
-            camera close-up freeman
+            wait 1.0s
+            freeman pose "point"         // «ценни́к» (0.18) — раз
+            wait 1.75s
+            freeman pose "open"          // «спор» (0.50) — два (`wide` — мимика, тело бы сбросилось)
+            wait 1.65s
+            freeman pose "shrug"         // «я знал» (0.80) — три
+            wait 1.1s
+        }
+        do {
+            wait 1.0s
+            palto1 moves-to (0.484, 1.40) over 0.4s ease-in     // упало
+            wait 1.35s
+            palto2 moves-to (0.648, 1.40) over 0.4s ease-in
+            wait 1.25s
+            palto3 moves-to (0.8125, 1.40) over 0.4s ease-in
         }
     }
-    freeman overlays "flash_disgust"
-    wait 0.08s
-    freeman overlays "stern"
-    wait 0.5s
+    wait 0.2s
 
-    // ── РАЗВОРОТ (VO-5): ракурс СНИЗУ, он один среди закрытых дверей ──────
+    // Финал пулемёта: три грабель на виду.
+    freeman overlays "stern"
     //lip 5
     together {
-        freeman speaks for 4.6s
+        freeman speaks for 5.0s
         do {
-            camera angle low freeman
-            freeman pose "chetvert_pravo"
-            wait 1.6s
-            camera wide
-            freeman overlays "flash_pupils"
-            wait 0.16s
-            freeman pose "v_upor"
+            wait 0.25s
+            freeman pose "v_upor"        // «Оши́бка одна́» (0.05) — в упор
             wait 1.4s
             camera medium freeman
-            freeman overlays "stern"
+            wait 1.85s
+            freeman pose "otvraschenie"  // «жуёте» (0.70) — отвращение
+            camera close-up freeman
+            wait 1.5s
         }
     }
-    wait 0.5s
+    wait 0.2s
+}
 
-    // ── ВЗЛЁТ (VO-6): сбоку выезжает ОТКРЫТАЯ дверь — светлое пятно ───────
-    freeman pose "raskryl"
+// ═══════════════ СЦЕНА 3: ПОЛЕ — наступил ═════════════════════════════════
+//  РАЗВОРОТ (VO-6). Сначала гэг без слов: входит шагом, наступает, черенок
+//  взлетает и бьёт в лоб, слово-удар «ОПЯТЬ?» и негатив-панч. Реплика идёт
+//  уже с шишкой.
+scene "pole" (duration: 1.0s, set: pole) {
+    transition static 0.22s
+
+    place freeman at (0.08, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+    let cherenok = prop("cherenok", "../assets/props/mysh-cherenok.svg") at (0.469, 0.924) layer 2
+    cherenok scales 2.78 over 0.01s
+    cherenok rotates 90 over 0.01s                       // лежит вдоль дороги
+    let opyat = text("ОПЯТЬ?", 120) at (0.5, -2.0) layer 6
+    opyat scales 2.4 over 0.01s
+
+    camera wide
+    together {
+        freeman moves-to (0.36, 0.585) over 1.6s ease-in-out
+        do {
+            freeman pose "shag_pravoj"
+            wait 0.4s
+            freeman pose "shag_levoj"
+            wait 0.4s
+            freeman pose "shag_pravoj"
+            wait 0.4s
+            freeman pose "shag_levoj"
+            wait 0.4s
+        }
+    }
+    // ── УДАР ─────────────────────────────────────────────────────────────
+    cherenok rotates -30 over 0.14s ease-in              // взлетел в лоб: на -30° верх черенка
+                                                     // ложится на лицо, стоящее левее оси
+    freeman pose "puppet_jerk"
+    camera shake 0.3s intensity 4
+    opyat moves-to (0.5, 0.26) over 0.01s
+    opyat scales 1.0 over 0.18s ease-in
+    transition invert 0.16s
+    wait 0.35s
+    opyat moves-to (0.5, -2.0) over 0.18s ease-in
+
+    freeman pose "hunch"
+    freeman overlays "stern"
     //lip 6
+    together {
+        freeman speaks for 5.5s
+        do {
+            wait 1.5s
+            camera medium freeman
+            wait 2.35s
+            freeman pose "v_upor"        // «в лицо́» (0.70) — в упор
+            camera close-up freeman
+            wait 1.65s
+        }
+    }
+    camera shake 0.3s intensity 2
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 4: ГАЛЕРЕЯ — выучить в лицо ════════════════════════
+//  ВЗЛЁТ (VO-7). Три портрета — грабли в трёх пальто. Персонаж проходит
+//  вдоль них шагом первые секунды реплики и останавливается, не закрывая
+//  рамок. Растворение: между полем и залом — дистанция, а не склейка.
+scene "galereya" (duration: 1.0s, set: galereya) {
+    transition dissolve 0.5s
+
+    place freeman at (0.90, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+
+    camera wide
+    //lip 7
+    together {
+        freeman speaks for 8.5s
+        do {
+            freeman pose "shag_levoj"
+            wait 0.45s
+            freeman pose "shag_pravoj"
+            wait 0.45s
+            freeman pose "shag_levoj"
+            wait 0.45s
+            freeman pose "shag_pravoj"
+            wait 0.45s
+            freeman pose "shag_levoj"
+            wait 0.45s
+            freeman pose "raskryl"       // «схе́ма» (0.25) — раскрылся, стоя у рамок
+            wait 3.3s
+            freeman pose "calm"          // «два с полови́ной часа́» (0.65) — покой
+            wait 2.5s
+        }
+        freeman moves-to (0.22, 0.585) over 2.2s ease-in-out
+        // Наезд всю реплику вместо ката: после остановки у рамок кадр стоял
+        // три секунды — самый долгий покой ролика.
+        camera zoom-to freeman over 8.4s ease-in-out
+    }
+    wait 0.2s
+}
+
+// ═══════════════ СЦЕНА 5: ПУСТОТА — КОЛЬЦО ════════════════════════════════
+//  ЖАЛО-CTA (VO-8). Мир снят. На «три тысячи» тот же ценник падает ему в
+//  руку: коробка так и осталась без надписи.
+scene "pustota" (duration: 1.0s, set: pustota) {
+    transition static 0.22s
+
+    place freeman at (0.40, 0.585) facing front
+    freeman scales 0.80 over 0.01s
+    let cennikf = prop("cennikf", "../assets/props/mysh-cennik-3.svg") at (0.62, -0.4) layer 3
+    cennikf scales 0.51 over 0.01s
+    cennikf hides
+
+    camera medium freeman
+    together {
+        freeman moves-to (0.5, 0.585) over 0.9s ease-out
+        do {
+            freeman pose "shag_levoj"
+            wait 0.3s
+            freeman pose "shag_pravoj"
+            wait 0.3s
+            freeman pose "lunge"
+            wait 0.3s
+        }
+    }
+    //lip 8
     together {
         freeman speaks for 6.0s
         do {
-            camera wide
-            wait 1.2s
-            dopen moves-to (0.845, 0.462) over 1.6s ease-out
-            freeman pose "point"
-            wait 1.0s
-            camera medium freeman
-            freeman overlays "hero_wow"
-            wait 1.4s
-            camera wide
-        }
-    }
-    // ── ВЗЛЁТ-добивка (VO-7) ──────────────────────────────────────────────
-    //lip 7
-    together {
-        freeman speaks for 6.6s
-        do {
-            camera medium freeman
-            wait 2.2s
-            freeman pose "raskryl"         // раскрыл обе на взлёте
+            wait 1.8s
+            freeman pose "point"         // «беспла́тно» (0.30) — палец
+            wait 2.7s
+            freeman pose "v_upor"        // «три ты́сячи» (0.75) — в упор
             camera close-up freeman
-            wait 2.2s
-            freeman pose "open"
-            camera wide
+            wait 1.5s
         }
-    }
-
-    // ── СЛОВО-УДАР «СКОЛЬКО?» + негатив-панч ──────────────────────────────
-    slovo moves-to (0.5, 0.26) over 0.01s
-    slovo scales 1.0 over 0.18s ease-in
-    transition invert 0.16s
-    camera shake 0.3s intensity 3
-    wait 0.8s
-    slovo moves-to (0.5, -2.0) over 0.22s ease-in
-    freeman overlays "flash_grin"
-    wait 0.08s
-
-    // ── ЖАЛО-CTA (VO-8): открытая дверь МЕДЛЕННО ЗАКРЫВАЕТСЯ ──────────────
-    freeman pose "calm"
-    freeman pose "lunge"
-    //lip 8
-    together {
-        freeman speaks for 4.6s
-        // Дверь закрывается ровно столько, сколько длится реплика: к слову
-        // «сегодня?» от светлого проёма остаётся полоска. Ответ на вопрос
-        // зритель видит, а не слышит.
-        dopen scales 0.09 over 4.4s ease-in
         do {
-            camera medium freeman
-            wait 1.2s
-            freeman pose "point"           // «сколько дверей ты закрыл?»
-            freeman overlays "hero_sly"
-            wait 1.0s
-            freeman pose "hips"
-            camera close-up freeman
+            wait 4.3s
+            cennikf shows
+            cennikf moves-to (0.61, 0.60) over 0.35s ease-in   // ценник упал в руку
+            camera shake 0.15s intensity 1
         }
+        freeman scales 0.88 over 5.9s ease-in-out            // подходит к зрителю
     }
+    camera extreme-close-up freeman
     freeman overlays "hero_wink"
     wait 0.5s
     camera reset over 0.5s
     freeman pose "calm"
-    wait 0.8s
+    wait 0.3s
 }
 
-scene "titry" (duration: 6s, set: titry) {
+// ═══════════════ СЦЕНА 6: ТИТРЫ ═══════════════════════════════════════════
+scene "titry" (duration: 3.4s, set: titry) {
     transition static 0.45s
+
     place freeman at (0.5, 3.0) facing front
     let stamp = prop("stamp", "../assets/props/stamp-meister.svg") at (0.5, 2.5)
     stamp hides
-    wait 1.2s
+    wait 0.9s
+
     stamp moves-to (0.5, 0.66) over 0.01s
     stamp shows
     stamp scales 2.6 over 0.01s
@@ -248,6 +384,7 @@ scene "titry" (duration: 6s, set: titry) {
     stamp scales 0.94 over 0.22s ease-in
     stamp scales 1.0 over 0.1s ease-out
     stamp rotates -4 over 0.12s
-    wait 2.5s
-    transition fade-black 0.8s
+
+    wait 1.2s
+    transition fade-black 0.7s
 }
