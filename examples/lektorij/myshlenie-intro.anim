@@ -139,7 +139,9 @@ scene "vitrina" (duration: 1.0s, set: vitrina) {
     wait 0.3s
 
     // ── ФИРМЕННОЕ ПРИВЕТСТВИЕ (VO-3), как с уличённым ────────────────────
-    camera medium freeman
+    //  Наезд едет от ОБЩЕГО плана: от среднего он полреплики стоял в тесном
+    //  кадре, и сверхкруп ролика выходил 0.44 при цели 0.40.
+    camera wide
     freeman overlays "smug"
     //lip 3
     together {
@@ -269,9 +271,8 @@ scene "pole" (duration: 1.0s, set: pole) {
             wait 1.5s
             camera medium freeman
             wait 2.35s
-            freeman pose "v_upor"        // «в лицо́» (0.70) — в упор
-            camera close-up freeman
-            wait 1.65s
+            freeman pose "v_upor"        // «в лицо́» (0.70) — в упор; средний план:
+            wait 1.65s                   // крупный отрезал бы черенок, стоящий у лица
         }
     }
     camera shake 0.3s intensity 2
